@@ -1,0 +1,25 @@
+## Interface: 110000,110002
+## SavedVariables: CUFDB
+## IconTexture: Interface\ICONS\spell_progenitor_buff
+
+## Title: Cell - Unit Frames
+## Author: Vollmer
+## Version: @project-version@
+## X-Date: @project-date-iso@
+## X-License: MIT
+## X-Curse-Project-ID:
+## X-Wago-ID:
+
+## Dependencies: Cell
+
+## Notes: Unitframes for our beloved Cell!
+
+Core.lua
+Util.lua
+
+Options.lua
+
+UnitFrames/UnitButton.lua
+UnitFrames/PlayerFrame.lua
+UnitFrames/FocusFrame.lua
+UnitFrames/TargetFrame.lua

@@ -288,7 +288,7 @@ local init, hookInit
 -- This is needed to get access to current layout, since this
 -- is the only place where this info is outside of local scope
 local function UpdatePreview()
-    if hookInit then return end
+    if not init or hookInit then return end
 
     local layoutsTab = CUF.findChildByName(optionsFrame, "CellOptionsFrame_LayoutsTab")
     local layoutPane = CUF.findChildByName(layoutsTab, "Layout")

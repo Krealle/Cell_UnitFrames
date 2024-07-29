@@ -11,7 +11,7 @@ local targetFrame, anchorFrame, hoverFrame, config = B:CreateBaseUnitFrame(unit,
 Cell.frames.targetFrame = targetFrame
 Cell.frames.targetFrameAnchor = anchorFrame
 
-local targetButton = CreateFrame("Button", "CellTargetButton", targetFrame, "CellUnitButtonTemplate")
+local targetButton = CreateFrame("Button", "CellTargetButton", targetFrame, "CUFUnitButtonTemplate")
 targetButton:SetAttribute("unit", unit)
 targetButton:SetPoint("TOPLEFT")
 targetButton:HookScript("OnEvent", function(self, event)

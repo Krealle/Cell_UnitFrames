@@ -1,0 +1,26 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/FrameXML/UI_shared.xsd">
+    <Button name="CUFUnitButtonTemplate" inherits="BackdropTemplate,SecureUnitButtonTemplate,SecureHandlerEnterLeaveTemplate,SecureHandlerShowHideTemplate" hidden="true" virtual="true">
+        <Attributes>
+            <Attribute name="toggleForVehicle" type="boolean" value="true"/>
+            <Attribute name="checkselfcast" type="boolean" value="false"/>
+            <Attribute name="checkfocuscast" type="boolean" value="false"/>
+            <!-- <Attribute name="allowVehicleTarget" type="boolean" value="true"/> -->
+            <!-- <Attribute name="ping-receiver" type="boolean" value="true"/> -->
+        </Attributes>
+        <Scripts>
+            <OnLoad>
+                CUFUnitButton_OnLoad(self)
+            </OnLoad>
+        </Scripts>
+    </Button>
+
+    <Button name="CUFPreviewButtonTemplate" inherits="BackdropTemplate" hidden="true" virtual="true">
+        <Scripts>
+            <OnLoad>
+                CUFUnitButton_OnLoad(self)
+                self.isPreview = true
+            </OnLoad>
+        </Scripts>
+    </Button>
+</Ui>

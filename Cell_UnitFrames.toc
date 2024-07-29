@@ -22,6 +22,8 @@ Core/Core.lua
 Menu/MenuFrame.lua
 Menu/Menu.lua
 Menu/Units.lua
+
+UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua
 UnitFrames/PlayerFrame.lua
 UnitFrames/FocusFrame.lua

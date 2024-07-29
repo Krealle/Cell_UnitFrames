@@ -11,7 +11,7 @@ local playerFrame, anchorFrame, hoverFrame, config = B:CreateBaseUnitFrame(unit,
 Cell.frames.playerFrame = playerFrame
 Cell.frames.playerFrameAnchor = anchorFrame
 
-local playerButton = CreateFrame("Button", "CellPlayerButton", playerFrame, "CellUnitButtonTemplate")
+local playerButton = CreateFrame("Button", "CellPlayerButton", playerFrame, "CUFUnitButtonTemplate")
 playerButton:SetAttribute("unit", unit)
 playerButton:SetPoint("TOPLEFT")
 playerButton._layout = "Player"

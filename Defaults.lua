@@ -2,6 +2,8 @@
 local CUF = select(2, ...)
 
 CUF.defaults = {}
+CUF.anchorPoints = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
+CUF.outlines = { "None", "Outline", "Monochrome" }
 
 ---@class CUF.defaults.color
 ---@field type "class_color" | "custom"
@@ -13,12 +15,12 @@ local colorOpt = {
 
 ---@class CUF.defaults.font
 ---@field size number
----@field outline "outline" | "none"
+---@field outline "None" | "Outline" | "Monochrome"
 ---@field shadow boolean
 ---@field style string
 local fontOpt = {
     ["size"] = 12,
-    ["outline"] = "outline",
+    ["outline"] = "Outline",
     ["shadow"] = false,
     ["style"] = "Cell Default",
 }
@@ -49,18 +51,40 @@ local unitFrameIndicators = {
     },
 }
 
----@class CUF.defaults.unitFrame.widgets
-local unitFrameWidgets = {
-    ["name"] = {
-        ["enabled"] = true,
-        ["color"] = colorOpt,
-        ["font"] = fontOpt,
-        ["position"] = positionOpt,
-        ["width"] = { ["type"] = "percent", ["value"] = 0.75 },
-    },
+---@class CUF.defaults.width
+---@field type "percentage" | "unlimited" | "length"
+---@field value number
+---@field auxValue number
+
+---@class NameWidgetTable
+---@field enabled boolean
+---@field color CUF.defaults.color
+---@field font CUF.defaults.font
+---@field position CUF.defaults.position
+---@field width CUF.defaults.width
+local nameWidget = {
+    ["enabled"] = true,
+    ["color"] = colorOpt,
+    ["font"] = fontOpt,
+    ["position"] = positionOpt,
+    ["width"] = { ["type"] = "percentage", ["value"] = 0.75, ["auxValue"] = 3 },
 }
 
----@class CUF.defaults.unitFrame
+---@class UnitFrrameWidgetsTable
+---@field name NameWidgetTable
+local unitFrameWidgets = {
+    ["name"] = nameWidget
+}
+
+---@class Layout
+---@field enabled boolean
+---@field sameSizeAsPlayer boolean
+---@field size table<number, number>
+---@field position table<string, number>
+---@field tooltipPosition table<string, string>
+---@field powerSize number
+---@field anchor string
+---@field widgets UnitFrrameWidgetsTable
 CUF.defaults.unitFrame = {
     ["enabled"] = false,
     ["sameSizeAsPlayer"] = false,
@@ -72,3 +96,6 @@ CUF.defaults.unitFrame = {
     ["widgets"] = unitFrameWidgets,
     --[[ ["indicators"] = unitFrameIndicators, ]]
 }
+
+---@alias LayoutTable table<string, Layout>
+---@alias CellDB table<string, LayoutTable>

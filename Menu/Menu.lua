@@ -15,8 +15,11 @@ menu.window = menuWindow
 menu.unitsToAdd = {}
 menu.widgetsToAdd = {}
 menu.selectedLayout = Cell.vars.currentLayout
+---@type LayoutTable
 menu.selectedLayoutTable = Cell.vars.currentLayoutTable
 menu.selectedUnit = "player"
+menu.selectedWidget = "name"
+menu.selectedWidgetTable = {}
 menu.init = false
 menu.hookInit = false
 
@@ -28,13 +31,37 @@ function menu:AddUnit(unit)
     table.insert(self.unitsToAdd, unit)
 end
 
+---@param widget function
+function menu:AddWidget(widget)
+    CUF:Debug("Menu - AddWidget")
+    table.insert(self.widgetsToAdd, widget)
+end
+
+---@param unit string|nil
+---@param widget string|nil
+function menu:UpdateSelected(unit, widget)
+    if unit then
+        self.selectedUnit = unit
+        self.selectedWidgetTable = self.selectedLayoutTable[unit].widgets
+    end
+
+    if widget then
+        self.selectedWidget = widget
+    end
+
+    CUF:Debug("UpdateSelected:", unit, widget)
+    CUF:Fire("LoadPageDB", unit, widget)
+end
+
 -- Load layout from DB
 ---@param layout string
 local function LoadLayoutDB(layout)
     menu.selectedLayout = layout
     menu.selectedLayoutTable = CellDB["layouts"][layout]
+    menu.selectedWidgetTable = menu.selectedLayoutTable[menu.selectedUnit].widgets
 
-    CUF:Fire("LoadPageDB", menu.selectedUnit)
+    CUF:Debug("LoadLayoutDB:", menu.selectedUnit, menu.selectedWidget)
+    CUF:Fire("LoadPageDB", menu.selectedUnit, menu.selectedWidget)
     CUF:Fire("UpdateVisibility")
 end
 

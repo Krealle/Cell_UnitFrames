@@ -29,31 +29,9 @@ function W:UnitFrame_UpdateName(button)
     button.states.class = UnitClassBase(unit)
     button.states.guid = UnitGUID(unit)
     button.states.isPlayer = UnitIsPlayer(unit)
+    button.states.class = UnitClassBase(unit) --! update class or it may be nil
 
     button.widgets.nameText:UpdateName()
-end
-
----@param button CUFUnitButton
-function W:UnitFrame_UpdateNameColor(button)
-    local unit = button.states.displayedUnit
-    if not unit then return end
-
-    button.class = UnitClassBase(unit) --! update class or it may be nil
-
-    if not Cell.vars.currentLayoutTable[unit] then
-        button.widgets.nameText:SetTextColor(1, 1, 1)
-        return
-    end
-
-    if not UnitIsConnected(unit) then
-        button.widgets.nameText:SetTextColor(F:GetClassColor(button.class))
-    else
-        if Cell.vars.currentLayoutTable[unit].widgets.name.color.type == "class_color" then
-            button.widgets.nameText:SetTextColor(F:GetClassColor(button.class))
-        else
-            button.widgets.nameText:SetTextColor(unpack(Cell.vars.currentLayoutTable[unit].widgets.name.color.rgb))
-        end
-    end
 end
 
 -------------------------------------------------
@@ -478,5 +456,20 @@ local function UpdateButtonText(button, unit)
 
     button.widgets.nameText.width = styleTable.width
     button.widgets.nameText:UpdateName()
+
+    if not Cell.vars.currentLayoutTable[unit] then
+        button.widgets.nameText:SetTextColor(1, 1, 1)
+        return
+    end
+
+    if not UnitIsConnected(unit) then
+        button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
+    else
+        if styleTable.color.type == "class_color" then
+            button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
+        else
+            button.widgets.nameText:SetTextColor(unpack(styleTable.color.rgb))
+        end
+    end
 end
 Handler:RegisterWidget(UpdateButtonText, "name")

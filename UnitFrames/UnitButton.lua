@@ -447,7 +447,6 @@ local function UnitFrame_UpdateAll(self)
     if not self:IsVisible() then return end
 
     W:UnitFrame_UpdateName(self)
-    W:UnitFrame_UpdateNameColor(self)
     UnitFrame_UpdateHealthMax(self)
     UnitFrame_UpdateHealth(self)
     UnitFrame_UpdateHealthColor(self)
@@ -535,7 +534,6 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             self._updateRequired = 1
         elseif event == "UNIT_NAME_UPDATE" then
             W:UnitFrame_UpdateName(self)
-            W:UnitFrame_UpdateNameColor(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, arg)
         end

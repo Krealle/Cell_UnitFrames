@@ -56,8 +56,6 @@ function menuWindow:InitUnits()
     for idx, fn in pairs(CUF.Menu.unitsToAdd) do
         local unit = fn(self)
 
-        DevTool:AddData(unit, unit.id)
-
         self.units[unit.id] = unit
 
         if prevButton then
@@ -69,6 +67,8 @@ function menuWindow:InitUnits()
 
         table.insert(self.unitsButtons, unit.button)
     end
+
+    CUF:DevAdd(self.units, "menuWindow - units")
 end
 
 function menuWindow:AddWidget(widget)
@@ -129,7 +129,7 @@ function menuWindow:Create()
     self.unitAnchor:SetAllPoints(self.unitPane)
 
     self:InitUnits()
-    DevTool:AddData(self.unitsButtons, "unitsButtons")
+    CUF:DevAdd(self.unitsButtons, "unitsButtons")
     Cell:CreateButtonGroup(self.unitsButtons, function(unit, b)
         self:SetUnit(unit)
         CUF:Fire("LoadPageDB", unit)

@@ -84,3 +84,9 @@ function CUF:Debug(...)
     if not CUF.debug then return end
     print(...)
 end
+
+function CUF:DevAdd(data, name)
+    if not CUF.debugDB or not DevTool then return end
+
+    DevTool:AddData(data, name)
+end

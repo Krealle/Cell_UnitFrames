@@ -80,5 +80,8 @@ eventFrame:SetScript("OnEvent", function()
     CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable
     CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[CUF.vars.selectedUnit].widgets
 
+    Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
+        function(layout) CUF:Fire("UpdateWidget", layout) end)
+
     CUF:Fire("UpdateWidget", Cell.vars.currentLayout)
 end)

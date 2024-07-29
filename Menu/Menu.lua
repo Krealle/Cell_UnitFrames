@@ -21,7 +21,7 @@ CUF.Menu = menu
 
 ---@param unit function
 function menu:AddUnit(unit)
-    print("Menu - AddUnit")
+    CUF:Debug("Menu - AddUnit")
     table.insert(self.unitsToAdd, unit)
 end
 

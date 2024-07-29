@@ -79,3 +79,8 @@ function CUF:Fire(eventName, ...)
         onEventFunc(...)
     end
 end
+
+function CUF:Debug(...)
+    if not CUF.debug then return end
+    print(...)
+end

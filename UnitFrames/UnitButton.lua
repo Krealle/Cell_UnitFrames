@@ -581,19 +581,19 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
 end
 
 local function UnitFrame_OnShow(self)
-    print(GetTime(), "OnShow", self:GetName())
+    CUF:Debug(GetTime(), "OnShow", self:GetName())
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
     self._powerBarUpdateRequired = 1
     UnitFrame_RegisterEvents(self)
 end
 
 local function UnitFrame_OnHide(self)
-    print(GetTime(), "OnHide", self:GetName())
+    CUF:Debug(GetTime(), "OnHide", self:GetName())
     UnitFrame_UnregisterEvents(self)
     ResetAuraTables(self)
 
     -- NOTE: update Cell.vars.guids
-    -- print("hide", self.states.unit, self.__unitGuid, self.__unitName)
+    -- CUF:Debug("hide", self.states.unit, self.__unitGuid, self.__unitName)
     if self.__unitGuid then
         if not self.isSpotlight then Cell.vars.guids[self.__unitGuid] = nil end
         self.__unitGuid = nil
@@ -625,7 +625,7 @@ end
 local UNKNOWN = _G["UNKNOWN"]
 local UNKNOWNOBJECT = _G["UNKNOWNOBJECT"]
 local function UnitFrame_OnTick(self)
-    -- print(GetTime(), "OnTick", self._updateRequired, self:GetAttribute("refreshOnUpdate"), self:GetName())
+    -- CUF:Debug(GetTime(), "OnTick", self._updateRequired, self:GetAttribute("refreshOnUpdate"), self:GetName())
     local e = (self.__tickCount or 0) + 1
     if e >= 2 then -- every 0.5 second
         e = 0
@@ -642,7 +642,7 @@ local function UnitFrame_OnTick(self)
 
             local guid = UnitGUID(self.states.unit)
             if guid and guid ~= self.__unitGuid then
-                -- print("guidChanged:", self:GetName(), self.states.unit, guid)
+                -- CUF:Debug("guidChanged:", self:GetName(), self.states.unit, guid)
                 -- NOTE: unit entity changed
                 -- update Cell.vars.guids
                 self.__unitGuid = guid
@@ -715,7 +715,7 @@ end
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
 
-    print(buttonName, "OnLoad")
+    CUF:Debug(buttonName, "OnLoad")
     InitAuraTables(button)
 
     button.widgets = {}
@@ -821,5 +821,5 @@ function CUFUnitButton_OnLoad(button)
     --[[ button:SetScript("OnSizeChanged", UnitFrame_OnSizeChanged) ]]
     button:SetScript("OnEvent", UnitFrame_OnEvent)
     button:RegisterForClicks("AnyDown")
-    print(button:GetName(), "OnLoad end")
+    CUF:Debug(button:GetName(), "OnLoad end")
 end

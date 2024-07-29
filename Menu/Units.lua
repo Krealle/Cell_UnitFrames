@@ -9,14 +9,14 @@ local P = Cell.pixelPerfectFuncs
 local menu = CUF.Menu
 
 local function UpdateSize()
-    if menu.selectedLayout == Cell.vars.currentLayout then
-        Cell:Fire("UpdateLayout", menu.selectedLayout, menu.selectedUnit .. "-size")
+    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-size")
     end
 end
 
 local function UpdateArrangement()
-    if menu.selectedLayout == Cell.vars.currentLayout then
-        Cell:Fire("UpdateLayout", menu.selectedLayout, menu.selectedUnit .. "-arrangement")
+    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-arrangement")
     end
 end
 
@@ -26,7 +26,7 @@ local function AddLoadPageDB(unit)
     local function LoadPageDB(page)
         if page ~= unit.id then return end
 
-        local pageLayoutTable = menu.selectedLayoutTable[page]
+        local pageLayoutTable = CUF.vars.selectedLayoutTable[page]
         -- size
         unit.widthSlider:SetValue(pageLayoutTable["size"][1])
         unit.heightSlider:SetValue(pageLayoutTable["size"][2])
@@ -52,7 +52,7 @@ local function AddLoadPageDB(unit)
             unit.anchorDropdown:SetEnabled(not pageLayoutTable["sameSizeAsPlayer"])
         end
 
-        unit.unitFrameCB:SetChecked(menu.selectedLayoutTable[unit.id]["enabled"])
+        unit.unitFrameCB:SetChecked(CUF.vars.selectedLayoutTable[unit.id]["enabled"])
     end
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unit.id .. "_LoadPageDB", LoadPageDB)
 end
@@ -71,11 +71,13 @@ for _, unit in pairs(CUF.units) do
             self.button = Cell:CreateButton(parent.unitAnchor, L[unitName], "accent-hover", { 85, 17 })
             self.button.id = unit
 
+            local unitTable = CUF.vars.selectedLayoutTable[unit]
+
             self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable " .. unitName .. " Frame"],
                 function(checked)
-                    menu.selectedLayoutTable[unit]["enabled"] = checked
-                    if menu.selectedLayout == Cell.vars.currentLayout then
-                        Cell:Fire("UpdateLayout", menu.selectedLayout, unit)
+                    unitTable["enabled"] = checked
+                    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit)
                     end
                     Cell:Fire("UpdateVisibility", unit)
                 end)
@@ -85,15 +87,15 @@ for _, unit in pairs(CUF.units) do
                 -- same size as player
                 self.sameSizeAsPlayerCB = Cell:CreateCheckButton(self.frame, L["Use Same Size As Player"],
                     function(checked)
-                        menu.selectedLayoutTable[menu.selectedUnit]["sameSizeAsPlayer"] = checked
+                        unitTable["sameSizeAsPlayer"] = checked
                         self.widthSlider:SetEnabled(not checked)
                         self.heightSlider:SetEnabled(not checked)
                         self.powerSizeSlider:SetEnabled(not checked)
                         --self.anchorDropdown:SetEnabled(not checked)
                         -- update size and power
                         UpdateSize()
-                        if menu.selectedLayout == Cell.vars.currentLayout then
-                            Cell:Fire("UpdateLayout", menu.selectedLayout, menu.selectedUnit .. "-power")
+                        if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                            Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                         end
                     end)
                 self.sameSizeAsPlayerCB:SetPoint("TOPLEFT", self.unitFrameCB, "TOPRIGHT", 200, 0)
@@ -101,23 +103,23 @@ for _, unit in pairs(CUF.units) do
 
             -- width
             self.widthSlider = Cell:CreateSlider(L["Width"], self.frame, 20, 500, 117, 1, function(value)
-                menu.selectedLayoutTable[menu.selectedUnit]["size"][1] = value
+                unitTable["size"][1] = value
                 UpdateSize()
             end)
             self.widthSlider:SetPoint("TOPLEFT", self.unitFrameCB, 0, -50)
 
             -- height
             self.heightSlider = Cell:CreateSlider(L["Height"], self.frame, 20, 500, 117, 1, function(value)
-                menu.selectedLayoutTable[menu.selectedUnit]["size"][2] = value
+                unitTable["size"][2] = value
                 UpdateSize()
             end)
             self.heightSlider:SetPoint("TOPLEFT", self.widthSlider, 0, -55)
 
             -- power height
             self.powerSizeSlider = Cell:CreateSlider(L["Power Size"], self.frame, 0, 100, 117, 1, function(value)
-                menu.selectedLayoutTable[menu.selectedUnit]["powerSize"] = value
-                if menu.selectedLayout == Cell.vars.currentLayout then
-                    Cell:Fire("UpdateLayout", menu.selectedLayout, menu.selectedUnit .. "-power")
+                unitTable["powerSize"] = value
+                if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                    Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                 end
             end)
             self.powerSizeSlider:SetPoint("TOPLEFT", self.heightSlider, "TOPRIGHT", 30, 0)
@@ -130,7 +132,7 @@ for _, unit in pairs(CUF.units) do
                     ["text"] = L["BOTTOMLEFT"],
                     ["value"] = "BOTTOMLEFT",
                     ["onClick"] = function()
-                        menu.selectedLayoutTable[menu.selectedUnit]["anchor"] = "BOTTOMLEFT"
+                        unitTable["anchor"] = "BOTTOMLEFT"
                         UpdateArrangement()
                     end,
                 },
@@ -138,7 +140,7 @@ for _, unit in pairs(CUF.units) do
                     ["text"] = L["BOTTOMRIGHT"],
                     ["value"] = "BOTTOMRIGHT",
                     ["onClick"] = function()
-                        menu.selectedLayoutTable[menu.selectedUnit]["anchor"] = "BOTTOMRIGHT"
+                        unitTable["anchor"] = "BOTTOMRIGHT"
                         UpdateArrangement()
                     end,
                 },
@@ -146,7 +148,7 @@ for _, unit in pairs(CUF.units) do
                     ["text"] = L["TOPLEFT"],
                     ["value"] = "TOPLEFT",
                     ["onClick"] = function()
-                        menu.selectedLayoutTable[menu.selectedUnit]["anchor"] = "TOPLEFT"
+                        unitTable["anchor"] = "TOPLEFT"
                         UpdateArrangement()
                     end,
                 },
@@ -154,7 +156,7 @@ for _, unit in pairs(CUF.units) do
                     ["text"] = L["TOPRIGHT"],
                     ["value"] = "TOPRIGHT",
                     ["onClick"] = function()
-                        menu.selectedLayoutTable[menu.selectedUnit]["anchor"] = "TOPRIGHT"
+                        unitTable["anchor"] = "TOPRIGHT"
                         UpdateArrangement()
                     end,
                 },

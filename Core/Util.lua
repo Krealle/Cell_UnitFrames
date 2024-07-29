@@ -1,5 +1,7 @@
 ---@class CUF
 local CUF = select(2, ...)
+
+---@class CUF.Util
 CUF.Util = {}
 
 function CUF.Util.findChildByName(frame, name)
@@ -50,6 +52,43 @@ function CUF.Util:AddMissingProps(tableA, tableB)
             tableA[key] = bVal
         elseif type(bVal) == "table" then
             self:AddMissingProps(tableA[key], bVal)
+        end
+    end
+end
+
+---@param func function
+---@param unitToIterate string?
+function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
+    for _, unit in pairs(CUF.units) do
+        if not unitToIterate or unitToIterate == unit then
+            func(Cell.unitButtons[unit], unit, ...)
+        end
+    end
+end
+
+---@param fs FontString
+---@param text string
+---@param widthTable FontWidth
+---@param relativeTo Frame
+function CUF.Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
+    if not text or not widthTable then return end
+
+    if widthTable.type == "unlimited" then
+        fs:SetText(text)
+    elseif widthTable.type == "percentage" then
+        local percent = widthTable.value or 0.75
+        local width = relativeTo:GetWidth() - 2
+        for i = string.utf8len(text), 0, -1 do
+            fs:SetText(string.utf8sub(text, 1, i))
+            if fs:GetWidth() / width <= percent then
+                break
+            end
+        end
+    elseif widthTable.type == "length" then
+        if string.len(text) == string.utf8len(text) then -- en
+            fs:SetText(string.utf8sub(text, 1, widthTable.value))
+        else                                             -- non-en
+            fs:SetText(string.utf8sub(text, 1, widthTable.auxValue))
         end
     end
 end

@@ -21,7 +21,7 @@ local colorOpt = {
 local fontOpt = {
     ["size"] = 12,
     ["outline"] = "Outline",
-    ["shadow"] = false,
+    ["shadow"] = true,
     ["style"] = "Cell Default",
 }
 
@@ -51,26 +51,32 @@ local unitFrameIndicators = {
     },
 }
 
----@class CUF.defaults.width
+---@class FontWidth
 ---@field type "percentage" | "unlimited" | "length"
 ---@field value number
 ---@field auxValue number
+local defaultFontWidth = {
+    ["type"] = "percentage",
+    ["value"] = 0.75,
+    ["auxValue"] = 3,
+}
+CUF.defaults.fontWidth = defaultFontWidth
 
 ---@class NameWidgetTable
 ---@field enabled boolean
 ---@field color CUF.defaults.color
 ---@field font CUF.defaults.font
 ---@field position CUF.defaults.position
----@field width CUF.defaults.width
+---@field width FontWidth
 local nameWidget = {
     ["enabled"] = true,
     ["color"] = colorOpt,
     ["font"] = fontOpt,
     ["position"] = positionOpt,
-    ["width"] = { ["type"] = "percentage", ["value"] = 0.75, ["auxValue"] = 3 },
+    ["width"] = defaultFontWidth,
 }
 
----@class UnitFrrameWidgetsTable
+---@class UnitFrameWidgetsTable
 ---@field name NameWidgetTable
 local unitFrameWidgets = {
     ["name"] = nameWidget
@@ -84,7 +90,7 @@ local unitFrameWidgets = {
 ---@field tooltipPosition table<string, string>
 ---@field powerSize number
 ---@field anchor string
----@field widgets UnitFrrameWidgetsTable
+---@field widgets UnitFrameWidgetsTable
 CUF.defaults.unitFrame = {
     ["enabled"] = false,
     ["sameSizeAsPlayer"] = false,

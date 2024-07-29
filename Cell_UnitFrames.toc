@@ -23,6 +23,7 @@ Menu/MenuFrame.lua
 Menu/Menu.lua
 Menu/Units.lua
 
+Widgets/Handler.lua
 Widgets/Name.lua
 
 UnitFrames/UnitButton.xml

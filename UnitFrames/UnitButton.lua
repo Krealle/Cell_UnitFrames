@@ -9,6 +9,9 @@ local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
 local A = Cell.animations
 
+---@class CUF.widgets
+local W = CUF.widgets
+
 local UnitIsConnected = UnitIsConnected
 local InCombatLockdown = InCombatLockdown
 local GetUnitName = GetUnitName
@@ -255,44 +258,9 @@ local function ResetAuraTables(self)
     wipe(self._buffs_count_cache)
 end
 
--- MARK: Update Name
-
-local function UnitFrame_UpdateName(self)
-    local unit = self.states.unit
-    if not unit then return end
-
-    self.states.name = UnitName(unit)
-    self.states.fullName = F:UnitFullName(unit)
-    self.states.class = UnitClassBase(unit)
-    self.states.guid = UnitGUID(unit)
-    self.states.isPlayer = UnitIsPlayer(unit)
-
-    self.widgets.nameText:UpdateName()
-end
-
-local function UnitFrame_UpdateNameColor(self)
-    local unit = self.states.displayedUnit
-    if not unit then return end
-
-    self.class = UnitClassBase(unit) --! update class or it may be nil
-
-    if not Cell.vars.currentLayoutTable[unit] then
-        self.widgets.nameText:SetTextColor(1, 1, 1)
-        return
-    end
-
-    if not UnitIsConnected(unit) then
-        self.widgets.nameText:SetTextColor(F:GetClassColor(self.class))
-    else
-        if Cell.vars.currentLayoutTable[unit].widgets.name.color.type == "class_color" then
-            self.widgets.nameText:SetTextColor(F:GetClassColor(self.class))
-        else
-            self.widgets.nameText:SetTextColor(unpack(Cell.vars.currentLayoutTable[unit].widgets.name.color.rgb))
-        end
-    end
-end
-
+-------------------------------------------------
 -- MARK: Update Health bar
+-------------------------------------------------
 
 local function UnitFrame_UpdateHealthColor(self)
     local unit = self.states.unit
@@ -478,8 +446,8 @@ end
 local function UnitFrame_UpdateAll(self)
     if not self:IsVisible() then return end
 
-    UnitFrame_UpdateName(self)
-    UnitFrame_UpdateNameColor(self)
+    W:UnitFrame_UpdateName(self)
+    W:UnitFrame_UpdateNameColor(self)
     UnitFrame_UpdateHealthMax(self)
     UnitFrame_UpdateHealth(self)
     UnitFrame_UpdateHealthColor(self)
@@ -566,8 +534,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = 1
         elseif event == "UNIT_NAME_UPDATE" then
-            UnitFrame_UpdateName(self)
-            UnitFrame_UpdateNameColor(self)
+            W:UnitFrame_UpdateName(self)
+            W:UnitFrame_UpdateNameColor(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, arg)
         end
@@ -712,6 +680,7 @@ end
 -- ----------------------------------------------------------------------- --
 -- MARK:                                 OnLoad                            --
 -- ----------------------------------------------------------------------- --
+---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
 
@@ -719,6 +688,7 @@ function CUFUnitButton_OnLoad(button)
     InitAuraTables(button)
 
     button.widgets = {}
+    ---@diagnostic disable-next-line: missing-fields
     button.states = {}
     button.indicators = {}
 
@@ -765,7 +735,8 @@ function CUFUnitButton_OnLoad(button)
     deadTex:Hide()
 
     -- nameText
-    local nameText = healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    button.widgets.nameText = W:CreateNameText(healthBar, button)
+    --[[ healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.nameText = nameText
     nameText.width = { "percentage", 0.75 }
     nameText:ClearAllPoints()
@@ -781,7 +752,7 @@ function CUFUnitButton_OnLoad(button)
         name = name or F:GetNickname(button.states.name, button.states.fullName)
 
         F:UpdateTextWidth(nameText, name, nameText.width, button)
-    end
+    end ]]
 
     --[[ -- powerbar
     local powerBar = CreateFrame("StatusBar", buttonName .. "PowerBar", button)
@@ -823,3 +794,21 @@ function CUFUnitButton_OnLoad(button)
     button:RegisterForClicks("AnyDown")
     CUF:Debug(button:GetName(), "OnLoad end")
 end
+
+---@class CUFUnitButtonStates
+---@field unit string
+---@field displayedUnit string
+---@field name string
+---@field fullName string
+---@field class string
+---@field guid string?
+---@field isPlayer boolean
+
+---@class CUFUnitButton: Button, BackdropTemplate
+---@field widgets table
+---@field states CUFUnitButtonStates
+---@field indicators table
+---@field GetTargetPingGUID function
+---@field __unitGuid string
+---@field class string
+---@field _layout string

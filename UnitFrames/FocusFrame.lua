@@ -11,18 +11,18 @@ local focusFrame, anchorFrame, hoverFrame, config = B:CreateBaseUnitFrame(unit, 
 Cell.frames.focusFrame = focusFrame
 Cell.frames.focusFrameAnchor = anchorFrame
 
-local focusButton = CreateFrame("Button", "CellFocusButton", focusFrame, "CUFUnitButtonTemplate")
+local focusButton = CreateFrame("Button", "CellFocusButton", focusFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 focusButton:SetAttribute("unit", unit)
 focusButton:SetPoint("TOPLEFT")
 focusButton:HookScript("OnEvent", function(self, event)
     -- This frame should always be fully refreshed when focus changes
-    if event == "PLAYER_FOCUS_CHANGED" and focusButton and focusButton:IsVisible() then B.UpdateAll(focusButton) end
+    --if event == "PLAYER_FOCUS_CHANGED" and focusButton and focusButton:IsVisible() then B.UpdateAll(focusButton) end
 end)
 focusButton:HookScript("OnShow", function(self)
     self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 end)
 focusButton._layout = "Focus"
-Cell.unitButtons.focus[unit] = focusButton
+Cell.unitButtons.focus = focusButton
 
 -------------------------------------------------
 -- callbacks

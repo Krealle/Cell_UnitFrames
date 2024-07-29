@@ -6,23 +6,95 @@ local L = Cell.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
 
+---@class CUF.widgets
+local W = CUF.widgets
+---@class CUF.Util
+local Util = CUF.Util
+---@class CUF.widgets.Handler
+local Handler = CUF.widgetsHandler
+
 local menu = CUF.Menu
 
-local function UpdateText()
-    if menu.selectedLayout == Cell.vars.currentLayout then
-        CUF:Fire("UpdateWidget", menu.selectedLayout, menu.selectedUnit .. "-name")
+-------------------------------------------------
+-- MARK: Button Update Name
+-------------------------------------------------
+
+---@param button CUFUnitButton
+function W:UnitFrame_UpdateName(button)
+    local unit = button.states.unit
+    if not unit then return end
+
+    button.states.name = UnitName(unit)
+    button.states.fullName = F:UnitFullName(unit)
+    button.states.class = UnitClassBase(unit)
+    button.states.guid = UnitGUID(unit)
+    button.states.isPlayer = UnitIsPlayer(unit)
+
+    button.widgets.nameText:UpdateName()
+end
+
+---@param button CUFUnitButton
+function W:UnitFrame_UpdateNameColor(button)
+    local unit = button.states.displayedUnit
+    if not unit then return end
+
+    button.class = UnitClassBase(unit) --! update class or it may be nil
+
+    if not Cell.vars.currentLayoutTable[unit] then
+        button.widgets.nameText:SetTextColor(1, 1, 1)
+        return
+    end
+
+    if not UnitIsConnected(unit) then
+        button.widgets.nameText:SetTextColor(F:GetClassColor(button.class))
+    else
+        if Cell.vars.currentLayoutTable[unit].widgets.name.color.type == "class_color" then
+            button.widgets.nameText:SetTextColor(F:GetClassColor(button.class))
+        else
+            button.widgets.nameText:SetTextColor(unpack(Cell.vars.currentLayoutTable[unit].widgets.name.color.rgb))
+        end
     end
 end
 
--- MARK: Name Widgth
+-------------------------------------------------
+-- MARK: CreateNameText
+-------------------------------------------------
+
+---@param parent Frame
+---@param button CUFUnitButton
+---@return nameTextWidget nameText
+function W:CreateNameText(parent, button)
+    ---@class nameTextWidget: FontString
+    local nameText = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    button.widgets.nameText = nameText
+    nameText.width = CUF.defaults.fontWidth
+    nameText:ClearAllPoints()
+    nameText:SetPoint("CENTER", 0, 0)
+    nameText:SetFont("Cell Default", 12, "Outline")
+
+    function nameText:UpdateName()
+        local name
+
+        if CELL_NICKTAG_ENABLED and Cell.NickTag then
+            name = Cell.NickTag:GetNickname(button.states.name, nil, true)
+        end
+        name = name or F:GetNickname(button.states.name, button.states.fullName)
+
+        Util:UpdateTextWidth(nameText, name, nameText.width, button)
+    end
+
+    return nameText
+end
+
+-------------------------------------------------
+-- MARK: CreateNameWidth
+-------------------------------------------------
 
 local function CreateNameWidth(parent)
     local f = CreateFrame("Frame", nil, parent)
     P:Size(f, 117, 20)
 
     local dropdown, percentDropdown, lengthEB, lengthEB2
-
-    local styleTable = menu.selectedLayoutTable[menu.selectedUnit].widgets.name
 
     dropdown = Cell:CreateDropdown(f, 117)
     dropdown:SetPoint("TOPLEFT")
@@ -31,8 +103,8 @@ local function CreateNameWidth(parent)
         {
             ["text"] = L["Unlimited"],
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.type = "unlimited"
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.type = "unlimited"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 percentDropdown:Hide()
                 lengthEB:Hide()
                 lengthEB2:Hide()
@@ -43,9 +115,9 @@ local function CreateNameWidth(parent)
         {
             ["text"] = L["Percentage"],
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.type = "percentage"
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 0.75
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.type = "percentage"
+                CUF.vars.selectedWidgetTable.name.width.value = 0.75
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 percentDropdown:SetSelectedValue(0.75)
                 percentDropdown:Show()
                 lengthEB:Hide()
@@ -57,10 +129,10 @@ local function CreateNameWidth(parent)
         {
             ["text"] = L["Length"],
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.type = "length"
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 5
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.auxValue = 3
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.type = "length"
+                CUF.vars.selectedWidgetTable.name.width.value = 5
+                CUF.vars.selectedWidgetTable.name.width.auxValue = 3
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 percentDropdown:Hide()
                 lengthEB:SetText(5)
                 lengthEB:Show()
@@ -80,32 +152,32 @@ local function CreateNameWidth(parent)
             ["text"] = "100%",
             ["value"] = 1,
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 1
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.value = 1
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
             end,
         },
         {
             ["text"] = "75%",
             ["value"] = 0.75,
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 0.75
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.value = 0.75
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
             end,
         },
         {
             ["text"] = "50%",
             ["value"] = 0.5,
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 0.5
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.value = 0.5
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
             end,
         },
         {
             ["text"] = "25%",
             ["value"] = 0.25,
             ["onClick"] = function()
-                menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = 0.25
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.width.value = 0.25
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
             end,
         },
     })
@@ -130,8 +202,8 @@ local function CreateNameWidth(parent)
         lengthEB.confirmBtn:Hide()
         lengthEB.value = length
 
-        menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.value = length
-        UpdateText()
+        CUF.vars.selectedWidgetTable.name.width.value = length
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
     end)
 
     lengthEB:SetScript("OnTextChanged", function(self, userChanged)
@@ -165,8 +237,8 @@ local function CreateNameWidth(parent)
         lengthEB2.confirmBtn:Hide()
         lengthEB2.value = length
 
-        menu.selectedLayoutTable[menu.selectedUnit].widgets.name.width.auxValue = length
-        UpdateText()
+        CUF.vars.selectedWidgetTable.name.width.auxValue = length
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
     end)
 
     lengthEB2:SetScript("OnTextChanged", function(self, userChanged)
@@ -180,7 +252,7 @@ local function CreateNameWidth(parent)
         end
     end)
 
-    ---@param t CUF.defaults.width
+    ---@param t FontWidth
     function f:SetNameWidth(t)
         if t.type == "unlimited" then
             dropdown:SetSelectedItem(1)
@@ -208,7 +280,9 @@ local function CreateNameWidth(parent)
     return f
 end
 
--- MARK: Name Widget
+-------------------------------------------------
+-- MARK: AddWidget
+-------------------------------------------------
 
 menu:AddWidget(
 ---@param parent MenuFrame
@@ -222,13 +296,11 @@ menu:AddWidget(
         widget.button = Cell:CreateButton(parent.widgetAnchor, L["Name"], "accent-hover", { 85, 17 })
         widget.button.id = "name"
 
-        local styleTable = menu.selectedLayoutTable[menu.selectedUnit].widgets.name
-
         local nameCP = Cell:CreateColorPicker(widget.frame, "", false, function(r, g, b, a)
-            styleTable.color.rgb[1] = r
-            styleTable.color.rgb[2] = g
-            styleTable.color.rgb[3] = b
-            UpdateText()
+            CUF.vars.selectedWidgetTable.name.color.rgb[1] = r
+            CUF.vars.selectedWidgetTable.name.color.rgb[2] = g
+            CUF.vars.selectedWidgetTable.name.color.rgb[3] = b
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
         end)
 
         local nameColorDropdown = Cell:CreateDropdown(widget.frame, 117)
@@ -239,18 +311,18 @@ menu:AddWidget(
                 ["text"] = L["Class Color"],
                 ["value"] = "class_color",
                 ["onClick"] = function()
-                    styleTable.color.type = "class_color"
+                    CUF.vars.selectedWidgetTable.name.color.type = "class_color"
                     nameCP:Hide()
-                    UpdateText()
+                    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 end,
             },
             {
                 ["text"] = L["Custom Color"],
                 ["value"] = "custom",
                 ["onClick"] = function()
-                    styleTable.color.type = "custom"
+                    CUF.vars.selectedWidgetTable.name.color.type = "custom"
                     nameCP:Show()
-                    UpdateText()
+                    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 end,
             },
         })
@@ -269,8 +341,8 @@ menu:AddWidget(
                 ["text"] = L[v],
                 ["value"] = v,
                 ["onClick"] = function()
-                    styleTable.position.anchor = v
-                    UpdateText()
+                    CUF.vars.selectedWidgetTable.name.position.anchor = v
+                    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 end,
             })
         end
@@ -279,15 +351,15 @@ menu:AddWidget(
         local nameXSlider = Cell:CreateSlider(L["X Offset"], widget.frame, -100, 100, 117, 1)
         nameXSlider:SetPoint("TOPLEFT", nameAnchorDropdown, "TOPRIGHT", 30, 0)
         nameXSlider.afterValueChangedFn = function(value)
-            styleTable.position.offsetX = value
-            UpdateText()
+            CUF.vars.selectedWidgetTable.name.position.offsetX = value
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
         end
 
         local nameYSlider = Cell:CreateSlider(L["Y Offset"], widget.frame, -100, 100, 117, 1)
         nameYSlider:SetPoint("TOPLEFT", nameXSlider, "TOPRIGHT", 30, 0)
         nameYSlider.afterValueChangedFn = function(value)
-            styleTable.position.offsetY = value
-            UpdateText()
+            CUF.vars.selectedWidgetTable.name.position.offsetY = value
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
         end
 
         local nameFontDropdown = Cell:CreateDropdown(widget.frame, 117)
@@ -297,8 +369,8 @@ menu:AddWidget(
         local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
         for _, item in pairs(items) do
             item["onClick"] = function()
-                styleTable.font.style = item["text"]
-                UpdateText()
+                CUF.vars.selectedWidgetTable.name.font.style = item["text"]
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
             end
         end
         nameFontDropdown:SetItems(items)
@@ -317,8 +389,8 @@ menu:AddWidget(
                 ["text"] = L[v],
                 ["value"] = v,
                 ["onClick"] = function()
-                    styleTable.font.outline = v
-                    UpdateText()
+                    CUF.vars.selectedWidgetTable.name.font.outline = v
+                    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
                 end,
             })
         end
@@ -327,13 +399,13 @@ menu:AddWidget(
         local nameSizeSilder = Cell:CreateSlider(L["Size"], widget.frame, 5, 50, 117, 1)
         nameSizeSilder:SetPoint("TOPLEFT", nameOutlineDropdown, "TOPRIGHT", 30, 0)
         nameSizeSilder.afterValueChangedFn = function(value)
-            styleTable.font.size = value
-            UpdateText()
+            CUF.vars.selectedWidgetTable.name.font.size = value
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
         end
 
         local nameShadowCB = Cell:CreateCheckButton(widget.frame, L["Shadow"], function(checked, self)
-            styleTable.font.shadow = checked
-            UpdateText()
+            CUF.vars.selectedWidgetTable.name.font.shadow = checked
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, "name")
         end)
         nameShadowCB:SetPoint("TOPLEFT", nameFontDropdown, "BOTTOMLEFT", 0, -10)
 
@@ -342,7 +414,7 @@ menu:AddWidget(
         local function LoadPageDB(page, subPage)
             if not page and subPage ~= "name" then return end
 
-            local pageLayoutTable = menu.selectedLayoutTable[page or menu.selectedUnit].widgets.name
+            local pageLayoutTable = CUF.vars.selectedWidgetTable.name
 
             nameCP:SetColor(pageLayoutTable.color.rgb[1], pageLayoutTable.color.rgb[2], pageLayoutTable.color.rgb[3])
             nameColorDropdown:SetSelectedValue(pageLayoutTable.color.type)
@@ -367,3 +439,44 @@ menu:AddWidget(
 
         return widget
     end)
+
+-------------------------------------------------
+-- MARK: Callback
+-------------------------------------------------
+
+---@param button CUFUnitButton
+local function UpdateButtonText(button, unit)
+    CUF:Debug("UpdateButtonText", unit)
+
+    local styleTable = CUF.vars.selectedLayoutTable[unit].widgets.name
+
+    button.widgets.nameText:ClearAllPoints()
+    button.widgets.nameText:SetPoint(styleTable.position.anchor, button,
+        styleTable.position.offsetX,
+        styleTable.position.offsetY)
+
+    local font = F:GetFont(styleTable.font.style)
+
+    local fontFlags
+    if styleTable.font.outline == "None" then
+        fontFlags = ""
+    elseif styleTable.font.outline == "Outline" then
+        fontFlags = "OUTLINE"
+    else
+        fontFlags = "OUTLINE,MONOCHROME"
+    end
+
+    button.widgets.nameText:SetFont(font, styleTable.font.size, fontFlags)
+
+    if styleTable.font.shadow then
+        button.widgets.nameText:SetShadowOffset(1, -1)
+        button.widgets.nameText:SetShadowColor(0, 0, 0, 1)
+    else
+        button.widgets.nameText:SetShadowOffset(0, 0)
+        button.widgets.nameText:SetShadowColor(0, 0, 0, 0)
+    end
+
+    button.widgets.nameText.width = styleTable.width
+    button.widgets.nameText:UpdateName()
+end
+Handler:RegisterWidget(UpdateButtonText, "name")

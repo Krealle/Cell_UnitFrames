@@ -2,24 +2,16 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
-local P = Cell.pixelPerfectFuncs
 local Util = CUF.Util
 
 local menuWindow = CUF.MenuWindow
 
 ---@class CUF.Menu
+---@field selectedWidgetTable UnitFrameWidgetsTable
 local menu = {}
-menu = {}
 menu.window = menuWindow
 menu.unitsToAdd = {}
 menu.widgetsToAdd = {}
-menu.selectedLayout = Cell.vars.currentLayout
----@type LayoutTable
-menu.selectedLayoutTable = Cell.vars.currentLayoutTable
-menu.selectedUnit = "player"
-menu.selectedWidget = "name"
-menu.selectedWidgetTable = {}
 menu.init = false
 menu.hookInit = false
 
@@ -40,28 +32,30 @@ end
 ---@param unit string|nil
 ---@param widget string|nil
 function menu:UpdateSelected(unit, widget)
+    CUF:Debug("UpdateSelected:", unit, widget)
+
     if unit then
-        self.selectedUnit = unit
-        self.selectedWidgetTable = self.selectedLayoutTable[unit].widgets
+        CUF.vars.selectedUnit = unit
+        CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[unit].widgets
     end
 
     if widget then
-        self.selectedWidget = widget
+        CUF.vars.selectedWidget = widget
     end
 
-    CUF:Debug("UpdateSelected:", unit, widget)
     CUF:Fire("LoadPageDB", unit, widget)
 end
 
 -- Load layout from DB
 ---@param layout string
 local function LoadLayoutDB(layout)
-    menu.selectedLayout = layout
-    menu.selectedLayoutTable = CellDB["layouts"][layout]
-    menu.selectedWidgetTable = menu.selectedLayoutTable[menu.selectedUnit].widgets
+    CUF:Debug("LoadLayoutDB:", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
-    CUF:Debug("LoadLayoutDB:", menu.selectedUnit, menu.selectedWidget)
-    CUF:Fire("LoadPageDB", menu.selectedUnit, menu.selectedWidget)
+    CUF.vars.selectedLayout = layout
+    CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
+    CUF.vars.selectedWidgetTable = CellDB["layouts"][layout][CUF.vars.selectedUnit].widgets
+
+    CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateVisibility")
 end
 

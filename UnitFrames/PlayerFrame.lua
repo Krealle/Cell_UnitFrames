@@ -11,11 +11,11 @@ local playerFrame, anchorFrame, hoverFrame, config = B:CreateBaseUnitFrame(unit,
 Cell.frames.playerFrame = playerFrame
 Cell.frames.playerFrameAnchor = anchorFrame
 
-local playerButton = CreateFrame("Button", "CellPlayerButton", playerFrame, "CUFUnitButtonTemplate")
+local playerButton = CreateFrame("Button", "CellPlayerButton", playerFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 playerButton:SetAttribute("unit", unit)
 playerButton:SetPoint("TOPLEFT")
 playerButton._layout = "Player"
-Cell.unitButtons.player[unit] = playerButton
+Cell.unitButtons.player = playerButton
 
 -------------------------------------------------
 -- callbacks

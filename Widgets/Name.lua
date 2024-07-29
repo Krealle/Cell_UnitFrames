@@ -32,6 +32,7 @@ function W:UnitFrame_UpdateName(button)
     button.states.class = UnitClassBase(unit) --! update class or it may be nil
 
     button.widgets.nameText:UpdateName()
+    button.widgets.nameText:UpdateTextColor()
 end
 
 -------------------------------------------------
@@ -59,6 +60,25 @@ function W:CreateNameText(parent, button)
         name = name or F:GetNickname(button.states.name, button.states.fullName)
 
         Util:UpdateTextWidth(nameText, name, nameText.width, button)
+    end
+
+    function nameText:UpdateTextColor()
+        if not Cell.vars.currentLayoutTable[button.states.unit] then
+            button.widgets.nameText:SetTextColor(1, 1, 1)
+            return
+        end
+
+        if not UnitIsConnected(button.states.unit) then
+            button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
+        else
+            if CUF.vars.selectedLayoutTable[button.states.unit].widgets.name.color.type == "class_color" then
+                button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
+            else
+                button.widgets.nameText:SetTextColor(unpack(CUF.vars.selectedLayoutTable[button.states.unit].widgets
+                    .name
+                    .color.rgb))
+            end
+        end
     end
 
     return nameText
@@ -456,20 +476,6 @@ local function UpdateButtonText(button, unit)
 
     button.widgets.nameText.width = styleTable.width
     button.widgets.nameText:UpdateName()
-
-    if not Cell.vars.currentLayoutTable[unit] then
-        button.widgets.nameText:SetTextColor(1, 1, 1)
-        return
-    end
-
-    if not UnitIsConnected(unit) then
-        button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
-    else
-        if styleTable.color.type == "class_color" then
-            button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
-        else
-            button.widgets.nameText:SetTextColor(unpack(styleTable.color.rgb))
-        end
-    end
+    button.widgets.nameText:UpdateTextColor()
 end
 Handler:RegisterWidget(UpdateButtonText, "name")

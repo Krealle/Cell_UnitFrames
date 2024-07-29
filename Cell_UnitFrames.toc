@@ -14,11 +14,14 @@
 
 ## Notes: Unitframes for our beloved Cell!
 
-Core.lua
-Util.lua
+Defaults.lua
 
-Options.lua
+Core/Util.lua
+Core/Core.lua
 
+Menu/MenuFrame.lua
+Menu/Menu.lua
+Menu/Units.lua
 UnitFrames/UnitButton.lua
 UnitFrames/PlayerFrame.lua
 UnitFrames/FocusFrame.lua

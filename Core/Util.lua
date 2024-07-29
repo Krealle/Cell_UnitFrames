@@ -1,7 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
+CUF.Util = {}
 
-function CUF.findChildByName(frame, name)
+function CUF.Util.findChildByName(frame, name)
     for _, child in pairs({ frame:GetChildren() }) do
         local childName = child:GetName() or (child.title and child.title:GetText()) or ""
 
@@ -11,10 +12,44 @@ function CUF.findChildByName(frame, name)
     end
 end
 
-function CUF.findChildByProp(frame, prop)
+function CUF.Util.findChildByProp(frame, prop)
     for _, child in pairs({ frame:GetChildren() }) do
         if child[prop] then
             return child
+        end
+    end
+end
+
+function CUF.Util:SafeTableMerge(tableA, tableB, overwrite)
+    if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
+
+    for key, bVal in pairs(tableB) do
+        local aVal = tableA[key]
+
+        if not aVal or type(aVal) ~= type(bVal) then
+            tableA[key] = bVal
+        elseif type(bVal) == "table" then
+            if not overwrite then
+                self:SafeTableMerge(aVal, bVal, overwrite)
+            else
+                tableA[key] = bVal
+            end
+        elseif overwrite then
+            tableA[key] = bVal
+        end
+    end
+end
+
+function CUF.Util:AddMissingProps(tableA, tableB)
+    if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
+
+    for key, bVal in pairs(tableB) do
+        if tableA[key] == nil then
+            tableA[key] = bVal
+        elseif type(tableA[key]) ~= type(bVal) then
+            tableA[key] = bVal
+        elseif type(bVal) == "table" then
+            self:AddMissingProps(tableA[key], bVal)
         end
     end
 end

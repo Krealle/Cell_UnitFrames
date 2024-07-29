@@ -99,8 +99,6 @@ function menuWindow:ShowMenu()
 
     self.unitsButtons[1]:Click()
     self.widgetsButtons[1]:Click()
-
-    self:UpdateHeight()
 end
 
 function menuWindow:HideMenu()

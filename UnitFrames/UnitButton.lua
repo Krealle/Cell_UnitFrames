@@ -258,160 +258,6 @@ local function ResetAuraTables(self)
     wipe(self._buffs_count_cache)
 end
 
--------------------------------------------------
--- MARK: Update Health bar
--------------------------------------------------
-
-local function UnitFrame_UpdateHealthColor(self)
-    local unit = self.states.unit
-    if not unit then return end
-
-    self.states.class = UnitClassBase(unit) --! update class
-
-    local barR, barG, barB
-    local lossR, lossG, lossB
-    local barA, lossA = 1, 1
-
-    if Cell.loaded then
-        barA = CellDB["appearance"]["barAlpha"]
-        lossA = CellDB["appearance"]["lossAlpha"]
-    end
-
-    if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
-        if not UnitIsConnected(unit) then
-            barR, barG, barB = 0.4, 0.4, 0.4
-            lossR, lossG, lossB = 0.4, 0.4, 0.4
-        elseif UnitIsCharmed(unit) then
-            barR, barG, barB, barA = 0.5, 0, 1, 1
-            lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
-        elseif self.states.inVehicle then
-            barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(self.states.healthPercent,
-                self.states.isDeadOrGhost or self.states.isDead, 0, 1, 0.2)
-        else
-            barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(self.states.healthPercent,
-                self.states.isDeadOrGhost or self.states.isDead, F:GetClassColor(self.states.class))
-        end
-    elseif F:IsPet(self.states.guid, self.states.unit) then -- pet
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(self.states.healthPercent,
-            self.states.isDeadOrGhost or self.states.isDead, 0.5, 0.5, 1)
-    else -- npc
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(self.states.healthPercent,
-            self.states.isDeadOrGhost or self.states.isDead, 0, 1, 0.2)
-    end
-
-    self.widgets.healthBar:SetStatusBarColor(barR, barG, barB, barA)
-    self.widgets.healthBarLoss:SetVertexColor(lossR, lossG, lossB, lossA)
-
-    --[[ if Cell.loaded and CellDB["appearance"]["healPrediction"][2] then
-        self.widgets.incomingHeal:SetVertexColor(CellDB["appearance"]["healPrediction"][3][1], CellDB["appearance"]["healPrediction"][3][2], CellDB["appearance"]["healPrediction"][3][3], CellDB["appearance"]["healPrediction"][3][4])
-    else
-        self.widgets.incomingHeal:SetVertexColor(barR, barG, barB, 0.4)
-    end ]]
-end
-
-local function UpdateUnitHealthState(self, diff)
-    local unit = self.states.displayedUnit
-
-    local health = UnitHealth(unit) + (diff or 0)
-    local healthMax = UnitHealthMax(unit)
-    health = min(health, healthMax) --! diff
-
-    self.states.health = health
-    self.states.healthMax = healthMax
-    self.states.totalAbsorbs = UnitGetTotalAbsorbs(unit)
-
-    if healthMax == 0 then
-        self.states.healthPercent = 0
-    else
-        self.states.healthPercent = health / healthMax
-    end
-
-    self.states.wasDead = self.states.isDead
-    self.states.isDead = health == 0
-    if self.states.wasDead ~= self.states.isDead then
-        --UnitButton_UpdateStatusText(self)
-        --I.UpdateStatusIcon_Resurrection(self)
-        if not self.states.isDead then
-            self.states.hasSoulstone = nil
-            --I.UpdateStatusIcon(self)
-        end
-    end
-
-    self.states.wasDeadOrGhost = self.states.isDeadOrGhost
-    self.states.isDeadOrGhost = UnitIsDeadOrGhost(unit)
-    if self.states.wasDeadOrGhost ~= self.states.isDeadOrGhost then
-        --I.UpdateStatusIcon_Resurrection(self)
-        UnitFrame_UpdateHealthColor(self)
-    end
-
-    --[[ if enabledIndicators["healthText"] and healthMax ~= 0 then
-        if indicatorBooleans["healthText"] then
-            if health == healthMax or self.states.isDeadOrGhost or self.states.isDead then
-                self.indicators.healthText:Hide()
-            else
-                self.indicators.healthText:SetValue(health, healthMax, self.states.totalAbsorbs)
-                self.indicators.healthText:Show()
-            end
-        else
-            self.indicators.healthText:SetValue(health, healthMax, self.states.totalAbsorbs)
-            self.indicators.healthText:Show()
-        end
-    else
-        self.indicators.healthText:Hide()
-    end ]]
-end
-
-local function UnitFrame_UpdateHealth(self, diff)
-    local unit = self.states.displayedUnit
-    if not unit then return end
-
-    UpdateUnitHealthState(self, diff)
-    local healthPercent = self.states.healthPercent
-
-    if barAnimationType == "Flash" then
-        self.widgets.healthBar:SetValue(self.states.health)
-        local diff = healthPercent - (self.states.healthPercentOld or healthPercent)
-        if diff >= 0 or self.states.healthMax == 0 then
-            B:HideFlash(self)
-        elseif diff <= -0.05 and diff >= -1 then --! player (just joined) UnitHealthMax(unit) may be 1 ====> diff == -maxHealth
-            B:ShowFlash(self, abs(diff))
-        end
-    else
-        self.widgets.healthBar:SetValue(self.states.health)
-    end
-
-    if Cell.vars.useGradientColor or Cell.vars.useFullColor then
-        UnitButton_UpdateHealthColor(self)
-    end
-
-    self.states.healthPercentOld = healthPercent
-
-    --[[ self.widgets.healthBar:SetValue(UnitHealth(unit)) ]]
-
-    if UnitIsDeadOrGhost(unit) then
-        self.widgets.deadTex:Show()
-    else
-        self.widgets.deadTex:Hide()
-    end
-end
-
-local function UnitFrame_UpdateHealthMax(self)
-    local unit = self.states.displayedUnit
-    if not unit then return end
-
-    UpdateUnitHealthState(self)
-
-    if barAnimationType == "Smooth" then
-        self.widgets.healthBar:SetMinMaxSmoothedValue(0, self.states.healthMax)
-    else
-        self.widgets.healthBar:SetMinMaxValues(0, self.states.healthMax)
-    end
-
-    if Cell.vars.useGradientColor or Cell.vars.useFullColor then
-        UnitButton_UpdateHealthColor(self)
-    end
-end
-
 -- MARK: Update InRange
 local function UnitFrame_UpdateInRange(self, ir)
     local unit = self.states.displayedUnit
@@ -447,9 +293,9 @@ local function UnitFrame_UpdateAll(self)
     if not self:IsVisible() then return end
 
     W:UnitFrame_UpdateName(self)
-    UnitFrame_UpdateHealthMax(self)
-    UnitFrame_UpdateHealth(self)
-    UnitFrame_UpdateHealthColor(self)
+    W:UnitFrame_UpdateHealthMax(self)
+    W:UnitFrame_UpdateHealth(self)
+    W:UnitFrame_UpdateHealthColor(self)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(self)
     --[[
@@ -526,10 +372,10 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             --UnitFrame_UpdateCasts(self, arg2)
         elseif event == "UNIT_HEALTH" then
-            UnitFrame_UpdateHealth(self)
+            W:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_MAXHEALTH" then
-            UnitFrame_UpdateHealthMax(self)
-            UnitFrame_UpdateHealth(self)
+            W:UnitFrame_UpdateHealthMax(self)
+            W:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = 1
         elseif event == "UNIT_NAME_UPDATE" then
@@ -708,49 +554,9 @@ function CUFUnitButton_OnLoad(button)
     button:SetBackdropColor(0, 0, 0, 1)
     button:SetBackdropBorderColor(unpack(CELL_BORDER_COLOR))
 
-    -- healthBar
-    local healthBar = CreateFrame("StatusBar", buttonName .. "HealthBar", button)
-    button.widgets.healthBar = healthBar
-
-    healthBar:SetStatusBarTexture(Cell.vars.texture)
-    healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
-    healthBar:SetPoint("TOPLEFT", button, "TOPLEFT", P:Scale(1), P:Scale(-1))
-    healthBar:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", P:Scale(-1), P:Scale(1))
-
-    -- heathLoss
-    local healthBarLoss = healthBar:CreateTexture(nil, "ARTWORK", nil, -7)
-    button.widgets.healthBarLoss = healthBarLoss
-    healthBarLoss:SetPoint("TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
-    healthBarLoss:SetPoint("BOTTOMRIGHT")
-    healthBarLoss:SetTexture(Cell.vars.texture)
-
-    -- dead texture
-    local deadTex = healthBar:CreateTexture(nil, "OVERLAY")
-    button.widgets.deadTex = deadTex
-    deadTex:SetAllPoints(healthBar)
-    deadTex:SetTexture(Cell.vars.whiteTexture)
-    deadTex:SetGradient("VERTICAL", CreateColor(0.545, 0, 0, 1), CreateColor(0, 0, 0, 1))
-    deadTex:Hide()
-
-    -- nameText
-    W:CreateNameText(healthBar, button)
-    --[[ healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
-    button.widgets.nameText = nameText
-    nameText.width = { "percentage", 0.75 }
-    nameText:ClearAllPoints()
-    nameText:SetPoint("CENTER", 0, 0)
-    nameText:SetFont("Cell Default", 12, "Outline")
-
-    function nameText:UpdateName()
-        local name
-
-        if CELL_NICKTAG_ENABLED and Cell.NickTag then
-            name = Cell.NickTag:GetNickname(button.states.name, nil, true)
-        end
-        name = name or F:GetNickname(button.states.name, button.states.fullName)
-
-        F:UpdateTextWidth(nameText, name, nameText.width, button)
-    end ]]
+    -- Widgets
+    W:CreateHealthBar(button, buttonName)
+    W:CreateNameText(button.widgets.healthBar, button)
 
     --[[ -- powerbar
     local powerBar = CreateFrame("StatusBar", buttonName .. "PowerBar", button)
@@ -762,8 +568,6 @@ function CUFUnitButton_OnLoad(button)
     powerBar:SetFrameLevel(button:GetFrameLevel() + 2)
     powerBar.SetBarValue = powerBar.SetValue ]]
 
-    -- smooth
-    Mixin(healthBar, SmoothStatusBarMixin)
     --Mixin(powerBar, SmoothStatusBarMixin)
 
     -- targetHighlight
@@ -801,6 +605,17 @@ end
 ---@field class string
 ---@field guid string?
 ---@field isPlayer boolean
+---@field health number
+---@field healthMax number
+---@field healthPercent number
+---@field healthPercentOld number
+---@field totalAbsorbs number
+---@field wasDead boolean
+---@field isDead boolean
+---@field wasDeadOrGhost boolean
+---@field isDeadOrGhost boolean
+---@field hasSoulstone boolean
+---@field inVehicle boolean
 
 ---@class CUFUnitButton: Button, BackdropTemplate
 ---@field widgets table

@@ -7,6 +7,11 @@ local P = Cell.pixelPerfectFuncs
 local F = Cell.funcs
 
 ---@class MenuFrame
+---@field window CellCombatFrame
+---@field units table<Units, UnitsMenuPage>
+---@field unitsButtons table<UnitMenuPageButton>
+---@field widgets table<Units, WidgetsMenuPage>
+---@field widgetsButtons table<WidgetMenuPageButton>
 local menuWindow = {}
 menuWindow.units = {}
 menuWindow.unitsButtons = {}
@@ -49,7 +54,8 @@ function menuWindow:InitUnits()
     CUF:Debug("menuWindow - InitUnits")
     local prevButton
 
-    for idx, fn in pairs(CUF.Menu.unitsToAdd) do
+    for _, fn in pairs(CUF.Menu.unitsToAdd) do
+        ---@type UnitsMenuPage
         local unit = fn(self)
 
         self.units[unit.id] = unit
@@ -71,7 +77,8 @@ function menuWindow:InitWidgets()
     CUF:Debug("menuWindow - InitWidgets")
     local prevButton
 
-    for idx, fn in pairs(CUF.Menu.widgetsToAdd) do
+    for _, fn in pairs(CUF.Menu.widgetsToAdd) do
+        ---@type WidgetsMenuPage
         local widget = fn(self)
 
         self.widgets[widget.id] = widget

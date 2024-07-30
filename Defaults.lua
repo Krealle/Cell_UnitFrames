@@ -83,14 +83,6 @@ local unitFrameWidgets = {
 }
 
 ---@class Layout
----@field enabled boolean
----@field sameSizeAsPlayer boolean
----@field size table<number, number>
----@field position table<string, number>
----@field tooltipPosition table<string, string>
----@field powerSize number
----@field anchor string
----@field widgets UnitFrameWidgetsTable
 CUF.defaults.unitFrame = {
     ["enabled"] = false,
     ["sameSizeAsPlayer"] = false,
@@ -102,6 +94,3 @@ CUF.defaults.unitFrame = {
     ["widgets"] = unitFrameWidgets,
     --[[ ["indicators"] = unitFrameIndicators, ]]
 }
-
----@alias LayoutTable table<string, Layout>
----@alias CellDB table<string, LayoutTable>

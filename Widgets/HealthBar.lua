@@ -135,7 +135,7 @@ function W:UnitFrame_UpdateHealth(button, diff)
 
     if CellDB["appearance"]["barAnimation"] == "Flash" then
         button.widgets.healthBar:SetValue(button.states.health)
-        local diff = healthPercent - (button.states.healthPercentOld or healthPercent)
+        diff = healthPercent - (button.states.healthPercentOld or healthPercent)
         if diff >= 0 or button.states.healthMax == 0 then
             B:HideFlash(button)
         elseif diff <= -0.05 and diff >= -1 then --! player (just joined) UnitHealthMax(unit) may be 1 ====> diff == -maxHealth
@@ -150,8 +150,6 @@ function W:UnitFrame_UpdateHealth(button, diff)
     end
 
     button.states.healthPercentOld = healthPercent
-
-    --[[ self.widgets.healthBar:SetValue(UnitHealth(unit)) ]]
 
     if UnitIsDeadOrGhost(unit) then
         button.widgets.deadTex:Show()

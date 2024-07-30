@@ -3,8 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local L = Cell.L
-local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 local menu = CUF.Menu
 
@@ -20,9 +18,10 @@ local function UpdateArrangement()
     end
 end
 
+---@param unit UnitsMenuPage
 local function AddLoadPageDB(unit)
     -- Load page from DB
-    ---@param page string
+    ---@param page Units
     local function LoadPageDB(page)
         if page ~= unit.id then return end
         -- size
@@ -60,8 +59,11 @@ for _, unit in pairs(CUF.vars.units) do
 
     menu:AddUnit(
     ---@param parent MenuFrame
+    ---@return UnitsMenuPage
         function(parent)
+            ---@class UnitsMenuPage
             local self = {}
+
             self.frame = CreateFrame("Frame", nil, parent.unitAnchor)
             self.id = unit
 

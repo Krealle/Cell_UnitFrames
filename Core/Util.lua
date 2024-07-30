@@ -4,8 +4,12 @@ local CUF = select(2, ...)
 ---@class CUF.Util
 CUF.Util = {}
 
+---@param frame Frame
+---@param name string
+---@return Frame|CellUnknowFrame? child
 function CUF.Util.findChildByName(frame, name)
     for _, child in pairs({ frame:GetChildren() }) do
+        ---@cast child CellUnknowFrame
         local childName = child:GetName() or (child.title and child.title:GetText()) or ""
 
         if childName == name then
@@ -14,14 +18,21 @@ function CUF.Util.findChildByName(frame, name)
     end
 end
 
+---@param frame Frame
+---@param prop string
+---@return Frame|CellUnknowFrame? child
 function CUF.Util.findChildByProp(frame, prop)
     for _, child in pairs({ frame:GetChildren() }) do
+        ---@cast child CellUnknowFrame
         if child[prop] then
             return child
         end
     end
 end
 
+---@param tableA table
+---@param tableB table
+---@param overwrite boolean
 function CUF.Util:SafeTableMerge(tableA, tableB, overwrite)
     if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
 
@@ -42,6 +53,8 @@ function CUF.Util:SafeTableMerge(tableA, tableB, overwrite)
     end
 end
 
+---@param tableA table
+---@param tableB table
 function CUF.Util:AddMissingProps(tableA, tableB)
     if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
 
@@ -96,21 +109,29 @@ end
 -- Callbacks
 local callbacks = {}
 
+---@param eventName Callbacks
+---@param onEventFuncName string
+---@param onEventFunc function
 function CUF:RegisterCallback(eventName, onEventFuncName, onEventFunc)
     if not callbacks[eventName] then callbacks[eventName] = {} end
     callbacks[eventName][onEventFuncName] = onEventFunc
 end
 
+---@param eventName Callbacks
+---@param onEventFuncName string
 function CUF:UnregisterCallback(eventName, onEventFuncName)
     if not callbacks[eventName] then return end
     callbacks[eventName][onEventFuncName] = nil
 end
 
+---@param eventName Callbacks
 function CUF:UnregisterAllCallbacks(eventName)
     if not callbacks[eventName] then return end
     callbacks[eventName] = nil
 end
 
+---@param eventName Callbacks
+---@param ... any
 function CUF:Fire(eventName, ...)
     if not callbacks[eventName] then return end
 
@@ -119,11 +140,14 @@ function CUF:Fire(eventName, ...)
     end
 end
 
+---@param ... any
 function CUF:Debug(...)
     if not CUF.debug then return end
     print(...)
 end
 
+---@param data any
+---@param name string
 function CUF:DevAdd(data, name)
     if not CUF.debugDB or not DevTool then return end
 

@@ -22,11 +22,14 @@ Cell.unitButtons.target = targetButton
 -------------------------------------------------
 -- callbacks
 -------------------------------------------------
+
+---@param which string?
 local function UpdateMenu(which)
     U:UpdateUnitButtonMenu(which, unit, targetButton, anchorFrame, config)
 end
 Cell:RegisterCallback("UpdateMenu", "TargetFrame_UpdateMenu", UpdateMenu)
 
+---@param which string?
 local function UpdateLayout(_, which)
     U:UpdateUnitButtonLayout(unit, which, targetButton, anchorFrame)
 end
@@ -39,6 +42,7 @@ local function UpdatePixelPerfect()
 end
 Cell:RegisterCallback("UpdatePixelPerfect", "TargetFrame_UpdatePixelPerfect", UpdatePixelPerfect)
 
+---@param which string?
 local function TargetFrame_UpdateVisibility(which)
     U:UpdateUnitFrameVisibility(which, unit, targetButton, targetFrame)
 end

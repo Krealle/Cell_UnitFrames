@@ -286,6 +286,7 @@ end
 menu:AddWidget(
 ---@param parent MenuFrame
     function(parent)
+        ---@class WidgetsMenuPage
         local widget = {}
         widget.frame = CreateFrame("Frame", nil, parent.widgetAnchor)
         widget.id = "name"

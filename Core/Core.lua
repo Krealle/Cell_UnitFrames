@@ -4,6 +4,10 @@ _G.CUF = CUF
 
 CUF.Cell = Cell
 
+CellDB = CellDB --[[@as CellDB]]
+Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
+Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
+
 CUF.version = 2
 CUF.debug = true
 CUF.debugDB = true
@@ -15,11 +19,11 @@ CUF.uFuncs = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string
----@field selectedUnit string
----@field selectedWidget string
+---@field selectedUnit Units
+---@field selectedWidget Widgets
 ---@field selectedLayoutTable LayoutTable
----@field selectedWidgetTable table
----@field units table<Units>
+---@field selectedWidgetTable UnitFrameWidgetsTable
+---@field units table<number, Units>
 CUF.vars = {}
 CUF.vars.units = { "player", "target", "focus" }
 
@@ -61,7 +65,7 @@ end
 
 if type(CUFDB) ~= "table" then CUFDB = {} end
 
-for _, layout in pairs(CellDB["layouts"] --[[@as CellDB]]) do
+for _, layout in pairs(CellDB["layouts"]) do
     for _, unit in pairs(CUF.vars.units) do
         --layout[unit].widgets = nil
 

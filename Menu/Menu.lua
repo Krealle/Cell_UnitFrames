@@ -8,6 +8,8 @@ local menuWindow = CUF.MenuWindow
 
 ---@class CUF.Menu
 ---@field selectedWidgetTable UnitFrameWidgetsTable
+---@field unitsToAdd table<number, function>
+---@field widgetsToAdd table<number, function>
 local menu = {}
 menu.window = menuWindow
 menu.unitsToAdd = {}
@@ -85,8 +87,13 @@ local function UpdatePreview()
     if not menu.init or menu.hookInit then return end
 
     local layoutsTab = Util.findChildByName(Cell.frames.optionsFrame, "CellOptionsFrame_LayoutsTab")
+    if not layoutsTab then return end
+
     local layoutPane = Util.findChildByName(layoutsTab, "Layout")
+    if not layoutPane then return end
+
     local layoutDropdown = Util.findChildByProp(layoutPane, "items")
+    if not layoutDropdown then return end
 
     hooksecurefunc(layoutDropdown, "SetSelected", function(self)
         LoadLayoutDB(self:GetSelected())

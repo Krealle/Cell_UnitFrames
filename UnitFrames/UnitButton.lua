@@ -155,7 +155,7 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
 end
 
 ---@param unit Units
----@param which string
+---@param which string?
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
@@ -221,7 +221,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     end
 end
 
----@param which string
+---@param which string?
 ---@param unit Units
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
@@ -248,7 +248,7 @@ function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
     end
 end
 
----@param which string
+---@param which string?
 ---@param unit Units
 ---@param button CUFUnitButton
 ---@param frame CUFUnitFrame
@@ -750,66 +750,3 @@ function CUFUnitButton_OnLoad(button)
     button:RegisterForClicks("AnyDown")
     CUF:Debug(button:GetName(), "OnLoad end")
 end
-
--------------------------------------------------
--- MARK: Types
--------------------------------------------------
-
----@class CUFUnitButtonStates
----@field unit string
----@field displayedUnit string
----@field name string
----@field fullName string
----@field class string
----@field guid string?
----@field isPlayer boolean
----@field health number
----@field healthMax number
----@field healthPercent number
----@field healthPercentOld number
----@field totalAbsorbs number
----@field wasDead boolean
----@field isDead boolean
----@field wasDeadOrGhost boolean
----@field isDeadOrGhost boolean
----@field hasSoulstone boolean
----@field inVehicle boolean
----@field role string
----@field powerType number
----@field powerMax number
----@field power number
----@field inRange boolean
----@field wasInRange boolean
-
----@class CUFUnitButton: Button, BackdropTemplate
----@field widgets CUFUnitButtonWidgets
----@field states CUFUnitButtonStates
----@field GetTargetPingGUID function
----@field __unitGuid string
----@field class string
----@field _layout string
----@field powerSize number
----@field _powerBarUpdateRequired boolean
----@field _updateRequired boolean
----@field __tickCount number
----@field __updateElapsed number
----@field __displayedGuid string?
----@field __unitName string
----@field __nameRetries number
----@field orientation string
----@field _casts table
----@field _timers table
----@field _buffs_cache table
----@field _buffs_count_cache table
-
----@class CUFUnitButtonWidgets
----@field healthBar HealthBarWidget
----@field healthBarLoss Texture
----@field deadTex Texture
----@field powerBar PowerBarWidget
----@field powerBarLoss Texture
----@field nameText NameTextWidget
----@field targetHighlight HighlightWidget
----@field mouseoverHighlight HighlightWidget
-
----@class HighlightWidget: BackdropTemplate, Frame

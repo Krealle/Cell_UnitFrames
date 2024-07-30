@@ -22,11 +22,14 @@ Cell.unitButtons.focus = focusButton
 -------------------------------------------------
 -- callbacks
 -------------------------------------------------
+
+---@param which string?
 local function UpdateMenu(which)
     U:UpdateUnitButtonMenu(which, unit, focusButton, anchorFrame, config)
 end
 Cell:RegisterCallback("UpdateMenu", "FocusFrame_UpdateMenu", UpdateMenu)
 
+---@param which string?
 local function UpdateLayout(_, which)
     U:UpdateUnitButtonLayout(unit, which, focusButton, anchorFrame)
 end
@@ -39,6 +42,7 @@ local function UpdatePixelPerfect()
 end
 Cell:RegisterCallback("UpdatePixelPerfect", "FocusFrame_UpdatePixelPerfect", UpdatePixelPerfect)
 
+---@param which string?
 local function FocusFrame_UpdateVisibility(which)
     U:UpdateUnitFrameVisibility(which, unit, focusButton, focusFrame)
 end

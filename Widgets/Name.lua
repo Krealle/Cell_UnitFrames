@@ -74,10 +74,10 @@ function W:CreateNameText(button)
         if not UnitIsConnected(button.states.unit) then
             button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
         else
-            if CUF.vars.selectedLayoutTable[button.states.unit].widgets.name.color.type == "class_color" then
+            if Cell.vars.currentLayoutTable[button.states.unit].widgets.name.color.type == "class_color" then
                 button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
             else
-                button.widgets.nameText:SetTextColor(unpack(CUF.vars.selectedLayoutTable[button.states.unit].widgets
+                button.widgets.nameText:SetTextColor(unpack(Cell.vars.currentLayoutTable[button.states.unit].widgets
                     .name
                     .color.rgb))
             end

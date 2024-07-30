@@ -621,6 +621,10 @@ end
 ---@field isDeadOrGhost boolean
 ---@field hasSoulstone boolean
 ---@field inVehicle boolean
+---@field role string
+---@field powerType number
+---@field powerMax number
+---@field power number
 
 ---@class CUFUnitButton: Button, BackdropTemplate
 ---@field widgets CUFUnitButtonWidgets

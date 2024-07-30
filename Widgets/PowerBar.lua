@@ -49,6 +49,7 @@ function W:UnitFrame_UpdatePowerTextColor(button)
     end
 end ]]
 
+---@param button CUFUnitButton
 function W:UnitFrame_UpdatePowerMax(button)
     local unit = button.states.displayedUnit
     if not unit then return end
@@ -65,6 +66,7 @@ function W:UnitFrame_UpdatePowerMax(button)
     --[[ function W:UnitFrame_UpdatePowerText(button) ]]
 end
 
+---@param button CUFUnitButton
 function W:UnitFrame_UpdatePower(button)
     local unit = button.states.displayedUnit
     if not unit then return end
@@ -76,6 +78,7 @@ function W:UnitFrame_UpdatePower(button)
     --[[ function W:UnitFrame_UpdatePowerText(button) ]]
 end
 
+---@param button CUFUnitButton
 function W:UnitFrame_UpdatePowerType(button)
     local unit = button.states.displayedUnit
     if not unit then return end

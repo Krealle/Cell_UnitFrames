@@ -39,6 +39,30 @@ function Builder:AnchorBelow(option, parent, prevOptions)
     end
 end
 
+---@param parent Frame
+---@param widgetName Widgets
+---@return EnabledCheckBox
+function Builder:CreatEnabledCheckBox(parent, widgetName)
+    ---@class EnabledCheckBox
+    local f = CreateFrame("Frame", nil, parent)
+    P:Size(f, 117, 20)
+    f:SetPoint("TOPLEFT", parent, 5, -27)
+
+    local checkbox = Cell:CreateCheckButton(f, L["Enabled"], function(checked)
+        CUF.vars.selectedWidgetTable[widgetName].enabled = checked
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+    end)
+    checkbox:SetPoint("TOPLEFT")
+    checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+
+    local function LoadPageDB()
+        checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "Enabled")
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: CreateNameWidth
 -------------------------------------------------

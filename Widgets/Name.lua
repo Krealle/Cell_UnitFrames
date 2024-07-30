@@ -92,20 +92,20 @@ end
 -- MARK: AddWidget
 -------------------------------------------------
 ---@param parent MenuFrame
----@param widgetName Widgets
----@param pageName string
-local function CreateNamePage(parent, widgetName, pageName)
+local function CreateNamePage(parent)
     ---@class WidgetsMenuPage
     local widget = {}
     widget.frame = CreateFrame("Frame", nil, parent.widgetAnchor)
     widget.id = "nameText"
-    widget.height = 200
+    widget.height = 250
 
     -- button
     widget.button = Cell:CreateButton(parent.widgetAnchor, L["Name"], "accent-hover", { 85, 17 })
     widget.button.id = "nameText"
 
-    local colorPicker = Builder:CreateUnitColorOptions(widget.frame, "nameText")
+    local enabledCheckBox = Builder:CreatEnabledCheckBox(widget.frame, "nameText")
+
+    local colorPicker = Builder:CreateUnitColorOptions(widget.frame, "nameText", enabledCheckBox)
     local nameWidth = Builder:CreateNameWidthOption(widget.frame, "nameText")
     nameWidth:SetPoint("TOPLEFT", colorPicker, "TOPRIGHT", 30, 0)
 
@@ -123,6 +123,13 @@ function W.UpdateNameTextWidget(button, unit, widgetName)
     --CUF:Debug("UpdateTextWidget", unit, widgetName)
 
     local styleTable = CUF.vars.selectedLayoutTable[unit].widgets[widgetName]
+
+    if not styleTable.enabled then
+        button.widgets[widgetName]:Hide()
+        return
+    else
+        button.widgets[widgetName]:Show()
+    end
 
     button.widgets[widgetName]:ClearAllPoints()
     button.widgets[widgetName]:SetPoint(styleTable.position.anchor, button,

@@ -11,8 +11,6 @@ local B = Cell.bFuncs
 local W = CUF.widgets
 ---@class CUF.Util
 local Util = CUF.Util
----@class CUF.widgets.Handler
-local Handler = CUF.widgetsHandler
 
 --! AI followers, wrong value returned by UnitClassBase
 local UnitClassBase = function(unit)

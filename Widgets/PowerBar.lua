@@ -21,17 +21,15 @@ local Handler = CUF.widgetsHandler
 ---@param button CUFUnitButton
 ---@param size number
 function W:SetPowerSize(button, size)
-    print(GetTime(), "SetPowerSize", button:GetName(), button:IsShown(), button:IsVisible(), size)
+    --print(GetTime(), "SetPowerSize", button:GetName(), button:IsShown(), button:IsVisible(), size)
     button.powerSize = size
 
     if size == 0 then
         button:HidePowerBar()
     else
         if button:ShouldShowPowerBar() then
-            CUF:Debug("ShowPowerBar", button:GetName())
             button:ShowPowerBar()
         else
-            CUF:Debug("HidePowerBar", button:GetName())
             button:HidePowerBar()
         end
     end

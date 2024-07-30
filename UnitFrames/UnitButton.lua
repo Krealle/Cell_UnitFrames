@@ -537,7 +537,6 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             UnitButton_UpdateThreatBar(self) ]]
             UnitFrame_UpdateAll(self)
         elseif event == "PLAYER_FOCUS_CHANGED" then
-            print("PLAYER_FOCUS_CHANGED")
             UnitFrame_UpdateAll(self)
         end
     end
@@ -545,7 +544,7 @@ end
 
 ---@param self CUFUnitButton
 local function UnitFrame_OnShow(self)
-    CUF:Debug(GetTime(), "OnShow", self:GetName())
+    --CUF:Debug(GetTime(), "OnShow", self:GetName())
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
     self._powerBarUpdateRequired = true
     UnitFrame_RegisterEvents(self)
@@ -553,7 +552,7 @@ end
 
 ---@param self CUFUnitButton
 local function UnitFrame_OnHide(self)
-    CUF:Debug(GetTime(), "OnHide", self:GetName())
+    --CUF:Debug(GetTime(), "OnHide", self:GetName())
     UnitFrame_UnregisterEvents(self)
     ResetAuraTables(self)
 
@@ -689,7 +688,7 @@ end
 ---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
-    CUF:Debug(buttonName, "OnLoad")
+    --CUF:Debug(buttonName, "OnLoad")
 
     InitAuraTables(button)
 
@@ -748,5 +747,5 @@ function CUFUnitButton_OnLoad(button)
     --[[ button:SetScript("OnSizeChanged", UnitFrame_OnSizeChanged) ]]
     button:SetScript("OnEvent", UnitFrame_OnEvent)
     button:RegisterForClicks("AnyDown")
-    CUF:Debug(button:GetName(), "OnLoad end")
+    --CUF:Debug(button:GetName(), "OnLoad end")
 end

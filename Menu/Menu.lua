@@ -21,13 +21,13 @@ CUF.Menu = menu
 
 ---@param unit function
 function menu:AddUnit(unit)
-    CUF:Debug("Menu - AddUnit")
+    --CUF:Debug("Menu - AddUnit")
     table.insert(self.unitsToAdd, unit)
 end
 
 ---@param widget function
 function menu:AddWidget(widget)
-    CUF:Debug("Menu - AddWidget")
+    --CUF:Debug("Menu - AddWidget")
     table.insert(self.widgetsToAdd, widget)
 end
 
@@ -66,7 +66,7 @@ end
 ---@param tab string
 local function ShowTab(tab)
     if tab == "layouts" then
-        CUF:Debug("CUF - ShowTab")
+        --("CUF - ShowTab")
         LoadLayoutDB(Cell.vars.currentLayout)
 
         menuWindow:ShowMenu()

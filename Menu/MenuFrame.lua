@@ -22,7 +22,7 @@ CUF.MenuWindow = menuWindow
 
 ---@param unit string
 function menuWindow:SetUnit(unit)
-    CUF:Debug("menuWindow - SetUnit", unit)
+    --CUF:Debug("menuWindow - SetUnit", unit)
     -- Hide old unit
     if self.selectedUnit then
         self.selectedUnit.frame:Hide()
@@ -36,7 +36,7 @@ end
 
 ---@param widget string
 function menuWindow:SetWidget(widget)
-    CUF:Debug("menuWindow - SetWidget", widget)
+    --CUF:Debug("menuWindow - SetWidget", widget)
     -- Hide old widget
     if self.selectedWidget then
         self.selectedWidget.frame:Hide()
@@ -51,7 +51,7 @@ function menuWindow:SetWidget(widget)
 end
 
 function menuWindow:InitUnits()
-    CUF:Debug("menuWindow - InitUnits")
+    --CUF:Debug("menuWindow - InitUnits")
     local prevButton
 
     for _, fn in pairs(CUF.Menu.unitsToAdd) do
@@ -74,7 +74,7 @@ function menuWindow:InitUnits()
 end
 
 function menuWindow:InitWidgets()
-    CUF:Debug("menuWindow - InitWidgets")
+    --CUF:Debug("menuWindow - InitWidgets")
     local prevButton
 
     for _, fn in pairs(CUF.Menu.widgetsToAdd) do
@@ -97,7 +97,7 @@ function menuWindow:InitWidgets()
 end
 
 function menuWindow:ShowMenu()
-    CUF:Debug("menuWindow - ShowMenu")
+    --CUF:Debug("menuWindow - ShowMenu")
     if not self.window then
         self:Create()
     end
@@ -109,20 +109,20 @@ function menuWindow:ShowMenu()
 end
 
 function menuWindow:HideMenu()
-    CUF:Debug("menuWindow - HideMenu")
+    --CUF:Debug("menuWindow - HideMenu")
     if not self.window then return end
     self.window:Hide()
 end
 
 function menuWindow:UpdateHeight()
-    CUF:Debug("menuWindow - UpdateHeight")
+    --CUF:Debug("menuWindow - UpdateHeight")
     local widgetHeight = self.selectedWidget.height
 
     self.window:SetHeight(self.baseHeight + widgetHeight)
 end
 
 function menuWindow:Create()
-    CUF:Debug("menuWindow - Create")
+    --CUF:Debug("menuWindow - Create")
 
     local optionsFrame = Cell.frames.optionsFrame
 

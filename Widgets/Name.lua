@@ -39,11 +39,10 @@ end
 -- MARK: CreateNameText
 -------------------------------------------------
 
----@param parent Frame
 ---@param button CUFUnitButton
-function W:CreateNameText(parent, button)
+function W:CreateNameText(button)
     ---@class NameTextWidget: FontString
-    local nameText = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    local nameText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.nameText = nameText
     nameText.width = CUF.defaults.fontWidth
     nameText:ClearAllPoints()

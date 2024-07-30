@@ -557,19 +557,7 @@ function CUFUnitButton_OnLoad(button)
 
     -- Widgets
     W:CreateHealthBar(button, buttonName)
-    W:CreateNameText(button.widgets.healthBar, button)
-
-    --[[ -- powerbar
-    local powerBar = CreateFrame("StatusBar", buttonName .. "PowerBar", button)
-    button.widgets.powerBar = powerBar
-    -- P:Point(powerBar, "TOPLEFT", healthBar, "BOTTOMLEFT", 0, -1)
-    -- P:Point(powerBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
-    powerBar:SetStatusBarTexture(Cell.vars.texture)
-    powerBar:GetStatusBarTexture():SetDrawLayer("ARTWORK", -7)
-    powerBar:SetFrameLevel(button:GetFrameLevel() + 2)
-    powerBar.SetBarValue = powerBar.SetValue ]]
-
-    --Mixin(powerBar, SmoothStatusBarMixin)
+    W:CreateNameText(button)
 
     -- targetHighlight
     ---@class HighlightWidget

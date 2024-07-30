@@ -49,7 +49,7 @@ end
 -- Load layout from DB
 ---@param layout string
 local function LoadLayoutDB(layout)
-    CUF:Debug("LoadLayoutDB:", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF:Debug("CUF - LoadLayoutDB:", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
     CUF.vars.selectedLayout = layout
     CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
@@ -64,6 +64,7 @@ end
 ---@param tab string
 local function ShowTab(tab)
     if tab == "layouts" then
+        CUF:Debug("CUF - ShowTab")
         LoadLayoutDB(Cell.vars.currentLayout)
 
         menuWindow:ShowMenu()

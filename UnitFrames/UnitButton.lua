@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local L = Cell.L
-local B = Cell.bFuncs
 local F = Cell.funcs
 local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
@@ -11,6 +10,8 @@ local A = Cell.animations
 
 ---@class CUF.widgets
 local W = CUF.widgets
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 
 local UnitIsConnected = UnitIsConnected
 local InCombatLockdown = InCombatLockdown
@@ -23,21 +24,37 @@ local GetAuraDataBySlot = C_UnitAuras.GetAuraDataBySlot
 -- MARK: Unit button
 -------------------------------------------------
 
-function B:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)
+---@param unit Units
+---@param tooltipPoint AnchorPoint
+---@param tooltipRelativePoint AnchorPoint
+---@param tooltipX number
+---@param tooltipY number
+function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)
     Cell.vars.currentLayoutTable[unit]["tooltipPosition"] = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
 end
 
-function B:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
+---@param unit Units
+---@param configTitle string
+---@param onEnterLogic function?
+---@return CUFUnitFrame Frame
+---@return CUFAnchorFrame anchorFrame
+---@return CUFHoverFrame Frame
+---@return CUFConfigButton config
+function U:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
     local name = unit:gsub("^%l", string.upper)
+
+    ---@class CUFUnitFrame
     local frame = CreateFrame("Frame", "Cell" .. name .. "Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
 
     -- Anchor
+    ---@class CUFAnchorFrame
     local anchorFrame = CreateFrame("Frame", "Cell" .. name .. "AnchorFrame", frame)
     PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
     anchorFrame:SetMovable(true)
     anchorFrame:SetClampedToScreen(true)
 
     -- Hover
+    ---@class CUFHoverFrame
     local hoverFrame = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     hoverFrame:SetPoint("TOP", anchorFrame, 0, 1)
     hoverFrame:SetPoint("BOTTOM", anchorFrame, 0, -1)
@@ -46,6 +63,7 @@ function B:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
 
     A:ApplyFadeInOutToMenu(anchorFrame, hoverFrame)
 
+    ---@class CUFConfigButton
     local config = Cell:CreateButton(anchorFrame, nil, "accent", { 20, 10 }, false, true, nil, nil,
         "SecureHandlerAttributeTemplate,SecureHandlerClickTemplate")
     config:SetFrameStrata("MEDIUM")
@@ -84,7 +102,10 @@ function B:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
     return frame, anchorFrame, hoverFrame, config
 end
 
-function B:UpdateUnitButtonPosition(unit, button, anchorFrame)
+---@param unit Units
+---@param button CUFUnitButton
+---@param anchorFrame CUFAnchorFrame
+function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     local layout = Cell.vars.currentLayoutTable
 
     local anchor
@@ -103,37 +124,41 @@ function B:UpdateUnitButtonPosition(unit, button, anchorFrame)
 
         if anchor == "BOTTOMLEFT" then
             P:Point(button, "BOTTOMLEFT", anchorFrame, "TOPLEFT", 0, 4)
-            B:SaveTooltipPosition(unit, "TOPLEFT", "BOTTOMLEFT", 0, -3)
+            U:SaveTooltipPosition(unit, "TOPLEFT", "BOTTOMLEFT", 0, -3)
         elseif anchor == "BOTTOMRIGHT" then
             P:Point(button, "BOTTOMRIGHT", anchorFrame, "TOPRIGHT", 0, 4)
-            B:SaveTooltipPosition(unit, "TOPRIGHT", "BOTTOMRIGHT", 0, -3)
+            U:SaveTooltipPosition(unit, "TOPRIGHT", "BOTTOMRIGHT", 0, -3)
         elseif anchor == "TOPLEFT" then
             P:Point(button, "TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, -4)
-            B:SaveTooltipPosition(unit, "BOTTOMLEFT", "TOPLEFT", 0, 3)
+            U:SaveTooltipPosition(unit, "BOTTOMLEFT", "TOPLEFT", 0, 3)
         elseif anchor == "TOPRIGHT" then
             P:Point(button, "TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, -4)
-            B:SaveTooltipPosition(unit, "BOTTOMRIGHT", "TOPRIGHT", 0, 3)
+            U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "TOPRIGHT", 0, 3)
         end
     else -- left_right
         P:Size(anchorFrame, 10, 20)
 
         if anchor == "BOTTOMLEFT" then
             P:Point(button, "BOTTOMLEFT", anchorFrame, "BOTTOMRIGHT", 4, 0)
-            B:SaveTooltipPosition(unit, "BOTTOMRIGHT", "BOTTOMLEFT", -3, 0)
+            U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "BOTTOMLEFT", -3, 0)
         elseif anchor == "BOTTOMRIGHT" then
             P:Point(button, "BOTTOMRIGHT", anchorFrame, "BOTTOMLEFT", -4, 0)
-            B:SaveTooltipPosition(unit, "BOTTOMLEFT", "BOTTOMRIGHT", 3, 0)
+            U:SaveTooltipPosition(unit, "BOTTOMLEFT", "BOTTOMRIGHT", 3, 0)
         elseif anchor == "TOPLEFT" then
             P:Point(button, "TOPLEFT", anchorFrame, "TOPRIGHT", 4, 0)
-            B:SaveTooltipPosition(unit, "TOPRIGHT", "TOPLEFT", -3, 0)
+            U:SaveTooltipPosition(unit, "TOPRIGHT", "TOPLEFT", -3, 0)
         elseif anchor == "TOPRIGHT" then
             P:Point(button, "TOPRIGHT", anchorFrame, "TOPLEFT", -4, 0)
-            B:SaveTooltipPosition(unit, "TOPLEFT", "TOPRIGHT", 3, 0)
+            U:SaveTooltipPosition(unit, "TOPLEFT", "TOPRIGHT", 3, 0)
         end
     end
 end
 
-function B:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
+---@param unit Units
+---@param which string
+---@param button CUFUnitButton
+---@param anchorFrame CUFAnchorFrame
+function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     local layout = Cell.vars.currentLayoutTable
 
     -- Size
@@ -172,7 +197,7 @@ function B:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
         button:ClearAllPoints()
         button:SetPoint(anchor, anchorFrame, anchorPoint, 0)
 
-        B:UpdateUnitButtonPosition(unit, button, anchorFrame)
+        U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
@@ -196,7 +221,12 @@ function B:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     end
 end
 
-function B:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
+---@param which string
+---@param unit Units
+---@param button CUFUnitButton
+---@param anchorFrame CUFAnchorFrame
+---@param config CUFConfigButton
+function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
     if not which or which == "lock" then
         if CellDB["general"]["locked"] then
             config:RegisterForDrag()
@@ -214,11 +244,15 @@ function B:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
     end
 
     if which == "position" then
-        B:UpdateUnitButtonPosition(unit, button, anchorFrame)
+        U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
 end
 
-function B:UpdateUnitFrameVisibility(which, unit, button, frame)
+---@param which string
+---@param unit Units
+---@param button CUFUnitButton
+---@param frame CUFUnitFrame
+function U:UpdateUnitFrameVisibility(which, unit, button, frame)
     if not which or which == unit then
         if Cell.vars.currentLayoutTable[unit]["enabled"] then
             RegisterUnitWatch(button)
@@ -303,6 +337,7 @@ end
 -------------------------------------------------
 -- MARK: Aura tables
 -------------------------------------------------
+---@param self CUFUnitButton
 local function InitAuraTables(self)
     -- vars
     self._casts = {}
@@ -313,6 +348,7 @@ local function InitAuraTables(self)
     self._buffs_count_cache = {}
 end
 
+---@param self CUFUnitButton
 local function ResetAuraTables(self)
     wipe(self._casts)
     wipe(self._timers)
@@ -321,6 +357,8 @@ local function ResetAuraTables(self)
 end
 
 -- MARK: Update InRange
+---@param self CUFUnitButton
+---@param ir boolean?
 local function UnitFrame_UpdateInRange(self, ir)
     local unit = self.states.displayedUnit
     if not unit then return end
@@ -384,6 +422,7 @@ end
 -- MARK: RegisterEvents
 -------------------------------------------------
 
+---@param self CUFUnitButton
 local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
@@ -440,6 +479,7 @@ local function UnitFrame_RegisterEvents(self)
     end
 end
 
+---@param self CUFUnitButton
 local function UnitFrame_UnregisterEvents(self)
     self:UnregisterAllEvents()
 end
@@ -447,6 +487,12 @@ end
 -------------------------------------------------
 -- MARK: OnEvents
 -------------------------------------------------
+
+---@param self CUFUnitButton
+---@param event WowEvent
+---@param unit string
+---@param arg any
+---@param arg2 any
 local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
@@ -468,7 +514,7 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             W:UnitFrame_UpdatePower(self)
             W:UnitFrame_UpdatePowerType(self)
         elseif event == "UNIT_CONNECTION" then
-            self._updateRequired = 1
+            self._updateRequired = true
         elseif event == "UNIT_NAME_UPDATE" then
             W:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
@@ -476,20 +522,22 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
-            self._updateRequired = 1
+            self._updateRequired = true
         elseif event == "PLAYER_TARGET_CHANGED" then
             --[[ UnitFrame_UpdateTarget(self) ]]
         end
     end
 end
 
+---@param self CUFUnitButton
 local function UnitFrame_OnShow(self)
     CUF:Debug(GetTime(), "OnShow", self:GetName())
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
-    self._powerBarUpdateRequired = 1
+    self._powerBarUpdateRequired = true
     UnitFrame_RegisterEvents(self)
 end
 
+---@param self CUFUnitButton
 local function UnitFrame_OnHide(self)
     CUF:Debug(GetTime(), "OnHide", self:GetName())
     UnitFrame_UnregisterEvents(self)
@@ -498,17 +546,18 @@ local function UnitFrame_OnHide(self)
     -- NOTE: update Cell.vars.guids
     -- CUF:Debug("hide", self.states.unit, self.__unitGuid, self.__unitName)
     if self.__unitGuid then
-        if not self.isSpotlight then Cell.vars.guids[self.__unitGuid] = nil end
+        Cell.vars.guids[self.__unitGuid] = nil
         self.__unitGuid = nil
     end
     if self.__unitName then
-        if not self.isSpotlight then Cell.vars.names[self.__unitName] = nil end
+        Cell.vars.names[self.__unitName] = nil
         self.__unitName = nil
     end
     self.__displayedGuid = nil
     F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
 end
 
+---@param self CUFUnitButton
 local function UnitFrame_OnEnter(self)
     --if not IsEncounterInProgress() then UnitButton_UpdateStatusText(self) end
 
@@ -520,6 +569,7 @@ local function UnitFrame_OnEnter(self)
     F:ShowTooltips(self, "unit", unit)
 end
 
+---@param self CUFUnitButton
 local function UnitFrame_OnLeave(self)
     self.widgets.mouseoverHighlight:Hide()
     GameTooltip:Hide()
@@ -527,6 +577,8 @@ end
 
 local UNKNOWN = _G["UNKNOWN"]
 local UNKNOWNOBJECT = _G["UNKNOWNOBJECT"]
+
+---@param self CUFUnitButton
 local function UnitFrame_OnTick(self)
     -- CUF:Debug(GetTime(), "OnTick", self._updateRequired, self:GetAttribute("refreshOnUpdate"), self:GetName())
     local e = (self.__tickCount or 0) + 1
@@ -539,8 +591,8 @@ local function UnitFrame_OnTick(self)
                 -- NOTE: displayed unit entity changed
                 F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
                 self.__displayedGuid = displayedGuid
-                self._updateRequired = 1
-                self._powerBarUpdateRequired = 1
+                self._updateRequired = true
+                self._powerBarUpdateRequired = true
             end
 
             local guid = UnitGUID(self.states.unit)
@@ -579,6 +631,8 @@ local function UnitFrame_OnTick(self)
     end
 end
 
+---@param self CUFUnitButton
+---@param elapsed number
 local function UnitFrame_OnUpdate(self, elapsed)
     local e = (self.__updateElapsed or 0) + elapsed
     if e > 0.25 then
@@ -588,6 +642,9 @@ local function UnitFrame_OnUpdate(self, elapsed)
     self.__updateElapsed = e
 end
 
+---@param self CUFUnitButton
+---@param name string
+---@param value string?
 local function UnitFrame_OnAttributeChanged(self, name, value)
     if name == "unit" then
         if not value or value ~= self.states.unit then
@@ -722,7 +779,7 @@ end
 ---@field _updateRequired boolean
 ---@field __tickCount number
 ---@field __updateElapsed number
----@field __displayedGuid string
+---@field __displayedGuid string?
 ---@field __unitName string
 ---@field __nameRetries number
 ---@field orientation string

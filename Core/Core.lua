@@ -10,6 +10,8 @@ CUF.debugDB = true
 
 ---@class CUF.widgets
 CUF.widgets = {}
+---@class CUF.uFuncs
+CUF.uFuncs = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string

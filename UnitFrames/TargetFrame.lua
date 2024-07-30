@@ -2,12 +2,14 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local B = Cell.bFuncs
 local P = Cell.pixelPerfectFuncs
+
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 
 local unit = "target"
 
-local targetFrame, anchorFrame, hoverFrame, config = B:CreateBaseUnitFrame(unit, "Target Frame")
+local targetFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit, "Target Frame")
 Cell.frames.targetFrame = targetFrame
 Cell.frames.targetFrameAnchor = anchorFrame
 
@@ -25,12 +27,12 @@ Cell.unitButtons.target = targetButton
 -- callbacks
 -------------------------------------------------
 local function UpdateMenu(which)
-    B:UpdateUnitButtonMenu(which, unit, targetButton, anchorFrame, config)
+    U:UpdateUnitButtonMenu(which, unit, targetButton, anchorFrame, config)
 end
 Cell:RegisterCallback("UpdateMenu", "TargetFrame_UpdateMenu", UpdateMenu)
 
 local function UpdateLayout(_, which)
-    B:UpdateUnitButtonLayout(unit, which, targetButton, anchorFrame)
+    U:UpdateUnitButtonLayout(unit, which, targetButton, anchorFrame)
 end
 Cell:RegisterCallback("UpdateLayout", "TargetFrame_UpdateLayout", UpdateLayout)
 
@@ -42,7 +44,7 @@ end
 Cell:RegisterCallback("UpdatePixelPerfect", "TargetFrame_UpdatePixelPerfect", UpdatePixelPerfect)
 
 local function TargetFrame_UpdateVisibility(which)
-    B:UpdateUnitFrameVisibility(which, unit, targetButton, targetFrame)
+    U:UpdateUnitFrameVisibility(which, unit, targetButton, targetFrame)
 end
 Cell:RegisterCallback("UpdateVisibility", "TargetFrame_UpdateVisibility", TargetFrame_UpdateVisibility)
 CUF:RegisterCallback("UpdateVisibility", "TargetFrame_UpdateVisibility", TargetFrame_UpdateVisibility)

@@ -42,7 +42,7 @@ end
 ---@param parent Frame
 ---@param button CUFUnitButton
 function W:CreateNameText(parent, button)
-    ---@class nameTextWidget: FontString
+    ---@class NameTextWidget: FontString
     local nameText = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.nameText = nameText
     nameText.width = CUF.defaults.fontWidth

@@ -531,6 +531,7 @@ function CUFUnitButton_OnLoad(button)
     CUF:Debug(buttonName, "OnLoad")
     InitAuraTables(button)
 
+    ---@diagnostic disable-next-line: missing-fields
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
@@ -571,6 +572,7 @@ function CUFUnitButton_OnLoad(button)
     --Mixin(powerBar, SmoothStatusBarMixin)
 
     -- targetHighlight
+    ---@class HighlightWidget
     local targetHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate")
     button.widgets.targetHighlight = targetHighlight
     targetHighlight:SetIgnoreParentAlpha(true)
@@ -578,6 +580,7 @@ function CUFUnitButton_OnLoad(button)
     targetHighlight:Hide()
 
     -- mouseoverHighlight
+    ---@class HighlightWidget
     local mouseoverHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate")
     button.widgets.mouseoverHighlight = mouseoverHighlight
     mouseoverHighlight:SetIgnoreParentAlpha(true)
@@ -618,10 +621,21 @@ end
 ---@field inVehicle boolean
 
 ---@class CUFUnitButton: Button, BackdropTemplate
----@field widgets table
+---@field widgets CUFUnitButtonWidgets
 ---@field states CUFUnitButtonStates
 ---@field indicators table
 ---@field GetTargetPingGUID function
 ---@field __unitGuid string
 ---@field class string
 ---@field _layout string
+
+---@class CUFUnitButtonWidgets
+---@field healthBar HealthBarWidget
+---@field healthBarLoss Texture
+---@field deadTex Texture
+---@field powerBar PowerBarWidget
+---@field nameText NameTextWidget
+---@field targetHighlight HighlightWidget
+---@field mouseoverHighlight HighlightWidget
+
+---@class HighlightWidget: BackdropTemplate, Frame

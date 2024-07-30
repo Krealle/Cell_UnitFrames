@@ -180,7 +180,7 @@ end
 ---@param button CUFUnitButton
 ---@param buttonName string
 function W:CreateHealthBar(button, buttonName)
-    ---@class healthBarWidget: StatusBar
+    ---@class HealthBarWidget: StatusBar
     local healthBar = CreateFrame("StatusBar", buttonName .. "HealthBar", button)
     button.widgets.healthBar = healthBar
 

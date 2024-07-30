@@ -176,17 +176,17 @@ function B:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
-    --[[ if not which or which == "barOrientation" then
-        B:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
-    end ]]
+    if not which or which == "barOrientation" then
+        W:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
+    end
 
-    --[[ if not which or strfind(which, "power$") or which == "barOrientation" then
+    if not which or strfind(which, "power$") or which == "barOrientation" then
         if layout[unit]["sameSizeAsPlayer"] then
-            B:SetPowerSize(button, layout["player"]["powerSize"])
+            W:SetPowerSize(button, layout["player"]["powerSize"])
         else
-            B:SetPowerSize(button, layout[unit]["powerSize"])
+            W:SetPowerSize(button, layout[unit]["powerSize"])
         end
-    end ]]
+    end
 
     -- load position
     if not P:LoadPosition(anchorFrame, layout[unit]["position"]) then
@@ -229,6 +229,75 @@ function B:UpdateUnitFrameVisibility(which, unit, button, frame)
             frame:Hide()
         end
     end
+end
+
+---@param button CUFUnitButton
+---@param orientation string
+---@param rotateTexture boolean
+function W:SetOrientation(button, orientation, rotateTexture)
+    local healthBar = button.widgets.healthBar
+    local healthBarLoss = button.widgets.healthBarLoss
+    local powerBar = button.widgets.powerBar
+    local powerBarLoss = button.widgets.powerBarLoss
+    --[[ local incomingHeal = button.widgets.incomingHeal
+    local damageFlashTex = button.widgets.damageFlashTex
+    local gapTexture = button.widgets.gapTexture
+    local shieldBar = button.widgets.shieldBar
+    local shieldBarR = button.widgets.shieldBarR
+    local overShieldGlow = button.widgets.overShieldGlow
+    local overShieldGlowR = button.widgets.overShieldGlowR
+    local overAbsorbGlow = button.widgets.overAbsorbGlow
+    local absorbsBar = button.widgets.absorbsBar ]]
+
+    button.orientation = orientation
+    if orientation == "vertical_health" then
+        healthBar:SetOrientation("VERTICAL")
+        powerBar:SetOrientation("HORIZONTAL")
+    else
+        healthBar:SetOrientation(orientation)
+        powerBar:SetOrientation(orientation)
+    end
+    healthBar:SetRotatesTexture(rotateTexture)
+    powerBar:SetRotatesTexture(rotateTexture)
+
+    if rotateTexture then
+        F:RotateTexture(healthBarLoss, 90)
+        F:RotateTexture(powerBarLoss, 90)
+    else
+        F:RotateTexture(healthBarLoss, 0)
+        F:RotateTexture(powerBarLoss, 0)
+    end
+
+    if orientation == "horizontal" then
+        -- update healthBarLoss
+        P:ClearPoints(healthBarLoss)
+        P:Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P:Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+
+        -- update powerBarLoss
+        P:ClearPoints(powerBarLoss)
+        P:Point(powerBarLoss, "TOPRIGHT", powerBar)
+        P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+    else -- vertical / vertical_health
+        P:ClearPoints(healthBarLoss)
+        P:Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P:Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+
+        if orientation == "vertical" then
+            -- update powerBarLoss
+            P:ClearPoints(powerBarLoss)
+            P:Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
+        else -- vertical_health
+            -- update powerBarLoss
+            P:ClearPoints(powerBarLoss)
+            P:Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        end
+    end
+
+    -- update actions
+    --I.UpdateActionsOrientation(button, orientation)
 end
 
 -------------------------------------------------
@@ -282,6 +351,7 @@ end
 -------------------------------------------------
 -- MARK: Update All
 -------------------------------------------------
+---@param self CUFUnitButton
 local function UnitFrame_UpdateAll(self)
     if not self:IsVisible() then return end
 
@@ -296,6 +366,18 @@ local function UnitFrame_UpdateAll(self)
     UnitFrame_UpdateInRange(self)
     --[[
     UnitFrame_UpdateAuras(self) ]]
+
+    if Cell.loaded and self._powerBarUpdateRequired then
+        self._powerBarUpdateRequired = nil
+        if self:ShouldShowPowerBar() then
+            self:ShowPowerBar()
+        else
+            self:HidePowerBar()
+        end
+    else
+        W:UnitFrame_UpdatePowerMax(self)
+        W:UnitFrame_UpdatePower(self)
+    end
 end
 
 -------------------------------------------------
@@ -544,7 +626,7 @@ function CUFUnitButton_OnLoad(button)
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
-    button.indicators = {}
+    --button.indicators = {}
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)
@@ -625,15 +707,29 @@ end
 ---@field powerType number
 ---@field powerMax number
 ---@field power number
+---@field inRange boolean
+---@field wasInRange boolean
 
 ---@class CUFUnitButton: Button, BackdropTemplate
 ---@field widgets CUFUnitButtonWidgets
 ---@field states CUFUnitButtonStates
----@field indicators table
 ---@field GetTargetPingGUID function
 ---@field __unitGuid string
 ---@field class string
 ---@field _layout string
+---@field powerSize number
+---@field _powerBarUpdateRequired boolean
+---@field _updateRequired boolean
+---@field __tickCount number
+---@field __updateElapsed number
+---@field __displayedGuid string
+---@field __unitName string
+---@field __nameRetries number
+---@field orientation string
+---@field _casts table
+---@field _timers table
+---@field _buffs_cache table
+---@field _buffs_count_cache table
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget

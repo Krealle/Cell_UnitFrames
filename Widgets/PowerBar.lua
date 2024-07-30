@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
+---@type LibGroupInfo
+local LGI = LibStub:GetLibrary("LibGroupInfo")
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -11,6 +13,141 @@ local W = CUF.widgets
 local Util = CUF.Util
 ---@class CUF.widgets.Handler
 local Handler = CUF.widgetsHandler
+
+-------------------------------------------------
+-- MARK: Layout Update PowerBar
+-------------------------------------------------
+
+---@param button CUFUnitButton
+---@param size number
+function W:SetPowerSize(button, size)
+    print(GetTime(), "SetPowerSize", button:GetName(), button:IsShown(), button:IsVisible(), size)
+    button.powerSize = size
+
+    if size == 0 then
+        button:HidePowerBar()
+    else
+        if button:ShouldShowPowerBar() then
+            CUF:Debug("ShowPowerBar", button:GetName())
+            button:ShowPowerBar()
+        else
+            CUF:Debug("HidePowerBar", button:GetName())
+            button:HidePowerBar()
+        end
+    end
+end
+
+-------------------------------------------------
+-- MARK: Button Functions
+-------------------------------------------------
+
+---@param button CUFUnitButton
+local function GetRole(button)
+    if button.states.role and button.states.role ~= "NONE" then
+        return button.states.role
+    end
+
+    local info = LGI:GetCachedInfo(button.states.guid)
+    if not info then return end
+    return info.role
+end
+
+---@class CUFUnitButton
+---@field ShouldShowPowerBar function
+---@param self CUFUnitButton
+local function ShouldShowPowerBar(self)
+    if not self:IsVisible() then return end
+    if not self.powerSize or self.powerSize == 0 then return end
+
+    if not self.states.guid then
+        return true
+    end
+
+    local class, role
+    if self.states.inVehicle then
+        class = "VEHICLE"
+    elseif F:IsPlayer(self.states.guid) then
+        class = self.states.class
+        role = GetRole(self)
+    elseif F:IsPet(self.states.guid) then
+        class = "PET"
+    elseif F:IsNPC(self.states.guid) then
+        if UnitInPartyIsAI(self.states.unit) then
+            class = self.states.class
+            role = GetRole(self)
+        else
+            class = "NPC"
+        end
+    elseif F:IsVehicle(self.states.guid) then
+        class = "VEHICLE"
+    end
+
+    if class and Cell.vars.currentLayoutTable then
+        if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
+            return Cell.vars.currentLayoutTable["powerFilters"][class]
+        else
+            if role then
+                return Cell.vars.currentLayoutTable["powerFilters"][class][role]
+            else
+                return true -- show power if role not found
+            end
+        end
+    end
+
+    return true
+end
+
+---@class CUFUnitButton
+---@field ShowPowerBar function
+---@param self CUFUnitButton
+local function ShowPowerBar(self)
+    if self:IsVisible() then
+        self:RegisterEvent("UNIT_POWER_FREQUENT")
+        self:RegisterEvent("UNIT_MAXPOWER")
+        self:RegisterEvent("UNIT_DISPLAYPOWER")
+    end
+    self.widgets.powerBar:Show()
+    self.widgets.powerBarLoss:Show()
+
+    P:ClearPoints(self.widgets.healthBar)
+    P:ClearPoints(self.widgets.powerBar)
+    if self.orientation == "horizontal" or self.orientation == "vertical_health" then
+        P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P:Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
+            self.powerSize + CELL_BORDER_SIZE * 2)
+        P:Point(self.widgets.powerBar, "TOPLEFT", self.widgets.healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
+        P:Point(self.widgets.powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+    else
+        P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P:Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT",
+            -(self.powerSize + CELL_BORDER_SIZE * 2),
+            CELL_BORDER_SIZE)
+        P:Point(self.widgets.powerBar, "TOPLEFT", self.widgets.healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
+        P:Point(self.widgets.powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+    end
+
+    if self:IsVisible() then
+        -- update now
+        W:UnitFrame_UpdatePowerMax(self)
+        W:UnitFrame_UpdatePower(self)
+        W:UnitFrame_UpdatePowerType(self)
+    end
+end
+
+---@class CUFUnitButton
+---@field HidePowerBar function
+---@param self CUFUnitButton
+local function HidePowerBar(self)
+    self:UnregisterEvent("UNIT_POWER_FREQUENT")
+    self:UnregisterEvent("UNIT_MAXPOWER")
+    self:UnregisterEvent("UNIT_DISPLAYPOWER")
+    self.widgets.powerBar:Hide()
+    self.widgets.powerBarLoss:Hide()
+
+    P:ClearPoints(self.widgets.healthBar)
+    P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+    P:Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+end
 
 -------------------------------------------------
 -- MARK: Button Update PowerBar
@@ -125,4 +262,8 @@ function W:CreatePowerBar(button, buttonName)
     powerBarLoss:SetPoint("TOPLEFT", powerBar:GetStatusBarTexture(), "TOPRIGHT")
     powerBarLoss:SetPoint("BOTTOMRIGHT")
     powerBarLoss:SetTexture(Cell.vars.texture)
+
+    button.ShowPowerBar = ShowPowerBar
+    button.HidePowerBar = HidePowerBar
+    button.ShouldShowPowerBar = ShouldShowPowerBar
 end

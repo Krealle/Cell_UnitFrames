@@ -7,7 +7,7 @@ CUF.Cell = Cell
 CUF.version = 2
 CUF.debug = true
 CUF.debugDB = true
-CUF.units = { "player", "target", "focus" }
+
 ---@class CUF.widgets
 CUF.widgets = {}
 
@@ -17,7 +17,9 @@ CUF.widgets = {}
 ---@field selectedWidget string
 ---@field selectedLayoutTable LayoutTable
 ---@field selectedWidgetTable table
+---@field units table<Units>
 CUF.vars = {}
+CUF.vars.units = { "player", "target", "focus" }
 
 local F = Cell.funcs
 local Util = CUF.Util
@@ -45,7 +47,7 @@ function F:IterateAllUnitButtons(...)
     end
 end
 
-for _, unit in pairs(CUF.units) do
+for _, unit in pairs(CUF.vars.units) do
     -- Load layout defaults (Layout_Defaults.lua)
     Cell.defaults.layout[unit] = CUF.defaults.unitFrame
     -- Insert unit buttons (MainFrame.lua)
@@ -58,7 +60,7 @@ end
 if type(CUFDB) ~= "table" then CUFDB = {} end
 
 for _, layout in pairs(CellDB["layouts"] --[[@as CellDB]]) do
-    for _, unit in pairs(CUF.units) do
+    for _, unit in pairs(CUF.vars.units) do
         --layout[unit].widgets = nil
 
         if type(layout[unit]) ~= "table" then

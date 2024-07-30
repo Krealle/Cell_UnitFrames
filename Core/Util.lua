@@ -59,7 +59,7 @@ end
 ---@param func function
 ---@param unitToIterate string?
 function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
-    for _, unit in pairs(CUF.units) do
+    for _, unit in pairs(CUF.vars.units) do
         if not unitToIterate or unitToIterate == unit then
             func(Cell.unitButtons[unit], unit, ...)
         end

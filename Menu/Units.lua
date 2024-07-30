@@ -55,7 +55,7 @@ local function AddLoadPageDB(unit)
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unit.id .. "_LoadPageDB", LoadPageDB)
 end
 
-for _, unit in pairs(CUF.units) do
+for _, unit in pairs(CUF.vars.units) do
     local unitName = unit:gsub("^%l", string.upper)
 
     menu:AddUnit(

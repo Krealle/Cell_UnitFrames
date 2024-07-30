@@ -11,7 +11,7 @@ local W = CUF.widgets
 ---@class CUF.widgets.builder
 local Builder = {}
 Builder.optionBufferY = 50
-Builder.optionBufferX = 30
+Builder.optionBufferX = 25
 Builder.singleOptionHeight = 20
 Builder.singleOptionWidth = 117
 Builder.dualOptionWidth = 117 * 2
@@ -19,8 +19,6 @@ Builder.tripleOptionWidth = 117 * 3
 
 W.Builder = Builder
 
----@class CUF.Util
-local Util = CUF.Util
 ---@class CUF.widgets.Handler
 local Handler = CUF.widgetsHandler
 
@@ -69,7 +67,7 @@ end
 
 ---@param parent Frame
 ---@param widgetName Widgets
-function Builder:CreateNameWidthOption(parent, widgetName)
+function Builder:CreateTextWidthOption(parent, widgetName)
     local f = CreateFrame("Frame", nil, parent)
     P:Size(f, 117, 20)
 
@@ -124,7 +122,7 @@ function Builder:CreateNameWidthOption(parent, widgetName)
     })
 
     percentDropdown = Cell:CreateDropdown(f, 75)
-    percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", 30, 0)
+    percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.optionBufferX, 0)
     Cell:SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
     percentDropdown:SetItems({
         {
@@ -162,7 +160,7 @@ function Builder:CreateNameWidthOption(parent, widgetName)
     })
 
     lengthEB = Cell:CreateEditBox(f, 34, 20, false, false, true)
-    lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", 30, 0)
+    lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.optionBufferX, 0)
 
     lengthEB.text = lengthEB:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     lengthEB.text:SetText(L["En"])
@@ -274,8 +272,9 @@ end
 ---@param parent Frame
 ---@param widgetName Widgets
 ---@param prevOptions? Frame
+---@param includeWidth? boolean
 ---@return UnitColorOptions
-function Builder:CreateUnitColorOptions(parent, widgetName, prevOptions)
+function Builder:CreateTextColorOptions(parent, widgetName, prevOptions, includeWidth)
     ---@class UnitColorOptions
     local f = CreateFrame("Frame", "UnitColorOptions" .. widgetName, parent)
     P:Size(f, 117, 20)
@@ -312,6 +311,11 @@ function Builder:CreateUnitColorOptions(parent, widgetName, prevOptions)
         },
     })
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
+
+    if includeWidth then
+        f.nameWidth = Builder:CreateTextWidthOption(parent, widgetName)
+        f.nameWidth:SetPoint("TOPLEFT", f, "TOPRIGHT", self.optionBufferX, 0)
+    end
 
     local function LoadPageDB()
         local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
@@ -421,7 +425,7 @@ function Builder:CreateFontOptions(parent, widgetName, prevOptions)
     end
 
     f.nameOutlineDropdown = Cell:CreateDropdown(parent, 117)
-    f.nameOutlineDropdown:SetPoint("TOPLEFT", f.nameFontDropdown, "TOPRIGHT", 30, 0)
+    f.nameOutlineDropdown:SetPoint("TOPLEFT", f.nameFontDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameOutlineDropdown:SetLabel(L["Outline"])
 
     items = {}
@@ -438,7 +442,7 @@ function Builder:CreateFontOptions(parent, widgetName, prevOptions)
     f.nameOutlineDropdown:SetItems(items)
 
     f.nameSizeSilder = Cell:CreateSlider(L["Size"], parent, 5, 50, 117, 1)
-    f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", 30, 0)
+    f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameSizeSilder.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].font.size = value
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)

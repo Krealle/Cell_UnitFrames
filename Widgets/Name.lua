@@ -105,9 +105,7 @@ local function CreateNamePage(parent)
 
     local enabledCheckBox = Builder:CreatEnabledCheckBox(widget.frame, "nameText")
 
-    local colorPicker = Builder:CreateUnitColorOptions(widget.frame, "nameText", enabledCheckBox)
-    local nameWidth = Builder:CreateNameWidthOption(widget.frame, "nameText")
-    nameWidth:SetPoint("TOPLEFT", colorPicker, "TOPRIGHT", 30, 0)
+    local colorPicker = Builder:CreateTextColorOptions(widget.frame, "nameText", enabledCheckBox, true)
 
     local anchorOptions = Builder:CreateAnchorOptions(widget.frame, "nameText", colorPicker)
     local nameOptions = Builder:CreateFontOptions(widget.frame, "nameText", anchorOptions)

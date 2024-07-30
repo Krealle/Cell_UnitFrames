@@ -52,14 +52,25 @@ end
 ---@param page string
 ---@param subPage string
 function Handler.LoadPageDB(page, subPage)
+    -- Both params are only present when LoadLayoutDB is called
+    if not page or not subPage then
+        if (page and page == Handler.previousPage)
+            or (subPage and subPage == Handler.previousSubPage) then
+            CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage, "skipping")
+            return
+        end
+    end
+
     CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage)
 
     subPage = subPage or CUF.vars.selectedWidget
 
+    Handler.previousPage = page
+    Handler.previousSubPage = subPage
+
     for widgetName, funcs in pairs(Handler.options) do
         if subPage == widgetName then
             for _, func in pairs(funcs) do
-                CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, widgetName)
                 func(subPage)
             end
         end

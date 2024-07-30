@@ -45,6 +45,9 @@ function menu:UpdateSelected(unit, widget)
         CUF.vars.selectedWidget = widget
     end
 
+    -- Prevent excessive calls when initializing
+    if not menu.init then return end
+
     CUF:Fire("LoadPageDB", unit, widget)
 end
 
@@ -56,6 +59,9 @@ local function LoadLayoutDB(layout)
     CUF.vars.selectedLayout = layout
     CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
     CUF.vars.selectedWidgetTable = CellDB["layouts"][layout][CUF.vars.selectedUnit].widgets
+
+    -- Prevent excessive calls when initializing
+    if not menu.init then return end
 
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateVisibility")

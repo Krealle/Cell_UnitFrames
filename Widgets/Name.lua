@@ -15,6 +15,11 @@ local Handler = CUF.widgetsHandler
 
 local menu = CUF.Menu
 
+--! AI followers, wrong value returned by UnitClassBase
+local UnitClassBase = function(unit)
+    return select(2, UnitClass(unit))
+end
+
 -------------------------------------------------
 -- MARK: Button Update Name
 -------------------------------------------------

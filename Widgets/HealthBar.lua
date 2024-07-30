@@ -14,6 +14,11 @@ local Util = CUF.Util
 ---@class CUF.widgets.Handler
 local Handler = CUF.widgetsHandler
 
+--! AI followers, wrong value returned by UnitClassBase
+local UnitClassBase = function(unit)
+    return select(2, UnitClass(unit))
+end
+
 -------------------------------------------------
 -- MARK: Button Update HealthBar
 -------------------------------------------------

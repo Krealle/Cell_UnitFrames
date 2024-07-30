@@ -16,10 +16,6 @@ Cell.frames.targetFrameAnchor = anchorFrame
 local targetButton = CreateFrame("Button", "CellTargetButton", targetFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 targetButton:SetAttribute("unit", unit)
 targetButton:SetPoint("TOPLEFT")
-targetButton:HookScript("OnEvent", function(self, event)
-    -- This frame should always be fully refreshed when target changes
-    --if event == "PLAYER_TARGET_CHANGED" and targetButton and targetButton:IsVisible() then B.UpdateAll(targetButton) end
-end)
 targetButton._layout = "Target"
 Cell.unitButtons.target = targetButton
 

@@ -389,34 +389,36 @@ end
 -------------------------------------------------
 -- MARK: Update All
 -------------------------------------------------
----@param self CUFUnitButton
-local function UnitFrame_UpdateAll(self)
-    if not self:IsVisible() then return end
 
-    W:UnitFrame_UpdateName(self)
-    W:UnitFrame_UpdateHealthMax(self)
-    W:UnitFrame_UpdateHealth(self)
-    W:UnitFrame_UpdateHealthColor(self)
-    W:UnitFrame_UpdatePowerMax(self)
-    W:UnitFrame_UpdatePower(self)
-    W:UnitFrame_UpdatePowerType(self)
+---@param button CUFUnitButton
+local function UnitFrame_UpdateAll(button)
+    if not button:IsVisible() then return end
+
+    W:UnitFrame_UpdateName(button)
+    W:UnitFrame_UpdateHealthMax(button)
+    W:UnitFrame_UpdateHealth(button)
+    W:UnitFrame_UpdateHealthColor(button)
+    W:UnitFrame_UpdatePowerMax(button)
+    W:UnitFrame_UpdatePower(button)
+    W:UnitFrame_UpdatePowerType(button)
     --UnitFrame_UpdateTarget(self)
-    UnitFrame_UpdateInRange(self)
+    UnitFrame_UpdateInRange(button)
     --[[
     UnitFrame_UpdateAuras(self) ]]
 
-    if Cell.loaded and self._powerBarUpdateRequired then
-        self._powerBarUpdateRequired = nil
-        if self:ShouldShowPowerBar() then
-            self:ShowPowerBar()
+    if Cell.loaded and button._powerBarUpdateRequired then
+        button._powerBarUpdateRequired = nil
+        if button:ShouldShowPowerBar() then
+            button:ShowPowerBar()
         else
-            self:HidePowerBar()
+            button:HidePowerBar()
         end
     else
-        W:UnitFrame_UpdatePowerMax(self)
-        W:UnitFrame_UpdatePower(self)
+        W:UnitFrame_UpdatePowerMax(button)
+        W:UnitFrame_UpdatePower(button)
     end
 end
+U.UpdateAll = UnitFrame_UpdateAll
 
 -------------------------------------------------
 -- MARK: RegisterEvents
@@ -452,6 +454,13 @@ local function UnitFrame_RegisterEvents(self)
 
     self:RegisterEvent("PLAYER_REGEN_ENABLED")
     self:RegisterEvent("PLAYER_REGEN_DISABLED")
+
+    if self.states.unit == "target" then
+        self:RegisterEvent("PLAYER_TARGET_CHANGED")
+    end
+    if self.states.unit == "focus" then
+        self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+    end
 
     --[[ if Cell.loaded then
         if enabledIndicators["playerRaidIcon"] then
@@ -524,7 +533,12 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         if event == "GROUP_ROSTER_UPDATE" then
             self._updateRequired = true
         elseif event == "PLAYER_TARGET_CHANGED" then
-            --[[ UnitFrame_UpdateTarget(self) ]]
+            --[[  UnitButton_UpdateTarget(self)
+            UnitButton_UpdateThreatBar(self) ]]
+            UnitFrame_UpdateAll(self)
+        elseif event == "PLAYER_FOCUS_CHANGED" then
+            print("PLAYER_FOCUS_CHANGED")
+            UnitFrame_UpdateAll(self)
         end
     end
 end

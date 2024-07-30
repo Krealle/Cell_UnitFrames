@@ -9,15 +9,17 @@ local W = CUF.widgets
 local Util = CUF.Util
 
 ---@class CUF.widgets.Handler
----@field widgets table<string, function>
+---@field widgets table<Widgets, function>
+---@field options table<Units, table<Widgets, function>>
 local Handler = {}
 Handler.widgets = {}
+Handler.options = {}
 
 CUF.widgetsHandler = Handler
 
 ---@param layout string?
 ---@param unit string?
----@param widgetName string?
+---@param widgetName Widgets?
 ---@param setting string?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     CUF:Debug("|cffff7777UpdateWidgets:|r ", layout, unit, widgetName, setting, ...)
@@ -27,13 +29,13 @@ function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     layout = layout or Cell.vars.currentLayout
 
     if widgetName then
-        Util:IterateAllUnitButtons(Handler.widgets[widgetName], unit, setting, ...)
+        Util:IterateAllUnitButtons(Handler.widgets[widgetName], unit, widgetName, ...)
         return
     end
 
     for name, func in pairs(Handler.widgets) do
         if not widgetName or name == widgetName then
-            Util:IterateAllUnitButtons(func, unit, setting, ...)
+            Util:IterateAllUnitButtons(func, unit, name, ...)
         end
     end
 end
@@ -41,8 +43,35 @@ end
 CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidgets)
 
 ---@param func function
----@param name string
-function Handler:RegisterWidget(func, name)
-    CUF:Debug("|cffff7777RegisterWidget:|r", name)
-    self.widgets[name] = func
+---@param widgetName Widgets
+function Handler:RegisterWidget(func, widgetName)
+    CUF:Debug("|cffff7777RegisterWidget:|r", widgetName)
+    self.widgets[widgetName] = func
+end
+
+---@param page string
+---@param subPage string
+function Handler.LoadPageDB(page, subPage)
+    CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage)
+
+    subPage = subPage or CUF.vars.selectedWidget
+
+    for widgetName, funcs in pairs(Handler.options) do
+        if subPage == widgetName then
+            for _, func in pairs(funcs) do
+                CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, widgetName)
+                func(subPage)
+            end
+        end
+    end
+end
+
+CUF:RegisterCallback("LoadPageDB", "Handler_LoadPageDB", Handler.LoadPageDB)
+
+function Handler:RegisterOption(func, widgetName, optName)
+    CUF:Debug("|cffff7777RegisterOption:|r", widgetName, optName)
+    if not self.options[widgetName] then
+        self.options[widgetName] = {}
+    end
+    table.insert(self.options[widgetName], func)
 end

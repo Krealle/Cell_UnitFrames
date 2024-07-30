@@ -36,6 +36,13 @@
 ---@field SetItems function
 ---@field SetEnabled function
 ---@field SetSelectedValue function
+---@field SetLabel function
+
+---@class CellColorPicker: Frame, BackdropTemplate
+---@field SetColor function
+
+---@class CellSlider: Slider
+---@field afterValueChangedFn function
 
 ---@class CellUnknowFrame: Frame
 ---@field title FontString
@@ -65,8 +72,40 @@
 -------------------------------------------------
 
 ---@alias Units "player" | "target" | "focus"
----@alias WidgetPages "name"
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
+
+-------------------------------------------------
+-- MARK: CUF Widgets
+-------------------------------------------------
+
+---@alias Widgets "nameText" | "healthText"
+
+---@class TextWidgetTable
+---@field enabled boolean
+---@field color ColorOpt
+---@field font FontOpt
+---@field position PositionOpt
+---@field width FontWidth
+
+---@class FontWidth
+---@field type "percentage" | "unlimited" | "length"
+---@field value number
+---@field auxValue number
+
+---@class FontOpt
+---@field size number
+---@field outline "None" | "Outline" | "Monochrome"
+---@field shadow boolean
+---@field style string
+
+---@class ColorOpt
+---@field type "class_color" | "custom"
+---@field rgb table<number>
+
+---@class PositionOpt
+---@field anchor AnchorPoint
+---@field offsetX number
+---@field offsetY number
 
 -------------------------------------------------
 -- MARK: CUF Frames
@@ -108,12 +147,24 @@
 
 ---@class WidgetsMenuPage
 ---@field frame Frame
----@field id WidgetPages
+---@field id Widgets
 ---@field button WidgetMenuPageButton
 ---@field height number
 
 ---@class WidgetMenuPageButton: Button
----@field id WidgetPages
+---@field id Widgets
+
+---@class UnitColorOptions: Frame
+---@field colorPicker CellColorPicker
+---@field dropdown CellDropdown
+
+---@class AnchorOptions: Frame
+---@field nameAnchorDropdown CellDropdown
+---@field nameXSlider CellSlider
+---@field nameYSlider CellSlider
+
+---@class FontOptions: Frame
+
 
 -------------------------------------------------
 -- MARK: CUF UnitButton
@@ -175,5 +226,6 @@
 ---@field nameText NameTextWidget
 ---@field targetHighlight HighlightWidget
 ---@field mouseoverHighlight HighlightWidget
+---@field healthText HealthTextWidget
 
 ---@class HighlightWidget: BackdropTemplate, Frame

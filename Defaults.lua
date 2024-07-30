@@ -5,19 +5,13 @@ CUF.defaults = {}
 CUF.anchorPoints = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
 CUF.outlines = { "None", "Outline", "Monochrome" }
 
----@class CUF.defaults.color
----@field type "class_color" | "custom"
----@field rgb table<number>
+---@type ColorOpt
 local colorOpt = {
     ["type"] = "class_color",
     ["rgb"] = { 1, 1, 1 },
 }
 
----@class CUF.defaults.font
----@field size number
----@field outline "None" | "Outline" | "Monochrome"
----@field shadow boolean
----@field style string
+---@type FontOpt
 local fontOpt = {
     ["size"] = 12,
     ["outline"] = "Outline",
@@ -25,10 +19,7 @@ local fontOpt = {
     ["style"] = "Cell Default",
 }
 
----@class CUF.defaults.position
----@field anchor AnchorPoint
----@field offsetX number
----@field offsetY number
+---@type PositionOpt
 local positionOpt = {
     ["anchor"] = "CENTER",
     ["offsetX"] = 0,
@@ -51,10 +42,7 @@ local unitFrameIndicators = {
     },
 }
 
----@class FontWidth
----@field type "percentage" | "unlimited" | "length"
----@field value number
----@field auxValue number
+---@type FontWidth
 local defaultFontWidth = {
     ["type"] = "percentage",
     ["value"] = 0.75,
@@ -62,12 +50,7 @@ local defaultFontWidth = {
 }
 CUF.defaults.fontWidth = defaultFontWidth
 
----@class NameWidgetTable
----@field enabled boolean
----@field color CUF.defaults.color
----@field font CUF.defaults.font
----@field position CUF.defaults.position
----@field width FontWidth
+---@type TextWidgetTable
 local nameWidget = {
     ["enabled"] = true,
     ["color"] = colorOpt,
@@ -76,10 +59,20 @@ local nameWidget = {
     ["width"] = defaultFontWidth,
 }
 
+---@type TextWidgetTable
+local healthTextWidget = {
+    ["enabled"] = true,
+    ["color"] = colorOpt,
+    ["font"] = fontOpt,
+    ["position"] = positionOpt,
+    ["width"] = defaultFontWidth,
+}
+
 ---@class UnitFrameWidgetsTable
----@field name NameWidgetTable
+---@field name TextWidgetTable
 local unitFrameWidgets = {
-    ["name"] = nameWidget
+    ["nameText"] = nameWidget,
+    ["healthText"] = healthTextWidget
 }
 
 ---@class Layout

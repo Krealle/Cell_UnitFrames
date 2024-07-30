@@ -24,6 +24,7 @@ Menu/Menu.lua
 Menu/Units.lua
 
 Widgets/Handler.lua
+Widgets/Common.lua
 Widgets/Name.lua
 Widgets/HealthBar.lua
 Widgets/PowerBar.lua

@@ -20,7 +20,7 @@ CUF.uFuncs = {}
 ---@class CUF.vars
 ---@field selectedLayout string
 ---@field selectedUnit Units
----@field selectedWidget WidgetPages
+---@field selectedWidget Widgets
 ---@field selectedLayoutTable LayoutTable
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field units table<number, Units>
@@ -72,6 +72,7 @@ for _, layout in pairs(CellDB["layouts"]) do
         if type(layout[unit]) ~= "table" then
             layout[unit] = F:Copy(Cell.defaults.layout[unit])
         else
+            --layout[unit].widgets["nameText"] = layout[unit].widgets.name
             Util:AddMissingProps(layout[unit], CUF.defaults.unitFrame)
         end
     end
@@ -83,7 +84,7 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function()
     CUF.vars.selectedUnit = "player"
-    CUF.vars.selectedWidget = "name"
+    CUF.vars.selectedWidget = "nameText"
     CUF.vars.selectedLayout = Cell.vars.currentLayout
     CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable
     CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[CUF.vars.selectedUnit].widgets

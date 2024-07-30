@@ -41,7 +41,6 @@ end
 
 ---@param parent Frame
 ---@param button CUFUnitButton
----@return nameTextWidget nameText
 function W:CreateNameText(parent, button)
     ---@class nameTextWidget: FontString
     local nameText = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
@@ -80,8 +79,6 @@ function W:CreateNameText(parent, button)
             end
         end
     end
-
-    return nameText
 end
 
 -------------------------------------------------

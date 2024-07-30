@@ -733,7 +733,7 @@ function CUFUnitButton_OnLoad(button)
     deadTex:Hide()
 
     -- nameText
-    button.widgets.nameText = W:CreateNameText(healthBar, button)
+    W:CreateNameText(healthBar, button)
     --[[ healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.nameText = nameText
     nameText.width = { "percentage", 0.75 }

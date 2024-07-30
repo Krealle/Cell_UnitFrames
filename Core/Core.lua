@@ -20,7 +20,7 @@ CUF.uFuncs = {}
 ---@class CUF.vars
 ---@field selectedLayout string
 ---@field selectedUnit Units
----@field selectedWidget Widgets
+---@field selectedWidget WidgetPages
 ---@field selectedLayoutTable LayoutTable
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field units table<number, Units>

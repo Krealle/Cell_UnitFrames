@@ -65,7 +65,7 @@
 -------------------------------------------------
 
 ---@alias Units "player" | "target" | "focus"
----@alias Widgets "name"
+---@alias WidgetPages "name"
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
 
 -------------------------------------------------
@@ -108,12 +108,12 @@
 
 ---@class WidgetsMenuPage
 ---@field frame Frame
----@field id Widgets
+---@field id WidgetPages
 ---@field button WidgetMenuPageButton
 ---@field height number
 
 ---@class WidgetMenuPageButton: Button
----@field id Widgets
+---@field id WidgetPages
 
 -------------------------------------------------
 -- MARK: CUF UnitButton

@@ -26,6 +26,7 @@ Menu/Units.lua
 Widgets/Handler.lua
 Widgets/Name.lua
 Widgets/HealthBar.lua
+Widgets/PowerBar.lua
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

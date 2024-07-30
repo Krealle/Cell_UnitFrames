@@ -19,13 +19,6 @@ local UnitGUID = UnitGUID
 local GetAuraSlots = C_UnitAuras.GetAuraSlots
 local GetAuraDataBySlot = C_UnitAuras.GetAuraDataBySlot
 
---! AI followers, wrong value returned by UnitClassBase
-local UnitClassBase = function(unit)
-    return select(2, UnitClass(unit))
-end
-
-local barAnimationType = CellDB["appearance"]["barAnimation"]
-
 -------------------------------------------------
 -- MARK: Unit button
 -------------------------------------------------
@@ -296,11 +289,18 @@ local function UnitFrame_UpdateAll(self)
     W:UnitFrame_UpdateHealthMax(self)
     W:UnitFrame_UpdateHealth(self)
     W:UnitFrame_UpdateHealthColor(self)
+    W:UnitFrame_UpdatePowerMax(self)
+    W:UnitFrame_UpdatePower(self)
+    W:UnitFrame_UpdatePowerType(self)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(self)
     --[[
     UnitFrame_UpdateAuras(self) ]]
 end
+
+-------------------------------------------------
+-- MARK: RegisterEvents
+-------------------------------------------------
 
 local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -363,7 +363,7 @@ local function UnitFrame_UnregisterEvents(self)
 end
 
 -------------------------------------------------
--- MARK: OnEvent
+-- MARK: OnEvents
 -------------------------------------------------
 local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
@@ -376,6 +376,15 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_MAXHEALTH" then
             W:UnitFrame_UpdateHealthMax(self)
             W:UnitFrame_UpdateHealth(self)
+        elseif event == "UNIT_MAXPOWER" then
+            W:UnitFrame_UpdatePowerMax(self)
+            W:UnitFrame_UpdatePower(self)
+        elseif event == "UNIT_POWER_FREQUENT" then
+            W:UnitFrame_UpdatePower(self)
+        elseif event == "UNIT_DISPLAYPOWER" then
+            W:UnitFrame_UpdatePowerMax(self)
+            W:UnitFrame_UpdatePower(self)
+            W:UnitFrame_UpdatePowerType(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = 1
         elseif event == "UNIT_NAME_UPDATE" then
@@ -527,8 +536,8 @@ end
 ---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
-
     CUF:Debug(buttonName, "OnLoad")
+
     InitAuraTables(button)
 
     ---@diagnostic disable-next-line: missing-fields
@@ -558,6 +567,7 @@ function CUFUnitButton_OnLoad(button)
     -- Widgets
     W:CreateHealthBar(button, buttonName)
     W:CreateNameText(button)
+    W:CreatePowerBar(button, buttonName)
 
     -- targetHighlight
     ---@class HighlightWidget
@@ -587,6 +597,10 @@ function CUFUnitButton_OnLoad(button)
     button:RegisterForClicks("AnyDown")
     CUF:Debug(button:GetName(), "OnLoad end")
 end
+
+-------------------------------------------------
+-- MARK: Types
+-------------------------------------------------
 
 ---@class CUFUnitButtonStates
 ---@field unit string
@@ -622,6 +636,7 @@ end
 ---@field healthBarLoss Texture
 ---@field deadTex Texture
 ---@field powerBar PowerBarWidget
+---@field powerBarLoss Texture
 ---@field nameText NameTextWidget
 ---@field targetHighlight HighlightWidget
 ---@field mouseoverHighlight HighlightWidget

@@ -23,7 +23,9 @@ Builder.MenuOptions = {
     TextColorWithWidth = 2,
     Anchor = 3,
     Font = 4,
+    HealthFormat = 5,
 }
+
 CUF.Builder = Builder
 
 -------------------------------------------------
@@ -53,7 +55,7 @@ function Builder:CreateWidgetMenuPage(menuFrame, widgetName, menuHeight, pageNam
     widgetPage.button = Cell:CreateButton(menuFrame.widgetAnchor, L[pageName], "accent-hover", { 85, 17 })
     widgetPage.button.id = widgetName
 
-    local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, "nameText")
+    local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
     enabledCheckBox:SetPoint("TOPLEFT", widgetPage.frame, 5, -27)
 
     ---@type Frame
@@ -520,6 +522,175 @@ function Builder:CreateFontOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Health Format
+-------------------------------------------------
+
+local healthFormats = {
+    ["percentage"] = "32%",
+    ["percentage-absorbs"] = "32+25% |cFFA7A7A7" .. L["shields"],
+    ["percentage-absorbs-merged"] = "57% |cFFA7A7A7+" .. L["shields"],
+    ["percentage-deficit"] = "-67%",
+    ["number"] = "21377",
+    ["number-short"] = F:FormatNumber(21377),
+    ["number-absorbs-short"] = F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
+    ["number-absorbs-merged-short"] = F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
+    ["number-deficit"] = "-44158",
+    ["number-deficit-short"] = F:FormatNumber(-44158),
+    ["current-short-percentage"] = F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
+    ["absorbs-only"] = "16384 |cFFA7A7A7" .. L["shields"],
+    ["absorbs-only-short"] = F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
+    ["absorbs-only-percentage"] = "25% |cFFA7A7A7" .. L["shields"],
+}
+
+---@param parent Frame
+---@param widgetName Widgets
+---@return HealthFormatOptions
+function Builder:CreateHealthFormatOptions(parent, widgetName)
+    ---@class HealthFormatOptions
+    local f = CreateFrame("Frame", "HealthFormatOptions" .. widgetName, parent)
+    P:Size(f, self.singleOptionHeight, self.singleOptionHeight)
+
+    f.format = Cell:CreateDropdown(parent, self.dualOptionWidth)
+    f.format:SetPoint("TOPLEFT", f)
+    f.format:SetLabel(L["Format"])
+    --[[ local items = {}
+    for k, v in pairs(healthFormats) do
+        tinsert(items, {
+            ["text"] = v,
+            ["value"] = k,
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = k
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        })
+    end ]]
+
+    f.format:SetItems({
+        {
+            ["text"] = "32%",
+            ["value"] = "percentage",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "percentage"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "32%+25% |cFFA7A7A7+" .. L["shields"],
+            ["value"] = "percentage-absorbs",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "percentage-absorbs"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "57% |cFFA7A7A7+" .. L["shields"],
+            ["value"] = "percentage-absorbs-merged",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "percentage-absorbs-merged"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "-67%",
+            ["value"] = "percentage-deficit",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "percentage-deficit"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "21377",
+            ["value"] = "number",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(21377),
+            ["value"] = "number-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
+            ["value"] = "number-absorbs-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-absorbs-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
+            ["value"] = "number-absorbs-merged-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-absorbs-merged-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "-44158",
+            ["value"] = "number-deficit",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-deficit"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(-44158),
+            ["value"] = "number-deficit-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-deficit-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
+            ["value"] = "current-short-percentage",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "current-short-percentage"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "16384 |cFFA7A7A7" .. L["shields"],
+            ["value"] = "absorbs-only",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "absorbs-only"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
+            ["value"] = "absorbs-only-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "absorbs-only-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+        {
+            ["text"] = "25% |cFFA7A7A7" .. L["shields"],
+            ["value"] = "absorbs-only-percentage",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "absorbs-only-percentage"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+            end,
+        },
+    })
+
+    local function LoadPageDB()
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
+
+        f.format:SetSelectedValue(pageLayoutTable.format)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "HealthFormatOptions")
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -529,4 +700,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.TextColorWithWidth] = Builder.CreateTextColorOptionsWithWidth,
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
+    [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
 }

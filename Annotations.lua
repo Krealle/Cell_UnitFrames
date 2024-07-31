@@ -37,6 +37,8 @@
 ---@field SetEnabled function
 ---@field SetSelectedValue function
 ---@field SetLabel function
+---@field SetSelected function
+---@field SetFont function
 
 ---@class CellColorPicker: Frame, BackdropTemplate
 ---@field SetColor function
@@ -73,12 +75,28 @@
 
 ---@alias Units "player" | "target" | "focus"
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
+---@alias HealthTextFormat
+---| "percentage"
+---| "percentage-absorbs"
+---| "percentage-absorbs-merged"
+---| "percentage-deficit"
+---| "number"
+---| "number-short"
+---| "number-absorbs-short"
+---| "number-absorbs-merged-short"
+---| "number-deficit"
+---| "number-deficit-short"
+---| "current-short-percentage"
+---| "absorbs-only"
+---| "absorbs-only-short"
+---| "absorbs-only-percentage"
 
 -------------------------------------------------
 -- MARK: CUF Widgets
 -------------------------------------------------
 
 ---@alias Widgets "nameText" | "healthText"
+---@alias Widget NameTextWidget | HealthTextWidget
 
 ---@class TextWidgetTable
 ---@field enabled boolean
@@ -86,6 +104,9 @@
 ---@field font FontOpt
 ---@field position PositionOpt
 ---@field width FontWidth
+
+---@class HealthTextWidgetTable: TextWidgetTable
+---@field format HealthTextFormat
 
 ---@class FontWidth
 ---@field type "percentage" | "unlimited" | "length"
@@ -144,7 +165,6 @@
 ---@class UnitMenuPageButton: Button
 ---@field id Units
 
-
 ---@class WidgetsMenuPage
 ---@field frame Frame
 ---@field id Widgets
@@ -164,7 +184,16 @@
 ---@field nameYSlider CellSlider
 
 ---@class FontOptions: Frame
+---@field nameFontDropdown CellDropdown
+---@field nameOutlineDropdown CellDropdown
+---@field nameSizeSilder CellSlider
+---@field nameShadowCB CheckButton
+---@field defaultFontName string
+---@field fonts table<string, string>
 
+---@class EnabledCheckBox: Frame
+
+---@class HealthFormatOptions: Frame
 
 -------------------------------------------------
 -- MARK: CUF UnitButton

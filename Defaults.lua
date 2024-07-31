@@ -59,17 +59,20 @@ local nameWidget = {
     ["width"] = defaultFontWidth,
 }
 
----@type TextWidgetTable
+---@type HealthTextWidgetTable
 local healthTextWidget = {
     ["enabled"] = true,
     ["color"] = colorOpt,
     ["font"] = fontOpt,
     ["position"] = positionOpt,
     ["width"] = defaultFontWidth,
+    ["format"] = "percentage",
+    ["hideIfEmptyOrFull"] = false,
 }
 
 ---@class UnitFrameWidgetsTable
----@field name TextWidgetTable
+---@field nameText TextWidgetTable
+---@field healthText HealthTextWidgetTable
 local unitFrameWidgets = {
     ["nameText"] = nameWidget,
     ["healthText"] = healthTextWidget

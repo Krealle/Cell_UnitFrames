@@ -721,6 +721,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthBar(button, buttonName)
     W:CreateNameText(button)
     W:CreatePowerBar(button, buttonName)
+    W:CreateHealthText(button)
 
     -- targetHighlight
     ---@class HighlightWidget

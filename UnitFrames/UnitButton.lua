@@ -394,7 +394,7 @@ end
 local function UnitFrame_UpdateAll(button)
     if not button:IsVisible() then return end
 
-    W:UnitFrame_UpdateName(button)
+    U:UnitFrame_UpdateName(button)
     W:UnitFrame_UpdateHealthMax(button)
     W:UnitFrame_UpdateHealth(button)
     W:UnitFrame_UpdateHealthColor(button)
@@ -525,7 +525,7 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_NAME_UPDATE" then
-            W:UnitFrame_UpdateName(self)
+            U:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, arg)
         end

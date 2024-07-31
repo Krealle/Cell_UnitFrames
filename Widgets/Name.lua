@@ -8,6 +8,8 @@ local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.widgets
 local W = CUF.widgets
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 ---@class CUF.Util
 local Util = CUF.Util
 ---@class CUF.widgets.Handler
@@ -27,7 +29,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdateName(button)
+function U:UnitFrame_UpdateName(button)
     local unit = button.states.unit
     if not unit then return end
 
@@ -37,6 +39,8 @@ function W:UnitFrame_UpdateName(button)
     button.states.guid = UnitGUID(unit)
     button.states.isPlayer = UnitIsPlayer(unit)
     button.states.class = UnitClassBase(unit) --! update class or it may be nil
+
+    if not button.widgets.nameText.enabled then return end
 
     button.widgets.nameText:UpdateName()
     button.widgets.nameText:UpdateTextColor()
@@ -116,49 +120,59 @@ menu:AddWidget(CreateNamePage)
 
 ---@param button CUFUnitButton
 ---@param unit Units
----@param widgetName Widgets
-function W.UpdateNameTextWidget(button, unit, widgetName)
-    --CUF:Debug("UpdateTextWidget", unit, widgetName)
+---@param setting string
+---@param subSetting string
+function W.UpdateNameTextWidget(button, unit, setting, subSetting)
+    --CUF:Debug("UpdateTextWidget", unit, setting)
 
-    local styleTable = CUF.vars.selectedLayoutTable[unit].widgets[widgetName]
+    local styleTable = CUF.vars.selectedLayoutTable[unit].widgets.nameText
+    local widget = button.widgets.nameText
 
-    button.widgets.healthText.enabled = styleTable.enabled
-    if not styleTable.enabled then
-        button.widgets[widgetName]:Hide()
-        return
-    else
-        button.widgets[widgetName]:Show()
+    if not setting or setting == "enabled" then
+        widget.enabled = styleTable.enabled
+        if not styleTable.enabled then
+            widget:Hide()
+            return
+        else
+            widget:Show()
+        end
     end
 
-    button.widgets[widgetName]:ClearAllPoints()
-    button.widgets[widgetName]:SetPoint(styleTable.position.anchor, button,
-        styleTable.position.offsetX,
-        styleTable.position.offsetY)
-
-    local font = F:GetFont(styleTable.font.style)
-
-    local fontFlags
-    if styleTable.font.outline == "None" then
-        fontFlags = ""
-    elseif styleTable.font.outline == "Outline" then
-        fontFlags = "OUTLINE"
-    else
-        fontFlags = "OUTLINE,MONOCHROME"
+    if not setting or setting == "position" then
+        widget:ClearAllPoints()
+        widget:SetPoint(styleTable.position.anchor, button,
+            styleTable.position.offsetX,
+            styleTable.position.offsetY)
     end
 
-    button.widgets[widgetName]:SetFont(font, styleTable.font.size, fontFlags)
+    if not setting or setting == "font" then
+        local font = F:GetFont(styleTable.font.style)
 
-    if styleTable.font.shadow then
-        button.widgets[widgetName]:SetShadowOffset(1, -1)
-        button.widgets[widgetName]:SetShadowColor(0, 0, 0, 1)
-    else
-        button.widgets[widgetName]:SetShadowOffset(0, 0)
-        button.widgets[widgetName]:SetShadowColor(0, 0, 0, 0)
+        local fontFlags
+        if styleTable.font.outline == "None" then
+            fontFlags = ""
+        elseif styleTable.font.outline == "Outline" then
+            fontFlags = "OUTLINE"
+        else
+            fontFlags = "OUTLINE,MONOCHROME"
+        end
+
+        widget:SetFont(font, styleTable.font.size, fontFlags)
+
+        if styleTable.font.shadow then
+            widget:SetShadowOffset(1, -1)
+            widget:SetShadowColor(0, 0, 0, 1)
+        else
+            widget:SetShadowOffset(0, 0)
+            widget:SetShadowColor(0, 0, 0, 0)
+        end
     end
 
-    button.widgets[widgetName].width = styleTable.width
-    button.widgets[widgetName]:UpdateName()
-    button.widgets[widgetName]:UpdateTextColor()
+    if not setting or setting == "textWidth" then
+        widget.width = styleTable.width
+    end
+
+    U:UnitFrame_UpdateName(button)
 end
 
 Handler:RegisterWidget(W.UpdateNameTextWidget, "nameText")

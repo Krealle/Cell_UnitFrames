@@ -29,13 +29,13 @@ function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     layout = layout or Cell.vars.currentLayout
 
     if widgetName then
-        Util:IterateAllUnitButtons(Handler.widgets[widgetName], unit, widgetName, ...)
+        Util:IterateAllUnitButtons(Handler.widgets[widgetName], unit, setting, ...)
         return
     end
 
     for name, func in pairs(Handler.widgets) do
         if not widgetName or name == widgetName then
-            Util:IterateAllUnitButtons(func, unit, name, ...)
+            Util:IterateAllUnitButtons(func, unit, setting, ...)
         end
     end
 end

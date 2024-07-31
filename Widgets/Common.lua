@@ -48,7 +48,7 @@ function Builder:CreatEnabledCheckBox(parent, widgetName)
 
     local checkbox = Cell:CreateCheckButton(f, L["Enabled"], function(checked)
         CUF.vars.selectedWidgetTable[widgetName].enabled = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "enabled")
     end)
     checkbox:SetPoint("TOPLEFT")
     checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
@@ -81,7 +81,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["text"] = L["Unlimited"],
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "unlimited"
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
                 percentDropdown:Hide()
                 lengthEB:Hide()
                 lengthEB2:Hide()
@@ -94,7 +94,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "percentage"
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.75
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
                 percentDropdown:SetSelectedValue(0.75)
                 percentDropdown:Show()
                 lengthEB:Hide()
@@ -109,7 +109,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "length"
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 5
                 CUF.vars.selectedWidgetTable[widgetName].width.auxValue = 3
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
                 percentDropdown:Hide()
                 lengthEB:SetText(5)
                 lengthEB:Show()
@@ -130,7 +130,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 1,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 1
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
             end,
         },
         {
@@ -138,7 +138,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.75,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.75
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
             end,
         },
         {
@@ -146,7 +146,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.5,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.5
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
             end,
         },
         {
@@ -154,7 +154,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.25,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.25
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
             end,
         },
     })
@@ -180,12 +180,12 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB.value = length
 
         CUF.vars.selectedWidgetTable[widgetName].width.value = length
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
     end)
 
-    lengthEB:SetScript("OnTextChanged", function(self, userChanged)
+    lengthEB:SetScript("OnTextChanged", function(txt, userChanged)
         if userChanged then
-            local length = tonumber(self:GetText())
+            local length = tonumber(txt:GetText())
             if length and length ~= lengthEB.value and length ~= 0 then
                 lengthEB.confirmBtn:Show()
             else
@@ -215,12 +215,12 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB2.value = length
 
         CUF.vars.selectedWidgetTable[widgetName].width.auxValue = length
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
     end)
 
-    lengthEB2:SetScript("OnTextChanged", function(self, userChanged)
+    lengthEB2:SetScript("OnTextChanged", function(txt, userChanged)
         if userChanged then
-            local length = tonumber(self:GetText())
+            local length = tonumber(txt:GetText())
             if length and length ~= lengthEB2.value and length ~= 0 then
                 lengthEB2.confirmBtn:Show()
             else
@@ -284,7 +284,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, prevOptions, include
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[1] = r
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[2] = g
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[3] = b
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "rgb")
     end)
 
     f.dropdown = Cell:CreateDropdown(f, 117)
@@ -297,7 +297,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, prevOptions, include
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].color.type = "class_color"
                 f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
             end,
         },
         {
@@ -306,7 +306,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, prevOptions, include
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].color.type = "custom"
                 f.colorPicker:Show()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
             end,
         },
     })
@@ -359,7 +359,7 @@ function Builder:CreateAnchorOptions(parent, widgetName, prevOptions)
             ["value"] = v,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].position.anchor = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "anchor")
             end,
         })
     end
@@ -369,14 +369,14 @@ function Builder:CreateAnchorOptions(parent, widgetName, prevOptions)
     f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameXSlider.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].position.offsetX = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "offsetX")
     end
 
     f.nameYSlider = Cell:CreateSlider(L["Y Offset"], parent, -100, 100, 117, 1)
     f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.optionBufferX, 0)
     f.nameYSlider.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].position.offsetY = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "offsetY")
     end
 
     local function LoadPageDB()
@@ -415,7 +415,7 @@ function Builder:CreateFontOptions(parent, widgetName, prevOptions)
     for _, item in pairs(items) do
         item["onClick"] = function()
             CUF.vars.selectedWidgetTable[widgetName].font.style = item["text"]
-            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "name")
         end
     end
     f.nameFontDropdown:SetItems(items)
@@ -435,7 +435,7 @@ function Builder:CreateFontOptions(parent, widgetName, prevOptions)
             ["value"] = v,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].font.outline = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "outline")
             end,
         })
     end
@@ -445,12 +445,12 @@ function Builder:CreateFontOptions(parent, widgetName, prevOptions)
     f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameSizeSilder.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].font.size = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "size")
     end
 
     f.nameShadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked)
         CUF.vars.selectedWidgetTable[widgetName].font.shadow = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "shadow")
     end)
     f.nameShadowCB:SetPoint("TOPLEFT", f.nameFontDropdown, "BOTTOMLEFT", 0, -10)
 

@@ -8,7 +8,7 @@ local Util = CUF.Util
 
 ---@class CUF.widgets.Handler
 ---@field widgets table<WIDGET_KIND, function>
----@field options table<Unit, table<WIDGET_KIND, function>>
+---@field options table<WIDGET_KIND, table<number, function>>
 local Handler = {}
 Handler.widgets = {}
 Handler.options = {}
@@ -39,7 +39,7 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
 end
 
 ---@param layout string?
----@param unit string?
+---@param unit Unit?
 ---@param widgetName WIDGET_KIND?
 ---@param setting string?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
@@ -64,8 +64,8 @@ function Handler:RegisterWidget(func, widgetName)
     self.widgets[widgetName] = func
 end
 
----@param page string
----@param subPage string
+---@param page Unit
+---@param subPage WIDGET_KIND
 function Handler.LoadPageDB(page, subPage)
     -- Both params are only present when LoadLayoutDB is called
     if not page or not subPage then
@@ -94,6 +94,9 @@ end
 
 CUF:RegisterCallback("LoadPageDB", "Handler_LoadPageDB", Handler.LoadPageDB)
 
+---@param func function
+--- @param widgetName WIDGET_KIND
+--- @param optName string
 function Handler:RegisterOption(func, widgetName, optName)
     CUF:Debug("|cffff7777RegisterOption:|r", widgetName, optName)
     if not self.options[widgetName] then

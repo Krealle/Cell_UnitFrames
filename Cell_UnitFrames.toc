@@ -14,9 +14,9 @@
 
 ## Notes: Unitframes for our beloved Cell!
 
+Core/Constants.lua
 Defaults.lua
 
-Core/Constants.lua
 Core/Util.lua
 Core/Core.lua
 Core/Handler.lua

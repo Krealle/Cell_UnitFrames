@@ -22,7 +22,7 @@ local const = CUF.constants
 ---@class CUF.vars
 ---@field selectedLayout string
 ---@field selectedUnit Unit
----@field selectedWidget Widgets
+---@field selectedWidget WIDGET_KIND
 ---@field selectedLayoutTable LayoutTable
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field units table<number, Unit>
@@ -86,7 +86,7 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function()
     CUF.vars.selectedUnit = const.UNIT.PLAYER
-    CUF.vars.selectedWidget = "nameText"
+    CUF.vars.selectedWidget = const.WIDGET_KIND.NAME_TEXT
     CUF.vars.selectedLayout = Cell.vars.currentLayout
     CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable
     CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[CUF.vars.selectedUnit].widgets

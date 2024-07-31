@@ -1,6 +1,9 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+---@class CUF.constants
+local const = CUF.constants
+
 CUF.defaults = {}
 CUF.anchorPoints = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
 CUF.outlines = { "None", "Outline", "Monochrome" }
@@ -86,9 +89,9 @@ local powerTextWidget = {
 ---@field healthText HealthTextWidgetTable
 ---@field powerText PowerTextWidgetTable
 local unitFrameWidgets = {
-    ["nameText"] = nameWidget,
-    ["healthText"] = healthTextWidget,
-    ["powerText"] = powerTextWidget
+    [const.WIDGET_KIND.NAME_TEXT] = nameWidget,
+    [const.WIDGET_KIND.HEALTH_TEXT] = healthTextWidget,
+    [const.WIDGET_KIND.POWER_TEXT] = powerTextWidget
 }
 
 ---@class Layout

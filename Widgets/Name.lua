@@ -30,7 +30,7 @@ end
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
-menu:AddWidget("nameText", 250, "Name", Builder.MenuOptions.TextColorWithWidth,
+menu:AddWidget(const.WIDGET_KIND.NAME_TEXT, 250, "Name", Builder.MenuOptions.TextColorWithWidth,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font)
 
@@ -49,7 +49,7 @@ function W.UpdateNameTextWidget(button, unit, setting, subSetting)
     U:UnitFrame_UpdateName(button)
 end
 
-Handler:RegisterWidget(W.UpdateNameTextWidget, "nameText")
+Handler:RegisterWidget(W.UpdateNameTextWidget, const.WIDGET_KIND.NAME_TEXT)
 
 -------------------------------------------------
 -- MARK: Button Update Name
@@ -87,7 +87,7 @@ function W:CreateNameText(button)
     nameText:SetPoint("CENTER", 0, 0)
     nameText:SetFont("Cell Default", 12, "Outline")
     nameText.enabled = false
-    nameText.id = "nameText"
+    nameText.id = const.WIDGET_KIND.NAME_TEXT
     ---@type ColorType
     nameText.colorType = const.ColorType.CLASS_COLOR
     nameText.rgb = { 1, 1, 1 }

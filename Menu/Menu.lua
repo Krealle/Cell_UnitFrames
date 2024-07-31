@@ -25,7 +25,7 @@ function menu:AddUnit(unit)
     table.insert(self.unitsToAdd, unit)
 end
 
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@param menuHeight number
 ---@param pageName string
 ---@param ... MenuOptions

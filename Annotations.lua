@@ -96,7 +96,6 @@
 -- MARK: CUF Widgets
 -------------------------------------------------
 
----@alias Widgets "nameText" | "healthText" | "powerText"
 ---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget
 ---@alias ColorFormat "class_color"  | "custom"
 --[[ ---@alias PowerColorFormat ColorFormat | "power_color" ]]
@@ -173,12 +172,12 @@
 
 ---@class WidgetsMenuPage
 ---@field frame Frame
----@field id Widgets
+---@field id WIDGET_KIND
 ---@field button WidgetMenuPageButton
 ---@field height number
 
 ---@class WidgetMenuPageButton: Button
----@field id Widgets
+---@field id WIDGET_KIND
 
 ---@class UnitColorOptions: Frame
 ---@field colorPicker CellColorPicker

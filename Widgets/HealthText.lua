@@ -26,7 +26,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget("healthText", 250, "Health", Builder.MenuOptions.TextColor,
+menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT, 250, "Health", Builder.MenuOptions.TextColor,
     Builder.MenuOptions.HealthFormat,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font)
@@ -45,7 +45,7 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
     U:UnitFrame_UpdateHealthText(button)
 end
 
-Handler:RegisterWidget(W.UpdateHealthTextWidget, "healthText")
+Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 
 -------------------------------------------------
 -- MARK: UpdateHealthText
@@ -261,7 +261,7 @@ function W:CreateHealthText(button)
     healthText:SetPoint("CENTER", 0, 0)
     healthText:SetFont("Cell Default", 12, "Outline")
     healthText.enabled = false
-    healthText.id = "healthText"
+    healthText.id = const.WIDGET_KIND.HEALTH_TEXT
     ---@type ColorType
     healthText.colorType = const.ColorType.CLASS_COLOR
     healthText.rgb = { 1, 1, 1 }

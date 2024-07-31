@@ -26,7 +26,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget("powerText", 250, "Power", Builder.MenuOptions.TextColorWithPowerType,
+menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, 250, "Power", Builder.MenuOptions.TextColorWithPowerType,
     Builder.MenuOptions.PowerFormat,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font)
@@ -46,7 +46,7 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     U:UnitFrame_UpdatePowerTextColor(button)
 end
 
-Handler:RegisterWidget(W.UpdatePowerTextWidget, "powerText")
+Handler:RegisterWidget(W.UpdatePowerTextWidget, const.WIDGET_KIND.POWER_TEXT)
 
 -------------------------------------------------
 -- MARK: Update Power Text
@@ -123,7 +123,7 @@ function W:CreatePowerText(button)
     powerText:SetPoint("CENTER", 0, 0)
     powerText:SetFont("Cell Default", 12, "Outline")
     powerText.enabled = false
-    powerText.id = "powerText"
+    powerText.id = const.WIDGET_KIND.POWER_TEXT
     ---@type PowerColorType
     powerText.colorType = const.PowerColorType.CLASS_COLOR
     powerText.rgb = { 1, 1, 1 }

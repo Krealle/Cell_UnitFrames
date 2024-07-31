@@ -7,8 +7,8 @@ local Cell = CUF.Cell
 local Util = CUF.Util
 
 ---@class CUF.widgets.Handler
----@field widgets table<Widgets, function>
----@field options table<Unit, table<Widgets, function>>
+---@field widgets table<WIDGET_KIND, function>
+---@field options table<Unit, table<WIDGET_KIND, function>>
 local Handler = {}
 Handler.widgets = {}
 Handler.options = {}
@@ -17,7 +17,7 @@ CUF.widgetsHandler = Handler
 
 ---@param button CUFUnitButton
 ---@param unit Unit
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@param setting string
 ---@param subSetting string
 local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
@@ -40,7 +40,7 @@ end
 
 ---@param layout string?
 ---@param unit string?
----@param widgetName Widgets?
+---@param widgetName WIDGET_KIND?
 ---@param setting string?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     CUF:Debug("|cffff7777UpdateWidgets:|r ", layout, unit, widgetName, setting, ...)
@@ -58,7 +58,7 @@ end
 CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidgets)
 
 ---@param func function
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
     CUF:Debug("|cffff7777RegisterWidget:|r", widgetName)
     self.widgets[widgetName] = func

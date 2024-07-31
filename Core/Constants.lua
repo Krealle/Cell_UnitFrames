@@ -27,3 +27,10 @@ const.ColorType = {
     CLASS_COLOR = "class_color",
     CUSTOM = "custom",
 }
+
+---@alias WIDGET_KIND "nameText" | "healthText" | "powerText"
+const.WIDGET_KIND = {
+    NAME_TEXT = "nameText",
+    HEALTH_TEXT = "healthText",
+    POWER_TEXT = "powerText",
+}

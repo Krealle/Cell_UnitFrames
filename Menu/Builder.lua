@@ -35,13 +35,13 @@ CUF.Builder = Builder
 -------------------------------------------------
 
 ---@class WidgetsMenuPageArgs
----@field widgetName Widgets
+---@field widgetName WIDGET_KIND
 ---@field menuHeight number
 ---@field pageName string
 ---@field options table<MenuOptions>
 
 ---@param menuFrame MenuFrame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@param menuHeight number
 ---@param pageName string
 ---@param ... MenuOptions
@@ -96,7 +96,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return EnabledCheckBox
 function Builder:CreatEnabledCheckBox(parent, widgetName)
     ---@class EnabledCheckBox
@@ -124,7 +124,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 function Builder:CreateTextWidthOption(parent, widgetName)
     local f = CreateFrame("Frame", nil, parent)
     P:Size(f, 117, 20)
@@ -328,7 +328,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@param includeWidth? boolean
 ---@param includePowerType? boolean
 ---@return UnitColorOptions
@@ -405,14 +405,14 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
 end
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return UnitColorOptions
 function Builder:CreateTextColorOptionsWithWidth(parent, widgetName)
     return self:CreateTextColorOptions(parent, widgetName, true)
 end
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return UnitColorOptions
 function Builder:CreateTextColorOptionsWithPowerType(parent, widgetName)
     return self:CreateTextColorOptions(parent, widgetName, false, true)
@@ -423,7 +423,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return AnchorOptions2
 function Builder:CreateAnchorOptions(parent, widgetName)
     ---@class AnchorOptions2: Frame
@@ -478,7 +478,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return FontOptions2
 function Builder:CreateFontOptions(parent, widgetName)
     ---@class FontOptions2: Frame
@@ -570,7 +570,7 @@ local healthFormats = {
 }
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return HealthFormatOptions
 function Builder:CreateHealthFormatOptions(parent, widgetName)
     ---@class HealthFormatOptions
@@ -711,7 +711,7 @@ end
 -------------------------------------------------
 
 ---@param parent Frame
----@param widgetName Widgets
+---@param widgetName WIDGET_KIND
 ---@return PowerFormatOptions
 function Builder:CreatePowerFormatOptions(parent, widgetName)
     ---@class PowerFormatOptions: Frame

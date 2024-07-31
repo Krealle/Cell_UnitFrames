@@ -74,23 +74,6 @@
 -------------------------------------------------
 
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
----@alias PowerTextFormat
----| "percentage"
----| "number"
----| "number-short"
----@alias HealthTextFormat
----| PowerTextFormat
----| "percentage-absorbs"
----| "percentage-absorbs-merged"
----| "percentage-deficit"
----| "number-absorbs-short"
----| "number-absorbs-merged-short"
----| "number-deficit"
----| "number-deficit-short"
----| "current-short-percentage"
----| "absorbs-only"
----| "absorbs-only-short"
----| "absorbs-only-percentage"
 
 -------------------------------------------------
 -- MARK: CUF Widgets

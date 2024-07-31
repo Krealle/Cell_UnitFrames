@@ -30,6 +30,7 @@ Widgets/Name.lua
 Widgets/HealthBar.lua
 Widgets/PowerBar.lua
 Widgets/HealthText.lua
+Widgets/PowerText.lua
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

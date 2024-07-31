@@ -70,12 +70,25 @@ local healthTextWidget = {
     ["hideIfEmptyOrFull"] = false,
 }
 
+---@type PowerTextWidgetTable
+local powerTextWidget = {
+    ["enabled"] = true,
+    ["color"] = colorOpt,
+    ["font"] = fontOpt,
+    ["position"] = positionOpt,
+    ["width"] = defaultFontWidth,
+    ["format"] = "percentage",
+    ["hideIfEmptyOrFull"] = false,
+}
+
 ---@class UnitFrameWidgetsTable
 ---@field nameText TextWidgetTable
 ---@field healthText HealthTextWidgetTable
+---@field powerText PowerTextWidgetTable
 local unitFrameWidgets = {
     ["nameText"] = nameWidget,
-    ["healthText"] = healthTextWidget
+    ["healthText"] = healthTextWidget,
+    ["powerText"] = powerTextWidget
 }
 
 ---@class Layout

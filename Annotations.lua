@@ -75,13 +75,15 @@
 
 ---@alias Units "player" | "target" | "focus"
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
----@alias HealthTextFormat
+---@alias PowerTextFormat
 ---| "percentage"
+---| "number"
+---| "number-short"
+---@alias HealthTextFormat
+---| PowerTextFormat
 ---| "percentage-absorbs"
 ---| "percentage-absorbs-merged"
 ---| "percentage-deficit"
----| "number"
----| "number-short"
 ---| "number-absorbs-short"
 ---| "number-absorbs-merged-short"
 ---| "number-deficit"
@@ -95,8 +97,8 @@
 -- MARK: CUF Widgets
 -------------------------------------------------
 
----@alias Widgets "nameText" | "healthText"
----@alias Widget NameTextWidget | HealthTextWidget
+---@alias Widgets "nameText" | "healthText" | "powerText"
+---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget
 
 ---@class TextWidgetTable
 ---@field enabled boolean
@@ -107,6 +109,9 @@
 
 ---@class HealthTextWidgetTable: TextWidgetTable
 ---@field format HealthTextFormat
+
+---@class PowerTextWidgetTable: TextWidgetTable
+---@field format PowerTextFormat
 
 ---@class FontWidth
 ---@field type "percentage" | "unlimited" | "length"
@@ -252,6 +257,7 @@
 ---@field deadTex Texture
 ---@field powerBar PowerBarWidget
 ---@field powerBarLoss Texture
+---@field powerText PowerTextWidget
 ---@field nameText NameTextWidget
 ---@field targetHighlight HighlightWidget
 ---@field mouseoverHighlight HighlightWidget

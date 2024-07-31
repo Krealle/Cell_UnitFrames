@@ -153,39 +153,6 @@ end
 -- MARK: Button Update PowerBar
 -------------------------------------------------
 
---[[ function function U:UnitFrame_UpdatePowerText(button)
-    if enabledIndicators["powerText"] and button.states.powerMax and button.states.power then
-        if indicatorBooleans["powerText"] then
-            if button.states.power == button.states.powerMax or button.states.power == 0 then
-                button.indicators.powerText:Hide()
-            else
-                button.indicators.powerText:SetValue(button.states.power, button.states.powerMax)
-                button.indicators.powerText:Show()
-            end
-        else
-            button.indicators.powerText:SetValue(button.states.power, button.states.powerMax)
-            button.indicators.powerText:Show()
-        end
-    else
-        button.indicators.powerText:Hide()
-    end
-end
-
-function U:UnitFrame_UpdatePowerTextColor(button)
-    local unit = button.states.displayedUnit
-    if not unit then return end
-
-    if enabledIndicators["powerText"] then
-        if indicatorColors["powerText"][1] == "power_color" then
-            button.indicators.powerText:SetColor(F:GetPowerColor(unit))
-        elseif indicatorColors["powerText"][1] == "class_color" then
-            button.indicators.powerText:SetColor(F:GetUnitClassColor(unit))
-        else
-            button.indicators.powerText:SetColor(unpack(indicatorColors["powerText"][2]))
-        end
-    end
-end ]]
-
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdatePowerMax(button)
     local unit = button.states.displayedUnit
@@ -199,8 +166,6 @@ function U:UnitFrame_UpdatePowerMax(button)
     else
         button.widgets.powerBar:SetMinMaxValues(0, button.states.powerMax)
     end
-
-    --[[ function U:UnitFrame_UpdatePowerText(button) ]]
 end
 
 ---@param button CUFUnitButton
@@ -211,8 +176,6 @@ function U:UnitFrame_UpdatePower(button)
     button.states.power = UnitPower(unit)
 
     button.widgets.powerBar:SetBarValue(button.states.power)
-
-    --[[ function U:UnitFrame_UpdatePowerText(button) ]]
 end
 
 ---@param button CUFUnitButton
@@ -232,8 +195,6 @@ function U:UnitFrame_UpdatePowerType(button)
 
     button.widgets.powerBar:SetStatusBarColor(r, g, b)
     button.widgets.powerBarLoss:SetVertexColor(lossR, lossG, lossB)
-
-    --[[ U:UnitFrame_UpdatePowerTextColor(button) ]]
 end
 
 -------------------------------------------------

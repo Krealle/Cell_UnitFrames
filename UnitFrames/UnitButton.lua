@@ -402,6 +402,8 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdatePowerMax(button)
     U:UnitFrame_UpdatePower(button)
     U:UnitFrame_UpdatePowerType(button)
+    U:UnitFrame_UpdatePowerText(button)
+    U:UnitFrame_UpdatePowerTextColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     --[[
@@ -463,6 +465,8 @@ local function UnitFrame_RegisterEvents(self)
         self:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
 
+    self:RegisterEvent("UNIT_NAME_UPDATE")
+
     --[[ if Cell.loaded then
         if enabledIndicators["playerRaidIcon"] then
             self:RegisterEvent("RAID_TARGET_UPDATE")
@@ -519,16 +523,21 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             U:UnitFrame_UpdatePower(self)
         elseif event == "UNIT_POWER_FREQUENT" then
             U:UnitFrame_UpdatePower(self)
+            U:UnitFrame_UpdatePowerText(self)
         elseif event == "UNIT_DISPLAYPOWER" then
             U:UnitFrame_UpdatePowerMax(self)
             U:UnitFrame_UpdatePower(self)
+            U:UnitFrame_UpdatePowerText(self)
             U:UnitFrame_UpdatePowerType(self)
+            U:UnitFrame_UpdatePowerTextColor(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_NAME_UPDATE" then
             U:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, arg)
+        elseif event == "UNIT_NAME_UPDATE" then
+            U:UnitFrame_UpdatePowerTextColor(self)
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
@@ -722,6 +731,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateNameText(button)
     W:CreatePowerBar(button, buttonName)
     W:CreateHealthText(button)
+    W:CreatePowerText(button)
 
     -- targetHighlight
     ---@class HighlightWidget

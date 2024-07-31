@@ -21,9 +21,11 @@ Builder.tripleOptionWidth = 117 * 3
 Builder.MenuOptions = {
     TextColor = 1,
     TextColorWithWidth = 2,
-    Anchor = 3,
-    Font = 4,
-    HealthFormat = 5,
+    TextColorWithPowerType = 3,
+    Anchor = 4,
+    Font = 5,
+    HealthFormat = 6,
+    PowerFormat = 7,
 }
 
 CUF.Builder = Builder
@@ -328,8 +330,9 @@ end
 ---@param parent Frame
 ---@param widgetName Widgets
 ---@param includeWidth? boolean
+---@param includePowerType? boolean
 ---@return UnitColorOptions
-function Builder:CreateTextColorOptions(parent, widgetName, includeWidth)
+function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includePowerType)
     ---@class UnitColorOptions
     local f = CreateFrame("Frame", "UnitColorOptions" .. widgetName, parent)
     P:Size(f, 117, 20)
@@ -344,7 +347,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth)
     f.dropdown = Cell:CreateDropdown(f, 117)
     f.dropdown:SetPoint("TOPLEFT")
     f.dropdown:SetLabel(L["Color"])
-    f.dropdown:SetItems({
+    local items = {
         {
             ["text"] = L["Class Color"],
             ["value"] = "class_color",
@@ -363,7 +366,20 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth)
                 CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
             end,
         },
-    })
+    }
+    if includePowerType then
+        tinsert(items, {
+            ["text"] = L["Power Color"],
+            ["value"] = "power_color",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].color.type = "power_color"
+                f.colorPicker:Hide()
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
+            end,
+        })
+    end
+    f.dropdown:SetItems(items)
+
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
 
     if includeWidth then
@@ -393,6 +409,13 @@ end
 ---@return UnitColorOptions
 function Builder:CreateTextColorOptionsWithWidth(parent, widgetName)
     return self:CreateTextColorOptions(parent, widgetName, true)
+end
+
+---@param parent Frame
+---@param widgetName Widgets
+---@return UnitColorOptions
+function Builder:CreateTextColorOptionsWithPowerType(parent, widgetName)
+    return self:CreateTextColorOptions(parent, widgetName, false, true)
 end
 
 -------------------------------------------------
@@ -557,17 +580,6 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
     f.format = Cell:CreateDropdown(parent, self.dualOptionWidth)
     f.format:SetPoint("TOPLEFT", f)
     f.format:SetLabel(L["Format"])
-    --[[ local items = {}
-    for k, v in pairs(healthFormats) do
-        tinsert(items, {
-            ["text"] = v,
-            ["value"] = k,
-            ["onClick"] = function()
-                CUF.vars.selectedWidgetTable[widgetName].format = k
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
-            end,
-        })
-    end ]]
 
     f.format:SetItems({
         {
@@ -695,6 +707,59 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Power Format
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName Widgets
+---@return PowerFormatOptions
+function Builder:CreatePowerFormatOptions(parent, widgetName)
+    ---@class PowerFormatOptions: Frame
+    local f = CreateFrame("Frame", "PowerFormatOptions" .. widgetName, parent)
+    P:Size(f, self.singleOptionHeight, self.singleOptionHeight)
+
+    f.format = Cell:CreateDropdown(parent, self.dualOptionWidth)
+    f.format:SetPoint("TOPLEFT", f)
+    f.format:SetLabel(L["Format"])
+
+    f.format:SetItems({
+        {
+            ["text"] = "32%",
+            ["value"] = "percentage",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "percentage"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+            end,
+        },
+        {
+            ["text"] = "21377",
+            ["value"] = "number",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+            end,
+        },
+        {
+            ["text"] = F:FormatNumber(21377),
+            ["value"] = "number-short",
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].format = "number-short"
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+            end,
+        },
+    })
+
+    local function LoadPageDB()
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
+
+        f.format:SetSelectedValue(pageLayoutTable.format)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "PowerFormatOptions")
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -702,7 +767,9 @@ end
 Builder.MenuFuncs = {
     [Builder.MenuOptions.TextColor] = Builder.CreateTextColorOptions,
     [Builder.MenuOptions.TextColorWithWidth] = Builder.CreateTextColorOptionsWithWidth,
+    [Builder.MenuOptions.TextColorWithPowerType] = Builder.CreateTextColorOptionsWithPowerType,
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
+    [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
 }

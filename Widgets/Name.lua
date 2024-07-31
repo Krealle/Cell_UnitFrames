@@ -55,6 +55,7 @@ function W:CreateNameText(button)
     nameText:ClearAllPoints()
     nameText:SetPoint("CENTER", 0, 0)
     nameText:SetFont("Cell Default", 12, "Outline")
+    nameText.enabled = false
 
     function nameText:UpdateName()
         local name
@@ -68,7 +69,6 @@ function W:CreateNameText(button)
     end
 
     function nameText:UpdateTextColor()
-        CUF:DevAdd(Cell.vars.currentLayoutTable[button.states.unit], "UpdateTextColor" .. button.states.unit)
         if not Cell.vars.currentLayoutTable[button.states.unit] then
             button.widgets.nameText:SetTextColor(1, 1, 1)
             return
@@ -122,6 +122,7 @@ function W.UpdateNameTextWidget(button, unit, widgetName)
 
     local styleTable = CUF.vars.selectedLayoutTable[unit].widgets[widgetName]
 
+    button.widgets.healthText.enabled = styleTable.enabled
     if not styleTable.enabled then
         button.widgets[widgetName]:Hide()
         return

@@ -395,12 +395,13 @@ local function UnitFrame_UpdateAll(button)
     if not button:IsVisible() then return end
 
     U:UnitFrame_UpdateName(button)
-    W:UnitFrame_UpdateHealthMax(button)
-    W:UnitFrame_UpdateHealth(button)
-    W:UnitFrame_UpdateHealthColor(button)
-    W:UnitFrame_UpdatePowerMax(button)
-    W:UnitFrame_UpdatePower(button)
-    W:UnitFrame_UpdatePowerType(button)
+    U:UnitFrame_UpdateHealthMax(button)
+    U:UnitFrame_UpdateHealth(button)
+    U:UnitFrame_UpdateHealthColor(button)
+    U:UnitFrame_UpdateHealthText(button)
+    U:UnitFrame_UpdatePowerMax(button)
+    U:UnitFrame_UpdatePower(button)
+    U:UnitFrame_UpdatePowerType(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     --[[
@@ -414,8 +415,8 @@ local function UnitFrame_UpdateAll(button)
             button:HidePowerBar()
         end
     else
-        W:UnitFrame_UpdatePowerMax(button)
-        W:UnitFrame_UpdatePower(button)
+        U:UnitFrame_UpdatePowerMax(button)
+        U:UnitFrame_UpdatePower(button)
     end
 end
 U.UpdateAll = UnitFrame_UpdateAll
@@ -509,19 +510,19 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             --UnitFrame_UpdateCasts(self, arg2)
         elseif event == "UNIT_HEALTH" then
-            W:UnitFrame_UpdateHealth(self)
+            U:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_MAXHEALTH" then
-            W:UnitFrame_UpdateHealthMax(self)
-            W:UnitFrame_UpdateHealth(self)
+            U:UnitFrame_UpdateHealthMax(self)
+            U:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_MAXPOWER" then
-            W:UnitFrame_UpdatePowerMax(self)
-            W:UnitFrame_UpdatePower(self)
+            U:UnitFrame_UpdatePowerMax(self)
+            U:UnitFrame_UpdatePower(self)
         elseif event == "UNIT_POWER_FREQUENT" then
-            W:UnitFrame_UpdatePower(self)
+            U:UnitFrame_UpdatePower(self)
         elseif event == "UNIT_DISPLAYPOWER" then
-            W:UnitFrame_UpdatePowerMax(self)
-            W:UnitFrame_UpdatePower(self)
-            W:UnitFrame_UpdatePowerType(self)
+            U:UnitFrame_UpdatePowerMax(self)
+            U:UnitFrame_UpdatePower(self)
+            U:UnitFrame_UpdatePowerType(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_NAME_UPDATE" then

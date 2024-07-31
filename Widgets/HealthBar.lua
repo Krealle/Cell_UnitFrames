@@ -9,6 +9,8 @@ local B = Cell.bFuncs
 
 ---@class CUF.widgets
 local W = CUF.widgets
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 ---@class CUF.Util
 local Util = CUF.Util
 
@@ -22,7 +24,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdateHealthColor(button)
+function U:UnitFrame_UpdateHealthColor(button)
     local unit = button.states.unit
     if not unit then return end
 
@@ -124,7 +126,7 @@ end
 
 ---@param button CUFUnitButton
 ---@param diff number?
-function W:UnitFrame_UpdateHealth(button, diff)
+function U:UnitFrame_UpdateHealth(button, diff)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -144,7 +146,7 @@ function W:UnitFrame_UpdateHealth(button, diff)
     end
 
     if Cell.vars.useGradientColor or Cell.vars.useFullColor then
-        W:UnitFrame_UpdateHealthColor(button)
+        U:UnitFrame_UpdateHealthColor(button)
     end
 
     button.states.healthPercentOld = healthPercent
@@ -157,7 +159,7 @@ function W:UnitFrame_UpdateHealth(button, diff)
 end
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdateHealthMax(button)
+function U:UnitFrame_UpdateHealthMax(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -170,7 +172,7 @@ function W:UnitFrame_UpdateHealthMax(button)
     end
 
     if Cell.vars.useGradientColor or Cell.vars.useFullColor then
-        W:UnitFrame_UpdateHealthColor(button)
+        U:UnitFrame_UpdateHealthColor(button)
     end
 end
 

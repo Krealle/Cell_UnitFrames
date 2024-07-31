@@ -9,6 +9,8 @@ local LGI = LibStub:GetLibrary("LibGroupInfo")
 
 ---@class CUF.widgets
 local W = CUF.widgets
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 ---@class CUF.Util
 local Util = CUF.Util
 ---@class CUF.widgets.Handler
@@ -126,9 +128,9 @@ local function ShowPowerBar(self)
 
     if self:IsVisible() then
         -- update now
-        W:UnitFrame_UpdatePowerMax(self)
-        W:UnitFrame_UpdatePower(self)
-        W:UnitFrame_UpdatePowerType(self)
+        U:UnitFrame_UpdatePowerMax(self)
+        U:UnitFrame_UpdatePower(self)
+        U:UnitFrame_UpdatePowerType(self)
     end
 end
 
@@ -151,7 +153,7 @@ end
 -- MARK: Button Update PowerBar
 -------------------------------------------------
 
---[[ function function W:UnitFrame_UpdatePowerText(button)
+--[[ function function U:UnitFrame_UpdatePowerText(button)
     if enabledIndicators["powerText"] and button.states.powerMax and button.states.power then
         if indicatorBooleans["powerText"] then
             if button.states.power == button.states.powerMax or button.states.power == 0 then
@@ -169,7 +171,7 @@ end
     end
 end
 
-function W:UnitFrame_UpdatePowerTextColor(button)
+function U:UnitFrame_UpdatePowerTextColor(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -185,7 +187,7 @@ function W:UnitFrame_UpdatePowerTextColor(button)
 end ]]
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdatePowerMax(button)
+function U:UnitFrame_UpdatePowerMax(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -198,11 +200,11 @@ function W:UnitFrame_UpdatePowerMax(button)
         button.widgets.powerBar:SetMinMaxValues(0, button.states.powerMax)
     end
 
-    --[[ function W:UnitFrame_UpdatePowerText(button) ]]
+    --[[ function U:UnitFrame_UpdatePowerText(button) ]]
 end
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdatePower(button)
+function U:UnitFrame_UpdatePower(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -210,11 +212,11 @@ function W:UnitFrame_UpdatePower(button)
 
     button.widgets.powerBar:SetBarValue(button.states.power)
 
-    --[[ function W:UnitFrame_UpdatePowerText(button) ]]
+    --[[ function U:UnitFrame_UpdatePowerText(button) ]]
 end
 
 ---@param button CUFUnitButton
-function W:UnitFrame_UpdatePowerType(button)
+function U:UnitFrame_UpdatePowerType(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -231,7 +233,7 @@ function W:UnitFrame_UpdatePowerType(button)
     button.widgets.powerBar:SetStatusBarColor(r, g, b)
     button.widgets.powerBarLoss:SetVertexColor(lossR, lossG, lossB)
 
-    --[[ W:UnitFrame_UpdatePowerTextColor(button) ]]
+    --[[ U:UnitFrame_UpdatePowerTextColor(button) ]]
 end
 
 -------------------------------------------------

@@ -17,6 +17,26 @@ Handler.options = {}
 
 CUF.widgetsHandler = Handler
 
+---@param button CUFUnitButton
+---@param unit Units
+---@param widgetName Widgets
+---@param setting string
+---@param subSetting string
+local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
+    local widget = button.widgets[widgetName]
+    if not widget then return end
+
+    if not setting or setting == "enabled" and type(widget.SetEnabled) == "function" then
+        widget:SetEnabled(unit)
+    end
+    if not setting or setting == "position" and type(widget.SetPosition) == "function" then
+        widget:SetPosition(unit)
+    end
+    if not setting or setting == "font" and type(widget.SetFontStyle) == "function" then
+        widget:SetFontStyle(unit)
+    end
+end
+
 ---@param layout string?
 ---@param unit string?
 ---@param widgetName Widgets?
@@ -26,15 +46,9 @@ function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
 
     if layout and layout ~= Cell.vars.currentLayout then return end
 
-    layout = layout or Cell.vars.currentLayout
-
-    if widgetName then
-        Util:IterateAllUnitButtons(Handler.widgets[widgetName], unit, setting, ...)
-        return
-    end
-
     for name, func in pairs(Handler.widgets) do
         if not widgetName or name == widgetName then
+            Util:IterateAllUnitButtons(IterateGenericSetters, unit, name, setting, ...)
             Util:IterateAllUnitButtons(func, unit, setting, ...)
         end
     end

@@ -60,6 +60,7 @@ function W:CreateNameText(button)
     nameText:SetPoint("CENTER", 0, 0)
     nameText:SetFont("Cell Default", 12, "Outline")
     nameText.enabled = false
+    nameText.id = "nameText"
 
     function nameText:UpdateName()
         local name
@@ -90,6 +91,10 @@ function W:CreateNameText(button)
             end
         end
     end
+
+    nameText.SetEnabled = W.SetEnabled
+    nameText.SetPosition = W.SetPosition
+    nameText.SetFontStyle = W.SetFontStyle
 end
 
 -------------------------------------------------
@@ -123,53 +128,10 @@ menu:AddWidget(CreateNamePage)
 ---@param setting string
 ---@param subSetting string
 function W.UpdateNameTextWidget(button, unit, setting, subSetting)
-    --CUF:Debug("UpdateTextWidget", unit, setting)
-
-    local styleTable = CUF.vars.selectedLayoutTable[unit].widgets.nameText
     local widget = button.widgets.nameText
 
-    if not setting or setting == "enabled" then
-        widget.enabled = styleTable.enabled
-        if not styleTable.enabled then
-            widget:Hide()
-            return
-        else
-            widget:Show()
-        end
-    end
-
-    if not setting or setting == "position" then
-        widget:ClearAllPoints()
-        widget:SetPoint(styleTable.position.anchor, button,
-            styleTable.position.offsetX,
-            styleTable.position.offsetY)
-    end
-
-    if not setting or setting == "font" then
-        local font = F:GetFont(styleTable.font.style)
-
-        local fontFlags
-        if styleTable.font.outline == "None" then
-            fontFlags = ""
-        elseif styleTable.font.outline == "Outline" then
-            fontFlags = "OUTLINE"
-        else
-            fontFlags = "OUTLINE,MONOCHROME"
-        end
-
-        widget:SetFont(font, styleTable.font.size, fontFlags)
-
-        if styleTable.font.shadow then
-            widget:SetShadowOffset(1, -1)
-            widget:SetShadowColor(0, 0, 0, 1)
-        else
-            widget:SetShadowOffset(0, 0)
-            widget:SetShadowColor(0, 0, 0, 0)
-        end
-    end
-
     if not setting or setting == "textWidth" then
-        widget.width = styleTable.width
+        widget.width = CUF.vars.selectedLayoutTable[unit].widgets.nameText.width
     end
 
     U:UnitFrame_UpdateName(button)

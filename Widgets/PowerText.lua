@@ -101,11 +101,11 @@ end
 ---@param self PowerTextWidget
 ---@param format PowerTextFormat
 local function PowerText_SetFormat(self, format)
-    if format == "percentage" then
+    if format == const.PowerTextFormat.PERCENTAGE then
         self.SetValue = SetPower_Percentage
-    elseif format == "number" then
+    elseif format == const.PowerTextFormat.NUMBER then
         self.SetValue = SetPower_Number
-    elseif format == "number-short" then
+    elseif format == const.PowerTextFormat.NUMBER_SHORT then
         self.SetValue = SetPower_Number_Short
     end
 end

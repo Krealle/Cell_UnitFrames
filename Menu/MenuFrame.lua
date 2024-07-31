@@ -6,6 +6,9 @@ local L = Cell.L
 local P = Cell.pixelPerfectFuncs
 local F = Cell.funcs
 
+---@class CUF.builder
+local Builder = CUF.Builder
+
 ---@class MenuFrame
 ---@field window CellCombatFrame
 ---@field units table<Units, UnitsMenuPage>
@@ -77,20 +80,21 @@ function menuWindow:InitWidgets()
     --CUF:Debug("menuWindow - InitWidgets")
     local prevButton
 
-    for _, fn in pairs(CUF.Menu.widgetsToAdd) do
+    for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetsMenuPage
-        local widget = fn(self)
+        local widgetPage = Builder:CreateWidgetMenuPage(self, widget.widgetName, widget.menuHeight, widget.pageName,
+            unpack(widget.options))
 
-        self.widgets[widget.id] = widget
+        self.widgets[widgetPage.id] = widgetPage
 
         if prevButton then
-            widget.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+            widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
         else
-            widget.button:SetPoint("TOPRIGHT", self.widgetAnchor)
+            widgetPage.button:SetPoint("TOPRIGHT", self.widgetAnchor)
         end
-        prevButton = widget.button
+        prevButton = widgetPage.button
 
-        table.insert(self.widgetsButtons, widget.button)
+        table.insert(self.widgetsButtons, widgetPage.button)
     end
 
     CUF:DevAdd(self.widgets, "menuWindow - widgets")

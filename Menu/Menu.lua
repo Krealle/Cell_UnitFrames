@@ -9,7 +9,7 @@ local menuWindow = CUF.MenuWindow
 ---@class CUF.Menu
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field unitsToAdd table<number, function>
----@field widgetsToAdd table<number, function>
+---@field widgetsToAdd table<number, WidgetsMenuPageArgs>
 local menu = {}
 menu.window = menuWindow
 menu.unitsToAdd = {}
@@ -25,10 +25,14 @@ function menu:AddUnit(unit)
     table.insert(self.unitsToAdd, unit)
 end
 
----@param widget function
-function menu:AddWidget(widget)
+---@param widgetName Widgets
+---@param menuHeight number
+---@param pageName string
+---@param ... MenuOptions
+function menu:AddWidget(widgetName, menuHeight, pageName, ...)
     --CUF:Debug("Menu - AddWidget")
-    table.insert(self.widgetsToAdd, widget)
+    table.insert(self.widgetsToAdd,
+        { ["widgetName"] = widgetName, ["menuHeight"] = menuHeight, ["pageName"] = pageName, ["options"] = { ... } })
 end
 
 ---@param unit string|nil

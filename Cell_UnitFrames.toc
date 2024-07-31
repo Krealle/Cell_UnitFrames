@@ -18,12 +18,13 @@ Defaults.lua
 
 Core/Util.lua
 Core/Core.lua
+Core/Handler.lua
 
+Menu/Builder.lua
 Menu/MenuFrame.lua
 Menu/Menu.lua
 Menu/Units.lua
 
-Widgets/Handler.lua
 Widgets/Common.lua
 Widgets/Name.lua
 Widgets/HealthBar.lua

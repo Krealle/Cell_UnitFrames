@@ -14,8 +14,8 @@ local U = CUF.uFuncs
 local Util = CUF.Util
 ---@class CUF.widgets.Handler
 local Handler = CUF.widgetsHandler
----@class CUF.widgets.builder
-local Builder = CUF.widgets.Builder
+---@class CUF.builder
+local Builder = CUF.Builder
 
 local menu = CUF.Menu
 
@@ -100,28 +100,10 @@ end
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
----@param parent MenuFrame
-local function CreateNamePage(parent)
-    ---@class WidgetsMenuPage
-    local widget = {}
-    widget.frame = CreateFrame("Frame", nil, parent.widgetAnchor)
-    widget.id = "nameText"
-    widget.height = 250
+menu:AddWidget("nameText", 250, "Name", Builder.MenuOptions.TextColorWithWidth,
+    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.Font)
 
-    -- button
-    widget.button = Cell:CreateButton(parent.widgetAnchor, L["Name"], "accent-hover", { 85, 17 })
-    widget.button.id = "nameText"
-
-    local enabledCheckBox = Builder:CreatEnabledCheckBox(widget.frame, "nameText")
-
-    local colorPicker = Builder:CreateTextColorOptions(widget.frame, "nameText", enabledCheckBox, true)
-
-    local anchorOptions = Builder:CreateAnchorOptions(widget.frame, "nameText", colorPicker)
-    local nameOptions = Builder:CreateFontOptions(widget.frame, "nameText", anchorOptions)
-
-    return widget
-end
-menu:AddWidget(CreateNamePage)
 
 ---@param button CUFUnitButton
 ---@param unit Units

@@ -3,8 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 
----@class CUF.widgets
-local W = CUF.widgets
 ---@class CUF.Util
 local Util = CUF.Util
 

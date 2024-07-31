@@ -12,6 +12,8 @@ local A = Cell.animations
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+---@class CUF.constants
+local const = CUF.constants
 
 local UnitIsConnected = UnitIsConnected
 local InCombatLockdown = InCombatLockdown
@@ -24,7 +26,7 @@ local GetAuraDataBySlot = C_UnitAuras.GetAuraDataBySlot
 -- MARK: Unit button
 -------------------------------------------------
 
----@param unit Units
+---@param unit Unit
 ---@param tooltipPoint AnchorPoint
 ---@param tooltipRelativePoint AnchorPoint
 ---@param tooltipX number
@@ -33,7 +35,7 @@ function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltip
     Cell.vars.currentLayoutTable[unit]["tooltipPosition"] = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
 end
 
----@param unit Units
+---@param unit Unit
 ---@param configTitle string
 ---@param onEnterLogic function?
 ---@return CUFUnitFrame Frame
@@ -102,7 +104,7 @@ function U:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
     return frame, anchorFrame, hoverFrame, config
 end
 
----@param unit Units
+---@param unit Unit
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
@@ -110,7 +112,7 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
 
     local anchor
     if layout[unit]["sameSizeAsPlayer"] then
-        anchor = layout["player"]["anchor"]
+        anchor = layout[const.UNIT.PLAYER]["anchor"]
     else
         anchor = layout[unit]["anchor"]
     end
@@ -154,7 +156,7 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
 end
 
----@param unit Units
+---@param unit Unit
 ---@param which string?
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
@@ -165,7 +167,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     if not which or strfind(which, "size$") then
         local width, height
         if layout[unit]["sameSizeAsPlayer"] then
-            width, height = unpack(layout["player"]["size"])
+            width, height = unpack(layout[const.UNIT.PLAYER]["size"])
         else
             width, height = unpack(layout[unit]["size"])
         end
@@ -177,7 +179,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     if not which or strfind(which, "arrangement$") then
         local anchor
         if layout[unit]["sameSizeAsPlayer"] then
-            anchor = layout["player"]["anchor"]
+            anchor = layout[const.UNIT.PLAYER]["anchor"]
         else
             anchor = layout[unit]["anchor"]
         end
@@ -207,7 +209,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
 
     if not which or strfind(which, "power$") or which == "barOrientation" then
         if layout[unit]["sameSizeAsPlayer"] then
-            W:SetPowerSize(button, layout["player"]["powerSize"])
+            W:SetPowerSize(button, layout[const.UNIT.PLAYER]["powerSize"])
         else
             W:SetPowerSize(button, layout[unit]["powerSize"])
         end
@@ -222,7 +224,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
 end
 
 ---@param which string?
----@param unit Units
+---@param unit Unit
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 ---@param config CUFConfigButton
@@ -249,7 +251,7 @@ function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
 end
 
 ---@param which string?
----@param unit Units
+---@param unit Unit
 ---@param button CUFUnitButton
 ---@param frame CUFUnitFrame
 function U:UpdateUnitFrameVisibility(which, unit, button, frame)
@@ -458,10 +460,10 @@ local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("PLAYER_REGEN_ENABLED")
     self:RegisterEvent("PLAYER_REGEN_DISABLED")
 
-    if self.states.unit == "target" then
+    if self.states.unit == const.UNIT.TARGET then
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
     end
-    if self.states.unit == "focus" then
+    if self.states.unit == const.UNIT.FOCUS then
         self:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
 

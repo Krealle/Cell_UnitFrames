@@ -6,8 +6,10 @@ local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+---@class CUF.constants
+local const = CUF.constants
 
-local unit = "focus"
+local unit = const.UNIT.FOCUS
 
 local focusFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit, "Focus Frame")
 Cell.frames.focusFrame = focusFrame

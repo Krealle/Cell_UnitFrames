@@ -16,16 +16,18 @@ CUF.debugDB = true
 CUF.widgets = {}
 ---@class CUF.uFuncs
 CUF.uFuncs = {}
+---@class CUF.constants
+local const = CUF.constants
 
 ---@class CUF.vars
 ---@field selectedLayout string
----@field selectedUnit Units
+---@field selectedUnit Unit
 ---@field selectedWidget Widgets
 ---@field selectedLayoutTable LayoutTable
 ---@field selectedWidgetTable UnitFrameWidgetsTable
----@field units table<number, Units>
+---@field units table<number, Unit>
 CUF.vars = {}
-CUF.vars.units = { "player", "target", "focus" }
+CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS }
 
 local F = Cell.funcs
 local Util = CUF.Util
@@ -83,7 +85,7 @@ CUFDB.version = CUF.version
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function()
-    CUF.vars.selectedUnit = "player"
+    CUF.vars.selectedUnit = const.UNIT.PLAYER
     CUF.vars.selectedWidget = "nameText"
     CUF.vars.selectedLayout = Cell.vars.currentLayout
     CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable

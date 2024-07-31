@@ -36,7 +36,7 @@ menu:AddWidget("nameText", 250, "Name", Builder.MenuOptions.TextColorWithWidth,
 
 
 ---@param button CUFUnitButton
----@param unit Units
+---@param unit Unit
 ---@param setting string
 ---@param subSetting string
 function W.UpdateNameTextWidget(button, unit, setting, subSetting)

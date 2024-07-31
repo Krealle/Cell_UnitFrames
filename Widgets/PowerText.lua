@@ -32,7 +32,7 @@ menu:AddWidget("powerText", 250, "Power", Builder.MenuOptions.TextColorWithPower
     Builder.MenuOptions.Font)
 
 ---@param button CUFUnitButton
----@param unit Units
+---@param unit Unit
 ---@param setting string
 ---@param subSetting string
 function W.UpdatePowerTextWidget(button, unit, setting, subSetting)

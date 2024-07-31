@@ -11,9 +11,9 @@ local Builder = CUF.Builder
 
 ---@class MenuFrame
 ---@field window CellCombatFrame
----@field units table<Units, UnitsMenuPage>
+---@field units table<Unit, UnitsMenuPage>
 ---@field unitsButtons table<UnitMenuPageButton>
----@field widgets table<Units, WidgetsMenuPage>
+---@field widgets table<Unit, WidgetsMenuPage>
 ---@field widgetsButtons table<WidgetMenuPageButton>
 local menuWindow = {}
 menuWindow.units = {}

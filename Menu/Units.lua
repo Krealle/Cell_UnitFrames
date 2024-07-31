@@ -4,7 +4,10 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = Cell.L
 
+---@class CUF.Menu
 local menu = CUF.Menu
+---@class CUF.constants
+local const = CUF.constants
 
 local function UpdateSize()
     if CUF.vars.selectedLayout == Cell.vars.currentLayout then
@@ -21,7 +24,7 @@ end
 ---@param unit UnitsMenuPage
 local function AddLoadPageDB(unit)
     -- Load page from DB
-    ---@param page Units
+    ---@param page Unit
     local function LoadPageDB(page)
         if page ~= unit.id then return end
         -- size
@@ -33,11 +36,11 @@ local function AddLoadPageDB(unit)
         unit.anchorDropdown:SetSelectedValue(CUF.vars.selectedLayoutTable[page]["anchor"])
 
         -- same as player
-        if page ~= "player" then
+        if page ~= const.UNIT.PLAYER then
             unit.sameSizeAsPlayerCB:SetChecked(CUF.vars.selectedLayoutTable[page]["sameSizeAsPlayer"])
         end
 
-        if page == "player" then
+        if page == const.UNIT.PLAYER then
             unit.widthSlider:SetEnabled(true)
             unit.heightSlider:SetEnabled(true)
             unit.powerSizeSlider:SetEnabled(true)
@@ -81,7 +84,7 @@ for _, unit in pairs(CUF.vars.units) do
                 end)
             self.unitFrameCB:SetPoint("TOPLEFT", 5, -27)
 
-            if unit ~= "player" then
+            if unit ~= const.UNIT.PLAYER then
                 -- same size as player
                 self.sameSizeAsPlayerCB = Cell:CreateCheckButton(self.frame, L["Use Same Size As Player"],
                     function(checked)

@@ -8,7 +8,7 @@ local Util = CUF.Util
 
 ---@class CUF.widgets.Handler
 ---@field widgets table<Widgets, function>
----@field options table<Units, table<Widgets, function>>
+---@field options table<Unit, table<Widgets, function>>
 local Handler = {}
 Handler.widgets = {}
 Handler.options = {}
@@ -16,7 +16,7 @@ Handler.options = {}
 CUF.widgetsHandler = Handler
 
 ---@param button CUFUnitButton
----@param unit Units
+---@param unit Unit
 ---@param widgetName Widgets
 ---@param setting string
 ---@param subSetting string

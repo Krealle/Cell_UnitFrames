@@ -13,7 +13,7 @@ local W = CUF.widgets
 -------------------------------------------------
 
 ---@param widget Widget
----@param unit Units
+---@param unit Unit
 function W.SetEnabled(widget, unit)
     local enabled = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].enabled
 
@@ -27,7 +27,7 @@ function W.SetEnabled(widget, unit)
 end
 
 ---@param widget Widget
----@param unit Units
+---@param unit Unit
 function W.SetPosition(widget, unit)
     local position = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].position
 
@@ -38,7 +38,7 @@ function W.SetPosition(widget, unit)
 end
 
 ---@param widget Widget
----@param unit Units
+---@param unit Unit
 function W.SetFontStyle(widget, unit)
     local styleTable = CUF.vars.selectedLayoutTable[unit].widgets[widget.id]
 
@@ -65,7 +65,7 @@ function W.SetFontStyle(widget, unit)
 end
 
 ---@param widget Widget
----@param unit Units
+---@param unit Unit
 function W.SetFontColor(widget, unit)
     local color = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].color
 

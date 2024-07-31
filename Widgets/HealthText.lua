@@ -32,7 +32,7 @@ menu:AddWidget("healthText", 250, "Health", Builder.MenuOptions.TextColor,
     Builder.MenuOptions.Font)
 
 ---@param button CUFUnitButton
----@param unit Units
+---@param unit Unit
 ---@param setting string
 ---@param subSetting string
 function W.UpdateHealthTextWidget(button, unit, setting, subSetting)

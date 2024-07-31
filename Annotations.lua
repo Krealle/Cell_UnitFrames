@@ -54,7 +54,7 @@
 ---@field mask Frame
 ---@field combatMask Frame
 
----@alias LayoutTable table<Units, Layout>
+---@alias LayoutTable table<Unit, Layout>
 ---@alias Layouts table<string, LayoutTable>
 
 ---@class Layout
@@ -73,7 +73,6 @@
 -- MARK: CUF Alias
 -------------------------------------------------
 
----@alias Units "player" | "target" | "focus"
 ---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
 ---@alias PowerTextFormat
 ---| "percentage"
@@ -159,7 +158,7 @@
 
 ---@class UnitsMenuPage
 ---@field frame Frame
----@field id Units
+---@field id Unit
 ---@field button UnitMenuPageButton
 ---@field unitFrameCB CheckButton
 ---@field sameSizeAsPlayerCB CheckButton?
@@ -170,7 +169,7 @@
 ---@field anchorText FontString
 
 ---@class UnitMenuPageButton: Button
----@field id Units
+---@field id Unit
 
 ---@class WidgetsMenuPage
 ---@field frame Frame

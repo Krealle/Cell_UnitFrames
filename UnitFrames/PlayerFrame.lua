@@ -6,8 +6,10 @@ local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+---@class CUF.constants
+local const = CUF.constants
 
-local unit = "player"
+local unit = const.UNIT.PLAYER
 
 local playerFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit, "Player Frame")
 Cell.frames.playerFrame = playerFrame

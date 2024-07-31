@@ -20,6 +20,31 @@ local Builder = CUF.Builder
 local menu = CUF.Menu
 
 -------------------------------------------------
+-- MARK: AddWidget
+-------------------------------------------------
+
+menu:AddWidget("healthText", 250, "Health", Builder.MenuOptions.TextColor,
+    Builder.MenuOptions.HealthFormat,
+    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.Font)
+
+---@param button CUFUnitButton
+---@param unit Units
+---@param setting string
+---@param subSetting string
+function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
+    local widget = button.widgets.healthText
+
+    if not setting or setting == "healthFormat" then
+        widget:SetFormat(CUF.vars.selectedLayoutTable[unit].widgets.healthText.format)
+    end
+
+    U:UnitFrame_UpdateHealthText(button)
+end
+
+Handler:RegisterWidget(W.UpdateHealthTextWidget, "healthText")
+
+-------------------------------------------------
 -- MARK: UpdateHealthText
 -------------------------------------------------
 
@@ -265,27 +290,3 @@ function W:CreateHealthText(button)
         end
     end
 end
-
--------------------------------------------------
--- MARK: AddWidget
--------------------------------------------------
-
-menu:AddWidget("healthText", 250, "Health", Builder.MenuOptions.TextColor,
-    Builder.MenuOptions.Anchor,
-    Builder.MenuOptions.Font)
-
----@param button CUFUnitButton
----@param unit Units
----@param setting string
----@param subSetting string
-function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
-    local widget = button.widgets.healthText
-
-    if not setting or setting == "healthFormat" then
-        widget:SetFormat(CUF.vars.selectedLayoutTable[unit].widgets.healthText.format)
-    end
-
-    U:UnitFrame_UpdateHealthText(button)
-end
-
-Handler:RegisterWidget(W.UpdateHealthTextWidget, "healthText")

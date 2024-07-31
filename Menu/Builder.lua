@@ -61,10 +61,14 @@ function Builder:CreateWidgetMenuPage(menuFrame, widgetName, menuHeight, pageNam
     ---@type Frame
     local prevOption = enabledCheckBox
     for _, option in pairs({ ... }) do
-        CUF:Debug("|cffff7777MenuBuilder:|r", option)
+        --CUF:Debug("|cffff7777MenuBuilder:|r", option)
         local optPage = Builder.MenuFuncs[option](self, widgetPage.frame, widgetName)
-        optPage:SetPoint("TOPLEFT", prevOption, 0, -self.optionBufferY)
-        prevOption = optPage
+        if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
+            optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.optionBufferX, 0)
+        else
+            optPage:SetPoint("TOPLEFT", prevOption, 0, -self.optionBufferY)
+            prevOption = optPage
+        end
     end
 
     return widgetPage

@@ -25,6 +25,30 @@ local UnitClassBase = function(unit)
 end
 
 -------------------------------------------------
+-- MARK: AddWidget
+-------------------------------------------------
+menu:AddWidget("nameText", 250, "Name", Builder.MenuOptions.TextColorWithWidth,
+    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.Font)
+
+
+---@param button CUFUnitButton
+---@param unit Units
+---@param setting string
+---@param subSetting string
+function W.UpdateNameTextWidget(button, unit, setting, subSetting)
+    local widget = button.widgets.nameText
+
+    if not setting or setting == "textWidth" then
+        widget.width = CUF.vars.selectedLayoutTable[unit].widgets.nameText.width
+    end
+
+    U:UnitFrame_UpdateName(button)
+end
+
+Handler:RegisterWidget(W.UpdateNameTextWidget, "nameText")
+
+-------------------------------------------------
 -- MARK: Button Update Name
 -------------------------------------------------
 
@@ -96,27 +120,3 @@ function W:CreateNameText(button)
     nameText.SetPosition = W.SetPosition
     nameText.SetFontStyle = W.SetFontStyle
 end
-
--------------------------------------------------
--- MARK: AddWidget
--------------------------------------------------
-menu:AddWidget("nameText", 250, "Name", Builder.MenuOptions.TextColorWithWidth,
-    Builder.MenuOptions.Anchor,
-    Builder.MenuOptions.Font)
-
-
----@param button CUFUnitButton
----@param unit Units
----@param setting string
----@param subSetting string
-function W.UpdateNameTextWidget(button, unit, setting, subSetting)
-    local widget = button.widgets.nameText
-
-    if not setting or setting == "textWidth" then
-        widget.width = CUF.vars.selectedLayoutTable[unit].widgets.nameText.width
-    end
-
-    U:UnitFrame_UpdateName(button)
-end
-
-Handler:RegisterWidget(W.UpdateNameTextWidget, "nameText")

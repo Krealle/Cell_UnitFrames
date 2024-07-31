@@ -91,6 +91,12 @@ eventFrame:SetScript("OnEvent", function()
     CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable
     CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[CUF.vars.selectedUnit].widgets
 
+    for _, unit in pairs(CUF.vars.units) do
+        if CUF.vars.selectedLayoutTable[unit].enabled then
+            CUF:HideBlizzardUnitFrame(unit)
+        end
+    end
+
     Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
         function(layout) CUF:Fire("UpdateWidget", layout) end)
 

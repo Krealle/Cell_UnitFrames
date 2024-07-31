@@ -16,6 +16,7 @@
 
 Core/Constants.lua
 Defaults.lua
+HideBlizzard.lua
 
 Core/Util.lua
 Core/Core.lua

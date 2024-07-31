@@ -80,8 +80,16 @@
 -------------------------------------------------
 
 ---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget
----@alias ColorFormat "class_color"  | "custom"
---[[ ---@alias PowerColorFormat ColorFormat | "power_color" ]]
+
+---@class BaseWidget
+---@field enabled boolean
+---@field id WIDGET_KIND
+
+---@class TextWidget: BaseWidget, FontString
+---@field colorType ColorType
+---@field rgb table<number>
+---@field UpdateTextColor function
+---@field UpdateValue function
 
 ---@class TextWidgetTable
 ---@field enabled boolean
@@ -108,7 +116,7 @@
 ---@field style string
 
 ---@class ColorOpt
----@field type ColorFormat
+---@field type ColorType
 ---@field rgb table<number>
 
 ---@class PositionOpt

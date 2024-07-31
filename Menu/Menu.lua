@@ -35,8 +35,8 @@ function menu:AddWidget(widgetName, menuHeight, pageName, ...)
         { ["widgetName"] = widgetName, ["menuHeight"] = menuHeight, ["pageName"] = pageName, ["options"] = { ... } })
 end
 
----@param unit string|nil
----@param widget string|nil
+---@param unit Unit|nil
+---@param widget WIDGET_KIND|nil
 function menu:UpdateSelected(unit, widget)
     CUF:Debug("UpdateSelected:", unit, widget)
 
@@ -73,7 +73,7 @@ end
 
 -- MARK: Callbacks
 
----@param tab string
+---@param tab Unit
 local function ShowTab(tab)
     if tab == "layouts" then
         --("CUF - ShowTab")

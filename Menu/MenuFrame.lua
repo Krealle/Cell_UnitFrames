@@ -13,7 +13,7 @@ local Builder = CUF.Builder
 ---@field window CellCombatFrame
 ---@field units table<Unit, UnitsMenuPage>
 ---@field unitsButtons table<UnitMenuPageButton>
----@field widgets table<Unit, WidgetsMenuPage>
+---@field widgets table<WIDGET_KIND, WidgetsMenuPage>
 ---@field widgetsButtons table<WidgetMenuPageButton>
 local menuWindow = {}
 menuWindow.units = {}
@@ -23,7 +23,7 @@ menuWindow.widgetsButtons = {}
 
 CUF.MenuWindow = menuWindow
 
----@param unit string
+---@param unit Unit
 function menuWindow:SetUnit(unit)
     --CUF:Debug("menuWindow - SetUnit", unit)
     -- Hide old unit
@@ -37,7 +37,7 @@ function menuWindow:SetUnit(unit)
     self.selectedUnit.frame:Show()
 end
 
----@param widget string
+---@param widget WIDGET_KIND
 function menuWindow:SetWidget(widget)
     --CUF:Debug("menuWindow - SetWidget", widget)
     -- Hide old widget

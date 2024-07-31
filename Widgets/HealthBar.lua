@@ -73,7 +73,7 @@ end
 
 ---@param button CUFUnitButton
 ---@param diff number?
-function W:UpdateUnitHealthState(button, diff)
+function U:UpdateUnitHealthState(button, diff)
     local unit = button.states.displayedUnit
 
     local health = UnitHealth(unit) + (diff or 0)
@@ -130,7 +130,7 @@ function U:UnitFrame_UpdateHealth(button, diff)
     local unit = button.states.displayedUnit
     if not unit then return end
 
-    W:UpdateUnitHealthState(button, diff)
+    U:UpdateUnitHealthState(button, diff)
     local healthPercent = button.states.healthPercent
 
     if CellDB["appearance"]["barAnimation"] == "Flash" then
@@ -163,7 +163,7 @@ function U:UnitFrame_UpdateHealthMax(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
-    W:UpdateUnitHealthState(button)
+    U:UpdateUnitHealthState(button)
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then
         button.widgets.healthBar:SetMinMaxSmoothedValue(0, button.states.healthMax)

@@ -33,7 +33,7 @@ menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, 250, "Power", Builder.MenuOptions.T
 
 ---@param button CUFUnitButton
 ---@param unit Unit
----@param setting string
+---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.powerText

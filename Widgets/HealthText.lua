@@ -54,7 +54,7 @@ Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateHealthText(button)
     if button.states.displayedUnit then
-        W:UpdateUnitHealthState(button)
+        U:UpdateUnitHealthState(button)
 
         button.widgets.healthText:UpdateTextColor()
         button.widgets.healthText:UpdateValue()
@@ -254,7 +254,7 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateHealthText(button)
-    ---@class HealthTextWidget: FontString
+    ---@class HealthTextWidget: TextWidget
     local healthText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.healthText = healthText
     healthText:ClearAllPoints()

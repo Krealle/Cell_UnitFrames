@@ -2,9 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -37,12 +35,12 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT, 250, "Name", Builder.MenuOptions.Tex
 
 ---@param button CUFUnitButton
 ---@param unit Unit
----@param setting string
+---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateNameTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.nameText
 
-    if not setting or setting == "textWidth" then
+    if not setting or setting == const.OPTION_KIND.TEXT_WIDTH then
         widget.width = CUF.vars.selectedLayoutTable[unit].widgets.nameText.width
     end
 
@@ -79,7 +77,7 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateNameText(button)
-    ---@class NameTextWidget: FontString
+    ---@class NameTextWidget: TextWidget
     local nameText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     button.widgets.nameText = nameText
     nameText.width = CUF.defaults.fontWidth

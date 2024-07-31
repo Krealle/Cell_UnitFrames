@@ -15,12 +15,8 @@ local U = CUF.uFuncs
 ---@class CUF.constants
 local const = CUF.constants
 
-local UnitIsConnected = UnitIsConnected
-local InCombatLockdown = InCombatLockdown
 local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
-local GetAuraSlots = C_UnitAuras.GetAuraSlots
-local GetAuraDataBySlot = C_UnitAuras.GetAuraDataBySlot
 
 -------------------------------------------------
 -- MARK: Unit button
@@ -204,7 +200,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
     if not which or which == "barOrientation" then
-        W:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
+        U:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
     end
 
     if not which or strfind(which, "power$") or which == "barOrientation" then
@@ -270,7 +266,7 @@ end
 ---@param button CUFUnitButton
 ---@param orientation string
 ---@param rotateTexture boolean
-function W:SetOrientation(button, orientation, rotateTexture)
+function U:SetOrientation(button, orientation, rotateTexture)
     local healthBar = button.widgets.healthBar
     local healthBarLoss = button.widgets.healthBarLoss
     local powerBar = button.widgets.powerBar

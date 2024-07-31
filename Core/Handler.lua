@@ -20,7 +20,7 @@ CUF.widgetsHandler = Handler
 ---@param button CUFUnitButton
 ---@param unit Unit
 ---@param widgetName WIDGET_KIND
----@param setting string
+---@param setting OPTION_KIND
 ---@param subSetting string
 local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
     local widget = button.widgets[widgetName]
@@ -43,7 +43,7 @@ end
 ---@param layout string?
 ---@param unit Unit?
 ---@param widgetName WIDGET_KIND?
----@param setting string?
+---@param setting OPTION_KIND?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     CUF:Debug("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
 

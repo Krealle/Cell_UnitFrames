@@ -63,3 +63,14 @@ function W.SetFontStyle(widget, unit)
         widget:SetShadowColor(0, 0, 0, 0)
     end
 end
+
+---@param widget Widget
+---@param unit Units
+function W.SetFontColor(widget, unit)
+    local color = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].color
+
+    widget.colorType = color.type
+    widget.rgb = color.rgb
+
+    widget:UpdateTextColor()
+end

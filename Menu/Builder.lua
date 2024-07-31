@@ -341,7 +341,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[1] = r
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[2] = g
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[3] = b
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "rgb")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "rgb")
     end)
 
     f.dropdown = Cell:CreateDropdown(f, 117)
@@ -354,7 +354,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].color.type = "class_color"
                 f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
             end,
         },
         {
@@ -363,7 +363,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].color.type = "custom"
                 f.colorPicker:Show()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
             end,
         },
     }
@@ -374,7 +374,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].color.type = "power_color"
                 f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "color", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
             end,
         })
     end

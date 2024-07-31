@@ -17,7 +17,10 @@ local Handler = CUF.widgetsHandler
 ---@class CUF.builder
 local Builder = CUF.Builder
 
+---@class CUF.Menu
 local menu = CUF.Menu
+---@class CUF.constants
+local const = CUF.constants
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -259,12 +262,16 @@ function W:CreateHealthText(button)
     healthText:SetFont("Cell Default", 12, "Outline")
     healthText.enabled = false
     healthText.id = "healthText"
+    ---@type ColorType
+    healthText.colorType = const.ColorType.CLASS_COLOR
+    healthText.rgb = { 1, 1, 1 }
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetValue = SetHealth_Percentage
     healthText.SetEnabled = W.SetEnabled
     healthText.SetPosition = W.SetPosition
     healthText.SetFontStyle = W.SetFontStyle
+    healthText.SetFontColor = W.SetFontColor
 
     function healthText:UpdateValue()
         if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then
@@ -276,17 +283,10 @@ function W:CreateHealthText(button)
     end
 
     function healthText:UpdateTextColor()
-        if not Cell.vars.currentLayoutTable[button.states.unit] then
-            button.widgets.healthText:SetTextColor(1, 1, 1)
-            return
-        end
-
-        if Cell.vars.currentLayoutTable[button.states.unit].widgets.healthText.color.type == "class_color" then
-            button.widgets.healthText:SetTextColor(F:GetClassColor(button.states.class))
+        if self.colorType == const.ColorType.CLASS_COLOR then
+            self:SetTextColor(F:GetClassColor(button.states.class))
         else
-            button.widgets.healthText:SetTextColor(unpack(Cell.vars.currentLayoutTable[button.states.unit].widgets
-                .healthText
-                .color.rgb))
+            self:SetTextColor(unpack(self.rgb))
         end
     end
 end

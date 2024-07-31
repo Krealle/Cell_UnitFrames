@@ -33,6 +33,9 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if not setting or setting == "font" and type(widget.SetFontStyle) == "function" then
         widget:SetFontStyle(unit)
     end
+    if not setting or setting == "textColor" and type(widget.SetFontColor) == "function" then
+        widget:SetFontColor(unit)
+    end
 end
 
 ---@param layout string?

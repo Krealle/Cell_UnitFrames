@@ -99,6 +99,8 @@
 
 ---@alias Widgets "nameText" | "healthText" | "powerText"
 ---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget
+---@alias ColorFormat "class_color"  | "custom"
+--[[ ---@alias PowerColorFormat ColorFormat | "power_color" ]]
 
 ---@class TextWidgetTable
 ---@field enabled boolean
@@ -125,7 +127,7 @@
 ---@field style string
 
 ---@class ColorOpt
----@field type "class_color" | "custom"
+---@field type ColorFormat
 ---@field rgb table<number>
 
 ---@class PositionOpt

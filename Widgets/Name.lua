@@ -17,7 +17,10 @@ local Handler = CUF.widgetsHandler
 ---@class CUF.builder
 local Builder = CUF.Builder
 
+---@class CUF.Menu
 local menu = CUF.Menu
+---@class CUF.constants
+local const = CUF.constants
 
 --! AI followers, wrong value returned by UnitClassBase
 local UnitClassBase = function(unit)
@@ -85,6 +88,9 @@ function W:CreateNameText(button)
     nameText:SetFont("Cell Default", 12, "Outline")
     nameText.enabled = false
     nameText.id = "nameText"
+    ---@type ColorType
+    nameText.colorType = const.ColorType.CLASS_COLOR
+    nameText.rgb = { 1, 1, 1 }
 
     function nameText:UpdateName()
         local name
@@ -98,25 +104,15 @@ function W:CreateNameText(button)
     end
 
     function nameText:UpdateTextColor()
-        if not Cell.vars.currentLayoutTable[button.states.unit] then
-            button.widgets.nameText:SetTextColor(1, 1, 1)
-            return
-        end
-
-        if not UnitIsConnected(button.states.unit) then
-            button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
+        if self.colorType == const.ColorType.CLASS_COLOR then
+            self:SetTextColor(F:GetClassColor(button.states.class))
         else
-            if Cell.vars.currentLayoutTable[button.states.unit].widgets["nameText"].color.type == "class_color" then
-                button.widgets.nameText:SetTextColor(F:GetClassColor(button.states.class))
-            else
-                button.widgets.nameText:SetTextColor(unpack(Cell.vars.currentLayoutTable[button.states.unit].widgets
-                    ["nameText"]
-                    .color.rgb))
-            end
+            self:SetTextColor(unpack(self.rgb))
         end
     end
 
     nameText.SetEnabled = W.SetEnabled
     nameText.SetPosition = W.SetPosition
     nameText.SetFontStyle = W.SetFontStyle
+    nameText.SetFontColor = W.SetFontColor
 end

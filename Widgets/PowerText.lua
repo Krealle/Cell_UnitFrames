@@ -17,7 +17,10 @@ local Handler = CUF.widgetsHandler
 ---@class CUF.builder
 local Builder = CUF.Builder
 
+---@class CUF.Menu
 local menu = CUF.Menu
+---@class CUF.constants
+local const = CUF.constants
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -56,24 +59,12 @@ function U:UnitFrame_UpdatePowerText(button)
     end
 end
 
+---@param button CUFUnitButton
 function U:UnitFrame_UpdatePowerTextColor(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
-    if not Cell.vars.currentLayoutTable[unit] then
-        button.widgets.powerText:SetColor(1, 1, 1)
-        return
-    end
-
-    if Cell.vars.currentLayoutTable[unit].widgets.powerText.color.type == "class_color" then
-        button.widgets.powerText:SetColor(F:GetClassColor(button.states.class))
-    elseif Cell.vars.currentLayoutTable[unit].widgets.powerText.color.type == "power_color" then
-        button.widgets.powerText:SetColor(F:GetPowerColor(unit))
-    else
-        button.widgets.powerText:SetColor(unpack(Cell.vars.currentLayoutTable[unit].widgets
-            .powerText
-            .color.rgb))
-    end
+    button.widgets.powerText:UpdateTextColor()
 end
 
 -------------------------------------------------
@@ -133,15 +124,32 @@ function W:CreatePowerText(button)
     powerText:SetFont("Cell Default", 12, "Outline")
     powerText.enabled = false
     powerText.id = "powerText"
+    ---@type PowerColorType
+    powerText.colorType = const.PowerColorType.CLASS_COLOR
+    powerText.rgb = { 1, 1, 1 }
 
     powerText.SetFormat = PowerText_SetFormat
     powerText.SetValue = SetPower_Percentage
     powerText.SetEnabled = W.SetEnabled
     powerText.SetPosition = W.SetPosition
     powerText.SetFontStyle = W.SetFontStyle
+    powerText.SetFontColor = W.SetFontColor
 
     function powerText:SetColor(r, g, b)
         self:SetTextColor(r, g, b)
+    end
+
+    function powerText:UpdateTextColor()
+        local unit = button.states.displayedUnit
+        if not unit then return end
+
+        if self.colorType == const.PowerColorType.CLASS_COLOR then
+            self:SetColor(F:GetClassColor(button.states.class))
+        elseif self.colorType == const.PowerColorType.POWER_COLOR then
+            self:SetColor(F:GetPowerColor(unit))
+        else
+            self:SetColor(unpack(self.rgb))
+        end
     end
 
     function powerText:UpdateValue()

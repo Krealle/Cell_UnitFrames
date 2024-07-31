@@ -5,6 +5,8 @@ local Cell = CUF.Cell
 
 ---@class CUF.Util
 local Util = CUF.Util
+---@class CUF.constants
+local const = CUF.constants
 
 ---@class CUF.widgets.Handler
 ---@field widgets table<WIDGET_KIND, function>
@@ -27,13 +29,13 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if not setting or setting == "enabled" and type(widget.SetEnabled) == "function" then
         widget:SetEnabled(unit)
     end
-    if not setting or setting == "position" and type(widget.SetPosition) == "function" then
+    if not setting or setting == const.OPTION_KIND.POSITION and type(widget.SetPosition) == "function" then
         widget:SetPosition(unit)
     end
-    if not setting or setting == "font" and type(widget.SetFontStyle) == "function" then
+    if not setting or setting == const.OPTION_KIND.FONT and type(widget.SetFontStyle) == "function" then
         widget:SetFontStyle(unit)
     end
-    if not setting or setting == "textColor" and type(widget.SetFontColor) == "function" then
+    if not setting or setting == const.OPTION_KIND.TEXT_COLOR and type(widget.SetFontColor) == "function" then
         widget:SetFontColor(unit)
     end
 end
@@ -43,7 +45,7 @@ end
 ---@param widgetName WIDGET_KIND?
 ---@param setting string?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
-    CUF:Debug("|cffff7777UpdateWidgets:|r ", layout, unit, widgetName, setting, ...)
+    CUF:Debug("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
 
     if layout and layout ~= Cell.vars.currentLayout then return end
 

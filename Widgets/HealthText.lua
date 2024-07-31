@@ -38,7 +38,7 @@ menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT, 250, "Health", Builder.MenuOptions
 function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.healthText
 
-    if not setting or setting == "healthFormat" then
+    if not setting or setting == const.OPTION_KIND.HEALTH_FORMAT then
         widget:SetFormat(CUF.vars.selectedLayoutTable[unit].widgets.healthText.format)
     end
 

@@ -108,7 +108,7 @@ function Builder:CreatEnabledCheckBox(parent, widgetName)
 
     local checkbox = Cell:CreateCheckButton(f, L["Enabled"], function(checked)
         CUF.vars.selectedWidgetTable[widgetName].enabled = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "enabled")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
     end)
     checkbox:SetPoint("TOPLEFT")
     checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
@@ -141,7 +141,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["text"] = L["Unlimited"],
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "unlimited"
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
                 percentDropdown:Hide()
                 lengthEB:Hide()
                 lengthEB2:Hide()
@@ -154,7 +155,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "percentage"
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.75
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
                 percentDropdown:SetSelectedValue(0.75)
                 percentDropdown:Show()
                 lengthEB:Hide()
@@ -169,7 +171,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
                 CUF.vars.selectedWidgetTable[widgetName].width.type = "length"
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 5
                 CUF.vars.selectedWidgetTable[widgetName].width.auxValue = 3
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
                 percentDropdown:Hide()
                 lengthEB:SetText(5)
                 lengthEB:Show()
@@ -190,7 +193,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 1,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 1
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
             end,
         },
         {
@@ -198,7 +202,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.75,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.75
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
             end,
         },
         {
@@ -206,7 +211,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.5,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.5
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
             end,
         },
         {
@@ -214,7 +220,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
             ["value"] = 0.25,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].width.value = 0.25
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_WIDTH)
             end,
         },
     })
@@ -240,7 +247,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB.value = length
 
         CUF.vars.selectedWidgetTable[widgetName].width.value = length
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .TEXT_WIDTH)
     end)
 
     lengthEB:SetScript("OnTextChanged", function(txt, userChanged)
@@ -275,7 +283,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB2.value = length
 
         CUF.vars.selectedWidgetTable[widgetName].width.auxValue = length
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textWidth")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .TEXT_WIDTH)
     end)
 
     lengthEB2:SetScript("OnTextChanged", function(txt, userChanged)
@@ -343,7 +352,8 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[1] = r
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[2] = g
         CUF.vars.selectedWidgetTable[widgetName].color.rgb[3] = b
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "rgb")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .TEXT_COLOR, "rgb")
     end)
 
     f.dropdown = Cell:CreateDropdown(f, 117)
@@ -352,31 +362,34 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
     local items = {
         {
             ["text"] = L["Class Color"],
-            ["value"] = "class_color",
+            ["value"] = const.ColorType.CLASS_COLOR,
             ["onClick"] = function()
-                CUF.vars.selectedWidgetTable[widgetName].color.type = "class_color"
+                CUF.vars.selectedWidgetTable[widgetName].color.type = const.ColorType.CLASS_COLOR
                 f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_COLOR, "type")
             end,
         },
         {
             ["text"] = L["Custom Color"],
-            ["value"] = "custom",
+            ["value"] = const.ColorType.CUSTOM,
             ["onClick"] = function()
-                CUF.vars.selectedWidgetTable[widgetName].color.type = "custom"
+                CUF.vars.selectedWidgetTable[widgetName].color.type = const.ColorType.CUSTOM
                 f.colorPicker:Show()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_COLOR, "type")
             end,
         },
     }
     if includePowerType then
         tinsert(items, {
             ["text"] = L["Power Color"],
-            ["value"] = "power_color",
+            ["value"] = const.PowerColorType.POWER_COLOR,
             ["onClick"] = function()
-                CUF.vars.selectedWidgetTable[widgetName].color.type = "power_color"
+                CUF.vars.selectedWidgetTable[widgetName].color.type = const.PowerColorType.POWER_COLOR
                 f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "textColor", "type")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.TEXT_COLOR, "type")
             end,
         })
     end
@@ -395,7 +408,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
         f.colorPicker:SetColor(pageLayoutTable.color.rgb[1], pageLayoutTable.color.rgb[2],
             pageLayoutTable.color.rgb[3])
         f.dropdown:SetSelectedValue(pageLayoutTable.color.type)
-        if pageLayoutTable.color.type == "custom" then
+        if pageLayoutTable.color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else
             f.colorPicker:Hide()
@@ -443,7 +456,8 @@ function Builder:CreateAnchorOptions(parent, widgetName)
             ["value"] = v,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].position.anchor = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "anchor")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.POSITION, "anchor")
             end,
         })
     end
@@ -453,14 +467,16 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameXSlider.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].position.offsetX = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "offsetX")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
+            "offsetX")
     end
 
     f.nameYSlider = Cell:CreateSlider(L["Y Offset"], parent, -100, 100, 117, 1)
     f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.optionBufferX, 0)
     f.nameYSlider.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].position.offsetY = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "position", "offsetY")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
+            "offsetY")
     end
 
     local function LoadPageDB()
@@ -497,7 +513,8 @@ function Builder:CreateFontOptions(parent, widgetName)
     for _, item in pairs(items) do
         item["onClick"] = function()
             CUF.vars.selectedWidgetTable[widgetName].font.style = item["text"]
-            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "name")
+            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
+                "name")
         end
     end
     f.nameFontDropdown:SetItems(items)
@@ -517,7 +534,8 @@ function Builder:CreateFontOptions(parent, widgetName)
             ["value"] = v,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].font.outline = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "outline")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.FONT, "outline")
             end,
         })
     end
@@ -527,12 +545,14 @@ function Builder:CreateFontOptions(parent, widgetName)
     f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.optionBufferX, 0)
     f.nameSizeSilder.afterValueChangedFn = function(value)
         CUF.vars.selectedWidgetTable[widgetName].font.size = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "size")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
+            "size")
     end
 
     f.nameShadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked)
         CUF.vars.selectedWidgetTable[widgetName].font.shadow = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "font", "shadow")
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
+            "shadow")
     end)
     f.nameShadowCB:SetPoint("TOPLEFT", f.nameFontDropdown, "BOTTOMLEFT", 0, -10)
 
@@ -591,7 +611,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.PERCENTAGE,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -599,7 +620,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.PERCENTAGE_ABSORBS,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.PERCENTAGE_ABSORBS
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -607,7 +629,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -615,7 +638,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.PERCENTAGE_DEFICIT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.PERCENTAGE_DEFICIT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -623,7 +647,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -631,7 +656,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -639,7 +665,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER_ABSORBS_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER_ABSORBS_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -647,7 +674,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -655,7 +683,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER_DEFICIT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER_DEFICIT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -663,7 +692,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.NUMBER_DEFICIT_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.NUMBER_DEFICIT_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -671,7 +701,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -679,7 +710,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.ABSORBS_ONLY,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.ABSORBS_ONLY
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -687,7 +719,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.ABSORBS_ONLY_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.ABSORBS_ONLY_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
         {
@@ -695,7 +728,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             ["value"] = const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "healthFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.HEALTH_FORMAT)
             end,
         },
     })
@@ -732,7 +766,8 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
             ["value"] = const.PowerTextFormat.PERCENTAGE,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.PowerTextFormat.PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.POWER_FORMAT)
             end,
         },
         {
@@ -740,7 +775,8 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
             ["value"] = const.PowerTextFormat.NUMBER,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.PowerTextFormat.NUMBER
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.POWER_FORMAT)
             end,
         },
         {
@@ -748,7 +784,8 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
             ["value"] = const.PowerTextFormat.NUMBER_SHORT,
             ["onClick"] = function()
                 CUF.vars.selectedWidgetTable[widgetName].format = const.PowerTextFormat.NUMBER_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, "powerFormat")
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.POWER_FORMAT)
             end,
         },
     })

@@ -10,7 +10,7 @@ CUF.outlines = { "None", "Outline", "Monochrome" }
 
 ---@type ColorOpt
 local colorOpt = {
-    ["type"] = "class_color",
+    ["type"] = const.ColorType.CLASS_COLOR,
     ["rgb"] = { 1, 1, 1 },
 }
 

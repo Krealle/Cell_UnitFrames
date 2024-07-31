@@ -74,3 +74,23 @@ const.WIDGET_KIND = {
     HEALTH_TEXT = "healthText",
     POWER_TEXT = "powerText",
 }
+
+---@alias OPTION_KIND
+---| "enabled"
+---| "position"
+---| "font"
+---| "width"
+---| "textWidth"
+---| "textColor"
+---| "healthFormat"
+---| "powerFormat"
+const.OPTION_KIND = {
+    ENABLED = "enabled",
+    POSITION = "position",
+    FONT = "font",
+    WIDTH = "width",
+    TEXT_WIDTH = "textWidth",
+    TEXT_COLOR = "textColor",
+    HEALTH_FORMAT = "healthFormat",
+    POWER_FORMAT = "powerFormat",
+}

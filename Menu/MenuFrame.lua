@@ -124,7 +124,7 @@ function menuWindow:Create()
 
     self.unitHeight = 200
     self.widgetHeight = 230
-    self.baseWidth = 422
+    self.baseWidth = 450
     self.window = Cell:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
         self.unitHeight + self.widgetHeight + 10 + 17)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)

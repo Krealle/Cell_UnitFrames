@@ -16,6 +16,7 @@ local DB = CUF.DB
 local Builder = {}
 Builder.optionBufferY = 50
 Builder.optionBufferX = 25
+Builder.optionWidth = 420
 Builder.singleOptionHeight = 20
 Builder.singleOptionWidth = 117
 Builder.dualOptionWidth = 117 * 2
@@ -29,7 +30,7 @@ Builder.MenuOptions = {
     Font = 5,
     HealthFormat = 6,
     PowerFormat = 7,
-    AuraOptions = 8,
+    AuraIconOptions = 8,
     ExtraAnchor = 9,
     Orientation = 10,
 }
@@ -63,13 +64,14 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
     widgetPage.height = menuHeight
 
     local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
-    enabledCheckBox:SetPoint("TOPLEFT", widgetPage.frame, 5, -10)
 
     ---@type Frame
     local prevOption = enabledCheckBox
     for _, option in pairs({ ... }) do
         --CUF:Debug("|cffff7777MenuBuilder:|r", option)
         local optPage = Builder.MenuFuncs[option](self, widgetPage.frame, widgetName)
+        optPage:Show()
+
         if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
             optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.optionBufferX, 0)
         else
@@ -101,29 +103,29 @@ end
 -- MARK: CheckBox
 -------------------------------------------------
 
---[[ ---@param parent Frame
+---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param title string
+---@param kind OPTION_KIND | AURA_OPTION_KIND
+---@param dbVal function
+---@param dbFn function
 ---@return CUFCheckBox
-function Builder:CreatCheckBox(parent, widgetName, title, dbFn)
-    ---@class CUFCheckBox: Frame
-    local f = CreateFrame("Frame", nil, parent)
-    P:Size(f, 117, 20)
-    f:SetPoint("TOPLEFT", parent, 5, -27)
-
-    local checkbox = Cell:CreateCheckButton(f, L[title], function(checked)
-        CUF.vars.selectedWidgetTable[widgetName].enabled = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
+function Builder:CreateCheckBox(parent, widgetName, title, kind, dbVal, dbFn)
+    ---@class CUFCheckBox: CheckButton
+    local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked)
+        dbFn(widgetName, checked)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
     end)
     checkbox:SetPoint("TOPLEFT")
-    checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+    checkbox:SetChecked(dbVal(widgetName, kind))
 
     local function LoadPageDB()
-        checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+        checkbox:SetChecked(dbVal(widgetName, kind))
     end
-    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
+    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox_" .. kind)
 
-    return f
-end ]]
+    return checkbox
+end
 
 -------------------------------------------------
 -- MARK: Enabled
@@ -134,21 +136,15 @@ end ]]
 ---@return EnabledCheckBox
 function Builder:CreatEnabledCheckBox(parent, widgetName)
     ---@class EnabledCheckBox
-    local f = CreateFrame("Frame", nil, parent)
-    P:Size(f, 117, 20)
-    f:SetPoint("TOPLEFT", parent, 5, -27)
+    local f = Cell:CreateFrame(nil, parent, self.optionWidth, 30)
+    f:SetPoint("TOPLEFT", parent, 10, -10)
+    f:Show()
 
-    local checkbox = Cell:CreateCheckButton(f, L["Enabled"], function(checked)
-        CUF.vars.selectedWidgetTable[widgetName].enabled = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
-    end)
-    checkbox:SetPoint("TOPLEFT")
-    checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
-
-    local function LoadPageDB()
-        checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "Enabled")
+    local enabledCheckBox = self:CreateCheckBox(f, widgetName, L["Enabled"],
+        const.OPTION_KIND.ENABLED,
+        DB.GetWidgetProperty, DB.SetWidgetEnabled)
+    enabledCheckBox:ClearAllPoints()
+    enabledCheckBox:SetPoint("LEFT", f, 10, 0)
 
     return f
 end
@@ -938,34 +934,46 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return AuraOptions
-function Builder:CreateAuraOptions(parent, widgetName)
+function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraOptions: Frame
-    local f = CreateFrame("Frame", "AuraOptions" .. widgetName, parent)
-    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 170)
 
     --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(parent, widgetName)
-    f.anchorOptions:SetPoint("TOPLEFT", f)
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
+    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -30)
 
     -- Middle Options
-    f.extraAnchorDropdown = self:CreateExtraAnchorOptions(parent, widgetName)
+    f.extraAnchorDropdown = self:CreateExtraAnchorOptions(f, widgetName)
     self:AnchorBelow(f.extraAnchorDropdown, f.anchorOptions)
 
-    f.orientationDropdown = self:CreateOrientationOptions(parent, widgetName)
+    f.orientationDropdown = self:CreateOrientationOptions(f, widgetName)
     self:AnchorRight(f.orientationDropdown, f.extraAnchorDropdown)
 
     -- Bottom Options
-    f.sizeOptions = self:CreateSizeOptions(parent, widgetName)
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
-    --[[ local function LoadPageDB()
-        ---@type AuraWidgetTable
-        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
+    return f
+end
 
-        f.extraAnchorDropdown:SetSelectedValue(pageLayoutTable.position.extraAnchor)
-        f.orientationAnchorDropdown:SetSelectedValue(pageLayoutTable.orientation)
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return AuraOptions
+function Builder:CreateAuraStackFontOptions(parent, widgetName)
+    ---@class AuraOptions: Frame
+    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 170)
+
+    local checkbox = Cell:CreateCheckButton(f, L["Show stacks"], function(checked)
+        DB.GetWidgetTable(widgetName).enabled = checked
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
+    end)
+    checkbox:SetPoint("TOPLEFT", f, 10, -10)
+    checkbox:SetChecked(DB.GetWidgetTable(widgetName).enabled)
+
+    local function LoadPageDB()
+        checkbox:SetChecked(DB.GetWidgetTable(widgetName).enabled)
     end
-    Handler:RegisterOption(LoadPageDB, widgetName, "AuraOptions") ]]
+    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 
     return f
 end
@@ -984,6 +992,6 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
-    [Builder.MenuOptions.AuraOptions] = Builder.CreateAuraOptions,
+    [Builder.MenuOptions.AuraIconOptions] = Builder.CreateAuraIconOptions,
     [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
 }

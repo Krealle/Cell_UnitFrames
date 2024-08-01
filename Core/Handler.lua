@@ -26,16 +26,16 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     local widget = button.widgets[widgetName]
     if not widget then return end
 
-    if not setting or setting == "enabled" and type(widget.SetEnabled) == "function" then
+    if (not setting or setting == "enabled") and type(widget.SetEnabled) == "function" then
         widget:SetEnabled(unit)
     end
-    if not setting or setting == const.OPTION_KIND.POSITION and type(widget.SetPosition) == "function" then
+    if (not setting or setting == const.OPTION_KIND.POSITION) and type(widget.SetPosition) == "function" then
         widget:SetPosition(unit)
     end
-    if not setting or setting == const.OPTION_KIND.FONT and type(widget.SetFontStyle) == "function" then
+    if (not setting or setting == const.OPTION_KIND.FONT) and type(widget.SetFontStyle) == "function" then
         widget:SetFontStyle(unit)
     end
-    if not setting or setting == const.OPTION_KIND.TEXT_COLOR and type(widget.SetFontColor) == "function" then
+    if (not setting or setting == const.OPTION_KIND.TEXT_COLOR) and type(widget.SetFontColor) == "function" then
         widget:SetFontColor(unit)
     end
 end

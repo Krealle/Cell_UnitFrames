@@ -123,7 +123,7 @@ function menuWindow:Create()
     local optionsFrame = Cell.frames.optionsFrame
 
     self.unitHeight = 200
-    self.widgetHeight = 200
+    self.widgetHeight = 230
     self.baseWidth = 422
     self.window = Cell:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
         self.unitHeight + self.widgetHeight + 10 + 17)

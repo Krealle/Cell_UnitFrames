@@ -28,6 +28,9 @@ Builder.MenuOptions = {
     Font = 5,
     HealthFormat = 6,
     PowerFormat = 7,
+    AuraOptions = 8,
+    ExtraAnchor = 9,
+    Orientation = 10,
 }
 
 CUF.Builder = Builder
@@ -83,15 +86,44 @@ end
 -------------------------------------------------
 
 ---@param option frame|table
----@param parent Frame
 ---@param prevOptions Frame
-function Builder:AnchorBelow(option, parent, prevOptions)
-    if prevOptions then
-        option:SetPoint("TOPLEFT", prevOptions, 0, -self.optionBufferY)
-    else
-        option:SetPoint("TOPLEFT", parent, 5, -42)
-    end
+function Builder:AnchorBelow(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, 0, -self.optionBufferY)
 end
+
+---@param option frame|table
+---@param prevOptions Frame
+function Builder:AnchorRight(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.optionBufferX, 0)
+end
+
+-------------------------------------------------
+-- MARK: CheckBox
+-------------------------------------------------
+
+--[[ ---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CUFCheckBox
+function Builder:CreatCheckBox(parent, widgetName, title, dbFn)
+    ---@class CUFCheckBox: Frame
+    local f = CreateFrame("Frame", nil, parent)
+    P:Size(f, 117, 20)
+    f:SetPoint("TOPLEFT", parent, 5, -27)
+
+    local checkbox = Cell:CreateCheckButton(f, L[title], function(checked)
+        CUF.vars.selectedWidgetTable[widgetName].enabled = checked
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
+    end)
+    checkbox:SetPoint("TOPLEFT")
+    checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+
+    local function LoadPageDB()
+        checkbox:SetChecked(CUF.vars.selectedWidgetTable[widgetName].enabled)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
+
+    return f
+end ]]
 
 -------------------------------------------------
 -- MARK: Enabled
@@ -439,9 +471,9 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
----@return AnchorOptions2
+---@return AnchorOptions
 function Builder:CreateAnchorOptions(parent, widgetName)
-    ---@class AnchorOptions2: Frame
+    ---@class AnchorOptions: Frame
     local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
     P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
 
@@ -491,15 +523,93 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return ExtraAnchorOptions
+function Builder:CreateExtraAnchorOptions(parent, widgetName)
+    ---@class ExtraAnchorOptions: Frame
+    local f = CreateFrame("Frame", "ExtraAnchorOptions" .. widgetName, parent)
+    P:Size(f, self.singleOptionWidth, self.singleOptionHeight)
+
+    f.extraAnchorDropdown = Cell:CreateDropdown(parent, 117)
+    f.extraAnchorDropdown:SetPoint("TOPLEFT", f)
+    f.extraAnchorDropdown:SetLabel(L["To UnitButton's"])
+
+    local items = {}
+    for _, v in pairs(CUF.anchorPoints) do
+        tinsert(items, {
+            ["text"] = L[v],
+            ["value"] = v,
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].position.extraAnchor = v
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.POSITION, "extraAnchor")
+            end,
+        })
+    end
+    f.extraAnchorDropdown:SetItems(items)
+
+    local function LoadPageDB()
+        ---@type PositionOpt
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName].position
+
+        f.extraAnchorDropdown:SetSelectedValue(pageLayoutTable.extraAnchor)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "ExtraAnchorOptions")
+
+    return f
+end
+
+-------------------------------------------------
+-- MARK: Orientation
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return OrientationOptions
+function Builder:CreateOrientationOptions(parent, widgetName)
+    ---@class OrientationOptions: Frame
+    local f = CreateFrame("Frame", "OrientationOptions" .. widgetName, parent)
+    P:Size(f, self.singleOptionWidth, self.singleOptionHeight)
+
+    f.orientationDropdown = Cell:CreateDropdown(parent, 117)
+    f.orientationDropdown:SetPoint("TOPLEFT", f)
+    f.orientationDropdown:SetLabel(L["Orientation"])
+
+    local orientationItems = {}
+    for _, v in pairs({ const.AURA_ORIENTATION.RIGHT_TO_LEFT, const.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        const.AURA_ORIENTATION.BOTTOM_TO_TOP, const.AURA_ORIENTATION.TOP_TO_BOTTOM }) do
+        tinsert(orientationItems, {
+            ["text"] = L[v],
+            ["value"] = v,
+            ["onClick"] = function()
+                CUF.vars.selectedWidgetTable[widgetName].orientation = v
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+                    const.OPTION_KIND.ORIENTATION)
+            end,
+        })
+    end
+    f.orientationDropdown:SetItems(orientationItems)
+
+    local function LoadPageDB()
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
+
+        f.orientationDropdown:SetSelectedValue(pageLayoutTable.orientation)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "OrientationOptions")
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: Font
 -------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
----@return FontOptions2
+---@return FontOptions
 function Builder:CreateFontOptions(parent, widgetName)
-    ---@class FontOptions2: Frame
+    ---@class FontOptions: Frame
     local f = CreateFrame("Frame", "FontOptions" .. widgetName, parent)
     P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
 
@@ -801,6 +911,85 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Size
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return SizeOptions
+function Builder:CreateSizeOptions(parent, widgetName)
+    ---@class SizeOptions: Frame
+    local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
+    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+
+    f.sizeWidthSlider = Cell:CreateSlider(L["Width"], parent, -100, 100, 117, 1)
+    f.sizeWidthSlider:SetPoint("TOPLEFT", f)
+    f.sizeWidthSlider.afterValueChangedFn = function(value)
+        CUF.vars.selectedWidgetTable[widgetName].size.width = value
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.SIZE,
+            "width")
+    end
+
+    f.sizeHeightSlider = Cell:CreateSlider(L["Height"], parent, -100, 100, 117, 1)
+    f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.optionBufferX, 0)
+    f.sizeHeightSlider.afterValueChangedFn = function(value)
+        CUF.vars.selectedWidgetTable[widgetName].size.height = value
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.SIZE,
+            "height")
+    end
+
+    local function LoadPageDB()
+        ---@type SizeOpt
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName].size
+
+        f.sizeWidthSlider:SetValue(pageLayoutTable.width)
+        f.sizeHeightSlider:SetValue(pageLayoutTable.height)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "SizeOptions")
+
+    return f
+end
+
+-------------------------------------------------
+-- MARK: Aura Menu
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return AuraOptions
+function Builder:CreateAuraOptions(parent, widgetName)
+    ---@class AuraOptions: Frame
+    local f = CreateFrame("Frame", "AuraOptions" .. widgetName, parent)
+    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+
+    --- Top Options
+    f.anchorOptions = self:CreateAnchorOptions(parent, widgetName)
+    f.anchorOptions:SetPoint("TOPLEFT", f)
+
+    -- Middle Options
+    f.extraAnchorDropdown = self:CreateExtraAnchorOptions(parent, widgetName)
+    self:AnchorBelow(f.extraAnchorDropdown, f.anchorOptions)
+
+    f.orientationDropdown = self:CreateOrientationOptions(parent, widgetName)
+    self:AnchorRight(f.orientationDropdown, f.extraAnchorDropdown)
+
+    -- Bottom Options
+    f.sizeOptions = self:CreateSizeOptions(parent, widgetName)
+    Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
+
+    --[[ local function LoadPageDB()
+        ---@type AuraWidgetTable
+        local pageLayoutTable = CUF.vars.selectedWidgetTable[widgetName]
+
+        f.extraAnchorDropdown:SetSelectedValue(pageLayoutTable.position.extraAnchor)
+        f.orientationAnchorDropdown:SetSelectedValue(pageLayoutTable.orientation)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "AuraOptions") ]]
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -810,7 +999,10 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.TextColorWithWidth] = Builder.CreateTextColorOptionsWithWidth,
     [Builder.MenuOptions.TextColorWithPowerType] = Builder.CreateTextColorOptionsWithPowerType,
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
+    [Builder.MenuOptions.ExtraAnchor] = Builder.CreateExtraAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
+    [Builder.MenuOptions.AuraOptions] = Builder.CreateAuraOptions,
+    [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
 }

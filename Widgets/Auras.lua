@@ -8,9 +8,14 @@ local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
 local A = Cell.animations
 
+
+local const = CUF.constants
+local Handler = CUF.widgetsHandler
+
+---@class CUF.widgets
+local W = CUF.widgets
 ---@class CUF.auras
 local Auras = {}
-
 CUF.auras = Auras
 
 local GetAuraSlots = C_UnitAuras.GetAuraSlots
@@ -86,7 +91,7 @@ local function HandleBuff(button, auraInfo)
 
         if --[[ myBuffs_icon[name] and source == "player" and ]] button._buffIconsFound < 5 then
             button._buffIconsFound = button._buffIconsFound + 1
-            button.buffIcons[button._buffIconsFound]:SetCooldown(start, duration, nil, icon, count, refreshing)
+            button.widgets.buffs[button._buffIconsFound]:SetCooldown(start, duration, nil, icon, count, refreshing)
         end
     end
 end
@@ -136,9 +141,88 @@ function Auras:UpdateAuras(button, updateInfo)
         button._buffIconsFound = 0
 
         ForEachAura(button, "HELPFUL", HandleBuff)
-        button.buffIcons:UpdateSize(button._buffIconsFound)
+        button.widgets.buffs:UpdateSize(button._buffIconsFound)
     end
 end
+
+-------------------------------------------------
+-- MARK: Aura Setters
+-------------------------------------------------
+
+---@param icons CellAuraIcons
+---@param fonts AuraFontOpt
+local function Icons_SetFont(icons, fonts)
+    local fs = fonts.stacks
+    local fd = fonts.duration
+    for i = 1, icons.maxNum do
+        icons[i]:SetFont(
+            { fs.style, fs.size, fs.outline, fs.shadow, fs.anchor, fs.offsetX, fs.offsetY, fs.rgb },
+            { fd.style, fd.size, fd.outline, fd.shadow, fd.anchor, fd.offsetX, fd.offsetY, fd.rgb })
+    end
+end
+
+---@param widget Widget
+---@param unit Unit
+local function Icons_SetPosition(widget, unit)
+    ---@type PositionOpt
+    local position = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].position
+    P:ClearPoints(widget)
+    P:Point(widget, position.anchor, widget:GetParent(), position.extraAnchor, position.offsetX, position.offsetY)
+end
+
+-------------------------------------------------
+-- MARK: Aura Update
+-------------------------------------------------
+
+---@param button CUFUnitButton
+---@param unit Unit
+---@param which "buffs" | "debuffs"
+---@param setting AURA_OPTION_KIND
+---@param subSetting string
+function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
+    ---@type CellAuraIcons
+    local auras = button.widgets[which]
+    ---@type AuraWidgetTable
+    local styleTable = CUF.vars.selectedWidgetTable[which]
+
+    if not setting or setting == const.AURA_OPTION_KIND.FONT then
+        auras:SetFont(styleTable.font)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.ORIENTATION then
+        auras:SetOrientation(styleTable.orientation)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SIZE then
+        P:Size(auras, styleTable.size.width, styleTable.size.height)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SHOW_DURATION then
+        auras:ShowDuration(styleTable.showDuration)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SHOW_ANIMATION then
+        auras:ShowAnimation(styleTable.showAnimation)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SHOW_STACK then
+        auras:ShowStack(styleTable.showStack)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SHOW_TOOLTIP then
+        --auras:ShowTooltips(styleTable.showTooltip)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.SPACING then
+        --auras:SetSpacing(spacing {styleTable.spacing.horizontal, styleTable.spacing.vertical})
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.NUM_PER_LINE then
+        --auras:SetNumPerLine(numPerLine)
+    end
+end
+
+---@param button CUFUnitButton
+---@param unit Unit
+---@param setting AURA_OPTION_KIND
+---@param subSetting string
+local function UpdateBuffs(button, unit, setting, subSetting)
+    W.UpdateAuraWidget(button, unit, const.WIDGET_KIND.BUFFS, setting, subSetting)
+end
+
+Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
 
 -------------------------------------------------
 -- MARK: Aura Indicators
@@ -148,26 +232,25 @@ end
 function Auras:CreateIndicators(button)
     CUF:Debug("CreateIndicators", button:GetName())
     -- buffs indicator (icon)
-    ---@type CellAuraIcons
-    local buffIcons = I.CreateAura_Icons(button:GetName() .. "BuffIcons", button.indicatorFrame, 5)
-    button.buffIcons = buffIcons
-    buffIcons:Show()
-    -- point
-    P:ClearPoints(buffIcons)
-    P:Point(buffIcons, "TOPLEFT", button, "TOPLEFT", 0, 30)
-    -- size
-    P:Size(buffIcons, 20, 20)
-    -- orientation
-    buffIcons:SetOrientation("right-to-left")
-    -- font
-    buffIcons:SetFont(unpack({
-        { "Cell " .. _G.DEFAULT, 11, "Outline", false, "TOPRIGHT",    2, 1,  { 1, 1, 1 } },
-        { "Cell " .. _G.DEFAULT, 11, "Outline", false, "BOTTOMRIGHT", 2, -1, { 1, 1, 1 } },
-    }))
+    ---@class CellAuraIcons
+    local buffIcons = I.CreateAura_Icons(button:GetName() .. "BuffIcons", button, 5)
+    button.widgets.buffs = buffIcons
+    buffIcons.SetFont = Icons_SetFont
+    buffIcons.enabled = false
+    buffIcons.id = const.WIDGET_KIND.BUFFS
+
+    buffIcons.SetEnabled = W.SetEnabled
+    buffIcons.SetPosition = Icons_SetPosition
+
     buffIcons:ShowDuration(true)
     buffIcons:ShowAnimation(true)
     buffIcons:ShowStack(true)
 
+    --[[ buffIcons:Show() ]]
+    -- point
+    --P:ClearPoints(buffIcons)
+    --P:Point(buffIcons, "TOPLEFT", button, "TOPLEFT", 0, 30)
+    -- size
     -- indicator color
     --[[ for i = 1, 5 do
         if buffIcons[i].cooldown:IsObjectType("StatusBar") then
@@ -216,7 +299,6 @@ end
 ---@field SetSize function
 ---@field _Hide function
 ---@field Hide function
----@field SetFont function
 ---@field UpdateSize fun(icons: any, numAuras: any) Icons_UpdateSize
 ---@field SetOrientation fun(icons: any, orientation: any) Icons_SetOrientation
 ---@field SetSpacing fun(icons: any, spacing: any) Icons_SetSpacing

@@ -68,11 +68,13 @@ const.HealthTextFormat = {
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
 }
 
----@alias WIDGET_KIND "nameText" | "healthText" | "powerText"
+---@alias WIDGET_KIND "nameText" | "healthText" | "powerText" | "buffs" | "debuffs"
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
     POWER_TEXT = "powerText",
+    BUFFS = "buffs",
+    DEBUFFS = "debuffs",
 }
 
 ---@alias OPTION_KIND
@@ -93,4 +95,39 @@ const.OPTION_KIND = {
     TEXT_COLOR = "textColor",
     HEALTH_FORMAT = "healthFormat",
     POWER_FORMAT = "powerFormat",
+    ORIENTATION = "orientation",
+}
+
+---@alias AURA_OPTION_KIND
+---| "size"
+---| "font"
+---| "orientation"
+---| "position"
+---| "showDuration"
+---| "showAnimation"
+---| "showStack"
+---| "showTooltip"
+---| "spacing"
+---| "numPerLine"
+---| "filter"
+const.AURA_OPTION_KIND = {
+    SIZE = "size",
+    FONT = "font",
+    ORIENTATION = "orientation",
+    POSITION = "position",
+    SHOW_DURATION = "showDuration",
+    SHOW_ANIMATION = "showAnimation",
+    SHOW_STACK = "showStack",
+    SHOW_TOOLTIP = "showTooltip",
+    SPACING = "spacing",
+    NUM_PER_LINE = "numPerLine",
+    FILTER = "filter",
+}
+
+---@alias AuraOrientation "right-to-left" | "left-to-right" | "top-to-bottom" | "bottom-to-top"
+const.AURA_ORIENTATION = {
+    RIGHT_TO_LEFT = "right-to-left",
+    LEFT_TO_RIGHT = "left-to-right",
+    TOP_TO_BOTTOM = "top-to-bottom",
+    BOTTOM_TO_TOP = "bottom-to-top",
 }

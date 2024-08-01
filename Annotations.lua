@@ -91,11 +91,13 @@
 ---@field UpdateTextColor function
 ---@field UpdateValue function
 
----@class TextWidgetTable
+---@class BaseWidgetTable
 ---@field enabled boolean
----@field color ColorOpt
----@field font FontOpt
 ---@field position PositionOpt
+
+---@class TextWidgetTable: BaseWidgetTable
+---@field color ColorOpt
+---@field font SmallFontOpt
 ---@field width FontWidth
 
 ---@class HealthTextWidgetTable: TextWidgetTable
@@ -109,11 +111,25 @@
 ---@field value number
 ---@field auxValue number
 
----@class FontOpt
+---@class SmallFontOpt
 ---@field size number
 ---@field outline "None" | "Outline" | "Monochrome"
 ---@field shadow boolean
 ---@field style string
+
+---@class BigFontOpt
+---@field size number
+---@field outline "None" | "Outline" | "Monochrome"
+---@field shadow boolean
+---@field style string
+---@field anchor AnchorPoint
+---@field offsetX number
+---@field offsetY number
+---@field rgb table<number>
+
+---@class AuraFontOpt
+---@field stacks BigFontOpt
+---@field duration BigFontOpt
 
 ---@class ColorOpt
 ---@field type ColorType
@@ -121,8 +137,13 @@
 
 ---@class PositionOpt
 ---@field anchor AnchorPoint
+---@field extraAnchor AnchorPoint?
 ---@field offsetX number
 ---@field offsetY number
+
+---@class SizeOpt
+---@field width number
+---@field height number
 
 -------------------------------------------------
 -- MARK: CUF Frames
@@ -241,6 +262,7 @@
 ---@field _timers table
 ---@field _buffs_cache table
 ---@field _buffs_count_cache table
+---@field _buffIconsFound number
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget
@@ -253,5 +275,6 @@
 ---@field targetHighlight HighlightWidget
 ---@field mouseoverHighlight HighlightWidget
 ---@field healthText HealthTextWidget
+---@field buffs CellAuraIcons
 
 ---@class HighlightWidget: BackdropTemplate, Frame

@@ -8,17 +8,13 @@ local F = Cell.funcs
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
----@class CUF.Util
-local Util = CUF.Util
----@class CUF.widgets.Handler
-local Handler = CUF.widgetsHandler
----@class CUF.builder
-local Builder = CUF.Builder
 
----@class CUF.Menu
+local Util = CUF.Util
+local Handler = CUF.widgetsHandler
+local Builder = CUF.Builder
 local menu = CUF.Menu
----@class CUF.constants
 local const = CUF.constants
+local DB = CUF.DB
 
 --! AI followers, wrong value returned by UnitClassBase
 local UnitClassBase = function(unit)
@@ -41,7 +37,7 @@ function W.UpdateNameTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.nameText
 
     if not setting or setting == const.OPTION_KIND.TEXT_WIDTH then
-        widget.width = CUF.vars.selectedLayoutTable[unit].widgets.nameText.width
+        widget.width = DB.GetWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit).width
     end
 
     U:UnitFrame_UpdateName(button)

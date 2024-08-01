@@ -2,7 +2,6 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
 local B = Cell.bFuncs
@@ -11,8 +10,6 @@ local B = Cell.bFuncs
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
----@class CUF.Util
-local Util = CUF.Util
 
 --! AI followers, wrong value returned by UnitClassBase
 local UnitClassBase = function(unit)

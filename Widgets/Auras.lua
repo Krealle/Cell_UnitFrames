@@ -11,6 +11,7 @@ local A = Cell.animations
 
 local const = CUF.constants
 local Handler = CUF.widgetsHandler
+local DB = CUF.DB
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -182,8 +183,8 @@ end
 function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
     ---@type CellAuraIcons
     local auras = button.widgets[which]
-    ---@type AuraWidgetTable
-    local styleTable = CUF.vars.selectedWidgetTable[which]
+
+    local styleTable = DB.GetWidgetTable(which) --[[@as AuraWidgetTable]]
 
     if not setting or setting == const.AURA_OPTION_KIND.FONT then
         auras:SetFont(styleTable.font)

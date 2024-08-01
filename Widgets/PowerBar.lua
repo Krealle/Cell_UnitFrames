@@ -11,10 +11,6 @@ local LGI = LibStub:GetLibrary("LibGroupInfo")
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
----@class CUF.Util
-local Util = CUF.Util
----@class CUF.widgets.Handler
-local Handler = CUF.widgetsHandler
 
 -------------------------------------------------
 -- MARK: Layout Update PowerBar

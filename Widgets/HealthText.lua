@@ -2,25 +2,18 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.widgets
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
----@class CUF.Util
-local Util = CUF.Util
----@class CUF.widgets.Handler
-local Handler = CUF.widgetsHandler
----@class CUF.builder
-local Builder = CUF.Builder
 
----@class CUF.Menu
+local Handler = CUF.widgetsHandler
+local Builder = CUF.Builder
 local menu = CUF.Menu
----@class CUF.constants
 local const = CUF.constants
+local DB = CUF.DB
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -39,7 +32,7 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.healthText
 
     if not setting or setting == const.OPTION_KIND.HEALTH_FORMAT then
-        widget:SetFormat(CUF.vars.selectedLayoutTable[unit].widgets.healthText.format)
+        widget:SetFormat(DB.GetWidgetTable(const.WIDGET_KIND.HEALTH_TEXT, unit).format)
     end
 
     U:UnitFrame_UpdateHealthText(button)

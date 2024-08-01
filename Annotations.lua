@@ -80,6 +80,7 @@
 -------------------------------------------------
 
 ---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget | CellAuraIcons
+---@alias WidgetTable TextWidgetTable | HealthTextWidgetTable | PowerTextWidgetTable | AuraWidgetTable
 
 ---@class BaseWidget
 ---@field enabled boolean

@@ -19,6 +19,7 @@ Defaults.lua
 HideBlizzard.lua
 
 Core/Util.lua
+Core/DataBase.lua
 Core/Core.lua
 Core/Handler.lua
 

@@ -6,7 +6,7 @@ local F = Cell.funcs
 
 ---@class CUF.widgets
 local W = CUF.widgets
----@class CUF.widgets.builder
+local DB = CUF.DB
 
 -------------------------------------------------
 -- MARK: Widget Setters
@@ -15,7 +15,7 @@ local W = CUF.widgets
 ---@param widget Widget
 ---@param unit Unit
 function W.SetEnabled(widget, unit)
-    local enabled = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].enabled
+    local enabled = DB.IsWidgetEnabled(widget.id, unit)
 
     widget.enabled = enabled
     if not enabled then
@@ -29,7 +29,7 @@ end
 ---@param widget Widget
 ---@param unit Unit
 function W.SetPosition(widget, unit)
-    local position = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].position
+    local position = DB.GetWidgetPosition(widget.id, unit)
 
     widget:ClearAllPoints()
     widget:SetPoint(position.anchor, widget:GetParent(),
@@ -40,7 +40,7 @@ end
 ---@param widget Widget
 ---@param unit Unit
 function W.SetFontStyle(widget, unit)
-    local styleTable = CUF.vars.selectedLayoutTable[unit].widgets[widget.id]
+    local styleTable = DB.GetWidgetTable(widget.id, unit)
 
     local font = F:GetFont(styleTable.font.style)
 
@@ -67,7 +67,7 @@ end
 ---@param widget Widget
 ---@param unit Unit
 function W.SetFontColor(widget, unit)
-    local color = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].color
+    local color = DB.GetWidgetTable(widget.id, unit).color
 
     widget.colorType = color.type
     widget.rgb = color.rgb

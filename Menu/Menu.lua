@@ -5,6 +5,7 @@ local Cell = CUF.Cell
 local Util = CUF.Util
 
 local menuWindow = CUF.MenuWindow
+local DB = CUF.DB
 
 ---@class CUF.Menu
 ---@field selectedWidgetTable UnitFrameWidgetsTable
@@ -42,7 +43,7 @@ function menu:UpdateSelected(unit, widget)
 
     if unit then
         CUF.vars.selectedUnit = unit
-        CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[unit].widgets
+        CUF.vars.selectedWidgetTable = DB.GetAllWidgetTables(unit)
     end
 
     if widget then
@@ -62,7 +63,7 @@ local function LoadLayoutDB(layout)
 
     CUF.vars.selectedLayout = layout
     CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
-    CUF.vars.selectedWidgetTable = CellDB["layouts"][layout][CUF.vars.selectedUnit].widgets
+    CUF.vars.selectedWidgetTable = DB.GetAllWidgetTables(CUF.vars.selectedUnit, layout)
 
     -- Prevent excessive calls when initializing
     if not menu.init then return end

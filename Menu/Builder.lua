@@ -14,13 +14,14 @@ local DB = CUF.DB
 
 ---@class CUF.builder
 local Builder = {}
-Builder.optionBufferY = 50
-Builder.optionBufferX = 25
+Builder.spacingY = 50
+Builder.spacingX = 25
 Builder.optionWidth = 420
 Builder.singleOptionHeight = 20
 Builder.singleOptionWidth = 117
 Builder.dualOptionWidth = 117 * 2
 Builder.tripleOptionWidth = 117 * 3
+
 ---@enum MenuOptions
 Builder.MenuOptions = {
     TextColor = 1,
@@ -61,7 +62,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
     widgetPage.frame:Hide()
 
     widgetPage.id = widgetName
-    widgetPage.height = menuHeight
+    widgetPage.height = 40 -- enabledCheckBox + spacingY
 
     local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
 
@@ -73,9 +74,11 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
         optPage:Show()
 
         if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
-            optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.optionBufferX, 0)
+            optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.spacingX, 0)
         else
-            optPage:SetPoint("TOPLEFT", prevOption, 0, -self.optionBufferY)
+            widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
+
+            optPage:SetPoint("TOPLEFT", prevOption, 0, -self.spacingY)
             prevOption = optPage
         end
     end
@@ -90,13 +93,13 @@ end
 ---@param option frame|table
 ---@param prevOptions Frame
 function Builder:AnchorBelow(option, prevOptions)
-    option:SetPoint("TOPLEFT", prevOptions, 0, -self.optionBufferY)
+    option:SetPoint("TOPLEFT", prevOptions, 0, -self.spacingY)
 end
 
 ---@param option frame|table
 ---@param prevOptions Frame
 function Builder:AnchorRight(option, prevOptions)
-    option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.optionBufferX, 0)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.spacingX, 0)
 end
 
 -------------------------------------------------
@@ -213,7 +216,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
     })
 
     percentDropdown = Cell:CreateDropdown(f, 75)
-    percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.optionBufferX, 0)
+    percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
     Cell:SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
     percentDropdown:SetItems({
         {
@@ -255,7 +258,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
     })
 
     lengthEB = Cell:CreateEditBox(f, 34, 20, false, false, true)
-    lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.optionBufferX, 0)
+    lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
 
     lengthEB.text = lengthEB:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
     lengthEB.text:SetText(L["En"])
@@ -425,7 +428,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
 
     if includeWidth then
         f.nameWidth = Builder:CreateTextWidthOption(parent, widgetName)
-        f.nameWidth:SetPoint("TOPLEFT", f, "TOPRIGHT", self.optionBufferX, 0)
+        f.nameWidth:SetPoint("TOPLEFT", f, "TOPRIGHT", self.spacingX, 0)
     end
 
     local function LoadPageDB()
@@ -488,7 +491,7 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     f.nameAnchorDropdown:SetItems(items)
 
     f.nameXSlider = Cell:CreateSlider(L["X Offset"], parent, -100, 100, 117, 1)
-    f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.optionBufferX, 0)
+    f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.spacingX, 0)
     f.nameXSlider.afterValueChangedFn = function(value)
         DB.GetWidgetTable(widgetName).position.offsetX = value
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
@@ -496,7 +499,7 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     end
 
     f.nameYSlider = Cell:CreateSlider(L["Y Offset"], parent, -100, 100, 117, 1)
-    f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.optionBufferX, 0)
+    f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.spacingX, 0)
     f.nameYSlider.afterValueChangedFn = function(value)
         DB.GetWidgetTable(widgetName).position.offsetY = value
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
@@ -619,7 +622,7 @@ function Builder:CreateFontOptions(parent, widgetName)
     end
 
     f.nameOutlineDropdown = Cell:CreateDropdown(parent, 117)
-    f.nameOutlineDropdown:SetPoint("TOPLEFT", f.nameFontDropdown, "TOPRIGHT", self.optionBufferX, 0)
+    f.nameOutlineDropdown:SetPoint("TOPLEFT", f.nameFontDropdown, "TOPRIGHT", self.spacingX, 0)
     f.nameOutlineDropdown:SetLabel(L["Outline"])
 
     items = {}
@@ -637,7 +640,7 @@ function Builder:CreateFontOptions(parent, widgetName)
     f.nameOutlineDropdown:SetItems(items)
 
     f.nameSizeSilder = Cell:CreateSlider(L["Size"], parent, 5, 50, 117, 1)
-    f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.optionBufferX, 0)
+    f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.spacingX, 0)
     f.nameSizeSilder.afterValueChangedFn = function(value)
         DB.GetWidgetTable(widgetName).font.size = value
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
@@ -910,7 +913,7 @@ function Builder:CreateSizeOptions(parent, widgetName)
     end
 
     f.sizeHeightSlider = Cell:CreateSlider(L["Height"], parent, -100, 100, 117, 1)
-    f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.optionBufferX, 0)
+    f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
     f.sizeHeightSlider.afterValueChangedFn = function(value)
         DB.GetWidgetTable(widgetName).size.height = value
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.SIZE,

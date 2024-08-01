@@ -14,6 +14,8 @@ local W = CUF.widgets
 local U = CUF.uFuncs
 ---@class CUF.constants
 local const = CUF.constants
+---@class CUF.auras
+local Auras = CUF.auras
 
 local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
@@ -354,7 +356,10 @@ local function ResetAuraTables(self)
     wipe(self._buffs_count_cache)
 end
 
+-------------------------------------------------
 -- MARK: Update InRange
+-------------------------------------------------
+
 ---@param self CUFUnitButton
 ---@param ir boolean?
 local function UnitFrame_UpdateInRange(self, ir)
@@ -406,6 +411,7 @@ local function UnitFrame_UpdateAll(button)
     UnitFrame_UpdateInRange(button)
     --[[
     UnitFrame_UpdateAuras(self) ]]
+    Auras:UpdateAuras(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -508,7 +514,7 @@ end
 local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
-            --[[ UnitFrame_UpdateAuras(self, arg) ]]
+            Auras:UpdateAuras(self, arg)
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             --UnitFrame_UpdateCasts(self, arg2)
         elseif event == "UNIT_HEALTH" then
@@ -730,6 +736,8 @@ function CUFUnitButton_OnLoad(button)
     W:CreatePowerBar(button, buttonName)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
+
+    Auras:CreateIndicators(button)
 
     -- targetHighlight
     ---@class HighlightWidget

@@ -34,6 +34,8 @@ Widgets/PowerBar.lua
 Widgets/HealthText.lua
 Widgets/PowerText.lua
 
+Widgets/Auras.lua
+
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua
 UnitFrames/PlayerFrame.lua

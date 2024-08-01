@@ -45,25 +45,24 @@ CUF.Builder = Builder
 ---@field pageName string
 ---@field options table<MenuOptions>
 
----@param menuFrame MenuFrame
+---@param settingsFrame Frame
 ---@param widgetName WIDGET_KIND
 ---@param menuHeight number
----@param pageName string
 ---@param ... MenuOptions
 ---@return WidgetsMenuPage
-function Builder:CreateWidgetMenuPage(menuFrame, widgetName, menuHeight, pageName, ...)
+function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...)
     ---@class WidgetsMenuPage
     local widgetPage = {}
-    widgetPage.frame = CreateFrame("Frame", nil, menuFrame.widgetAnchor)
+    widgetPage.frame = Cell:CreateFrame(nil, settingsFrame.scrollFrame.content,
+        settingsFrame:GetWidth(), settingsFrame:GetHeight(), true)
+    widgetPage.frame:SetPoint("TOPLEFT")
+    widgetPage.frame:Hide()
+
     widgetPage.id = widgetName
     widgetPage.height = menuHeight
 
-    -- button
-    widgetPage.button = Cell:CreateButton(menuFrame.widgetAnchor, L[pageName], "accent-hover", { 85, 17 })
-    widgetPage.button.id = widgetName
-
     local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
-    enabledCheckBox:SetPoint("TOPLEFT", widgetPage.frame, 5, -27)
+    enabledCheckBox:SetPoint("TOPLEFT", widgetPage.frame, 5, -10)
 
     ---@type Frame
     local prevOption = enabledCheckBox

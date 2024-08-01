@@ -32,8 +32,6 @@ function menuWindow:SetUnit(unit)
     end
 
     self.selectedUnit = self.units[unit]
-
-    self.selectedUnit.frame:SetAllPoints(self.unitAnchor)
     self.selectedUnit.frame:Show()
 end
 
@@ -46,11 +44,10 @@ function menuWindow:SetWidget(widget)
     end
 
     self.selectedWidget = self.widgets[widget]
-
-    self.selectedWidget.frame:SetAllPoints(self.widgetAnchor)
     self.selectedWidget.frame:Show()
 
-    self:UpdateHeight()
+    self.settingsFrame.scrollFrame:SetContentHeight(self.selectedWidget.height)
+    self.settingsFrame.scrollFrame:ResetScroll()
 end
 
 function menuWindow:InitUnits()
@@ -66,7 +63,7 @@ function menuWindow:InitUnits()
         if prevButton then
             unit.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
         else
-            unit.button:SetPoint("TOPRIGHT", self.unitAnchor)
+            unit.button:SetPoint("TOPRIGHT", self.unitPane)
         end
         prevButton = unit.button
 
@@ -82,15 +79,18 @@ function menuWindow:InitWidgets()
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetsMenuPage
-        local widgetPage = Builder:CreateWidgetMenuPage(self, widget.widgetName, widget.menuHeight, widget.pageName,
+        local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, widget.menuHeight,
             unpack(widget.options))
 
         self.widgets[widgetPage.id] = widgetPage
 
+        -- button
+        widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.pageName], "accent-hover", { 85, 17 })
+        widgetPage.button.id = widget.widgetName
         if prevButton then
             widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
         else
-            widgetPage.button:SetPoint("TOPRIGHT", self.widgetAnchor)
+            widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane)
         end
         prevButton = widgetPage.button
 
@@ -118,22 +118,15 @@ function menuWindow:HideMenu()
     self.window:Hide()
 end
 
-function menuWindow:UpdateHeight()
-    --CUF:Debug("menuWindow - UpdateHeight")
-    local widgetHeight = self.selectedWidget.height
-
-    self.window:SetHeight(self.baseHeight + widgetHeight)
-end
-
 function menuWindow:Create()
     --CUF:Debug("menuWindow - Create")
-
     local optionsFrame = Cell.frames.optionsFrame
 
-    self.baseHeight = 200
+    self.unitHeight = 200
+    self.widgetHeight = 200
     self.baseWidth = 422
-    self.window = Cell:CreateFrame("CellOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
-        self.baseHeight)
+    self.window = Cell:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
+        self.unitHeight + self.widgetHeight + 10 + 17)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)
 
     -- mask
@@ -142,10 +135,8 @@ function menuWindow:Create()
     self.window.mask:Hide()
 
     self.unitPane = Cell:CreateTitledPane(self.window, L["Unit Frames"], self.baseWidth - 10,
-        self.baseHeight - 5)
+        200)
     self.unitPane:SetPoint("TOPLEFT", 5, -5)
-    self.unitAnchor = CreateFrame("Frame", nil, self.unitPane)
-    self.unitAnchor:SetAllPoints(self.unitPane)
 
     self:InitUnits()
     CUF:DevAdd(self.unitsButtons, "unitsButtons")
@@ -154,10 +145,17 @@ function menuWindow:Create()
         CUF.Menu:UpdateSelected(unit)
     end)
 
-    self.widgetPane = Cell:CreateTitledPane(self.window, L["Widgets"], self.baseWidth - 10, 200)
-    self.widgetPane:SetPoint("TOPLEFT", self.window, "TOPLEFT", 5, -self.window:GetHeight())
-    self.widgetAnchor = CreateFrame("Frame", nil, self.widgetPane)
-    self.widgetAnchor:SetAllPoints(self.widgetPane)
+    self.widgetPane = Cell:CreateTitledPane(self.window, L["Widgets"], self.baseWidth - 10, 17)
+    self.widgetPane:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT", 0, 0)
+
+    -- settings frame
+    self.settingsFrame = Cell:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane, 10, 10, true)
+    self.settingsFrame:SetSize(self.widgetPane:GetWidth(), self.widgetHeight)
+    self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT")
+    self.settingsFrame:Show()
+
+    Cell:CreateScrollFrame(self.settingsFrame)
+    self.settingsFrame.scrollFrame:SetScrollStep(25)
 
     self:InitWidgets()
     CUF:DevAdd(self.widgetsButtons, "widgetsButtons")

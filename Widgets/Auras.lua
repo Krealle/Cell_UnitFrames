@@ -69,7 +69,7 @@ local function HandleBuff(button, auraInfo)
 
     local refreshing = false
 
-    if duration then
+    if duration ~= 0 then
         if Cell.vars.iconAnimation == "duration" then
             local timeIncreased = button._buffs_cache[auraInstanceID] and
                 (expirationTime - button._buffs_cache[auraInstanceID] >= 0.5) or false

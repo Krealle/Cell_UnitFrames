@@ -79,7 +79,7 @@
 -- MARK: CUF Widgets
 -------------------------------------------------
 
----@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget
+---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget | CellAuraIcons
 
 ---@class BaseWidget
 ---@field enabled boolean

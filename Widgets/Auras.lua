@@ -150,24 +150,22 @@ local function UpdateAuraIcons(button, type)
     end)
 
     -- Update icons
-    for i = 1, 10 do
-        if button[auraCountKey] < 10 then
-            local auraInstanceID = auraInstanceIDs[i]
-            if not auraInstanceID then break end
+    for i = 1, button.widgets[type]._maxNum do
+        local auraInstanceID = auraInstanceIDs[i]
+        if not auraInstanceID then break end
 
-            local auraData = auraCache[auraInstanceID]
+        local auraData = auraCache[auraInstanceID] ---@type AuraData
 
-            button[auraCountKey] = button[auraCountKey] + 1
-            button.widgets.buffs[button[auraCountKey]]:SetCooldown(
-                (auraData.expirationTime or 0) - auraData.duration,
-                auraData.duration,
-                nil,
-                auraData.icon,
-                auraData.applications,
-                auraData.refreshing
-            )
-            button.widgets.buffs[button[auraCountKey]].index = auraData.index -- Tooltip
-        end
+        button[auraCountKey] = button[auraCountKey] + 1
+        button.widgets[type][button[auraCountKey]]:SetCooldown(
+            (auraData.expirationTime or 0) - auraData.duration,
+            auraData.duration,
+            nil,
+            auraData.icon,
+            auraData.applications,
+            auraData.refreshing
+        )
+        button.widgets[type][button[auraCountKey]].index = auraData.index -- Tooltip
     end
 end
 
@@ -245,6 +243,12 @@ local function Icons_ShowTooltip(icons, show)
     end
 end
 
+---@param icons CellAuraIcons
+---@param maxNum number
+local function Icons_SetMaxNum(icons, maxNum)
+    icons._maxNum = maxNum
+end
+
 -------------------------------------------------
 -- MARK: Aura Update
 -------------------------------------------------
@@ -285,7 +289,10 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
         auras:SetSpacing({ styleTable.spacing.horizontal, styleTable.spacing.vertical })
     end
     if not setting or setting == const.AURA_OPTION_KIND.NUM_PER_LINE then
-        --auras:SetNumPerLine(numPerLine)
+        auras:SetNumPerLine(styleTable.numPerLine)
+    end
+    if not setting or setting == const.AURA_OPTION_KIND.MAX_ICONS then
+        auras:SetMaxNum(styleTable.maxIcons)
     end
 
     U:UnitFrame_UpdateAuras(button)
@@ -319,11 +326,13 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons.id = type
     auraIcons.parent = button
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
+    auraIcons._maxNum = 10
 
     auraIcons.SetEnabled = W.SetEnabled
     auraIcons.SetPosition = Icons_SetPosition
     auraIcons.SetFont = Icons_SetFont
     auraIcons.ShowTooltip = Icons_ShowTooltip
+    auraIcons.SetMaxNum = Icons_SetMaxNum
 
     auraIcons:ShowDuration(true)
     auraIcons:ShowAnimation(true)

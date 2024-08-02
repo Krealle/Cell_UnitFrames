@@ -978,11 +978,14 @@ end
 ---@return AuraOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraOptions: Frame
-    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 170)
+    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 200)
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Icon")
 
     --- Top Options
     f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
-    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -30)
+    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
 
     -- Middle Options
     f.extraAnchorDropdown = self:CreateExtraAnchorOptions(f, widgetName)

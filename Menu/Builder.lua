@@ -1038,7 +1038,7 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
 
     f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
     self:AnchorBelow(f.showStacksCB, f.fontOptions.nameFontDropdown)
-    f.fontOptions.nameShadowCB:SetPoint("TOPLEFT", f.showStacksCB, "TOPRIGHT", 117, 0)
+    self:AnchorBelow(f.fontOptions.nameShadowCB, f.fontOptions.nameOutlineDropdown)
 
     f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
         DB.GetWidgetTable(widgetName).font.stacks.rgb[1] = r
@@ -1047,7 +1047,7 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
             .TEXT_COLOR, "rgb")
     end)
-    f.colorPicker:SetPoint("TOPLEFT", f.fontOptions.nameShadowCB, "TOPRIGHT", 117, 0)
+    self:AnchorBelow(f.colorPicker, f.fontOptions.nameSizeSilder)
 
     local function LoadPageDB()
         f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font.stacks.rgb[1],

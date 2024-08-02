@@ -339,21 +339,19 @@ end
 -------------------------------------------------
 ---@param self CUFUnitButton
 local function InitAuraTables(self)
-    -- vars
-    self._casts = {}
-    self._timers = {}
-
-    -- for icon animation only
+    self._buffsAuraInstanceIDs = {}
     self._buffs_cache = {}
-    self._buffs_count_cache = {}
+    self._buffsCount = 0
+
+    self._debuffsAuraInstanceIDs = {}
+    self._debuffs_cache = {}
+    self._debuffsCount = 0
 end
 
 ---@param self CUFUnitButton
 local function ResetAuraTables(self)
-    wipe(self._casts)
-    wipe(self._timers)
     wipe(self._buffs_cache)
-    wipe(self._buffs_count_cache)
+    wipe(self._debuffs_cache)
 end
 
 -------------------------------------------------
@@ -409,9 +407,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdatePowerTextColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
-    --[[
-    UnitFrame_UpdateAuras(self) ]]
-    Auras:UpdateAuras(button)
+    U:UnitFrame_UpdateAuras(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -514,7 +510,7 @@ end
 local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
-            Auras:UpdateAuras(self, arg)
+            U:UnitFrame_UpdateAuras(self, arg)
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             --UnitFrame_UpdateCasts(self, arg2)
         elseif event == "UNIT_HEALTH" then
@@ -737,7 +733,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
 
-    button.widgets.buffs = Auras:CreateIndicators(button, "HELPFUL")
+    button.widgets.buffs = Auras:CreateAuraIcons(button, "buffs", "Buffs")
 
     -- targetHighlight
     ---@class HighlightWidget

@@ -15,6 +15,8 @@ local DB = CUF.DB
 
 ---@class CUF.widgets
 local W = CUF.widgets
+---@class CUF.uFuncs
+local U = CUF.uFuncs
 ---@class CUF.auras
 local Auras = {}
 CUF.auras = Auras
@@ -32,8 +34,12 @@ local function ForEachAuraHelper(button, func, _continuationToken, ...)
     local n = select('#', ...)
     for i = 1, n do
         local slot = select(i, ...)
-        local auraInfo = GetAuraDataBySlot(button.states.unit, slot)
-        func(button, auraInfo, i)
+        ---@class AuraData
+        local auraData = GetAuraDataBySlot(button.states.unit, slot)
+        auraData.index = i
+        auraData.refreshing = false
+
+        func(button, auraData, i)
     end
 end
 
@@ -48,98 +54,144 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param auraInfo AuraData?
-local function HandleBuff(button, auraInfo, index)
-    if not auraInfo then return end
+---@param auraData AuraData?
+local function HandleAura(button, auraData)
+    if not auraData then return end
 
-    local auraInstanceID = auraInfo.auraInstanceID
-    local name = auraInfo.name
-    local icon = auraInfo.icon
-    local count = auraInfo.applications
-    -- local debuffType = auraInfo.isHarmful and auraInfo.dispelName
-    local expirationTime = auraInfo.expirationTime or 0
-    local start = expirationTime - auraInfo.duration
-    local duration = auraInfo.duration
-    local source = auraInfo.sourceUnit
-    local spellId = auraInfo.spellId
-    -- local attribute = auraInfo.points[1] -- UnitAura:arg16
+    local duration = auraData.duration
+    if not duration or duration == 0 then return end
 
-    local refreshing = false
+    -- TODO: blacklist / whitelist logic
+    --local spellId = auraData.spellId
 
-    if duration ~= 0 then
-        if Cell.vars.iconAnimation == "duration" then
-            local timeIncreased = button._buffs_cache[auraInstanceID] and
-                (expirationTime - button._buffs_cache[auraInstanceID] >= 0.5) or false
-            local countIncreased = button._buffs_count_cache[auraInstanceID] and
-                (count > button._buffs_count_cache[auraInstanceID]) or false
-            refreshing = timeIncreased or countIncreased
-        elseif Cell.vars.iconAnimation == "stack" then
-            refreshing = button._buffs_count_cache[auraInstanceID] and
-                (count > button._buffs_count_cache[auraInstanceID]) or
-                false
-        else
-            refreshing = false
+    local auraInstanceID = auraData.auraInstanceID
+    local count = auraData.applications
+    local expirationTime = auraData.expirationTime or 0
+
+    local cache = auraData.isHarmful and button._debuffs_cache or button._buffs_cache
+    local instanceIDCache = auraData.isHarmful and button._debuffsAuraInstanceIDs or button._buffsAuraInstanceIDs
+
+    if Cell.vars.iconAnimation == "duration" then
+        local timeIncreased = cache[auraInstanceID] and
+            (expirationTime - cache[auraInstanceID]["expirationTime"] >= 0.5) or false
+        local countIncreased = cache[auraInstanceID] and
+            (count > cache[auraInstanceID]["applications"]) or false
+        auraData.refreshing = timeIncreased or countIncreased
+    elseif Cell.vars.iconAnimation == "stack" then
+        auraData.refreshing = cache[auraInstanceID] and
+            (count > cache[auraInstanceID]["applications"]) or false
+    end
+
+    cache[auraInstanceID] = auraData
+    table.insert(instanceIDCache, auraData.auraInstanceID)
+end
+
+---@param button CUFUnitButton
+---@param updateInfo UnitAuraUpdateInfo?
+---@return "full" | boolean buffChanged
+---@return boolean debuffChanged
+local function ShouldUpdateAuras(button, updateInfo)
+    if not updateInfo or updateInfo.isFullUpdate then return "full", true end
+
+    local buffChanged = false
+    local debuffChanged = false
+
+    if updateInfo.addedAuras then
+        for _, aura in pairs(updateInfo.addedAuras) do
+            if aura.isHelpful then buffChanged = true end
+            if aura.isHarmful then debuffChanged = true end
         end
+    end
 
-        --[[         if (source == "player" and (myBuffs_icon[name] or myBuffs_bar[name])) or offensiveBuffs[spellId] then ]]
-        button._buffs_cache[auraInstanceID] = expirationTime
-        button._buffs_count_cache[auraInstanceID] = count
-        --[[ end ]]
+    if updateInfo.updatedAuraInstanceIDs then
+        for _, auraInstanceID in pairs(updateInfo.updatedAuraInstanceIDs) do
+            if button._buffs_cache[auraInstanceID] then buffChanged = true end
+            if button._debuffs_cache[auraInstanceID] then debuffChanged = true end
+        end
+    end
 
-        if --[[ myBuffs_icon[name] and source == "player" and ]] button._buffIconsFound < 5 then
-            button._buffIconsFound = button._buffIconsFound + 1
-            button.widgets.buffs[button._buffIconsFound]:SetCooldown(start, duration, nil, icon, count, refreshing)
-            button.widgets.buffs[button._buffIconsFound].index = index
+    if updateInfo.removedAuraInstanceIDs then
+        for _, auraInstanceID in pairs(updateInfo.removedAuraInstanceIDs) do
+            if button._buffs_cache[auraInstanceID] then
+                button._buffs_cache[auraInstanceID] = nil
+                buffChanged = true
+            end
+            if button._debuffs_cache[auraInstanceID] then
+                button._debuffs_cache[auraInstanceID] = nil
+                debuffChanged = true
+            end
+        end
+    end
+
+    if Cell.loaded then
+        if CellDB["general"]["alwaysUpdateBuffs"] then buffChanged = true end
+        if CellDB["general"]["alwaysUpdateDebuffs"] then debuffChanged = true end
+    end
+
+    return buffChanged, debuffChanged
+end
+
+---@param button CUFUnitButton
+---@param type "buffs" | "debuffs"
+local function UpdateAuraIcons(button, type)
+    local auraCache = button["_" .. type .. "_cache"]
+    local auraInstanceIDs = button["_" .. type .. "AuraInstanceIDs"]
+    local auraCountKey = "_" .. type .. "Count"
+
+    -- Update aura cache
+    ForEachAura(button, (type == "buffs" and "HELPFUL" or "HARMFUL"), HandleAura)
+
+    -- Sort
+    table.sort(auraInstanceIDs, function(a, b)
+        local aData = auraCache[a]
+        local bData = auraCache[b]
+        if not aData or not bData then return false end
+        return aData.expirationTime < bData.expirationTime
+    end)
+
+    -- Update icons
+    for i = 1, 10 do
+        if button[auraCountKey] < 10 then
+            local auraInstanceID = auraInstanceIDs[i]
+            if not auraInstanceID then break end
+
+            local auraData = auraCache[auraInstanceID]
+
+            button[auraCountKey] = button[auraCountKey] + 1
+            button.widgets.buffs[button[auraCountKey]]:SetCooldown(
+                (auraData.expirationTime or 0) - auraData.duration,
+                auraData.duration,
+                nil,
+                auraData.icon,
+                auraData.applications,
+                auraData.refreshing
+            )
+            button.widgets.buffs[button[auraCountKey]].index = auraData.index -- Tooltip
         end
     end
 end
 
 ---@param button CUFUnitButton
 ---@param updateInfo UnitAuraUpdateInfo?
-function Auras:UpdateAuras(button, updateInfo)
-    local unit = button.states.unit
-    --CUF:Debug("UpdateAuras", button:GetName(), unit, updateInfo and "has info" or "no info")
+function U:UnitFrame_UpdateAuras(button, updateInfo)
+    local unit = button.states.displayedUnit
     if not unit then return end
 
-    local buffsChanged
+    local buffChanged, debuffChanged = ShouldUpdateAuras(button, updateInfo)
+    if not buffChanged and not debuffChanged then return end
 
-    if not updateInfo or updateInfo.isFullUpdate then
+    if buffChanged == "full" then
         wipe(button._buffs_cache)
-        wipe(button._buffs_count_cache)
-        buffsChanged = true
-    else
-        if updateInfo.addedAuras then
-            for _, aura in pairs(updateInfo.addedAuras) do
-                if aura.isHelpful then buffsChanged = true end
-            end
-        end
-
-        if updateInfo.updatedAuraInstanceIDs then
-            for _, auraInstanceID in pairs(updateInfo.updatedAuraInstanceIDs) do
-                if button._buffs_cache[auraInstanceID] then buffsChanged = true end
-            end
-        end
-
-        if updateInfo.removedAuraInstanceIDs then
-            for _, auraInstanceID in pairs(updateInfo.removedAuraInstanceIDs) do
-                if button._buffs_cache[auraInstanceID] then
-                    button._buffs_cache[auraInstanceID] = nil
-                    button._buffs_count_cache[auraInstanceID] = nil
-                    buffsChanged = true
-                end
-            end
-        end
-
-        if Cell.loaded then
-            if CellDB["general"]["alwaysUpdateBuffs"] then buffsChanged = true end
-        end
+        wipe(button._debuffs_cache)
     end
 
-    if buffsChanged then
-        button._buffIconsFound = 0
+    if buffChanged and button.widgets.buffs.enabled then
+        button._buffsCount = 0
+        wipe(button._buffsAuraInstanceIDs)
 
-        ForEachAura(button, "HELPFUL", HandleBuff)
-        button.widgets.buffs:UpdateSize(button._buffIconsFound)
+        UpdateAuraIcons(button, "buffs")
+
+        button.widgets.buffs:UpdateSize(button._buffsCount)
     end
 end
 
@@ -206,7 +258,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
     ---@type CellAuraIcons
     local auras = button.widgets[which]
 
-    local styleTable = DB.GetWidgetTable(which) --[[@as AuraWidgetTable]]
+    local styleTable = DB.GetWidgetTable(which, unit) --[[@as AuraWidgetTable]]
 
     if not setting or setting == const.AURA_OPTION_KIND.FONT or const.AURA_OPTION_KIND.POSITION then
         auras:SetFont(styleTable.font)
@@ -236,7 +288,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
         --auras:SetNumPerLine(numPerLine)
     end
 
-    Auras:UpdateAuras(button)
+    U:UnitFrame_UpdateAuras(button)
 end
 
 ---@param button CUFUnitButton
@@ -254,28 +306,29 @@ Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param auraFilter "HELPFUL" | "HARMFUL"
-function Auras:CreateIndicators(button, auraFilter)
+---@param type "buffs" | "debuffs"
+---@param title "Buffs" | "Debuffs"
+---@return CellAuraIcons auraIcons
+function Auras:CreateAuraIcons(button, type, title)
     CUF:Debug("CreateIndicators", button:GetName())
     -- buffs indicator (icon)
     ---@class CellAuraIcons
-    local buffIcons = I.CreateAura_Icons(button:GetName() .. "BuffIcons", button, 10)
+    local auraIcons = I.CreateAura_Icons(button:GetName() .. title .. "Icons", button, 10)
 
-    buffIcons.enabled = false
-    buffIcons.id = const.WIDGET_KIND.BUFFS
-    buffIcons.parent = button
-    buffIcons.auraFilter = auraFilter
+    auraIcons.enabled = false
+    auraIcons.id = type
+    auraIcons.parent = button
 
-    buffIcons.SetEnabled = W.SetEnabled
-    buffIcons.SetPosition = Icons_SetPosition
-    buffIcons.SetFont = Icons_SetFont
-    buffIcons.ShowTooltip = Icons_ShowTooltip
+    auraIcons.SetEnabled = W.SetEnabled
+    auraIcons.SetPosition = Icons_SetPosition
+    auraIcons.SetFont = Icons_SetFont
+    auraIcons.ShowTooltip = Icons_ShowTooltip
 
-    buffIcons:ShowDuration(true)
-    buffIcons:ShowAnimation(true)
-    buffIcons:ShowStack(true)
+    auraIcons:ShowDuration(true)
+    auraIcons:ShowAnimation(true)
+    auraIcons:ShowStack(true)
 
-    return buffIcons
+    return auraIcons
 end
 
 -------------------------------------------------

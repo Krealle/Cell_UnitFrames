@@ -33,11 +33,7 @@ local function ForEachAuraHelper(button, func, _continuationToken, ...)
     for i = 1, n do
         local slot = select(i, ...)
         local auraInfo = GetAuraDataBySlot(button.states.unit, slot)
-        local done = func(button, auraInfo, i)
-        if done then
-            -- if func returns true then no further slots are needed, so don't return continuationToken
-            return nil
-        end
+        func(button, auraInfo, i)
     end
 end
 
@@ -53,7 +49,7 @@ end
 
 ---@param button CUFUnitButton
 ---@param auraInfo AuraData?
-local function HandleBuff(button, auraInfo)
+local function HandleBuff(button, auraInfo, index)
     if not auraInfo then return end
 
     local auraInstanceID = auraInfo.auraInstanceID
@@ -93,6 +89,7 @@ local function HandleBuff(button, auraInfo)
         if --[[ myBuffs_icon[name] and source == "player" and ]] button._buffIconsFound < 5 then
             button._buffIconsFound = button._buffIconsFound + 1
             button.widgets.buffs[button._buffIconsFound]:SetCooldown(start, duration, nil, icon, count, refreshing)
+            button.widgets.buffs[button._buffIconsFound].index = index
         end
     end
 end
@@ -171,6 +168,31 @@ local function Icons_SetPosition(widget, unit)
     P:Point(widget, position.anchor, widget:GetParent(), position.extraAnchor, position.offsetX, position.offsetY)
 end
 
+---@param icons CellAuraIcons
+---@param show boolean
+local function Icons_ShowTooltip(icons, show)
+    for i = 1, #icons do
+        if show then
+            icons[i]:SetScript("OnEnter", function(self)
+                if (CellDB["general"]["hideTooltipsInCombat"] and InCombatLockdown()) then return end
+
+                GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+                GameTooltip:SetUnitAura(icons.parent.states.displayedUnit, self.index, icons.auraFilter)
+            end)
+
+            icons[i]:SetScript("OnLeave", function()
+                GameTooltip:Hide()
+            end)
+
+            -- https://warcraft.wiki.gg/wiki/API_ScriptRegion_EnableMouse
+            icons[i]:SetMouseClickEnabled(false)
+        else
+            icons[i]:SetScript("OnEnter", nil)
+            icons[i]:SetScript("OnLeave", nil)
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: Aura Update
 -------------------------------------------------
@@ -205,10 +227,10 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
         auras:ShowStack(styleTable.showStack)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SHOW_TOOLTIP then
-        --auras:ShowTooltips(styleTable.showTooltip)
+        auras:ShowTooltip(styleTable.showTooltip)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SPACING then
-        --auras:SetSpacing(spacing {styleTable.spacing.horizontal, styleTable.spacing.vertical})
+        auras:SetSpacing({ styleTable.spacing.horizontal, styleTable.spacing.vertical })
     end
     if not setting or setting == const.AURA_OPTION_KIND.NUM_PER_LINE then
         --auras:SetNumPerLine(numPerLine)
@@ -232,45 +254,28 @@ Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function Auras:CreateIndicators(button)
+---@param auraFilter "HELPFUL" | "HARMFUL"
+function Auras:CreateIndicators(button, auraFilter)
     CUF:Debug("CreateIndicators", button:GetName())
     -- buffs indicator (icon)
     ---@class CellAuraIcons
-    local buffIcons = I.CreateAura_Icons(button:GetName() .. "BuffIcons", button, 5)
-    button.widgets.buffs = buffIcons
-    buffIcons.SetFont = Icons_SetFont
+    local buffIcons = I.CreateAura_Icons(button:GetName() .. "BuffIcons", button, 10)
+
     buffIcons.enabled = false
     buffIcons.id = const.WIDGET_KIND.BUFFS
+    buffIcons.parent = button
+    buffIcons.auraFilter = auraFilter
 
     buffIcons.SetEnabled = W.SetEnabled
     buffIcons.SetPosition = Icons_SetPosition
+    buffIcons.SetFont = Icons_SetFont
+    buffIcons.ShowTooltip = Icons_ShowTooltip
 
     buffIcons:ShowDuration(true)
     buffIcons:ShowAnimation(true)
     buffIcons:ShowStack(true)
 
-    --[[ buffIcons:Show() ]]
-    -- point
-    --P:ClearPoints(buffIcons)
-    --P:Point(buffIcons, "TOPLEFT", button, "TOPLEFT", 0, 30)
-    -- size
-    -- indicator color
-    --[[ for i = 1, 5 do
-        if buffIcons[i].cooldown:IsObjectType("StatusBar") then
-            buffIcons[i].cooldown:GetStatusBarTexture():SetAlpha(1)
-            buffIcons[i].tex = buffIcons[i]:CreateTexture(nil, "OVERLAY")
-            buffIcons[i].tex:SetAllPoints(buffIcons[i].icon)
-
-            hooksecurefunc(buffIcons[i], "SetCooldown", function(self, _, _, _, _, _, _, color, glow)
-                self.tex:SetColorTexture(unpack(color))
-                -- self.spark:SetColorTexture(color[1], color[2], color[3], 1) -- ignore alpha
-                -- elseif self.cooldown:IsObjectType("Cooldown") then
-                --     self.cooldown:SetSwipeTexture(0)
-                --     self.cooldown:SetSwipeColor(unpack(color))
-                ShowGlow(self, glow, color)
-            end)
-        end
-    end ]]
+    return buffIcons
 end
 
 -------------------------------------------------
@@ -291,9 +296,13 @@ end
 ---@field GetCooldownDuration function
 ---@field ShowCooldown function
 ---@field tex Texture
+---@field index number
 
 ---@class CellAuraIcons
+---@field enabled boolean
+---@field id "buffs" | "debuffs"
 ---@field indicatorType "icons"
+---@field auraFilter "HELPFUL" | "HARMFUL"
 ---@field maxNum number
 ---@field numPerLine number
 ---@field spacingX number
@@ -311,3 +320,4 @@ end
 ---@field ShowAnimation fun(icons: any, show: any) Icons_ShowAnimation
 ---@field UpdatePixelPerfect function
 ---@field [number] CellAuraIcon
+---@field parent CUFUnitButton

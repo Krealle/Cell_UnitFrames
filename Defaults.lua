@@ -161,7 +161,7 @@ local auraWidget = {
     showTooltip = true,
     filter = auraFilterOpt,
     spacing = spacingOpt,
-    numPerLine = 1,
+    numPerLine = 5,
     maxIcons = 10
 }
 

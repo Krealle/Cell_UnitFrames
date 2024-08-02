@@ -737,7 +737,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
 
-    Auras:CreateIndicators(button)
+    button.widgets.buffs = Auras:CreateIndicators(button, "HELPFUL")
 
     -- targetHighlight
     ---@class HighlightWidget

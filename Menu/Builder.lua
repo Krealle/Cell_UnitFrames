@@ -76,10 +76,8 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
         if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
             optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.spacingX, 0)
         else
-            widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
-
             if widgetName == const.WIDGET_KIND.BUFFS then
-                widgetPage.height = widgetPage.height + optPage:GetHeight() + 10
+                widgetPage.height = widgetPage.height + optPage:GetHeight() + 12
                 optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
             else
                 widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
@@ -133,7 +131,7 @@ local function Set_DB(widgetName, kind, value, keys)
         t = t[key]
     end
     t[keys[#keys]] = value
-    CUF:DevAdd({ widgetTable, t, kind, value, keys, keys[#keys] }, widgetName .. " " .. kind)
+    --CUF:DevAdd({ widgetTable, t, kind, value, keys, keys[#keys] }, widgetName .. " " .. kind)
 end
 
 ---@param widgetName WIDGET_KIND
@@ -157,11 +155,12 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param title string
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param keys? string[] Keys to traverse to the property
 ---@return CUFCheckBox
-function Builder:CreateCheckBox(parent, widgetName, title, kind)
+function Builder:CreateCheckBox(parent, widgetName, title, kind, keys)
     ---@class CUFCheckBox: CheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
-        cb.Set_DB(widgetName, kind, checked)
+        cb.Set_DB(widgetName, kind, checked, keys)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
     end)
 
@@ -169,10 +168,10 @@ function Builder:CreateCheckBox(parent, widgetName, title, kind)
     checkbox.Get_DB = Get_DB
 
     checkbox:SetPoint("TOPLEFT")
-    checkbox:SetChecked(checkbox.Get_DB(widgetName, kind))
+    checkbox:SetChecked(checkbox.Get_DB(widgetName, kind, keys))
 
     local function LoadPageDB()
-        checkbox:SetChecked(checkbox.Get_DB(widgetName, kind))
+        checkbox:SetChecked(checkbox.Get_DB(widgetName, kind, keys))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox_" .. kind)
 
@@ -1036,30 +1035,49 @@ end
 ---@return AuraIconOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraIconOptions: Frame
-    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 245)
+    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 290)
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Icon")
 
-    --- Top Options
+    --- Top Row
     f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
     f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
 
-    -- Middle Options
+    -- Second Row
     f.extraAnchorDropdown = self:CreateExtraAnchorOptions(f, widgetName)
     self:AnchorBelow(f.extraAnchorDropdown, f.anchorOptions)
 
     f.orientationDropdown = self:CreateOrientationOptions(f, widgetName)
     self:AnchorRight(f.orientationDropdown, f.extraAnchorDropdown)
 
-    -- Bottom Options
+    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], 1, 10,
+        const.AURA_OPTION_KIND.MAX_ICONS)
+    self:AnchorBelow(f.maxIconsSlider, f.anchorOptions.nameYSlider)
+
+    -- Third Row
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
-    -- Bottom Bottom Options
-    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], 1, 10,
-        const.AURA_OPTION_KIND.MAX_ICONS)
-    self:AnchorRight(f.maxIconsSlider, f.sizeOptions)
+    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], 1, 10,
+        const.AURA_OPTION_KIND.NUM_PER_LINE)
+    self:AnchorBelow(f.numPerLineSlider, f.maxIconsSlider)
+
+    -- Fourth Row
+    f.spacingHorizontalSlider = self:CreateSlider(f, widgetName, L["X Spacing"], 0, 50,
+        const.AURA_OPTION_KIND.SPACING, { "horizontal" })
+    self:AnchorBelow(f.spacingHorizontalSlider, f.sizeOptions)
+
+    f.spacingVerticalSlider = self:CreateSlider(f, widgetName, L["Y Spacing"], 0, 50,
+        const.AURA_OPTION_KIND.SPACING, { "vertical" })
+    self:AnchorBelow(f.spacingVerticalSlider, f.sizeOptions.sizeHeightSlider)
+
+    -- Fifth Row
+    f.showAnimation = self:CreateCheckBox(f, widgetName, L["Show Animation"], const.AURA_OPTION_KIND.SHOW_ANIMATION)
+    self:AnchorBelow(f.showAnimation, f.spacingHorizontalSlider)
+
+    f.showTooltip = self:CreateCheckBox(f, widgetName, L["Show Tooltips"], const.AURA_OPTION_KIND.SHOW_TOOLTIP)
+    self:AnchorBelow(f.showTooltip, f.spacingVerticalSlider)
 
     return f
 end

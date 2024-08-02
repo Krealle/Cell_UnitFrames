@@ -110,6 +110,23 @@ function Builder:AnchorRight(option, prevOptions)
 end
 
 -------------------------------------------------
+-- MARK: Functions
+-------------------------------------------------
+
+---@param widgetName WIDGET_KIND
+---@param kind string
+---@param value any
+local function Set_DB(widgetName, kind, value)
+    DB.GetWidgetTable(widgetName)[kind] = value
+end
+
+---@param widgetName WIDGET_KIND
+---@param kind string
+local function Get_DB(widgetName, kind)
+    return DB.GetWidgetTable(widgetName)[kind]
+end
+
+-------------------------------------------------
 -- MARK: CheckBox
 -------------------------------------------------
 
@@ -158,6 +175,37 @@ function Builder:CreatEnabledCheckBox(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Slider
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param title string
+---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param minVal number
+---@param maxVal number
+---@return CUFSlider
+function Builder:CreateSlider(parent, widgetName, title, kind, minVal, maxVal)
+    ---@class CUFSlider: CellSlider
+    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, 117, 1)
+
+    slider.Set_DB = Set_DB
+    slider.Get_DB = Get_DB
+
+    slider.afterValueChangedFn = function(value)
+        slider.Set_DB(widgetName, kind, value)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
+    end
+
+    local function LoadPageDB()
+        slider:SetValue(slider.Get_DB(widgetName, kind))
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "Slider_" .. kind)
+
+    return slider
+end
+
+-----------------------------------------------
 -- MARK: Option Title
 -------------------------------------------------
 
@@ -971,7 +1019,7 @@ function Builder:CreateSizeOptions(parent, widgetName)
 end
 
 -------------------------------------------------
--- MARK: Aura Menu
+-- MARK: Aura Icon
 -------------------------------------------------
 
 ---@param parent Frame
@@ -979,7 +1027,7 @@ end
 ---@return AuraIconOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraIconOptions: Frame
-    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 200)
+    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 245)
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Icon")
@@ -999,8 +1047,16 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
+    -- Bottom Bottom Options
+    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], const.AURA_OPTION_KIND.MAX_ICONS, 1, 10)
+    self:AnchorBelow(f.maxIconsSlider, f.sizeOptions)
+
     return f
 end
+
+-------------------------------------------------
+-- MARK: Aura Stack
+-------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName "buffs" | "debuffs"
@@ -1058,6 +1114,10 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
 
     return f
 end
+
+-------------------------------------------------
+-- MARK: Aura Duration
+-------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName "buffs" | "debuffs"

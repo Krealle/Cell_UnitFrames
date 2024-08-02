@@ -110,6 +110,7 @@ const.OPTION_KIND = {
 ---| "spacing"
 ---| "numPerLine"
 ---| "filter"
+---| "maxIcons"
 const.AURA_OPTION_KIND = {
     SIZE = "size",
     FONT = "font",
@@ -122,6 +123,7 @@ const.AURA_OPTION_KIND = {
     SPACING = "spacing",
     NUM_PER_LINE = "numPerLine",
     FILTER = "filter",
+    MAX_ICONS = "maxIcons"
 }
 
 ---@alias AuraOrientation "right-to-left" | "left-to-right" | "top-to-bottom" | "bottom-to-top"

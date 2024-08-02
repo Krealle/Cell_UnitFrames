@@ -148,6 +148,7 @@ local auraFilterOpt = {
 ---@field position PositionOpt
 ---@field spacing SpacingOpt
 ---@field numPerLine number
+---@field maxIcons number
 local auraWidget = {
     enabled = false,
     font = auraFontOpt,
@@ -161,6 +162,7 @@ local auraWidget = {
     filter = auraFilterOpt,
     spacing = spacingOpt,
     numPerLine = 1,
+    maxIcons = 10
 }
 
 ---@class UnitFrameWidgetsTable

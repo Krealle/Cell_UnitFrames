@@ -36,9 +36,6 @@ Widgets/HealthText.lua
 Widgets/PowerText.lua
 
 Widgets/Auras.lua
-Widgets/Buffs.lua
-#Widgets/Debuffs.lua
-#Widgets/BuffsAndDebuffs.lua
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

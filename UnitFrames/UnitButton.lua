@@ -734,6 +734,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreatePowerText(button)
 
     button.widgets.buffs = Auras:CreateAuraIcons(button, "buffs", "Buffs")
+    button.widgets.debuffs = Auras:CreateAuraIcons(button, "debuffs", "Debuffs")
 
     -- targetHighlight
     ---@class HighlightWidget

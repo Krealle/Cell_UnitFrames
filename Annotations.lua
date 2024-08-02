@@ -280,5 +280,6 @@
 ---@field mouseoverHighlight HighlightWidget
 ---@field healthText HealthTextWidget
 ---@field buffs CellAuraIcons
+---@field debuffs CellAuraIcons
 
 ---@class HighlightWidget: BackdropTemplate, Frame

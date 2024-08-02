@@ -170,11 +170,13 @@ local auraWidget = {
 ---@field healthText HealthTextWidgetTable
 ---@field powerText PowerTextWidgetTable
 ---@field buffs AuraWidgetTable
+---@field debuffs AuraWidgetTable
 local unitFrameWidgets = {
     nameText = nameWidget,
     healthText = healthTextWidget,
     powerText = powerTextWidget,
     buffs = auraWidget,
+    debuffs = auraWidget,
 }
 
 ---@class Layout

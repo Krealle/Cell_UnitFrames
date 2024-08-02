@@ -12,6 +12,8 @@ local A = Cell.animations
 local const = CUF.constants
 local Handler = CUF.widgetsHandler
 local DB = CUF.DB
+local menu = CUF.Menu
+local Builder = CUF.Builder
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -146,7 +148,7 @@ local function UpdateAuraIcons(button, type)
         local aData = auraCache[a]
         local bData = auraCache[b]
         if not aData or not bData then return false end
-        return aData.expirationTime < bData.expirationTime
+        return aData.expirationTime > bData.expirationTime
     end)
 
     -- Update icons
@@ -190,6 +192,14 @@ function U:UnitFrame_UpdateAuras(button, updateInfo)
         UpdateAuraIcons(button, "buffs")
 
         button.widgets.buffs:UpdateSize(button._buffsCount)
+    end
+    if debuffChanged and button.widgets.debuffs.enabled then
+        button._debuffsCount = 0
+        wipe(button._debuffsAuraInstanceIDs)
+
+        UpdateAuraIcons(button, "debuffs")
+
+        button.widgets.debuffs:UpdateSize(button._debuffsCount)
     end
 end
 
@@ -298,6 +308,10 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
     U:UnitFrame_UpdateAuras(button)
 end
 
+-------------------------------------------------
+-- MARK: Buff & Debuff
+-------------------------------------------------
+
 ---@param button CUFUnitButton
 ---@param unit Unit
 ---@param setting AURA_OPTION_KIND
@@ -307,6 +321,28 @@ local function UpdateBuffs(button, unit, setting, subSetting)
 end
 
 Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
+
+menu:AddWidget(const.WIDGET_KIND.BUFFS, 250, "Buffs",
+    Builder.MenuOptions.AuraIconOptions,
+    Builder.MenuOptions.AuraStackFontOptions,
+    Builder.MenuOptions.AuraDurationFontOptions
+)
+
+---@param button CUFUnitButton
+---@param unit Unit
+---@param setting AURA_OPTION_KIND
+---@param subSetting string
+local function UpdateDebuffs(button, unit, setting, subSetting)
+    W.UpdateAuraWidget(button, unit, const.WIDGET_KIND.DEBUFFS, setting, subSetting)
+end
+
+Handler:RegisterWidget(UpdateDebuffs, const.WIDGET_KIND.DEBUFFS)
+
+menu:AddWidget(const.WIDGET_KIND.DEBUFFS, 250, "Debuffs",
+    Builder.MenuOptions.AuraIconOptions,
+    Builder.MenuOptions.AuraStackFontOptions,
+    Builder.MenuOptions.AuraDurationFontOptions
+)
 
 -------------------------------------------------
 -- MARK: Aura Indicators

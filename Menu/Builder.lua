@@ -76,7 +76,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
         if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
             optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.spacingX, 0)
         else
-            if widgetName == const.WIDGET_KIND.BUFFS then
+            if widgetName == const.WIDGET_KIND.BUFFS or widgetName == const.WIDGET_KIND.DEBUFFS then
                 widgetPage.height = widgetPage.height + optPage:GetHeight() + 12
                 optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
             else

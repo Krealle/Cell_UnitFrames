@@ -76,6 +76,7 @@ end
 function menuWindow:InitWidgets()
     --CUF:Debug("menuWindow - InitWidgets")
     local prevButton
+    local idx = 1
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetsMenuPage
@@ -87,8 +88,18 @@ function menuWindow:InitWidgets()
         -- button
         widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.pageName], "accent-hover", { 85, 17 })
         widgetPage.button.id = widget.widgetName
+
         if prevButton then
-            widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+            -- Max 4 buttons per row
+            if idx % 4 == 0 then
+                widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane, 0, 16)
+                idx = 0
+                --[[ self.window:SetHeight(self.window:GetHeight() + 16)
+                self.unitPane:SetHeight(self.unitPane:GetHeight() + 16) ]]
+            else
+                widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+            end
+            idx = idx + 1
         else
             widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane)
         end

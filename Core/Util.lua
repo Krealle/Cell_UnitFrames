@@ -147,7 +147,7 @@ function CUF:Debug(...)
 end
 
 ---@param data any
----@param name string
+---@param name string|number
 function CUF:DevAdd(data, name)
     if not CUF.debugDB or not DevTool then return end
 

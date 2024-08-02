@@ -186,7 +186,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
 
     local styleTable = DB.GetWidgetTable(which) --[[@as AuraWidgetTable]]
 
-    if not setting or setting == const.AURA_OPTION_KIND.FONT then
+    if not setting or setting == const.AURA_OPTION_KIND.FONT or const.AURA_OPTION_KIND.POSITION then
         auras:SetFont(styleTable.font)
     end
     if not setting or setting == const.AURA_OPTION_KIND.ORIENTATION then
@@ -213,6 +213,8 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
     if not setting or setting == const.AURA_OPTION_KIND.NUM_PER_LINE then
         --auras:SetNumPerLine(numPerLine)
     end
+
+    Auras:UpdateAuras(button)
 end
 
 ---@param button CUFUnitButton

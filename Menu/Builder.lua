@@ -140,7 +140,7 @@ end
 function Builder:CreatEnabledCheckBox(parent, widgetName)
     ---@class EnabledCheckBox
     local f = Cell:CreateFrame(nil, parent, self.optionWidth, 30)
-    f:SetPoint("TOPLEFT", parent, 10, -10)
+    f:SetPoint("TOPLEFT", parent, 5, -5)
     f:Show()
 
     local enabledCheckBox = self:CreateCheckBox(f, widgetName, L["Enabled"],

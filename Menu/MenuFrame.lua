@@ -151,7 +151,7 @@ function menuWindow:Create()
     -- settings frame
     self.settingsFrame = Cell:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane, 10, 10, true)
     self.settingsFrame:SetSize(self.widgetPane:GetWidth(), self.widgetHeight)
-    self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT")
+    self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -5)
     self.settingsFrame:Show()
 
     Cell:CreateScrollFrame(self.settingsFrame)

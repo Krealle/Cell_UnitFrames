@@ -24,4 +24,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 menu:AddWidget(const.WIDGET_KIND.BUFFS, 250, "Buffs",
-    Builder.MenuOptions.AuraIconOptions, Builder.MenuOptions.AuraStackFontOptions)
+    Builder.MenuOptions.AuraIconOptions,
+    Builder.MenuOptions.AuraStackFontOptions,
+    Builder.MenuOptions.AuraDurationFontOptions
+)

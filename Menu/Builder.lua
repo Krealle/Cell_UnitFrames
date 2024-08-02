@@ -35,6 +35,7 @@ Builder.MenuOptions = {
     ExtraAnchor = 9,
     Orientation = 10,
     AuraStackFontOptions = 11,
+    AuraDurationFontOptions = 12,
 }
 
 CUF.Builder = Builder
@@ -975,9 +976,9 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
----@return AuraOptions
+---@return AuraIconOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
-    ---@class AuraOptions: Frame
+    ---@class AuraIconOptions: Frame
     local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 200)
 
     -- Title
@@ -1003,9 +1004,9 @@ end
 
 ---@param parent Frame
 ---@param widgetName "buffs" | "debuffs"
----@return AuraOptions
+---@return AuraStackFontOptions
 function Builder:CreateAuraStackFontOptions(parent, widgetName)
-    ---@class AuraOptions: Frame
+    ---@class AuraStackFontOptions: Frame
     local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 190)
 
     -- Title
@@ -1013,7 +1014,6 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
 
     --- Top Options
     f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
-    --self:AnchorBelow(f.anchorOptions, f.title)
     f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
 
     -- Override to target proper DB
@@ -1059,6 +1059,115 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName "buffs" | "debuffs"
+---@return AuraDurationFontOptions
+function Builder:CreateAuraDurationFontOptions(parent, widgetName)
+    ---@class AuraDurationFontOptions: Frame
+    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 190)
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Duration Font")
+
+    --- Top Options
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
+    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
+
+    -- Override to target proper DB
+    f.anchorOptions.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).font.duration[kind] = value
+    end
+    f.anchorOptions.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).font.duration[kind]
+    end
+
+    -- Middle Options
+    f.fontOptions = self:CreateFontOptions(f, widgetName)
+    self:AnchorBelow(f.fontOptions, f.anchorOptions)
+
+    -- Override to target proper DB
+    f.fontOptions.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).font.duration[kind] = value
+    end
+    f.fontOptions.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).font.duration[kind]
+    end
+
+    -- Bottom Options
+    f.iconDurationDropdown = Cell:CreateDropdown(f, 117)
+    f.iconDurationDropdown:SetPoint("TOPLEFT", 5, -27)
+    f.iconDurationDropdown:SetLabel(L["showDuration"])
+    self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.nameFontDropdown)
+    self:AnchorBelow(f.fontOptions.nameShadowCB, f.fontOptions.nameOutlineDropdown)
+
+    local function ShowDuration(_, val)
+        DB.GetWidgetTable(widgetName).showDuration = val
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
+            const.AURA_OPTION_KIND.SHOW_DURATION)
+    end
+    f.iconDurationDropdown:SetItems({
+        {
+            ["text"] = L["Never"],
+            ["value"] = false,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = L["Always"],
+            ["value"] = true,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 75%",
+            ["value"] = 0.75,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 50%",
+            ["value"] = 0.5,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 25%",
+            ["value"] = 0.25,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 15 " .. L["sec"],
+            ["value"] = 15,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 10 " .. L["sec"],
+            ["value"] = 10,
+            ["onClick"] = ShowDuration,
+        },
+        {
+            ["text"] = "< 5 " .. L["sec"],
+            ["value"] = 5,
+            ["onClick"] = ShowDuration,
+        },
+    })
+
+    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+        DB.GetWidgetTable(widgetName).font.duration.rgb[1] = r
+        DB.GetWidgetTable(widgetName).font.duration.rgb[2] = g
+        DB.GetWidgetTable(widgetName).font.duration.rgb[3] = b
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .TEXT_COLOR, "rgb")
+    end)
+    self:AnchorBelow(f.colorPicker, f.fontOptions.nameSizeSilder)
+
+    local function LoadPageDB()
+        f.iconDurationDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).showDuration)
+        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font.duration.rgb[1],
+            DB.GetWidgetTable(widgetName).font.duration.rgb[2],
+            DB.GetWidgetTable(widgetName).font.duration.rgb[3])
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1076,4 +1185,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.AuraIconOptions] = Builder.CreateAuraIconOptions,
     [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
     [Builder.MenuOptions.AuraStackFontOptions] = Builder.CreateAuraStackFontOptions,
+    [Builder.MenuOptions.AuraDurationFontOptions] = Builder.CreateAuraDurationFontOptions,
 }

@@ -141,7 +141,7 @@ local auraFilterOpt = {
 ---@field font AuraFontOpt
 ---@field orientation AuraOrientation
 ---@field showStack boolean
----@field showDuration boolean
+---@field showDuration boolean|number
 ---@field showAnimation boolean
 ---@field filter AuraFilterOpt
 ---@field showTooltip boolean

@@ -6,9 +6,7 @@ local L = Cell.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
 
----@class CUF.widgets.Handler
 local Handler = CUF.widgetsHandler
----@class CUF.constants
 local const = CUF.constants
 local DB = CUF.DB
 
@@ -114,16 +112,39 @@ end
 -------------------------------------------------
 
 ---@param widgetName WIDGET_KIND
----@param kind string
+---@param kind OPTION_KIND | AURA_OPTION_KIND
 ---@param value any
-local function Set_DB(widgetName, kind, value)
-    DB.SetWidgetProperty(widgetName, kind, value)
+local function Set_DB(widgetName, kind, value, keys)
+    local widgetTable = DB.GetWidgetTable(widgetName)
+
+    if not keys then
+        widgetTable[kind] = value
+        return
+    end
+
+    local t = widgetTable[kind]
+    for i = 1, #keys - 1 do
+        local key = keys[i]
+        if t[key] == nil then
+            print("Key not found: " .. table.concat(keys, ".", 1, i))
+        end
+        t = t[key]
+    end
+    t[keys[#keys]] = value
+    CUF:DevAdd({ widgetTable, t, kind, value, keys, keys[#keys] }, widgetName .. " " .. kind)
 end
 
 ---@param widgetName WIDGET_KIND
----@param kind string
-local function Get_DB(widgetName, kind)
-    return DB.GetWidgetProperty(widgetName, kind)
+---@param kind OPTION_KIND | AURA_OPTION_KIND
+local function Get_DB(widgetName, kind, keys)
+    local result = DB.GetWidgetProperty(widgetName, kind)
+
+    if not keys then return result end
+
+    for _, v in ipairs(keys) do
+        result = result[v]
+    end
+    return result
 end
 
 -------------------------------------------------
@@ -179,11 +200,12 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param title string
----@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
 ---@param minVal number
 ---@param maxVal number
+---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param keys? string[] Keys to traverse to the property
 ---@return CUFSlider
-function Builder:CreateSlider(parent, widgetName, title, kind, minVal, maxVal)
+function Builder:CreateSlider(parent, widgetName, title, minVal, maxVal, kind, keys)
     ---@class CUFSlider: CellSlider
     local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, 117, 1)
 
@@ -191,12 +213,12 @@ function Builder:CreateSlider(parent, widgetName, title, kind, minVal, maxVal)
     slider.Get_DB = Get_DB
 
     slider.afterValueChangedFn = function(value)
-        slider.Set_DB(widgetName, kind, value)
+        slider.Set_DB(widgetName, kind, value, keys)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
     end
 
     local function LoadPageDB()
-        slider:SetValue(slider.Get_DB(widgetName, kind))
+        slider:SetValue(slider.Get_DB(widgetName, kind, keys))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "Slider_" .. kind)
 
@@ -987,31 +1009,17 @@ end
 ---@return SizeOptions
 function Builder:CreateSizeOptions(parent, widgetName)
     ---@class SizeOptions: Frame
-    local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
-    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+    local f = Cell:CreateFrame(nil, parent, 259, 30)
 
-    f.sizeWidthSlider = Cell:CreateSlider(L["Width"], parent, -100, 100, 117, 1)
+    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], 0, 100,
+        const.AURA_OPTION_KIND.SIZE,
+        { "width" })
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
-    f.sizeWidthSlider.afterValueChangedFn = function(value)
-        DB.GetWidgetTable(widgetName).size.width = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.SIZE,
-            "width")
-    end
 
-    f.sizeHeightSlider = Cell:CreateSlider(L["Height"], parent, -100, 100, 117, 1)
+    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], 0, 100,
+        const.AURA_OPTION_KIND.SIZE,
+        { "height" })
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
-    f.sizeHeightSlider.afterValueChangedFn = function(value)
-        DB.GetWidgetTable(widgetName).size.height = value
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.SIZE,
-            "height")
-    end
-
-    local function LoadPageDB()
-        ---@type SizeOpt
-        f.sizeWidthSlider:SetValue(DB.GetWidgetTable(widgetName).size.width)
-        f.sizeHeightSlider:SetValue(DB.GetWidgetTable(widgetName).size.height)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "SizeOptions")
 
     return f
 end

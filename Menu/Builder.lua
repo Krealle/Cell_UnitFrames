@@ -1046,8 +1046,9 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
     -- Bottom Bottom Options
-    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], const.AURA_OPTION_KIND.MAX_ICONS, 1, 10)
-    self:AnchorBelow(f.maxIconsSlider, f.sizeOptions)
+    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], 1, 10,
+        const.AURA_OPTION_KIND.MAX_ICONS)
+    self:AnchorRight(f.maxIconsSlider, f.sizeOptions)
 
     return f
 end

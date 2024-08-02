@@ -165,7 +165,7 @@ end
 ---@param txt string
 ---@return FontString
 function Builder:CreateOptionTitle(parent, txt)
-    local title = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    local title = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
     title:SetText(L[txt])
     title:SetScale(1.2)
     title:SetPoint("TOPLEFT", parent, 10, -10)

@@ -79,8 +79,10 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
             widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
 
             if widgetName == const.WIDGET_KIND.BUFFS then
+                widgetPage.height = widgetPage.height + optPage:GetHeight() + 10
                 optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
             else
+                widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
                 optPage:SetPoint("TOPLEFT", prevOption, 0, -self.spacingY)
             end
 
@@ -1010,6 +1012,7 @@ end
 function Builder:CreateSizeOptions(parent, widgetName)
     ---@class SizeOptions: Frame
     local f = Cell:CreateFrame(nil, parent, 259, 30)
+    f:Show()
 
     f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], 0, 100,
         const.AURA_OPTION_KIND.SIZE,

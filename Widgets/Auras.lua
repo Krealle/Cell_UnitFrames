@@ -318,6 +318,7 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons.enabled = false
     auraIcons.id = type
     auraIcons.parent = button
+    auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
 
     auraIcons.SetEnabled = W.SetEnabled
     auraIcons.SetPosition = Icons_SetPosition

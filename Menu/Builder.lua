@@ -117,13 +117,13 @@ end
 ---@param kind string
 ---@param value any
 local function Set_DB(widgetName, kind, value)
-    DB.GetWidgetTable(widgetName)[kind] = value
+    DB.SetWidgetProperty(widgetName, kind, value)
 end
 
 ---@param widgetName WIDGET_KIND
 ---@param kind string
 local function Get_DB(widgetName, kind)
-    return DB.GetWidgetTable(widgetName)[kind]
+    return DB.GetWidgetProperty(widgetName, kind)
 end
 
 -------------------------------------------------
@@ -134,22 +134,22 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param title string
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
----@param dbVal function? Defaults to DB.GetWidgetProperty
----@param dbFn function? Defaults to DB.SetWidgetProperty
 ---@return CUFCheckBox
-function Builder:CreateCheckBox(parent, widgetName, title, kind, dbVal, dbFn)
-    dbFn = dbFn or DB.SetWidgetProperty
-    dbVal = dbVal or DB.GetWidgetProperty
+function Builder:CreateCheckBox(parent, widgetName, title, kind)
     ---@class CUFCheckBox: CheckButton
-    local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked)
-        dbFn(widgetName, checked)
+    local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
+        cb.Set_DB(widgetName, kind, checked)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
     end)
+
+    checkbox.Set_DB = Set_DB
+    checkbox.Get_DB = Get_DB
+
     checkbox:SetPoint("TOPLEFT")
-    checkbox:SetChecked(dbVal(widgetName, kind))
+    checkbox:SetChecked(checkbox.Get_DB(widgetName, kind))
 
     local function LoadPageDB()
-        checkbox:SetChecked(dbVal(widgetName, kind))
+        checkbox:SetChecked(checkbox.Get_DB(widgetName, kind))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox_" .. kind)
 
@@ -165,9 +165,7 @@ function Builder:CreatEnabledCheckBox(parent, widgetName)
     f:SetPoint("TOPLEFT", parent, 5, -5)
     f:Show()
 
-    local enabledCheckBox = self:CreateCheckBox(f, widgetName, L["Enabled"],
-        const.OPTION_KIND.ENABLED,
-        DB.GetWidgetProperty, DB.SetWidgetEnabled)
+    local enabledCheckBox = self:CreateCheckBox(f, widgetName, L["Enabled"], const.OPTION_KIND.ENABLED)
     enabledCheckBox:ClearAllPoints()
     enabledCheckBox:SetPoint("LEFT", f, 10, 0)
 

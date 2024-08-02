@@ -34,6 +34,7 @@ Builder.MenuOptions = {
     AuraIconOptions = 8,
     ExtraAnchor = 9,
     Orientation = 10,
+    AuraStackFontOptions = 11,
 }
 
 CUF.Builder = Builder
@@ -78,7 +79,12 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
         else
             widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
 
-            optPage:SetPoint("TOPLEFT", prevOption, 0, -self.spacingY)
+            if widgetName == const.WIDGET_KIND.BUFFS then
+                optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
+            else
+                optPage:SetPoint("TOPLEFT", prevOption, 0, -self.spacingY)
+            end
+
             prevOption = optPage
         end
     end
@@ -109,11 +115,13 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param title string
----@param kind OPTION_KIND | AURA_OPTION_KIND
----@param dbVal function
----@param dbFn function
+---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param dbVal function? Defaults to DB.GetWidgetProperty
+---@param dbFn function? Defaults to DB.SetWidgetProperty
 ---@return CUFCheckBox
 function Builder:CreateCheckBox(parent, widgetName, title, kind, dbVal, dbFn)
+    dbFn = dbFn or DB.SetWidgetProperty
+    dbVal = dbVal or DB.GetWidgetProperty
     ---@class CUFCheckBox: CheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked)
         dbFn(widgetName, checked)
@@ -129,10 +137,6 @@ function Builder:CreateCheckBox(parent, widgetName, title, kind, dbVal, dbFn)
 
     return checkbox
 end
-
--------------------------------------------------
--- MARK: Enabled
--------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
@@ -150,6 +154,22 @@ function Builder:CreatEnabledCheckBox(parent, widgetName)
     enabledCheckBox:SetPoint("LEFT", f, 10, 0)
 
     return f
+end
+
+-------------------------------------------------
+-- MARK: Option Title
+-------------------------------------------------
+
+---@param parent Frame
+---@param txt string
+---@return FontString
+function Builder:CreateOptionTitle(parent, txt)
+    local title = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    title:SetText(L[txt])
+    title:SetScale(1.2)
+    title:SetPoint("TOPLEFT", parent, 10, -10)
+
+    return title
 end
 
 -------------------------------------------------
@@ -472,6 +492,16 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
     P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
 
+    ---@param kind string
+    ---@param value any
+    f.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).position[kind] = value
+    end
+    ---@param kind string
+    f.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).position[kind]
+    end
+
     f.nameAnchorDropdown = Cell:CreateDropdown(parent, 117)
     f.nameAnchorDropdown:SetPoint("TOPLEFT", f)
     f.nameAnchorDropdown:SetLabel(L["Anchor Point"])
@@ -482,7 +512,7 @@ function Builder:CreateAnchorOptions(parent, widgetName)
             ["text"] = L[v],
             ["value"] = v,
             ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).position.anchor = v
+                f.Set_DB("anchor", v)
                 CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
                     const.OPTION_KIND.POSITION, "anchor")
             end,
@@ -493,7 +523,7 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     f.nameXSlider = Cell:CreateSlider(L["X Offset"], parent, -100, 100, 117, 1)
     f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.spacingX, 0)
     f.nameXSlider.afterValueChangedFn = function(value)
-        DB.GetWidgetTable(widgetName).position.offsetX = value
+        f.Set_DB("offsetX", value)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
             "offsetX")
     end
@@ -501,15 +531,15 @@ function Builder:CreateAnchorOptions(parent, widgetName)
     f.nameYSlider = Cell:CreateSlider(L["Y Offset"], parent, -100, 100, 117, 1)
     f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.spacingX, 0)
     f.nameYSlider.afterValueChangedFn = function(value)
-        DB.GetWidgetTable(widgetName).position.offsetY = value
+        f.Set_DB("offsetY", value)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
             "offsetY")
     end
 
     local function LoadPageDB()
-        f.nameAnchorDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).position.anchor)
-        f.nameXSlider:SetValue(DB.GetWidgetTable(widgetName).position.offsetX)
-        f.nameYSlider:SetValue(DB.GetWidgetTable(widgetName).position.offsetY)
+        f.nameAnchorDropdown:SetSelectedValue(f.Get_DB("anchor"))
+        f.nameXSlider:SetValue(f.Get_DB("offsetX"))
+        f.nameYSlider:SetValue(f.Get_DB("offsetY"))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "AnchorOptions")
 
@@ -601,6 +631,16 @@ function Builder:CreateFontOptions(parent, widgetName)
     local f = CreateFrame("Frame", "FontOptions" .. widgetName, parent)
     P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
 
+    ---@param kind string
+    ---@param value any
+    f.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).font[kind] = value
+    end
+    ---@param kind string
+    f.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).font[kind]
+    end
+
     f.nameFontDropdown = Cell:CreateDropdown(parent, 117)
     f.nameFontDropdown:SetPoint("TOPLEFT", f)
     f.nameFontDropdown:SetLabel(L["Font"])
@@ -610,7 +650,7 @@ function Builder:CreateFontOptions(parent, widgetName)
     f.fonts = fonts
     for _, item in pairs(items) do
         item["onClick"] = function()
-            DB.GetWidgetTable(widgetName).font.style = item["text"]
+            f.Set_DB("style", item["text"])
             CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
                 "name")
         end
@@ -631,7 +671,7 @@ function Builder:CreateFontOptions(parent, widgetName)
             ["text"] = L[v],
             ["value"] = v,
             ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).font.outline = v
+                f.Set_DB("outline", v)
                 CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
                     const.OPTION_KIND.FONT, "outline")
             end,
@@ -642,24 +682,23 @@ function Builder:CreateFontOptions(parent, widgetName)
     f.nameSizeSilder = Cell:CreateSlider(L["Size"], parent, 5, 50, 117, 1)
     f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.spacingX, 0)
     f.nameSizeSilder.afterValueChangedFn = function(value)
-        DB.GetWidgetTable(widgetName).font.size = value
+        f.Set_DB("size", value)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
             "size")
     end
 
     f.nameShadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked)
-        DB.GetWidgetTable(widgetName).font.shadow = checked
+        f.Set_DB("shadow", checked)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
             "shadow")
     end)
     f.nameShadowCB:SetPoint("TOPLEFT", f.nameFontDropdown, "BOTTOMLEFT", 0, -10)
 
     local function LoadPageDB()
-        f.nameSizeSilder:SetValue(DB.GetWidgetTable(widgetName).font.size)
-        f.nameOutlineDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).font.outline)
-        f.nameShadowCB:SetChecked(DB.GetWidgetTable(widgetName).font.shadow)
-        f.nameFontDropdown:SetSelected(DB.GetWidgetTable(widgetName).font.style, f.fonts,
-            f.defaultFontName)
+        f.nameSizeSilder:SetValue(f.Get_DB("size"))
+        f.nameOutlineDropdown:SetSelectedValue(f.Get_DB("outline"))
+        f.nameShadowCB:SetChecked(f.Get_DB("shadow"))
+        f.nameFontDropdown:SetSelected(f.Get_DB("style"), f.fonts, f.defaultFontName)
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "FontOptions")
 
@@ -960,21 +999,57 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
 end
 
 ---@param parent Frame
----@param widgetName WIDGET_KIND
+---@param widgetName "buffs" | "debuffs"
 ---@return AuraOptions
 function Builder:CreateAuraStackFontOptions(parent, widgetName)
     ---@class AuraOptions: Frame
-    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 170)
+    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 190)
 
-    local checkbox = Cell:CreateCheckButton(f, L["Show stacks"], function(checked)
-        DB.GetWidgetTable(widgetName).enabled = checked
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.ENABLED)
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Stack Font")
+
+    --- Top Options
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
+    --self:AnchorBelow(f.anchorOptions, f.title)
+    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
+
+    -- Override to target proper DB
+    f.anchorOptions.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).font.stacks[kind] = value
+    end
+    f.anchorOptions.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).font.stacks[kind]
+    end
+
+    -- Middle Options
+    f.fontOptions = self:CreateFontOptions(f, widgetName)
+    self:AnchorBelow(f.fontOptions, f.anchorOptions)
+
+    -- Override to target proper DB
+    f.fontOptions.Set_DB = function(kind, value)
+        DB.GetWidgetTable(widgetName).font.stacks[kind] = value
+    end
+    f.fontOptions.Get_DB = function(kind)
+        return DB.GetWidgetTable(widgetName).font.stacks[kind]
+    end
+
+    f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
+    self:AnchorBelow(f.showStacksCB, f.fontOptions.nameFontDropdown)
+    f.fontOptions.nameShadowCB:SetPoint("TOPLEFT", f.showStacksCB, "TOPRIGHT", 117, 0)
+
+    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+        DB.GetWidgetTable(widgetName).font.stacks.rgb[1] = r
+        DB.GetWidgetTable(widgetName).font.stacks.rgb[2] = g
+        DB.GetWidgetTable(widgetName).font.stacks.rgb[3] = b
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .TEXT_COLOR, "rgb")
     end)
-    checkbox:SetPoint("TOPLEFT", f, 10, -10)
-    checkbox:SetChecked(DB.GetWidgetTable(widgetName).enabled)
+    f.colorPicker:SetPoint("TOPLEFT", f.fontOptions.nameShadowCB, "TOPRIGHT", 117, 0)
 
     local function LoadPageDB()
-        checkbox:SetChecked(DB.GetWidgetTable(widgetName).enabled)
+        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font.stacks.rgb[1],
+            DB.GetWidgetTable(widgetName).font.stacks.rgb[2],
+            DB.GetWidgetTable(widgetName).font.stacks.rgb[3])
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 
@@ -997,4 +1072,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
     [Builder.MenuOptions.AuraIconOptions] = Builder.CreateAuraIconOptions,
     [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
+    [Builder.MenuOptions.AuraStackFontOptions] = Builder.CreateAuraStackFontOptions,
 }

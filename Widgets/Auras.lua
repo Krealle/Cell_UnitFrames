@@ -134,6 +134,7 @@ end
 local function UpdateAuraIcons(icons)
     -- Preview
     if icons._isSelected then
+        icons:ShowPreview()
         icons:UpdateSize(icons._maxNum)
         return
     end
@@ -232,7 +233,8 @@ local function Icons_ShowTooltip(icons, show)
     for i = 1, #icons do
         if show then
             icons[i]:SetScript("OnEnter", function(self)
-                if (CellDB["general"]["hideTooltipsInCombat"] and InCombatLockdown()) then return end
+                -- Don't show tooltips in preview mode
+                if (CellDB["general"]["hideTooltipsInCombat"] and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
                 GameTooltip:SetUnitAura(icons.parent.states.displayedUnit, self.index, icons.auraFilter)
@@ -343,16 +345,54 @@ menu:AddWidget(const.WIDGET_KIND.DEBUFFS, 250, "Debuffs",
 )
 
 -------------------------------------------------
--- MARK: Aura Indicators
+-- MARK: Create Aura Icons
 -------------------------------------------------
+
+local placeHolderTextures = {
+    135939, 237542, 135727, 463286, 132242, 1526618, 136075, 5199640, 1360764, 135988
+}
+
+---@param icons CellAuraIcons
+local function Icons_ShowPreview(icons)
+    for idx, icon in ipairs(icons) do
+        icon:Hide() -- Clear any existing cooldowns
+
+        icon.preview:SetScript("OnUpdate", function(self, elapsed)
+            self.elapsedTime = (self.elapsedTime or 0) + elapsed
+            if self.elapsedTime >= 10 then
+                self.elapsedTime = 0
+                icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, (idx % 3 == 0))
+            end
+        end)
+
+        icon.preview:SetScript("OnShow", function()
+            icon.preview.elapsedTime = 0
+            icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, (idx % 3 == 0))
+        end)
+
+        icon:Show()
+        icon.preview:Show()
+    end
+
+    icons:UpdateSize(icons._maxNum)
+end
+
+---@param icons CellAuraIcons
+local function Icons_HidePreview(icons)
+    for _, icon in ipairs(icons) do
+        icon.preview:SetScript("OnUpdate", nil)
+        icon.preview:SetScript("OnShow", nil)
+
+        icon:Hide()
+    end
+end
 
 ---@param button CUFUnitButton
 ---@param type "buffs" | "debuffs"
 ---@param title "Buffs" | "Debuffs"
 ---@return CellAuraIcons auraIcons
 function Auras:CreateAuraIcons(button, type, title)
-    CUF:Debug("CreateIndicators", button:GetName())
-    -- buffs indicator (icon)
+    --CUF:Debug("CreateIndicators", button:GetName())
     ---@class CellAuraIcons
     local auraIcons = I.CreateAura_Icons(button:GetName() .. title .. "Icons", button, 10)
 
@@ -367,11 +407,36 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons._auraInstanceIDs = {}
     auraIcons._auraCount = 0
 
+    for _, icon in ipairs(auraIcons) do
+        ---@class CellAuraIcon.preview: Frame
+        icon.preview = CreateFrame("Frame", nil, icon)
+        icon.preview:Hide()
+        icon.preview.elapsedTime = 0
+    end
+
     auraIcons.SetEnabled = W.SetEnabled
     auraIcons.SetPosition = Icons_SetPosition
     auraIcons.SetFont = Icons_SetFont
     auraIcons.ShowTooltip = Icons_ShowTooltip
     auraIcons.SetMaxNum = Icons_SetMaxNum
+
+    auraIcons.ShowPreview = Icons_ShowPreview
+    auraIcons.HidePreview = Icons_HidePreview
+
+    ---@param icons CellAuraIcons
+    ---@param val boolean
+    auraIcons._SetIsSelected = function(icons, val)
+        if icons._isSelected ~= val then
+            if val then
+                icons:ShowPreview()
+            else
+                icons:HidePreview()
+            end
+        end
+        icons._isSelected = val
+
+        U:UnitFrame_UpdateAuras(button)
+    end
 
     auraIcons:ShowDuration(true)
     auraIcons:ShowAnimation(true)
@@ -399,6 +464,7 @@ end
 ---@field ShowCooldown function
 ---@field tex Texture
 ---@field index number
+---@field preview CellAuraIcon.preview
 
 ---@class CellAuraIcons
 ---@field enabled boolean

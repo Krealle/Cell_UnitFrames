@@ -6,8 +6,8 @@ local L = Cell.L
 local P = Cell.pixelPerfectFuncs
 local F = Cell.funcs
 
----@class CUF.builder
 local Builder = CUF.Builder
+local Handler = CUF.widgetsHandler
 
 ---@class MenuFrame
 ---@field window CellCombatFrame
@@ -25,7 +25,6 @@ CUF.MenuWindow = menuWindow
 
 ---@param unit Unit
 function menuWindow:SetUnit(unit)
-    --CUF:Debug("menuWindow - SetUnit", unit)
     -- Hide old unit
     if self.selectedUnit then
         self.selectedUnit.frame:Hide()
@@ -33,11 +32,13 @@ function menuWindow:SetUnit(unit)
 
     self.selectedUnit = self.units[unit]
     self.selectedUnit.frame:Show()
+
+    CUF.Menu:UpdateSelectedPages(unit)
 end
 
+-- Update the selected widge
 ---@param widget WIDGET_KIND
 function menuWindow:SetWidget(widget)
-    --CUF:Debug("menuWindow - SetWidget", widget)
     -- Hide old widget
     if self.selectedWidget then
         self.selectedWidget.frame:Hide()
@@ -48,7 +49,32 @@ function menuWindow:SetWidget(widget)
 
     self.settingsFrame.scrollFrame:SetContentHeight(self.selectedWidget.height)
     self.settingsFrame.scrollFrame:ResetScroll()
+
+    CUF.Menu:UpdateSelectedPages(nil, widget)
 end
+
+function menuWindow:ShowMenu()
+    CUF:Debug("|cff00ccffShow Menu|r")
+    if not self.window then
+        self:Create()
+    end
+
+    self.window:Show()
+    CUF.vars.isMenuOpen = true
+end
+
+function menuWindow:HideMenu()
+    if not self.window or not self.window:IsShown() then return end
+    CUF:Debug("|cff00ccffHide Menu|r")
+    self.window:Hide()
+
+    CUF.vars.isMenuOpen = false
+    Handler.UpdateSelected()
+end
+
+-------------------------------------------------
+-- MARK: Init
+-------------------------------------------------
 
 function menuWindow:InitUnits()
     --CUF:Debug("menuWindow - InitUnits")
@@ -111,26 +137,12 @@ function menuWindow:InitWidgets()
     CUF:DevAdd(self.widgets, "menuWindow - widgets")
 end
 
-function menuWindow:ShowMenu()
-    --CUF:Debug("menuWindow - ShowMenu")
-    if not self.window then
-        self:Create()
-    end
-
-    self.window:Show()
-
-    self.unitsButtons[1]:Click()
-    self.widgetsButtons[1]:Click()
-end
-
-function menuWindow:HideMenu()
-    --CUF:Debug("menuWindow - HideMenu")
-    if not self.window then return end
-    self.window:Hide()
-end
+-------------------------------------------------
+-- MARK: Create
+-------------------------------------------------
 
 function menuWindow:Create()
-    --CUF:Debug("menuWindow - Create")
+    CUF:Debug("|cff00ccffCreate Menu|r")
     local optionsFrame = Cell.frames.optionsFrame
 
     self.unitHeight = 200
@@ -153,7 +165,6 @@ function menuWindow:Create()
     CUF:DevAdd(self.unitsButtons, "unitsButtons")
     Cell:CreateButtonGroup(self.unitsButtons, function(unit, b)
         self:SetUnit(unit)
-        CUF.Menu:UpdateSelected(unit)
     end)
 
     self.widgetPane = Cell:CreateTitledPane(self.window, L["Widgets"], self.baseWidth - 10, 17)
@@ -172,6 +183,14 @@ function menuWindow:Create()
     CUF:DevAdd(self.widgetsButtons, "widgetsButtons")
     Cell:CreateButtonGroup(self.widgetsButtons, function(widget, b)
         self:SetWidget(widget)
-        CUF.Menu:UpdateSelected(nil, widget)
+    end)
+
+    self.unitsButtons[1]:Click()
+    self.widgetsButtons[1]:Click()
+
+    self.init = true
+
+    hooksecurefunc(optionsFrame, "Hide", function()
+        self:HideMenu()
     end)
 end

@@ -140,10 +140,16 @@ function CUF:Fire(eventName, ...)
     end
 end
 
+local function GetFormattedTimestamp()
+    local time = date("*t")
+    local millisec = math.floor(GetTime() * 1000) % 1000
+    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
+end
+
 ---@param ... any
 function CUF:Debug(...)
     if not CUF.debug then return end
-    print(...)
+    print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any

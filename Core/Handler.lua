@@ -3,9 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 
----@class CUF.Util
 local Util = CUF.Util
----@class CUF.constants
 local const = CUF.constants
 
 ---@class CUF.widgets.Handler
@@ -16,6 +14,10 @@ Handler.widgets = {}
 Handler.options = {}
 
 CUF.widgetsHandler = Handler
+
+-------------------------------------------------
+-- MARK: Widgets
+-------------------------------------------------
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -62,8 +64,29 @@ CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidge
 ---@param func function
 ---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
-    CUF:Debug("|cffff7777RegisterWidget:|r", widgetName)
+    --CUF:Debug("|cffff7777RegisterWidget:|r", widgetName)
     self.widgets[widgetName] = func
+end
+
+-------------------------------------------------
+-- MARK: Pages
+-------------------------------------------------
+
+-- Set `_isSelected` for the button and corresponding widget that is selected in menu.
+--
+-- Called when `LoadPageDB` is called or when optionsFrame is hidden.
+---@param selectedUnit Unit?
+---@param selectedWidget WIDGET_KIND?
+function Handler.UpdateSelected(selectedUnit, selectedWidget)
+    CUF:Debug("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
+    Util:IterateAllUnitButtons(
+    ---@param button CUFUnitButton
+        function(button)
+            button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
+            for _, widget in pairs(const.WIDGET_KIND) do
+                button.widgets[widget]._isSelected = widget == selectedWidget and button._isSelected
+            end
+        end)
 end
 
 ---@param page Unit
@@ -81,6 +104,7 @@ function Handler.LoadPageDB(page, subPage)
     CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage)
 
     subPage = subPage or CUF.vars.selectedWidget
+    page = page or CUF.vars.selectedUnit
 
     Handler.previousPage = page
     Handler.previousSubPage = subPage
@@ -92,6 +116,8 @@ function Handler.LoadPageDB(page, subPage)
             end
         end
     end
+
+    Handler.UpdateSelected(page, subPage)
 end
 
 CUF:RegisterCallback("LoadPageDB", "Handler_LoadPageDB", Handler.LoadPageDB)
@@ -100,7 +126,7 @@ CUF:RegisterCallback("LoadPageDB", "Handler_LoadPageDB", Handler.LoadPageDB)
 --- @param widgetName WIDGET_KIND
 --- @param optName string
 function Handler:RegisterOption(func, widgetName, optName)
-    CUF:Debug("|cffff7777RegisterOption:|r", widgetName, optName)
+    --CUF:Debug("|cffff7777RegisterOption:|r", widgetName, optName)
     if not self.options[widgetName] then
         self.options[widgetName] = {}
     end

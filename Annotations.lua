@@ -267,6 +267,7 @@
 ---@field _debuffsAuraInstanceIDs table<number>
 ---@field _debuffs_cache table<number, AuraData>
 ---@field _debuffsCount number
+---@field _isSelected boolean
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget

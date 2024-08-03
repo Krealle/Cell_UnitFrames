@@ -36,10 +36,15 @@ function menu:AddWidget(widgetName, menuHeight, pageName, ...)
         { ["widgetName"] = widgetName, ["menuHeight"] = menuHeight, ["pageName"] = pageName, ["options"] = { ... } })
 end
 
+-------------------------------------------------
+-- MARK: Update vars
+-------------------------------------------------
+
+-- Update the selected unit and widget vars fire `LoadPageDB` callback
 ---@param unit Unit|nil
 ---@param widget WIDGET_KIND|nil
-function menu:UpdateSelected(unit, widget)
-    CUF:Debug("UpdateSelected:", unit, widget)
+function menu:UpdateSelectedPages(unit, widget)
+    --CUF:Debug("|cff00ff00menu:UpdateSelected:|r", unit, widget)
 
     if unit then
         CUF.vars.selectedUnit = unit
@@ -51,52 +56,47 @@ function menu:UpdateSelected(unit, widget)
     end
 
     -- Prevent excessive calls when initializing
-    if not menu.init then return end
+    if not menu.window.init then return end
 
     CUF:Fire("LoadPageDB", unit, widget)
 end
 
--- Load layout from DB
+-- Load layout vars from DB
+--
+-- Hooked to `layoutDropdown` from Cell `layoutsTab`
+--
+-- Fires `LoadPageDB` and `UpdateVisibility` callbacks
 ---@param layout string
 local function LoadLayoutDB(layout)
-    CUF:Debug("CUF - LoadLayoutDB:", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF:Debug("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
     CUF.vars.selectedLayout = layout
     CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
     CUF.vars.selectedWidgetTable = DB.GetAllWidgetTables(CUF.vars.selectedUnit, layout)
 
-    -- Prevent excessive calls when initializing
-    if not menu.init then return end
-
+    menu.window:ShowMenu()
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateVisibility")
 end
 
--- MARK: Callbacks
-
----@param tab Unit
-local function ShowTab(tab)
-    if tab == "layouts" then
-        --("CUF - ShowTab")
-        LoadLayoutDB(Cell.vars.currentLayout)
-
-        menuWindow:ShowMenu()
-
-        if not menu.init then
-            menu.init = true
-        end
-    else
-        menuWindow:HideMenu()
-    end
-end
-Cell:RegisterCallback("ShowOptionsTab", "CellUnitFrames_ShowTab", ShowTab)
+-------------------------------------------------
+-- MARK: Callbacks - Hooks
+-------------------------------------------------
 
 -- This is hacky, but it works
--- This is needed to get access to current layout, since this
--- is the only place where this info is outside of local scope
+-- To make sure that we always have the correct layout selected
+-- We need to hook on to Cell somehow, since the value in the dropdown
+-- In the layout tab isn't exposed to us.
+--
+-- So here we hook on to the `SetSelectedValue` fn to grab the value
+--
+-- We can only hook once it's initialized, so we hook on to the `ShowOptionsTab` callback
+-- Which we use to hook on to the `UpdatePreview` callback, since both are fired when the
+-- `layouts` tab is selected.
+--
+-- We then unhook on to the `UpdatePreview` callback, since we no longer need it.
 local function UpdatePreview()
-    if not menu.init or menu.hookInit then return end
-
+    --CUF:Debug("Cell_UpdatePreview")
     local layoutsTab = Util.findChildByName(Cell.frames.optionsFrame, "CellOptionsFrame_LayoutsTab")
     if not layoutsTab then return end
 
@@ -106,16 +106,26 @@ local function UpdatePreview()
     local layoutDropdown = Util.findChildByProp(layoutPane, "items")
     if not layoutDropdown then return end
 
-    hooksecurefunc(layoutDropdown, "SetSelected", function(self)
-        LoadLayoutDB(self:GetSelected())
-    end)
     hooksecurefunc(layoutDropdown, "SetSelectedValue", function(self)
+        --CUF:Debug("Cell_SetSelectedValue", self:GetSelected())
         LoadLayoutDB(self:GetSelected())
     end)
 
+    -- Initial load
     LoadLayoutDB(layoutDropdown:GetSelected())
-    Cell:UnregisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview")
 
-    menu.hookInit = true
+    -- Unhook
+    Cell:UnregisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview")
 end
-Cell:RegisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview", UpdatePreview)
+
+---@param tab string
+local function ShowTab(tab)
+    --CUF:Debug("Cell_ShowTab", tab)
+    if tab ~= "layouts" then
+        menuWindow:HideMenu()
+    elseif not menu.window.init then
+        -- Inital hook
+        Cell:RegisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview", UpdatePreview)
+    end
+end
+Cell:RegisterCallback("ShowOptionsTab", "CellUnitFrames_ShowTab", ShowTab)

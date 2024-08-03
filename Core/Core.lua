@@ -28,6 +28,8 @@ local const = CUF.constants
 ---@field units table<number, Unit>
 CUF.vars = {}
 CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS }
+CUF.vars.isMenuOpen = false
+CUF.vars.testMode = true
 
 local F = Cell.funcs
 local Util = CUF.Util
@@ -69,7 +71,7 @@ if type(CUFDB) ~= "table" then CUFDB = {} end
 
 for _, layout in pairs(CellDB["layouts"]) do
     for _, unit in pairs(CUF.vars.units) do
-        --layout[unit].widgets = nil
+        --layout[unit].widgets.debuffs = nil
 
         if type(layout[unit]) ~= "table" then
             layout[unit] = F:Copy(Cell.defaults.layout[unit])

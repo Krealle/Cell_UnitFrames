@@ -6,14 +6,14 @@ local Cell = CUF.Cell
 local Util = CUF.Util
 local const = CUF.constants
 
----@class CUF.widgets.Handler
+---@class CUF.Handler
 ---@field widgets table<WIDGET_KIND, function>
 ---@field options table<WIDGET_KIND, table<number, function>>
 local Handler = {}
 Handler.widgets = {}
 Handler.options = {}
 
-CUF.widgetsHandler = Handler
+CUF.Handler = Handler
 
 -------------------------------------------------
 -- MARK: Widgets

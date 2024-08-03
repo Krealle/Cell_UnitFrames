@@ -7,7 +7,7 @@ local P = Cell.pixelPerfectFuncs
 local F = Cell.funcs
 
 local Builder = CUF.Builder
-local Handler = CUF.widgetsHandler
+local Handler = CUF.Handler
 
 ---@class MenuFrame
 ---@field window CellCombatFrame

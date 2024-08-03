@@ -10,7 +10,7 @@ local A = Cell.animations
 
 
 local const = CUF.constants
-local Handler = CUF.widgetsHandler
+local Handler = CUF.Handler
 local DB = CUF.DB
 local menu = CUF.Menu
 local Builder = CUF.Builder

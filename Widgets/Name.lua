@@ -10,7 +10,7 @@ local W = CUF.widgets
 local U = CUF.uFuncs
 
 local Util = CUF.Util
-local Handler = CUF.widgetsHandler
+local Handler = CUF.Handler
 local Builder = CUF.Builder
 local menu = CUF.Menu
 local const = CUF.constants

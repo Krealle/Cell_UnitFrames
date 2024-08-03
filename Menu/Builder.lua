@@ -6,7 +6,7 @@ local L = Cell.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
 
-local Handler = CUF.widgetsHandler
+local Handler = CUF.Handler
 local const = CUF.constants
 local DB = CUF.DB
 

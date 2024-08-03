@@ -61,7 +61,15 @@ local function HandleAura(icon, auraData)
     if not auraData then return end
 
     local duration = auraData.duration
-    if not duration or duration == 0 then return end
+
+    -- Duration Check
+    if icon.hideNoDuration and duration == 0 then return end
+    if icon.minDuration and duration < icon.minDuration then return end
+    if icon.maxDuration and duration > icon.maxDuration then return end
+
+    -- Personal / External Check
+    if icon.hidePersonal and auraData.sourceUnit == "player" then return end
+    if icon.hideExternal and auraData.sourceUnit ~= "player" then return end
 
     -- TODO: blacklist / whitelist logic
     --local spellId = auraData.spellId
@@ -259,6 +267,36 @@ local function Icons_SetMaxNum(icons, maxNum)
     icons._maxNum = maxNum
 end
 
+---@param icons CellAuraIcons
+---@param hidePersonal boolean
+local function Icons_SetHidePersonal(icons, hidePersonal)
+    icons.hidePersonal = hidePersonal
+end
+
+---@param icons CellAuraIcons
+---@param hideExternal boolean
+local function Icons_SetHideExternal(icons, hideExternal)
+    icons.hideExternal = hideExternal
+end
+
+---@param icons CellAuraIcons
+---@param hideNoDuration boolean
+local function Icons_SetHideNoDuration(icons, hideNoDuration)
+    icons.hideNoDuration = hideNoDuration
+end
+
+---@param icons CellAuraIcons
+---@param maxDuration number
+local function Icons_SetMaxDuration(icons, maxDuration)
+    icons.maxDuration = maxDuration ~= 0 and maxDuration or false
+end
+
+---@param icons CellAuraIcons
+---@param minDuration number
+local function Icons_SetMinDuration(icons, minDuration)
+    icons.minDuration = minDuration ~= 0 and minDuration or false
+end
+
 -------------------------------------------------
 -- MARK: Aura Update
 -------------------------------------------------
@@ -268,7 +306,7 @@ end
 ---@param which "buffs" | "debuffs"
 ---@param setting AURA_OPTION_KIND
 ---@param subSetting string
-function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
+function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
     ---@type CellAuraIcons
     local auras = button.widgets[which]
 
@@ -304,6 +342,23 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting)
     if not setting or setting == const.AURA_OPTION_KIND.MAX_ICONS then
         auras:SetMaxNum(styleTable.maxIcons)
     end
+    if not setting or setting == const.AURA_OPTION_KIND.FILTER then
+        if not subSetting or subSetting == "hidePersonal" then
+            auras:SetHidePersonal(styleTable.filter.hidePersonal)
+        end
+        if not subSetting or subSetting == "hideNoDuration" then
+            auras:SetHideNoDuration(styleTable.filter.hideNoDuration)
+        end
+        if not subSetting or subSetting == "hideExternal" then
+            auras:SetHideExternal(styleTable.filter.hideExternal)
+        end
+        if not subSetting or subSetting == "maxDuration" then
+            auras:SetMaxDuration(styleTable.filter.maxDuration)
+        end
+        if not subSetting or subSetting == "minDuration" then
+            auras:SetMinDuration(styleTable.filter.minDuration)
+        end
+    end
 
     U:UnitFrame_UpdateAuras(button)
 end
@@ -325,7 +380,8 @@ Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
 menu:AddWidget(const.WIDGET_KIND.BUFFS, 250, "Buffs",
     Builder.MenuOptions.AuraIconOptions,
     Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions
+    Builder.MenuOptions.AuraDurationFontOptions,
+    Builder.MenuOptions.AuraFilter
 )
 
 ---@param button CUFUnitButton
@@ -341,7 +397,8 @@ Handler:RegisterWidget(UpdateDebuffs, const.WIDGET_KIND.DEBUFFS)
 menu:AddWidget(const.WIDGET_KIND.DEBUFFS, 250, "Debuffs",
     Builder.MenuOptions.AuraIconOptions,
     Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions
+    Builder.MenuOptions.AuraDurationFontOptions,
+    Builder.MenuOptions.AuraFilter
 )
 
 -------------------------------------------------
@@ -419,6 +476,11 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons.SetFont = Icons_SetFont
     auraIcons.ShowTooltip = Icons_ShowTooltip
     auraIcons.SetMaxNum = Icons_SetMaxNum
+    auraIcons.SetHidePersonal = Icons_SetHidePersonal
+    auraIcons.SetHideExternal = Icons_SetHideExternal
+    auraIcons.SetHideNoDuration = Icons_SetHideNoDuration
+    auraIcons.SetMaxDuration = Icons_SetMaxDuration
+    auraIcons.SetMinDuration = Icons_SetMinDuration
 
     auraIcons.ShowPreview = Icons_ShowPreview
     auraIcons.HidePreview = Icons_HidePreview
@@ -493,3 +555,8 @@ end
 ---@field _auraCache table<number, AuraData>
 ---@field _auraInstanceIDs table<number>
 ---@field _auraCount number
+---@field hidePersonal boolean
+---@field hideExternal boolean
+---@field hideNoDuration boolean
+---@field maxDuration number|boolean
+---@field minDuration number|boolean

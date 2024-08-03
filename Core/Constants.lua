@@ -86,6 +86,7 @@ const.WIDGET_KIND = {
 ---| "textColor"
 ---| "healthFormat"
 ---| "powerFormat"
+---| "height"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -111,6 +112,13 @@ const.OPTION_KIND = {
 ---| "numPerLine"
 ---| "filter"
 ---| "maxIcons"
+---| "minDuration"
+---| "maxDuration"
+---| "hidePersonal"
+---| "hideExternal"
+---| "horizontal"
+---| "vertical"
+---| "hideNoDuration"
 const.AURA_OPTION_KIND = {
     SIZE = "size",
     FONT = "font",

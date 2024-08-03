@@ -34,6 +34,7 @@ Builder.MenuOptions = {
     Orientation = 10,
     AuraStackFontOptions = 11,
     AuraDurationFontOptions = 12,
+    AuraFilter = 13,
 }
 
 CUF.Builder = Builder
@@ -107,6 +108,12 @@ function Builder:AnchorRight(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.spacingX, 0)
 end
 
+---@param option frame|table
+---@param prevOptions Frame
+function Builder:AnchorRightOfCB(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + 117, 0)
+end
+
 -------------------------------------------------
 -- MARK: Functions
 -------------------------------------------------
@@ -161,7 +168,7 @@ function Builder:CreateCheckBox(parent, widgetName, title, kind, keys)
     ---@class CUFCheckBox: CheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
         cb.Set_DB(widgetName, kind, checked, keys)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind, keys and unpack(keys))
     end)
 
     checkbox.Set_DB = Set_DB
@@ -201,21 +208,22 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param title string
+---@param width number? Default: 117
 ---@param minVal number
 ---@param maxVal number
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
----@param keys? string[] Keys to traverse to the property
+---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
 ---@return CUFSlider
-function Builder:CreateSlider(parent, widgetName, title, minVal, maxVal, kind, keys)
+function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, kind, keys)
     ---@class CUFSlider: CellSlider
-    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, 117, 1)
+    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1)
 
     slider.Set_DB = Set_DB
     slider.Get_DB = Get_DB
 
     slider.afterValueChangedFn = function(value)
         slider.Set_DB(widgetName, kind, value, keys)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind, keys and unpack(keys))
     end
 
     local function LoadPageDB()
@@ -1013,12 +1021,12 @@ function Builder:CreateSizeOptions(parent, widgetName)
     local f = Cell:CreateFrame(nil, parent, 259, 30)
     f:Show()
 
-    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], 0, 100,
+    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
         const.AURA_OPTION_KIND.SIZE,
         { "width" })
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
-    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], 0, 100,
+    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, 0, 100,
         const.AURA_OPTION_KIND.SIZE,
         { "height" })
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
@@ -1051,7 +1059,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.orientationDropdown = self:CreateOrientationOptions(f, widgetName)
     self:AnchorRight(f.orientationDropdown, f.extraAnchorDropdown)
 
-    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], 1, 10,
+    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], nil, 1, 10,
         const.AURA_OPTION_KIND.MAX_ICONS)
     self:AnchorBelow(f.maxIconsSlider, f.anchorOptions.nameYSlider)
 
@@ -1059,16 +1067,16 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
-    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], 1, 10,
+    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], nil, 1, 10,
         const.AURA_OPTION_KIND.NUM_PER_LINE)
     self:AnchorBelow(f.numPerLineSlider, f.maxIconsSlider)
 
     -- Fourth Row
-    f.spacingHorizontalSlider = self:CreateSlider(f, widgetName, L["X Spacing"], 0, 50,
+    f.spacingHorizontalSlider = self:CreateSlider(f, widgetName, L["X Spacing"], nil, 0, 50,
         const.AURA_OPTION_KIND.SPACING, { "horizontal" })
     self:AnchorBelow(f.spacingHorizontalSlider, f.sizeOptions)
 
-    f.spacingVerticalSlider = self:CreateSlider(f, widgetName, L["Y Spacing"], 0, 50,
+    f.spacingVerticalSlider = self:CreateSlider(f, widgetName, L["Y Spacing"], nil, 0, 50,
         const.AURA_OPTION_KIND.SPACING, { "vertical" })
     self:AnchorBelow(f.spacingVerticalSlider, f.sizeOptions.sizeHeightSlider)
 
@@ -1257,6 +1265,88 @@ function Builder:CreateAuraDurationFontOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Aura Filter
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return AuraFilterOptions
+function Builder:CreateAuraFilterOptions(parent, widgetName)
+    ---@class AuraFilterOptions: Frame
+    local f = Cell:CreateFrame("AuraFilterOptions" .. widgetName, parent, self.optionWidth, 165)
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Filter")
+
+    --- First Row
+    f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
+        const.AURA_OPTION_KIND.FILTER, { "maxDuration" })
+    f.maxDurationSlider:SetPoint("TOPLEFT", f, 10, -60)
+    f.maxDurationSlider.currentEditBox:SetWidth(60)
+
+    f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,
+        const.AURA_OPTION_KIND.FILTER, { "minDuration" })
+    self:AnchorRight(f.minDurationSlider, f.maxDurationSlider)
+    f.minDurationSlider.currentEditBox:SetWidth(60)
+
+    -- Second Row
+    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L["Hide Personal"], const.AURA_OPTION_KIND.FILTER,
+        { "hidePersonal" })
+    self:AnchorBelow(f.hidePersonalCB, f.maxDurationSlider)
+
+    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L["Hide External"], const.AURA_OPTION_KIND.FILTER,
+        { "hideExternal" })
+    self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
+
+    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
+        { "hideNoDuration" })
+    f.hideNoDuration:SetPoint("TOPLEFT", f.hidePersonalCB, 0, -30)
+
+    return f
+end
+
+-------------------------------------------------
+-- MARK: Aura Blacklist
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return AuraBlacklistOptions
+function Builder:CreateAuraBlacklistOptions(parent, widgetName)
+    ---@class AuraBlacklistOptions: Frame
+    local f = Cell:CreateFrame("AuraBlacklistOptions" .. widgetName, parent, self.optionWidth, 290)
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Blacklist")
+
+    --- First Row
+    f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
+        const.AURA_OPTION_KIND.FILTER, { "maxDuration" })
+    f.maxDurationSlider:SetPoint("TOPLEFT", f, 10, -60)
+    f.maxDurationSlider.currentEditBox:SetWidth(60)
+
+    f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,
+        const.AURA_OPTION_KIND.FILTER, { "minDuration" })
+    self:AnchorRight(f.minDurationSlider, f.maxDurationSlider)
+    f.minDurationSlider.currentEditBox:SetWidth(60)
+
+    -- Second Row
+    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L["Hide Personal"], const.AURA_OPTION_KIND.FILTER,
+        { "hidePersonal" })
+    self:AnchorBelow(f.hidePersonalCB, f.maxDurationSlider)
+
+    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L["Hide External"], const.AURA_OPTION_KIND.FILTER,
+        { "hideExternal" })
+    self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
+
+    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
+        { "hideNoDuration" })
+    f.hideNoDuration:SetPoint("TOPLEFT", f.hidePersonalCB, 0, -30)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1274,4 +1364,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
     [Builder.MenuOptions.AuraStackFontOptions] = Builder.CreateAuraStackFontOptions,
     [Builder.MenuOptions.AuraDurationFontOptions] = Builder.CreateAuraDurationFontOptions,
+    [Builder.MenuOptions.AuraFilter] = Builder.CreateAuraFilterOptions,
 }

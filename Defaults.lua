@@ -124,6 +124,7 @@ local powerTextWidget = {
 ---@field maxDuration number
 ---@field hidePersonal boolean
 ---@field hideExternal boolean
+---@field hideNoDuration boolean
 local auraFilterOpt = {
     ["useBlacklist"] = false,
     ["blacklist"] = {},
@@ -133,6 +134,7 @@ local auraFilterOpt = {
     ["maxDuration"] = 0,
     ["hidePersonal"] = false,
     ["hideExternal"] = false,
+    ["hideNoDuration"] = false,
 }
 
 ---@class AuraWidgetTable

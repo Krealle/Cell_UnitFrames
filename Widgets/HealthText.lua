@@ -265,6 +265,7 @@ function W:CreateHealthText(button)
     healthText.SetPosition = W.SetPosition
     healthText.SetFontStyle = W.SetFontStyle
     healthText.SetFontColor = W.SetFontColor
+    healthText._SetIsSelected = W.SetIsSelected
 
     function healthText:UpdateValue()
         if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then

@@ -127,6 +127,7 @@ function W:CreatePowerText(button)
     powerText.SetPosition = W.SetPosition
     powerText.SetFontStyle = W.SetFontStyle
     powerText.SetFontColor = W.SetFontColor
+    powerText._SetIsSelected = W.SetIsSelected
 
     function powerText:SetColor(r, g, b)
         self:SetTextColor(r, g, b)

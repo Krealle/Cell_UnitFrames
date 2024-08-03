@@ -84,7 +84,8 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
         function(button)
             button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
             for _, widget in pairs(const.WIDGET_KIND) do
-                button.widgets[widget]._isSelected = widget == selectedWidget and button._isSelected
+                local isSelected = widget == selectedWidget and button._isSelected
+                button.widgets[widget]:_SetIsSelected(isSelected)
             end
         end)
 end

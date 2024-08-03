@@ -109,4 +109,5 @@ function W:CreateNameText(button)
     nameText.SetPosition = W.SetPosition
     nameText.SetFontStyle = W.SetFontStyle
     nameText.SetFontColor = W.SetFontColor
+    nameText._SetIsSelected = W.SetIsSelected
 end

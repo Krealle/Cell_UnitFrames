@@ -74,3 +74,10 @@ function W.SetFontColor(widget, unit)
 
     widget:UpdateTextColor()
 end
+
+-- Set `_isSelected` property for the widget
+---@param widget Widget
+---@param val boolean
+function W.SetIsSelected(widget, val)
+    widget._isSelected = val
+end

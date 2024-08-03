@@ -30,34 +30,34 @@ local GetAuraDataBySlot = C_UnitAuras.GetAuraDataBySlot
 -- MARK: ForEachAura
 -------------------------------------------------
 
----@param button CUFUnitButton
+---@param icons CellAuraIcons
 ---@param func function
-local function ForEachAuraHelper(button, func, _continuationToken, ...)
+local function ForEachAuraHelper(icons, func, _continuationToken, ...)
     local n = select('#', ...)
     for i = 1, n do
         local slot = select(i, ...)
         ---@class AuraData
-        local auraData = GetAuraDataBySlot(button.states.unit, slot)
+        local auraData = GetAuraDataBySlot(icons.parent.states.unit, slot)
         auraData.index = i
         auraData.refreshing = false
 
-        func(button, auraData, i)
+        func(icons, auraData)
     end
 end
 
----@param button CUFUnitButton
+---@param icons CellAuraIcons
 ---@param filter string
-local function ForEachAura(button, filter, func)
-    ForEachAuraHelper(button, func, GetAuraSlots(button.states.unit, filter))
+local function ForEachAura(icons, filter, func)
+    ForEachAuraHelper(icons, func, GetAuraSlots(icons.parent.states.unit, filter))
 end
 
 -------------------------------------------------
 -- MARK: Aura Handling
 -------------------------------------------------
 
----@param button CUFUnitButton
+---@param icon CellAuraIcons
 ---@param auraData AuraData?
-local function HandleAura(button, auraData)
+local function HandleAura(icon, auraData)
     if not auraData then return end
 
     local duration = auraData.duration
@@ -70,22 +70,19 @@ local function HandleAura(button, auraData)
     local count = auraData.applications
     local expirationTime = auraData.expirationTime or 0
 
-    local cache = auraData.isHarmful and button._debuffs_cache or button._buffs_cache
-    local instanceIDCache = auraData.isHarmful and button._debuffsAuraInstanceIDs or button._buffsAuraInstanceIDs
-
     if Cell.vars.iconAnimation == "duration" then
-        local timeIncreased = cache[auraInstanceID] and
-            (expirationTime - cache[auraInstanceID]["expirationTime"] >= 0.5) or false
-        local countIncreased = cache[auraInstanceID] and
-            (count > cache[auraInstanceID]["applications"]) or false
+        local timeIncreased = icon._auraCache[auraInstanceID] and
+            (expirationTime - icon._auraCache[auraInstanceID]["expirationTime"] >= 0.5) or false
+        local countIncreased = icon._auraCache[auraInstanceID] and
+            (count > icon._auraCache[auraInstanceID]["applications"]) or false
         auraData.refreshing = timeIncreased or countIncreased
     elseif Cell.vars.iconAnimation == "stack" then
-        auraData.refreshing = cache[auraInstanceID] and
-            (count > cache[auraInstanceID]["applications"]) or false
+        auraData.refreshing = icon._auraCache[auraInstanceID] and
+            (count > icon._auraCache[auraInstanceID]["applications"]) or false
     end
 
-    cache[auraInstanceID] = auraData
-    table.insert(instanceIDCache, auraData.auraInstanceID)
+    icon._auraCache[auraInstanceID] = auraData
+    table.insert(icon._auraInstanceIDs, auraData.auraInstanceID)
 end
 
 ---@param button CUFUnitButton
@@ -107,19 +104,19 @@ local function ShouldUpdateAuras(button, updateInfo)
 
     if updateInfo.updatedAuraInstanceIDs then
         for _, auraInstanceID in pairs(updateInfo.updatedAuraInstanceIDs) do
-            if button._buffs_cache[auraInstanceID] then buffChanged = true end
-            if button._debuffs_cache[auraInstanceID] then debuffChanged = true end
+            if button.widgets.buffs._auraCache[auraInstanceID] then buffChanged = true end
+            if button.widgets.debuffs._auraCache[auraInstanceID] then debuffChanged = true end
         end
     end
 
     if updateInfo.removedAuraInstanceIDs then
         for _, auraInstanceID in pairs(updateInfo.removedAuraInstanceIDs) do
-            if button._buffs_cache[auraInstanceID] then
-                button._buffs_cache[auraInstanceID] = nil
+            if button.widgets.buffs._auraCache[auraInstanceID] then
+                button.widgets.buffs._auraCache[auraInstanceID] = nil
                 buffChanged = true
             end
-            if button._debuffs_cache[auraInstanceID] then
-                button._debuffs_cache[auraInstanceID] = nil
+            if button.widgets.debuffs._auraCache[auraInstanceID] then
+                button.widgets.debuffs._auraCache[auraInstanceID] = nil
                 debuffChanged = true
             end
         end
@@ -133,33 +130,38 @@ local function ShouldUpdateAuras(button, updateInfo)
     return buffChanged, debuffChanged
 end
 
----@param button CUFUnitButton
----@param type "buffs" | "debuffs"
-local function UpdateAuraIcons(button, type)
-    local auraCache = button["_" .. type .. "_cache"]
-    local auraInstanceIDs = button["_" .. type .. "AuraInstanceIDs"]
-    local auraCountKey = "_" .. type .. "Count"
+---@param icons CellAuraIcons
+local function UpdateAuraIcons(icons)
+    -- Preview
+    if icons._isSelected then
+        icons:UpdateSize(icons._maxNum)
+        return
+    end
+
+    -- Reset
+    icons._auraCount = 0
+    wipe(icons._auraInstanceIDs)
 
     -- Update aura cache
-    ForEachAura(button, (type == "buffs" and "HELPFUL" or "HARMFUL"), HandleAura)
+    ForEachAura(icons, icons.auraFilter, HandleAura)
 
     -- Sort
-    table.sort(auraInstanceIDs, function(a, b)
-        local aData = auraCache[a]
-        local bData = auraCache[b]
+    table.sort(icons._auraInstanceIDs, function(a, b)
+        local aData = icons._auraCache[a]
+        local bData = icons._auraCache[b]
         if not aData or not bData then return false end
         return aData.expirationTime > bData.expirationTime
     end)
 
     -- Update icons
-    for i = 1, button.widgets[type]._maxNum do
-        local auraInstanceID = auraInstanceIDs[i]
+    for i = 1, icons._maxNum do
+        local auraInstanceID = icons._auraInstanceIDs[i]
         if not auraInstanceID then break end
 
-        local auraData = auraCache[auraInstanceID] ---@type AuraData
+        local auraData = icons._auraCache[auraInstanceID]
 
-        button[auraCountKey] = button[auraCountKey] + 1
-        button.widgets[type][button[auraCountKey]]:SetCooldown(
+        icons._auraCount = icons._auraCount + 1
+        icons[icons._auraCount]:SetCooldown(
             (auraData.expirationTime or 0) - auraData.duration,
             auraData.duration,
             nil,
@@ -167,8 +169,11 @@ local function UpdateAuraIcons(button, type)
             auraData.applications,
             auraData.refreshing
         )
-        button.widgets[type][button[auraCountKey]].index = auraData.index -- Tooltip
+        icons[icons._auraCount].index = auraData.index -- Tooltip
     end
+
+    -- Resize
+    icons:UpdateSize(icons._auraCount)
 end
 
 ---@param button CUFUnitButton
@@ -178,28 +183,21 @@ function U:UnitFrame_UpdateAuras(button, updateInfo)
     if not unit then return end
 
     local buffChanged, debuffChanged = ShouldUpdateAuras(button, updateInfo)
-    if not buffChanged and not debuffChanged then return end
+    local previewMode = CUF.vars.testMode and button._isSelected
+
+    if not buffChanged and not debuffChanged and not previewMode then return end
 
     if buffChanged == "full" then
-        wipe(button._buffs_cache)
-        wipe(button._debuffs_cache)
+        wipe(button.widgets.buffs._auraCache)
+        wipe(button.widgets.debuffs._auraCache)
     end
 
-    if buffChanged and button.widgets.buffs.enabled then
-        button._buffsCount = 0
-        wipe(button._buffsAuraInstanceIDs)
-
-        UpdateAuraIcons(button, "buffs")
-
-        button.widgets.buffs:UpdateSize(button._buffsCount)
+    if button.widgets.buffs.enabled and (buffChanged or previewMode) then
+        UpdateAuraIcons(button.widgets.buffs)
     end
-    if debuffChanged and button.widgets.debuffs.enabled then
-        button._debuffsCount = 0
-        wipe(button._debuffsAuraInstanceIDs)
 
-        UpdateAuraIcons(button, "debuffs")
-
-        button.widgets.debuffs:UpdateSize(button._debuffsCount)
+    if button.widgets.debuffs.enabled and (debuffChanged or previewMode) then
+        UpdateAuraIcons(button.widgets.debuffs)
     end
 end
 
@@ -363,6 +361,11 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons.parent = button
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
     auraIcons._maxNum = 10
+    auraIcons._isSelected = false
+
+    auraIcons._auraCache = {}
+    auraIcons._auraInstanceIDs = {}
+    auraIcons._auraCount = 0
 
     auraIcons.SetEnabled = W.SetEnabled
     auraIcons.SetPosition = Icons_SetPosition
@@ -420,3 +423,7 @@ end
 ---@field UpdatePixelPerfect function
 ---@field [number] CellAuraIcon
 ---@field parent CUFUnitButton
+---@field _isSelected boolean
+---@field _auraCache table<number, AuraData>
+---@field _auraInstanceIDs table<number>
+---@field _auraCount number

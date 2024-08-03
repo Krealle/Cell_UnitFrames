@@ -337,21 +337,11 @@ end
 -------------------------------------------------
 -- MARK: Aura tables
 -------------------------------------------------
----@param self CUFUnitButton
-local function InitAuraTables(self)
-    self._buffsAuraInstanceIDs = {}
-    self._buffs_cache = {}
-    self._buffsCount = 0
-
-    self._debuffsAuraInstanceIDs = {}
-    self._debuffs_cache = {}
-    self._debuffsCount = 0
-end
 
 ---@param self CUFUnitButton
 local function ResetAuraTables(self)
-    wipe(self._buffs_cache)
-    wipe(self._debuffs_cache)
+    wipe(self.widgets.buffs._auraCache)
+    wipe(self.widgets.debuffs._auraCache)
 end
 
 -------------------------------------------------
@@ -699,8 +689,6 @@ end
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
     --CUF:Debug(buttonName, "OnLoad")
-
-    InitAuraTables(button)
 
     ---@diagnostic disable-next-line: missing-fields
     button.widgets = {}

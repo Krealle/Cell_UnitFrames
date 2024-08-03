@@ -261,12 +261,6 @@
 ---@field orientation "horizontal" | "vertical_health" | "vertical"
 ---@field _casts table
 ---@field _timers table
----@field _buffsAuraInstanceIDs table<number>
----@field _buffs_cache table<number, AuraData>
----@field _buffsCount number
----@field _debuffsAuraInstanceIDs table<number>
----@field _debuffs_cache table<number, AuraData>
----@field _debuffsCount number
 ---@field _isSelected boolean
 
 ---@class CUFUnitButtonWidgets

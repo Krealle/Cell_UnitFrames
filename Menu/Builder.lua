@@ -634,35 +634,10 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return ExtraAnchorOptions
-function Builder:CreateExtraAnchorOptions(parent, widgetName)
-    ---@class ExtraAnchorOptions: Frame
-    local f = CreateFrame("Frame", "ExtraAnchorOptions" .. widgetName, parent)
-    P:Size(f, self.singleOptionWidth, self.singleOptionHeight)
-
-    f.extraAnchorDropdown = Cell:CreateDropdown(parent, 117)
-    f.extraAnchorDropdown:SetPoint("TOPLEFT", f)
-    f.extraAnchorDropdown:SetLabel(L["To UnitButton's"])
-
-    local items = {}
-    for _, v in pairs(CUF.anchorPoints) do
-        tinsert(items, {
-            ["text"] = L[v],
-            ["value"] = v,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).position.extraAnchor = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.POSITION, "extraAnchor")
-            end,
-        })
-    end
-    f.extraAnchorDropdown:SetItems(items)
-
-    local function LoadPageDB()
-        f.extraAnchorDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).position.extraAnchor)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "ExtraAnchorOptions")
-
-    return f
+function Builder:CreateExtraAnchorOptions(parent, widgetName, altKind, ...)
+    ---@class ExtraAnchorOptions: AnchorOptions
+    return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, CUF.anchorPoints,
+        altKind or const.OPTION_KIND.POSITION, { ..., "extraAnchor" })
 end
 
 -------------------------------------------------

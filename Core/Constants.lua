@@ -96,6 +96,7 @@ const.WIDGET_KIND = {
 ---| "offsetY"
 ---| "color"
 ---| "type"
+---| "extraAnchor"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",

@@ -24,6 +24,7 @@ Core/Core.lua
 Core/Handler.lua
 
 Menu/Builder.lua
+Menu/AuraFilterList.lua
 Menu/MenuFrame.lua
 Menu/Menu.lua
 Menu/Units.lua

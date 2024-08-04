@@ -2,11 +2,9 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
 local F = Cell.funcs
 local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
-local A = Cell.animations
 
 
 local const = CUF.constants
@@ -60,9 +58,17 @@ end
 local function HandleAura(icon, auraData)
     if not auraData then return end
 
-    local duration = auraData.duration
+    --TODO: Filter prio?
+
+    -- Blacklist / Whitelist Check
+    local spellId = auraData.spellId
+
+    if icon.useBlacklist and icon.blacklist[spellId] then return end
+    if icon.useWhitelist and not icon.whitelist[spellId] then return end
 
     -- Duration Check
+    local duration = auraData.duration
+
     if icon.hideNoDuration and duration == 0 then return end
     if icon.minDuration and duration < icon.minDuration then return end
     if icon.maxDuration and duration > icon.maxDuration then return end
@@ -70,9 +76,6 @@ local function HandleAura(icon, auraData)
     -- Personal / External Check
     if icon.hidePersonal and auraData.sourceUnit == "player" then return end
     if icon.hideExternal and auraData.sourceUnit ~= "player" then return end
-
-    -- TODO: blacklist / whitelist logic
-    --local spellId = auraData.spellId
 
     local auraInstanceID = auraData.auraInstanceID
     local count = auraData.applications
@@ -297,6 +300,30 @@ local function Icons_SetMinDuration(icons, minDuration)
     icons.minDuration = minDuration ~= 0 and minDuration or false
 end
 
+---@param icons CellAuraIcons
+---@param blacklist table<number>
+local function Icons_SetBlacklist(icons, blacklist)
+    icons.blacklist = F:ConvertTable(blacklist)
+end
+
+---@param icons CellAuraIcons
+---@param whitelist table<number>
+local function Icons_SetWhitelist(icons, whitelist)
+    icons.whitelist = F:ConvertTable(whitelist)
+end
+
+---@param icons CellAuraIcons
+---@param useBlacklist boolean
+local function Icons_SetUseBlacklist(icons, useBlacklist)
+    icons.useBlacklist = useBlacklist
+end
+
+---@param icons CellAuraIcons
+---@param useWhitelist boolean
+local function Icons_SetUseWhitelist(icons, useWhitelist)
+    icons.useWhitelist = useWhitelist
+end
+
 -------------------------------------------------
 -- MARK: Aura Update
 -------------------------------------------------
@@ -358,6 +385,18 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         if not subSetting or subSetting == "minDuration" then
             auras:SetMinDuration(styleTable.filter.minDuration)
         end
+        if not subSetting or subSetting == "blacklist" then
+            auras:SetBlacklist(styleTable.filter.blacklist)
+        end
+        if not subSetting or subSetting == "whitelist" then
+            auras:SetWhitelist(styleTable.filter.whitelist)
+        end
+        if not subSetting or subSetting == "useBlacklist" then
+            auras:SetUseBlacklist(styleTable.filter.useBlacklist)
+        end
+        if not subSetting or subSetting == "useWhitelist" then
+            auras:SetUseWhitelist(styleTable.filter.useWhitelist)
+        end
     end
 
     U:UnitFrame_UpdateAuras(button)
@@ -379,9 +418,11 @@ Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
 
 menu:AddWidget(const.WIDGET_KIND.BUFFS, 250, "Buffs",
     Builder.MenuOptions.AuraIconOptions,
+    Builder.MenuOptions.AuraFilter,
+    Builder.MenuOptions.AuraBlacklist,
+    Builder.MenuOptions.AuraWhitelist,
     Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions,
-    Builder.MenuOptions.AuraFilter
+    Builder.MenuOptions.AuraDurationFontOptions
 )
 
 ---@param button CUFUnitButton
@@ -396,9 +437,11 @@ Handler:RegisterWidget(UpdateDebuffs, const.WIDGET_KIND.DEBUFFS)
 
 menu:AddWidget(const.WIDGET_KIND.DEBUFFS, 250, "Debuffs",
     Builder.MenuOptions.AuraIconOptions,
+    Builder.MenuOptions.AuraFilter,
+    Builder.MenuOptions.AuraBlacklist,
+    Builder.MenuOptions.AuraWhitelist,
     Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions,
-    Builder.MenuOptions.AuraFilter
+    Builder.MenuOptions.AuraDurationFontOptions
 )
 
 -------------------------------------------------
@@ -481,6 +524,10 @@ function Auras:CreateAuraIcons(button, type, title)
     auraIcons.SetHideNoDuration = Icons_SetHideNoDuration
     auraIcons.SetMaxDuration = Icons_SetMaxDuration
     auraIcons.SetMinDuration = Icons_SetMinDuration
+    auraIcons.SetBlacklist = Icons_SetBlacklist
+    auraIcons.SetWhitelist = Icons_SetWhitelist
+    auraIcons.SetUseBlacklist = Icons_SetUseBlacklist
+    auraIcons.SetUseWhitelist = Icons_SetUseWhitelist
 
     auraIcons.ShowPreview = Icons_ShowPreview
     auraIcons.HidePreview = Icons_HidePreview
@@ -560,3 +607,7 @@ end
 ---@field hideNoDuration boolean
 ---@field maxDuration number|boolean
 ---@field minDuration number|boolean
+---@field blacklist table<number, boolean>
+---@field whitelist table<number, boolean>
+---@field useBlacklist boolean
+---@field useWhitelist boolean

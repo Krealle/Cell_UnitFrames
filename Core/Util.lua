@@ -106,6 +106,22 @@ function CUF.Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
     end
 end
 
+-- Function to capitalize the first letter to a series of strings
+---@param ... string
+---@return string
+function CUF.Util:ToTitleCase(...)
+    local args = { ... }
+    local function capitalizeFirst(word)
+        return word:gsub("^%l", string.upper)
+    end
+
+    for i, str in ipairs(args) do
+        args[i] = capitalizeFirst(str)
+    end
+
+    return table.concat(args)
+end
+
 -- Callbacks
 local callbacks = {}
 

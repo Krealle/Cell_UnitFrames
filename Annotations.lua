@@ -1,3 +1,5 @@
+---@meta
+
 -------------------------------------------------
 -- MARK: External Annotations
 -------------------------------------------------
@@ -184,7 +186,7 @@
 ---@field id Unit
 
 ---@class WidgetsMenuPage
----@field frame Frame
+---@field frame WidgetsMenuPageFrame
 ---@field id WIDGET_KIND
 ---@field button WidgetMenuPageButton
 ---@field height number

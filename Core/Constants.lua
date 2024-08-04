@@ -119,6 +119,8 @@ const.OPTION_KIND = {
 ---| "horizontal"
 ---| "vertical"
 ---| "hideNoDuration"
+---| "useBlacklist"
+---| "useWhitelist"
 const.AURA_OPTION_KIND = {
     SIZE = "size",
     FONT = "font",

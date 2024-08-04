@@ -35,6 +35,8 @@ Builder.MenuOptions = {
     AuraStackFontOptions = 11,
     AuraDurationFontOptions = 12,
     AuraFilter = 13,
+    AuraBlacklist = 14,
+    AuraWhitelist = 15,
 }
 
 CUF.Builder = Builder
@@ -57,6 +59,8 @@ CUF.Builder = Builder
 function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...)
     ---@class WidgetsMenuPage
     local widgetPage = {}
+
+    ---@class WidgetsMenuPageFrame: Frame
     widgetPage.frame = Cell:CreateFrame(nil, settingsFrame.scrollFrame.content,
         settingsFrame:GetWidth(), settingsFrame:GetHeight(), true)
     widgetPage.frame:SetPoint("TOPLEFT")
@@ -64,6 +68,14 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
 
     widgetPage.id = widgetName
     widgetPage.height = 40 -- enabledCheckBox + spacingY
+
+    widgetPage.frame._GetHeight = function()
+        return widgetPage.height
+    end
+    widgetPage.frame._SetHeight = function(height)
+        widgetPage.height = height
+        settingsFrame.scrollFrame:SetContentHeight(height)
+    end
 
     local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
 
@@ -88,6 +100,8 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
             prevOption = optPage
         end
     end
+
+    widgetPage._originalHeight = widgetPage.height
 
     return widgetPage
 end
@@ -162,7 +176,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param title string
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
----@param keys? string[] Keys to traverse to the property
+---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
 ---@return CUFCheckBox
 function Builder:CreateCheckBox(parent, widgetName, title, kind, keys)
     ---@class CUFCheckBox: CheckButton
@@ -1290,60 +1304,46 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     f.minDurationSlider.currentEditBox:SetWidth(60)
 
     -- Second Row
+    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
+        { "hideNoDuration" })
+    self:AnchorBelow(f.hideNoDuration, f.maxDurationSlider)
+
     f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L["Hide Personal"], const.AURA_OPTION_KIND.FILTER,
         { "hidePersonal" })
-    self:AnchorBelow(f.hidePersonalCB, f.maxDurationSlider)
+    self:AnchorRightOfCB(f.hidePersonalCB, f.hideNoDuration)
 
     f.hideExternalCB = self:CreateCheckBox(f, widgetName, L["Hide External"], const.AURA_OPTION_KIND.FILTER,
         { "hideExternal" })
     self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
 
-    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
-        { "hideNoDuration" })
-    f.hideNoDuration:SetPoint("TOPLEFT", f.hidePersonalCB, 0, -30)
+    -- Third Row
+    f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L["Use Blacklist"], const.AURA_OPTION_KIND.FILTER,
+        { "useBlacklist" })
+    f.useBlacklistCB:SetPoint("TOPLEFT", f.hideNoDuration, 0, -30)
+
+    f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L["Use Whitelist"], const.AURA_OPTION_KIND.FILTER,
+        { "useWhitelist" })
+    self:AnchorRightOfCB(f.useWhitelistCB, f.useBlacklistCB)
 
     return f
 end
 
 -------------------------------------------------
--- MARK: Aura Blacklist
+-- MARK: Aura Black-/whitelist
 -------------------------------------------------
 
----@param parent Frame
----@param widgetName WIDGET_KIND
----@return AuraBlacklistOptions
+---@param parent WidgetsMenuPageFrame
+---@param widgetName "buffs" | "debuffs"
+---@return Cell.SettingsAuras
 function Builder:CreateAuraBlacklistOptions(parent, widgetName)
-    ---@class AuraBlacklistOptions: Frame
-    local f = Cell:CreateFrame("AuraBlacklistOptions" .. widgetName, parent, self.optionWidth, 290)
+    return Builder.CreateSetting_Auras(parent, widgetName, "blacklist")
+end
 
-    -- Title
-    f.title = self:CreateOptionTitle(f, "Blacklist")
-
-    --- First Row
-    f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
-        const.AURA_OPTION_KIND.FILTER, { "maxDuration" })
-    f.maxDurationSlider:SetPoint("TOPLEFT", f, 10, -60)
-    f.maxDurationSlider.currentEditBox:SetWidth(60)
-
-    f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,
-        const.AURA_OPTION_KIND.FILTER, { "minDuration" })
-    self:AnchorRight(f.minDurationSlider, f.maxDurationSlider)
-    f.minDurationSlider.currentEditBox:SetWidth(60)
-
-    -- Second Row
-    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L["Hide Personal"], const.AURA_OPTION_KIND.FILTER,
-        { "hidePersonal" })
-    self:AnchorBelow(f.hidePersonalCB, f.maxDurationSlider)
-
-    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L["Hide External"], const.AURA_OPTION_KIND.FILTER,
-        { "hideExternal" })
-    self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
-
-    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
-        { "hideNoDuration" })
-    f.hideNoDuration:SetPoint("TOPLEFT", f.hidePersonalCB, 0, -30)
-
-    return f
+---@param parent WidgetsMenuPageFrame
+---@param widgetName "buffs" | "debuffs"
+---@return Cell.SettingsAuras
+function Builder:CreateAuraWhitelistOptions(parent, widgetName)
+    return Builder.CreateSetting_Auras(parent, widgetName, "whitelist")
 end
 
 -------------------------------------------------
@@ -1365,4 +1365,6 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.AuraStackFontOptions] = Builder.CreateAuraStackFontOptions,
     [Builder.MenuOptions.AuraDurationFontOptions] = Builder.CreateAuraDurationFontOptions,
     [Builder.MenuOptions.AuraFilter] = Builder.CreateAuraFilterOptions,
+    [Builder.MenuOptions.AuraBlacklist] = Builder.CreateAuraBlacklistOptions,
+    [Builder.MenuOptions.AuraWhitelist] = Builder.CreateAuraWhitelistOptions,
 }

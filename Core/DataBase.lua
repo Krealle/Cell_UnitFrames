@@ -57,6 +57,15 @@ function DB.GetWidgetPosition(which, unit, layout)
     return DB.GetAllWidgetTables(unit, layout)[which].position
 end
 
+---@param which "buffs"|"debuffs"
+---@param kind "blacklist"|"whitelist"
+---@param unit Unit?
+---@param layout string?
+---@return table
+function DB.GetAuraFilter(which, kind, unit, layout)
+    return DB.GetAllWidgetTables(unit, layout)[which].filter[kind]
+end
+
 -----------------------------------------
 -- Setters
 -----------------------------------------
@@ -78,4 +87,13 @@ end
 function DB.SetWidgetProperty(which, property, value, unit, layout)
     dbDebug("|cffff7777DB:SetWidgetProperty:|r", which, property, value, unit, layout)
     DB.GetWidgetTable(which, unit, layout)[property] = value
+end
+
+---@param which "buffs"|"debuffs"
+---@param kind "blacklist"|"whitelist"
+---@param value table
+---@param unit Unit?
+---@param layout string?
+function DB.SetAuraFilter(which, kind, value, unit, layout)
+    DB.GetAllWidgetTables(unit, layout)[which].filter[kind] = value
 end

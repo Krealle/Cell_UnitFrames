@@ -117,9 +117,9 @@ local powerTextWidget = {
 
 ---@class AuraFilterOpt
 ---@field useBlacklist boolean
----@field blacklist table<number, boolean>
+---@field blacklist table<number>
 ---@field useWhitelist boolean
----@field whitelist table<number, boolean>
+---@field whitelist table<number>
 ---@field minDuration number
 ---@field maxDuration number
 ---@field hidePersonal boolean

@@ -274,8 +274,8 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, k
 
     local dropDownItems = {}
     for _, item in ipairs(items) do
-        local text = type(item) == "table" and item[1] or item
-        local value = type(item) == "table" and item[2] or item
+        local text = type(item) == "string" and item or item[1]
+        local value = type(item) == "string" and item or item[2]
 
         tinsert(dropDownItems, {
             ["text"] = L[text],
@@ -908,142 +908,82 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
 end
 
 -------------------------------------------------
--- MARK: Aura Stack
+-- MARK: Aura Font
 -------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName "buffs" | "debuffs"
----@return AuraStackFontOptions
-function Builder:CreateAuraStackFontOptions(parent, widgetName)
-    ---@class AuraStackFontOptions: Frame
-    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 190)
+---@param kind "stacks" | "duration"
+---@return AuraFontOptions
+function Builder:CreateAuraFontOptions(parent, widgetName, kind)
+    local titleKind = Util:ToTitleCase(kind)
+    ---@class AuraFontOptions: Frame
+    local f = Cell:CreateFrame("Aura" .. titleKind .. "FontOptions" .. widgetName, parent, self.optionWidth,
+        190)
 
     -- Title
-    f.title = self:CreateOptionTitle(f, "Stack Font")
+    f.title = self:CreateOptionTitle(f, titleKind .. " Font")
 
     --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, "stacks")
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, kind)
     f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
 
-    f.fontOptions = self:CreateFontOptions(f, widgetName, "stacks")
+    f.fontOptions = self:CreateFontOptions(f, widgetName, kind)
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
-
-    f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
-    self:AnchorBelow(f.showStacksCB, f.fontOptions.styleDropdown)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
-        DB.GetWidgetTable(widgetName).font.stacks.rgb[1] = r
-        DB.GetWidgetTable(widgetName).font.stacks.rgb[2] = g
-        DB.GetWidgetTable(widgetName).font.stacks.rgb[3] = b
+        DB.GetWidgetTable(widgetName).font[kind].rgb[1] = r
+        DB.GetWidgetTable(widgetName).font[kind].rgb[2] = g
+        DB.GetWidgetTable(widgetName).font[kind].rgb[3] = b
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
             .TEXT_COLOR, "rgb")
     end)
-    self:AnchorBelow(f.colorPicker, f.fontOptions.nameSizeSilder)
+    self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
 
     local function LoadPageDB()
-        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font.stacks.rgb[1],
-            DB.GetWidgetTable(widgetName).font.stacks.rgb[2],
-            DB.GetWidgetTable(widgetName).font.stacks.rgb[3])
+        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font[kind].rgb[1],
+            DB.GetWidgetTable(widgetName).font[kind].rgb[2],
+            DB.GetWidgetTable(widgetName).font[kind].rgb[3])
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 
     return f
 end
 
--------------------------------------------------
--- MARK: Aura Duration
--------------------------------------------------
+---@param parent Frame
+---@param widgetName "buffs" | "debuffs"
+---@return AuraStackFontOptions
+function Builder:CreateAuraStackFontOptions(parent, widgetName)
+    ---@class AuraStackFontOptions: AuraFontOptions
+    local f = Builder:CreateAuraFontOptions(parent, widgetName, "stacks")
+
+    f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
+    self:AnchorBelow(f.showStacksCB, f.fontOptions.styleDropdown)
+
+    return f
+end
 
 ---@param parent Frame
 ---@param widgetName "buffs" | "debuffs"
 ---@return AuraDurationFontOptions
 function Builder:CreateAuraDurationFontOptions(parent, widgetName)
-    ---@class AuraDurationFontOptions: Frame
-    local f = Cell:CreateFrame("AuraStackFontOptions" .. widgetName, parent, self.optionWidth, 190)
+    ---@class AuraDurationFontOptions: AuraFontOptions
+    local f = Builder:CreateAuraFontOptions(parent, widgetName, "duration")
 
-    -- Title
-    f.title = self:CreateOptionTitle(f, "Duration Font")
-
-    --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, "duration")
-    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
-
-    -- Middle Options
-    f.fontOptions = self:CreateFontOptions(f, widgetName, "duration")
-    self:AnchorBelow(f.fontOptions, f.anchorOptions)
-
-    -- Bottom Options
-    f.iconDurationDropdown = Cell:CreateDropdown(f, 117)
-    f.iconDurationDropdown:SetPoint("TOPLEFT", 5, -27)
-    f.iconDurationDropdown:SetLabel(L["showDuration"])
+    local items = {
+        { L["Never"],          false },
+        { L["Always"],         true },
+        { "< 75%",             0.75 },
+        { "< 50%",             0.5 },
+        { "< 25%",             0.25 },
+        { "< 15 " .. L["sec"], 15 },
+        { "< 10 " .. L["sec"], 10 },
+        { "< 5 " .. L["sec"],  5 },
+    }
+    f.iconDurationDropdown = self:CreateDropdown(f, widgetName, L["showDuration"], nil,
+        items, const.AURA_OPTION_KIND.SHOW_DURATION)
     self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.styleDropdown)
-    self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
-
-    local function ShowDuration(_, val)
-        DB.GetWidgetTable(widgetName).showDuration = val
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-            const.AURA_OPTION_KIND.SHOW_DURATION)
-    end
-    f.iconDurationDropdown:SetItems({
-        {
-            ["text"] = L["Never"],
-            ["value"] = false,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = L["Always"],
-            ["value"] = true,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 75%",
-            ["value"] = 0.75,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 50%",
-            ["value"] = 0.5,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 25%",
-            ["value"] = 0.25,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 15 " .. L["sec"],
-            ["value"] = 15,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 10 " .. L["sec"],
-            ["value"] = 10,
-            ["onClick"] = ShowDuration,
-        },
-        {
-            ["text"] = "< 5 " .. L["sec"],
-            ["value"] = 5,
-            ["onClick"] = ShowDuration,
-        },
-    })
-
-    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
-        DB.GetWidgetTable(widgetName).font.duration.rgb[1] = r
-        DB.GetWidgetTable(widgetName).font.duration.rgb[2] = g
-        DB.GetWidgetTable(widgetName).font.duration.rgb[3] = b
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
-            .TEXT_COLOR, "rgb")
-    end)
-    self:AnchorBelow(f.colorPicker, f.fontOptions.nameSizeSilder)
-
-    local function LoadPageDB()
-        f.iconDurationDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).showDuration)
-        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font.duration.rgb[1],
-            DB.GetWidgetTable(widgetName).font.duration.rgb[2],
-            DB.GetWidgetTable(widgetName).font.duration.rgb[3])
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 
     return f
 end

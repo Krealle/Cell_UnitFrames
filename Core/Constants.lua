@@ -86,6 +86,7 @@ const.WIDGET_KIND = {
 ---| "textColor"
 ---| "healthFormat"
 ---| "powerFormat"
+---| "format"
 ---| "height"
 const.OPTION_KIND = {
     ENABLED = "enabled",
@@ -97,6 +98,7 @@ const.OPTION_KIND = {
     HEALTH_FORMAT = "healthFormat",
     POWER_FORMAT = "powerFormat",
     ORIENTATION = "orientation",
+    FORMAT = "format",
 }
 
 ---@alias AURA_OPTION_KIND

@@ -135,6 +135,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param kind OPTION_KIND | AURA_OPTION_KIND
 ---@param value any
+---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[]
 local function Set_DB(widgetName, kind, value, keys)
     local widgetTable = DB.GetWidgetTable(widgetName)
 
@@ -157,6 +158,7 @@ end
 
 ---@param widgetName WIDGET_KIND
 ---@param kind OPTION_KIND | AURA_OPTION_KIND
+---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[]
 local function Get_DB(widgetName, kind, keys)
     local result = DB.GetWidgetProperty(widgetName, kind)
 
@@ -1015,50 +1017,17 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return PowerFormatOptions
 function Builder:CreatePowerFormatOptions(parent, widgetName)
-    ---@class PowerFormatOptions: Frame
-    local f = CreateFrame("Frame", "PowerFormatOptions" .. widgetName, parent)
-    P:Size(f, self.singleOptionHeight, self.singleOptionHeight)
+    local powerFormatItems = {
+        { "32%",                 const.PowerTextFormat.PERCENTAGE, },
+        { "21377",               const.PowerTextFormat.NUMBER, },
+        { F:FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, }
+    }
 
-    f.format = Cell:CreateDropdown(parent, self.dualOptionWidth)
-    f.format:SetPoint("TOPLEFT", f)
-    f.format:SetLabel(L["Format"])
+    ---@class PowerFormatOptions: CUFDropdown
+    local powerFormatDropdown = Builder:CreateDropdown(parent, widgetName, "Format", nil,
+        powerFormatItems, const.OPTION_KIND.FORMAT)
 
-    f.format:SetItems({
-        {
-            ["text"] = "32%",
-            ["value"] = const.PowerTextFormat.PERCENTAGE,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.PowerTextFormat.PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.POWER_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "21377",
-            ["value"] = const.PowerTextFormat.NUMBER,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.PowerTextFormat.NUMBER
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.POWER_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(21377),
-            ["value"] = const.PowerTextFormat.NUMBER_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.PowerTextFormat.NUMBER_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.POWER_FORMAT)
-            end,
-        },
-    })
-
-    local function LoadPageDB()
-        f.format:SetSelectedValue(DB.GetWidgetTable(widgetName).format)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "PowerFormatOptions")
-
-    return f
+    return powerFormatDropdown
 end
 
 -------------------------------------------------

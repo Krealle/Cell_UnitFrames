@@ -31,7 +31,7 @@ menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, 230, "Power", Builder.MenuOptions.T
 function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.powerText
 
-    if not setting or setting == const.OPTION_KIND.POWER_FORMAT then
+    if not setting or setting == const.OPTION_KIND.FORMAT then
         widget:SetFormat(DB.GetAllWidgetTables(unit).powerText.format)
     end
 

@@ -648,35 +648,11 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return OrientationOptions
 function Builder:CreateOrientationOptions(parent, widgetName)
-    ---@class OrientationOptions: Frame
-    local f = CreateFrame("Frame", "OrientationOptions" .. widgetName, parent)
-    P:Size(f, self.singleOptionWidth, self.singleOptionHeight)
+    local orientationItems = { const.AURA_ORIENTATION.RIGHT_TO_LEFT, const.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        const.AURA_ORIENTATION.BOTTOM_TO_TOP, const.AURA_ORIENTATION.TOP_TO_BOTTOM }
 
-    f.orientationDropdown = Cell:CreateDropdown(parent, 117)
-    f.orientationDropdown:SetPoint("TOPLEFT", f)
-    f.orientationDropdown:SetLabel(L["Orientation"])
-
-    local orientationItems = {}
-    for _, v in pairs({ const.AURA_ORIENTATION.RIGHT_TO_LEFT, const.AURA_ORIENTATION.LEFT_TO_RIGHT,
-        const.AURA_ORIENTATION.BOTTOM_TO_TOP, const.AURA_ORIENTATION.TOP_TO_BOTTOM }) do
-        tinsert(orientationItems, {
-            ["text"] = L[v],
-            ["value"] = v,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).orientation = v
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.ORIENTATION)
-            end,
-        })
-    end
-    f.orientationDropdown:SetItems(orientationItems)
-
-    local function LoadPageDB()
-        f.orientationDropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).orientation)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "OrientationOptions")
-
-    return f
+    ---@class OrientationOptions: CUFDropdown
+    return self:CreateDropdown(parent, widgetName, "Orientation", nil, orientationItems, const.OPTION_KIND.ORIENTATION)
 end
 
 -------------------------------------------------

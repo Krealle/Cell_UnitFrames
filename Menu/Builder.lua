@@ -841,172 +841,46 @@ end
 -- MARK: Health Format
 -------------------------------------------------
 
-local healthFormats = {
-    [const.HealthTextFormat.PERCENTAGE] = "32%",
-    [const.HealthTextFormat.PERCENTAGE_ABSORBS] = "32+25% |cFFA7A7A7+" .. L["shields"],
-    [const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED] = "57% |cFFA7A7A7+" .. L["shields"],
-    [const.HealthTextFormat.PERCENTAGE_DEFICIT] = "-67%",
-    [const.HealthTextFormat.NUMBER] = "21377",
-    [const.HealthTextFormat.NUMBER_SHORT] = F:FormatNumber(21377),
-    [const.HealthTextFormat.NUMBER_ABSORBS_SHORT] = F:FormatNumber(21377) ..
-        "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
-    [const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT] = F:FormatNumber(21377 + 16384) ..
-        " |cFFA7A7A7+" .. L["shields"],
-    [const.HealthTextFormat.NUMBER_DEFICIT] = "-44158",
-    [const.HealthTextFormat.NUMBER_DEFICIT_SHORT] = F:FormatNumber(-44158),
-    [const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE] = F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
-    [const.HealthTextFormat.ABSORBS_ONLY] = "16384 |cFFA7A7A7" .. L["shields"],
-    [const.HealthTextFormat.ABSORBS_ONLY_SHORT] = F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
-    [const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE] = "25% |cFFA7A7A7" .. L["shields"],
-}
-
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return HealthFormatOptions
 function Builder:CreateHealthFormatOptions(parent, widgetName)
-    ---@class HealthFormatOptions
-    local f = CreateFrame("Frame", "HealthFormatOptions" .. widgetName, parent)
-    P:Size(f, self.singleOptionHeight, self.singleOptionHeight)
+    local healthFormats = {
+        { "32%",
+            const.HealthTextFormat.PERCENTAGE, },
+        { "32+25% |cFFA7A7A7+" .. L["shields"],
+            const.HealthTextFormat.PERCENTAGE_ABSORBS },
+        { "57% |cFFA7A7A7+" .. L["shields"],
+            const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED },
+        { "-67%",
+            const.HealthTextFormat.PERCENTAGE_DEFICIT },
+        { "21377",
+            const.HealthTextFormat.NUMBER },
+        { F:FormatNumber(21377),
+            const.HealthTextFormat.NUMBER_SHORT },
+        { F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
+            const.HealthTextFormat.NUMBER_ABSORBS_SHORT },
+        { F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
+            const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT },
+        { "-44158",
+            const.HealthTextFormat.NUMBER_DEFICIT },
+        { F:FormatNumber(-44158),
+            const.HealthTextFormat.NUMBER_DEFICIT_SHORT },
+        { F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
+            const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE },
+        { "16384 |cFFA7A7A7" .. L["shields"],
+            const.HealthTextFormat.ABSORBS_ONLY },
+        { F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
+            const.HealthTextFormat.ABSORBS_ONLY_SHORT },
+        { "25% |cFFA7A7A7" .. L["shields"],
+            const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE },
+    }
 
-    f.format = Cell:CreateDropdown(parent, self.dualOptionWidth)
-    f.format:SetPoint("TOPLEFT", f)
-    f.format:SetLabel(L["Format"])
+    ---@class HealthFormatOptions: CUFDropdown
+    local healthFormatDropdown = Builder:CreateDropdown(parent, widgetName, "Format", 200,
+        healthFormats, const.OPTION_KIND.FORMAT)
 
-    f.format:SetItems({
-        {
-            ["text"] = "32%",
-            ["value"] = const.HealthTextFormat.PERCENTAGE,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "32%+25% |cFFA7A7A7+" .. L["shields"],
-            ["value"] = const.HealthTextFormat.PERCENTAGE_ABSORBS,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.PERCENTAGE_ABSORBS
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "57% |cFFA7A7A7+" .. L["shields"],
-            ["value"] = const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "-67%",
-            ["value"] = const.HealthTextFormat.PERCENTAGE_DEFICIT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.PERCENTAGE_DEFICIT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "21377",
-            ["value"] = const.HealthTextFormat.NUMBER,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(21377),
-            ["value"] = const.HealthTextFormat.NUMBER_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
-            ["value"] = const.HealthTextFormat.NUMBER_ABSORBS_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER_ABSORBS_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
-            ["value"] = const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "-44158",
-            ["value"] = const.HealthTextFormat.NUMBER_DEFICIT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER_DEFICIT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(-44158),
-            ["value"] = const.HealthTextFormat.NUMBER_DEFICIT_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.NUMBER_DEFICIT_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
-            ["value"] = const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "16384 |cFFA7A7A7" .. L["shields"],
-            ["value"] = const.HealthTextFormat.ABSORBS_ONLY,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.ABSORBS_ONLY
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
-            ["value"] = const.HealthTextFormat.ABSORBS_ONLY_SHORT,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.ABSORBS_ONLY_SHORT
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-        {
-            ["text"] = "25% |cFFA7A7A7" .. L["shields"],
-            ["value"] = const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).format = const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.HEALTH_FORMAT)
-            end,
-        },
-    })
-
-    local function LoadPageDB()
-        f.format:SetSelectedValue(DB.GetWidgetTable(widgetName).format)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "HealthFormatOptions")
-
-    return f
+    return healthFormatDropdown
 end
 
 -------------------------------------------------

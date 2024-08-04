@@ -251,7 +251,6 @@
 ---@field GetTargetPingGUID function
 ---@field __unitGuid string
 ---@field class string
----@field _layout string
 ---@field powerSize number
 ---@field _powerBarUpdateRequired boolean
 ---@field _updateRequired boolean

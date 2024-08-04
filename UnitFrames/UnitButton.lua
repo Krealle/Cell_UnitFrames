@@ -4,18 +4,16 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = Cell.L
 local F = Cell.funcs
-local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
 local A = Cell.animations
 
----@class CUF.widgets
-local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
----@class CUF.constants
+
+local W = CUF.widgets
 local const = CUF.constants
----@class CUF.auras
 local Auras = CUF.auras
+local Util = CUF.Util
 
 local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
@@ -34,21 +32,20 @@ function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltip
 end
 
 ---@param unit Unit
----@param configTitle string
 ---@param onEnterLogic function?
 ---@return CUFUnitFrame Frame
 ---@return CUFAnchorFrame anchorFrame
 ---@return CUFHoverFrame Frame
 ---@return CUFConfigButton config
-function U:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
-    local name = unit:gsub("^%l", string.upper)
+function U:CreateBaseUnitFrame(unit, onEnterLogic)
+    local name = Util:ToTitleCase(unit)
 
     ---@class CUFUnitFrame
-    local frame = CreateFrame("Frame", "Cell" .. name .. "Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
+    local frame = CreateFrame("Frame", "CUF" .. name .. "Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
 
     -- Anchor
     ---@class CUFAnchorFrame
-    local anchorFrame = CreateFrame("Frame", "Cell" .. name .. "AnchorFrame", frame)
+    local anchorFrame = CreateFrame("Frame", "CUF" .. name .. "AnchorFrame", frame)
     PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
     anchorFrame:SetMovable(true)
     anchorFrame:SetClampedToScreen(true)
@@ -85,7 +82,7 @@ function U:CreateBaseUnitFrame(unit, configTitle, onEnterLogic)
             ["tooltipPosition"])
         P:Point(CellTooltip, tooltipPoint, config, tooltipRelativePoint, tooltipX, tooltipY)
 
-        CellTooltip:AddLine(L[configTitle])
+        CellTooltip:AddLine(L[Util:ToTitleCase(unit) .. " Frame"])
 
         -- Execute additional logic passed to the function
         if type(onEnterLogic) == "function" then
@@ -721,8 +718,8 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
 
-    button.widgets.buffs = Auras:CreateAuraIcons(button, "buffs", "Buffs")
-    button.widgets.debuffs = Auras:CreateAuraIcons(button, "debuffs", "Debuffs")
+    button.widgets.buffs = Auras:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
+    button.widgets.debuffs = Auras:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
 
     -- targetHighlight
     ---@class HighlightWidget

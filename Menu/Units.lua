@@ -4,10 +4,9 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = Cell.L
 
----@class CUF.Menu
 local menu = CUF.Menu
----@class CUF.constants
 local const = CUF.constants
+local Util = CUF.Util
 
 local function UpdateSize()
     if CUF.vars.selectedLayout == Cell.vars.currentLayout then
@@ -58,7 +57,7 @@ local function AddLoadPageDB(unit)
 end
 
 for _, unit in pairs(CUF.vars.units) do
-    local unitName = unit:gsub("^%l", string.upper)
+    local unitName = Util:ToTitleCase(unit)
 
     menu:AddUnit(
     ---@param parent MenuFrame

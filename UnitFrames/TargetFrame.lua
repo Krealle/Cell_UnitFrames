@@ -11,14 +11,13 @@ local const = CUF.constants
 
 local unit = const.UNIT.TARGET
 
-local targetFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit, "Target Frame")
+local targetFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit)
 Cell.frames.targetFrame = targetFrame
 Cell.frames.targetFrameAnchor = anchorFrame
 
-local targetButton = CreateFrame("Button", "CellTargetButton", targetFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
+local targetButton = CreateFrame("Button", "CUFTargetButton", targetFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 targetButton:SetAttribute("unit", unit)
 targetButton:SetPoint("TOPLEFT")
-targetButton._layout = "Target"
 Cell.unitButtons.target = targetButton
 
 -------------------------------------------------

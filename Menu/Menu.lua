@@ -115,7 +115,7 @@ local function UpdatePreview()
     LoadLayoutDB(layoutDropdown:GetSelected())
 
     -- Unhook
-    Cell:UnregisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview")
+    Cell:UnregisterCallback("UpdatePreview", "CUF_UpdatePreview")
 end
 
 ---@param tab string
@@ -125,7 +125,7 @@ local function ShowTab(tab)
         menuWindow:HideMenu()
     elseif not menu.window.init then
         -- Inital hook
-        Cell:RegisterCallback("UpdatePreview", "CellUnitFrames_UpdatePreview", UpdatePreview)
+        Cell:RegisterCallback("UpdatePreview", "CUF_UpdatePreview", UpdatePreview)
     end
 end
-Cell:RegisterCallback("ShowOptionsTab", "CellUnitFrames_ShowTab", ShowTab)
+Cell:RegisterCallback("ShowOptionsTab", "CUFShowTab", ShowTab)

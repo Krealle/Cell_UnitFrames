@@ -447,7 +447,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     local title = Util:ToTitleCase(which, kind)
 
     ---@class Cell.SettingsAuras: Frame
-    local widget = Cell:CreateFrame("AuraBlacklistOptions" .. title, parent, 420, 128)
+    local widget = Cell:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
 
     widget.frame = Cell:CreateFrame(nil, widget, 20, 20)
     widget.frame:SetPoint("TOPLEFT", 5, -22)

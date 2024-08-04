@@ -473,12 +473,11 @@ end
 
 ---@param button CUFUnitButton
 ---@param type "buffs" | "debuffs"
----@param title "Buffs" | "Debuffs"
 ---@return CellAuraIcons auraIcons
-function Auras:CreateAuraIcons(button, type, title)
+function Auras:CreateAuraIcons(button, type)
     --CUF:Debug("CreateIndicators", button:GetName())
     ---@class CellAuraIcons
-    local auraIcons = I.CreateAura_Icons(button:GetName() .. title .. "Icons", button, 10)
+    local auraIcons = I.CreateAura_Icons(button:GetName() .. Util:ToTitleCase(type) .. "Icons", button, 10)
 
     auraIcons.enabled = false
     auraIcons.id = type

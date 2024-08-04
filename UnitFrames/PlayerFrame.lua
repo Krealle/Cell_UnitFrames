@@ -11,14 +11,13 @@ local const = CUF.constants
 
 local unit = const.UNIT.PLAYER
 
-local playerFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit, "Player Frame")
+local playerFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit)
 Cell.frames.playerFrame = playerFrame
 Cell.frames.playerFrameAnchor = anchorFrame
 
-local playerButton = CreateFrame("Button", "CellPlayerButton", playerFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
+local playerButton = CreateFrame("Button", "CUFPlayerButton", playerFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 playerButton:SetAttribute("unit", unit)
 playerButton:SetPoint("TOPLEFT")
-playerButton._layout = "Player"
 Cell.unitButtons.player = playerButton
 
 -------------------------------------------------

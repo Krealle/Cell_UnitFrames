@@ -12,6 +12,7 @@ local Handler = CUF.Handler
 local DB = CUF.DB
 local menu = CUF.Menu
 local Builder = CUF.Builder
+local Util = CUF.Util
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -406,43 +407,26 @@ end
 -- MARK: Buff & Debuff
 -------------------------------------------------
 
----@param button CUFUnitButton
----@param unit Unit
----@param setting AURA_OPTION_KIND
----@param subSetting string
-local function UpdateBuffs(button, unit, setting, subSetting)
-    W.UpdateAuraWidget(button, unit, const.WIDGET_KIND.BUFFS, setting, subSetting)
+for _, kind in pairs({ const.WIDGET_KIND.BUFFS, const.WIDGET_KIND.DEBUFFS }) do
+    ---@param button CUFUnitButton
+    ---@param unit Unit
+    ---@param setting AURA_OPTION_KIND
+    ---@param subSetting string
+    local function UpdateAuraWidget(button, unit, setting, subSetting)
+        W.UpdateAuraWidget(button, unit, kind, setting, subSetting)
+    end
+
+    Handler:RegisterWidget(UpdateAuraWidget, kind)
+
+    menu:AddWidget(kind, 250, Util:ToTitleCase(kind),
+        Builder.MenuOptions.AuraIconOptions,
+        Builder.MenuOptions.AuraFilter,
+        Builder.MenuOptions.AuraBlacklist,
+        Builder.MenuOptions.AuraWhitelist,
+        Builder.MenuOptions.AuraStackFontOptions,
+        Builder.MenuOptions.AuraDurationFontOptions
+    )
 end
-
-Handler:RegisterWidget(UpdateBuffs, const.WIDGET_KIND.BUFFS)
-
-menu:AddWidget(const.WIDGET_KIND.BUFFS, 250, "Buffs",
-    Builder.MenuOptions.AuraIconOptions,
-    Builder.MenuOptions.AuraFilter,
-    Builder.MenuOptions.AuraBlacklist,
-    Builder.MenuOptions.AuraWhitelist,
-    Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions
-)
-
----@param button CUFUnitButton
----@param unit Unit
----@param setting AURA_OPTION_KIND
----@param subSetting string
-local function UpdateDebuffs(button, unit, setting, subSetting)
-    W.UpdateAuraWidget(button, unit, const.WIDGET_KIND.DEBUFFS, setting, subSetting)
-end
-
-Handler:RegisterWidget(UpdateDebuffs, const.WIDGET_KIND.DEBUFFS)
-
-menu:AddWidget(const.WIDGET_KIND.DEBUFFS, 250, "Debuffs",
-    Builder.MenuOptions.AuraIconOptions,
-    Builder.MenuOptions.AuraFilter,
-    Builder.MenuOptions.AuraBlacklist,
-    Builder.MenuOptions.AuraWhitelist,
-    Builder.MenuOptions.AuraStackFontOptions,
-    Builder.MenuOptions.AuraDurationFontOptions
-)
 
 -------------------------------------------------
 -- MARK: Create Aura Icons

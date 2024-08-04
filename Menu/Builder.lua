@@ -226,18 +226,19 @@ end
 ---@param minVal number
 ---@param maxVal number
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
----@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
+---@param ... OPTION_KIND | AURA_OPTION_KIND Keys to traverse to the property
 ---@return CUFSlider
-function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, kind, keys)
+function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, kind, ...)
     ---@class CUFSlider: CellSlider
     local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1)
 
     slider.Set_DB = Set_DB
     slider.Get_DB = Get_DB
 
+    local keys = { ... }
     slider.afterValueChangedFn = function(value)
         slider.Set_DB(widgetName, kind, value, keys)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind, keys and unpack(keys))
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
     end
 
     local function LoadPageDB()
@@ -262,15 +263,17 @@ end
 ---@param width number? Default: 117
 ---@param items DropdownItem[] | string[]
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
----@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
+---@param ... OPTION_KIND | AURA_OPTION_KIND Keys to traverse to the property
 ---@return CUFDropdown
-function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, keys)
+function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, ...)
     ---@class CUFDropdown: CellDropdown
     local dropdown = Cell:CreateDropdown(parent, width or 117)
     dropdown:SetLabel(L[title])
 
     dropdown.Set_DB = Set_DB
     dropdown.Get_DB = Get_DB
+
+    local keys = { ... }
 
     local dropDownItems = {}
     for _, item in ipairs(items) do
@@ -282,8 +285,7 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, k
             ["value"] = value,
             ["onClick"] = function()
                 dropdown.Set_DB(widgetName, kind, value, keys)
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind,
-                    keys and unpack(keys))
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
             end,
         })
     end
@@ -546,8 +548,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
         tinsert(items, { L["Power Color"], const.PowerColorType.POWER_COLOR })
     end
     f.dropdown = self:CreateDropdown(f, widgetName, L["Color"], nil, items,
-        const.OPTION_KIND.COLOR,
-        { "type" })
+        const.OPTION_KIND.COLOR, "type")
     f.dropdown:SetPoint("TOPLEFT")
     f.dropdown.Set_DB = function(...)
         Set_DB(...)
@@ -615,17 +616,17 @@ function Builder:CreateAnchorOptions(parent, widgetName, altKind, ...)
     P:Size(f, 401, 25)
 
     f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, CUF.anchorPoints,
-        altKind or const.OPTION_KIND.POSITION, { ..., "anchor" })
+        altKind or const.OPTION_KIND.POSITION, ..., "anchor")
     f.anchorDropdown:SetPoint("TOPLEFT", f)
 
     f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, -100, 100, altKind or const.OPTION_KIND
         .POSITION,
-        { ..., "offsetX" })
+        ..., "offsetX")
     self:AnchorRight(f.sliderX, f.anchorDropdown)
 
     f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, -100, 100, altKind or const.OPTION_KIND
         .POSITION,
-        { ..., "offsetY" })
+        ..., "offsetY")
     self:AnchorRight(f.sliderY, f.sliderX)
 
     return f
@@ -637,7 +638,7 @@ end
 function Builder:CreateExtraAnchorOptions(parent, widgetName, altKind, ...)
     ---@class ExtraAnchorOptions: AnchorOptions
     return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, CUF.anchorPoints,
-        altKind or const.OPTION_KIND.POSITION, { ..., "extraAnchor" })
+        altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
 end
 
 -------------------------------------------------
@@ -671,15 +672,15 @@ function Builder:CreateFontOptions(parent, widgetName, ...)
     local fontItems = Util:GetFontItems()
 
     f.styleDropdown = self:CreateDropdown(parent, widgetName, "Font", nil, fontItems,
-        const.OPTION_KIND.FONT, { ..., "style" })
+        const.OPTION_KIND.FONT, ..., "style")
     f.styleDropdown:SetPoint("TOPLEFT", f)
 
     f.outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, CUF.outlines,
-        const.OPTION_KIND.FONT, { ..., "outline" })
+        const.OPTION_KIND.FONT, ..., "outline")
     self:AnchorRight(f.outlineDropdown, f.styleDropdown)
 
     f.sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 5, 50,
-        const.OPTION_KIND.FONT, { ..., "size" })
+        const.OPTION_KIND.FONT, ..., "size")
     self:AnchorRight(f.sizeSlider, f.outlineDropdown)
 
     f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], const.OPTION_KIND.FONT,
@@ -729,10 +730,8 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
     }
 
     ---@class HealthFormatOptions: CUFDropdown
-    local healthFormatDropdown = Builder:CreateDropdown(parent, widgetName, "Format", 200,
+    return self:CreateDropdown(parent, widgetName, "Format", 200,
         healthFormats, const.OPTION_KIND.FORMAT)
-
-    return healthFormatDropdown
 end
 
 -------------------------------------------------
@@ -750,10 +749,8 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
     }
 
     ---@class PowerFormatOptions: CUFDropdown
-    local powerFormatDropdown = Builder:CreateDropdown(parent, widgetName, "Format", nil,
+    return self:CreateDropdown(parent, widgetName, "Format", nil,
         powerFormatItems, const.OPTION_KIND.FORMAT)
-
-    return powerFormatDropdown
 end
 
 -------------------------------------------------
@@ -770,12 +767,12 @@ function Builder:CreateSizeOptions(parent, widgetName)
 
     f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
         const.AURA_OPTION_KIND.SIZE,
-        { "width" })
+        "width")
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
     f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, 0, 100,
         const.AURA_OPTION_KIND.SIZE,
-        { "height" })
+        "height")
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
 
     return f
@@ -820,11 +817,11 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
 
     -- Fourth Row
     f.spacingHorizontalSlider = self:CreateSlider(f, widgetName, L["X Spacing"], nil, 0, 50,
-        const.AURA_OPTION_KIND.SPACING, { "horizontal" })
+        const.AURA_OPTION_KIND.SPACING, "horizontal")
     self:AnchorBelow(f.spacingHorizontalSlider, f.sizeOptions)
 
     f.spacingVerticalSlider = self:CreateSlider(f, widgetName, L["Y Spacing"], nil, 0, 50,
-        const.AURA_OPTION_KIND.SPACING, { "vertical" })
+        const.AURA_OPTION_KIND.SPACING, "vertical")
     self:AnchorBelow(f.spacingVerticalSlider, f.sizeOptions.sizeHeightSlider)
 
     -- Fifth Row
@@ -934,12 +931,12 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
 
     --- First Row
     f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
-        const.AURA_OPTION_KIND.FILTER, { "maxDuration" })
+        const.AURA_OPTION_KIND.FILTER, "maxDuration")
     f.maxDurationSlider:SetPoint("TOPLEFT", f, 10, -60)
     f.maxDurationSlider.currentEditBox:SetWidth(60)
 
     f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,
-        const.AURA_OPTION_KIND.FILTER, { "minDuration" })
+        const.AURA_OPTION_KIND.FILTER, "minDuration")
     self:AnchorRight(f.minDurationSlider, f.maxDurationSlider)
     f.minDurationSlider.currentEditBox:SetWidth(60)
 

@@ -248,6 +248,44 @@ function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, 
     return slider
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param title string
+---@param width number? Default: 117
+---@param items table<number, table<string, any>> # table<text, value>
+---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
+---@return CUFDropdown
+function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, keys)
+    ---@class CUFDropdown: CellDropdown
+    local dropdown = Cell:CreateDropdown(parent, width or 117)
+    dropdown:SetLabel(L[title])
+
+    dropdown.Set_DB = Set_DB
+    dropdown.Get_DB = Get_DB
+
+    local dropDownItems = {}
+    for _, item in pairs(items) do
+        tinsert(dropDownItems, {
+            ["text"] = item[1],
+            ["value"] = item[2],
+            ["onClick"] = function()
+                dropdown.Set_DB(widgetName, kind, item[2], keys)
+                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind,
+                    keys and unpack(keys))
+            end,
+        })
+    end
+    dropdown:SetItems(dropDownItems)
+
+    local function LoadPageDB()
+        dropdown:SetSelectedValue(dropdown.Get_DB(widgetName, kind, keys))
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "Dropdown_" .. kind)
+
+    return dropdown
+end
+
 -----------------------------------------------
 -- MARK: Option Title
 -------------------------------------------------

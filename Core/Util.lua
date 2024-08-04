@@ -1,6 +1,9 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+local Cell = CUF.Cell
+local F = Cell.funcs
+
 ---@class CUF.Util
 CUF.Util = {}
 
@@ -120,6 +123,19 @@ function CUF.Util:ToTitleCase(...)
     end
 
     return table.concat(args)
+end
+
+-- Returns a table of all fonts.
+---@return string[]
+function CUF.Util:GetFontItems()
+    local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
+
+    local newItems = {}
+    for idx, item in pairs(items) do
+        newItems[idx] = item.text
+    end
+
+    return newItems
 end
 
 -- Callbacks

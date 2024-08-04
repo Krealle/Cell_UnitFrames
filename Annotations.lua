@@ -203,14 +203,6 @@
 ---@field nameXSlider CellSlider
 ---@field nameYSlider CellSlider
 
----@class FontOptions: Frame
----@field nameFontDropdown CellDropdown
----@field nameOutlineDropdown CellDropdown
----@field nameSizeSilder CellSlider
----@field nameShadowCB CheckButton
----@field defaultFontName string
----@field fonts table<string, string>
-
 ---@class EnabledCheckBox: Frame
 
 ---@class HealthFormatOptions: Frame

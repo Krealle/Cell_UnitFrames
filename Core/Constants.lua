@@ -88,6 +88,9 @@ const.WIDGET_KIND = {
 ---| "powerFormat"
 ---| "format"
 ---| "height"
+---| "outline"
+---| "style"
+---| "shadow"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -99,6 +102,9 @@ const.OPTION_KIND = {
     POWER_FORMAT = "powerFormat",
     ORIENTATION = "orientation",
     FORMAT = "format",
+    OUTLINE = "outline",
+    STYLE = "style",
+    SHADOW = "shadow",
 }
 
 ---@alias AURA_OPTION_KIND
@@ -123,6 +129,8 @@ const.OPTION_KIND = {
 ---| "hideNoDuration"
 ---| "useBlacklist"
 ---| "useWhitelist"
+---| "duration"
+---| "stacks"
 const.AURA_OPTION_KIND = {
     SIZE = "size",
     FONT = "font",

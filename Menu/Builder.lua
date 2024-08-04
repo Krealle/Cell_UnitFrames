@@ -9,6 +9,7 @@ local P = Cell.pixelPerfectFuncs
 local Handler = CUF.Handler
 local const = CUF.constants
 local DB = CUF.DB
+local Util = CUF.Util
 
 ---@class CUF.builder
 local Builder = {}
@@ -145,15 +146,12 @@ local function Set_DB(widgetName, kind, value, keys)
     end
 
     local t = widgetTable[kind]
-    for i = 1, #keys - 1 do
-        local key = keys[i]
-        if t[key] == nil then
-            print("Key not found: " .. table.concat(keys, ".", 1, i))
-        end
-        t = t[key]
+    local lastKey = keys[#keys]
+    for _, v in pairs(keys) do
+        if v == lastKey then break end
+        t = t[v]
     end
-    t[keys[#keys]] = value
-    --CUF:DevAdd({ widgetTable, t, kind, value, keys, keys[#keys] }, widgetName .. " " .. kind)
+    t[lastKey] = value
 end
 
 ---@param widgetName WIDGET_KIND
@@ -164,7 +162,7 @@ local function Get_DB(widgetName, kind, keys)
 
     if not keys then return result end
 
-    for _, v in ipairs(keys) do
+    for _, v in pairs(keys) do
         result = result[v]
     end
     return result
@@ -250,11 +248,19 @@ function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, 
     return slider
 end
 
+-------------------------------------------------
+-- MARK: Dropdown
+-------------------------------------------------
+
+---@class DropdownItem
+---@field [1] string # Text
+---@field [2] any # Value
+
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param title string
 ---@param width number? Default: 117
----@param items table<number, table<string, any>> # table<text, value>
+---@param items DropdownItem[] | string[]
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
 ---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
 ---@return CUFDropdown
@@ -267,12 +273,15 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, k
     dropdown.Get_DB = Get_DB
 
     local dropDownItems = {}
-    for _, item in pairs(items) do
+    for _, item in ipairs(items) do
+        local text = type(item) == "table" and item[1] or item
+        local value = type(item) == "table" and item[2] or item
+
         tinsert(dropDownItems, {
-            ["text"] = item[1],
-            ["value"] = item[2],
+            ["text"] = text,
+            ["value"] = value,
             ["onClick"] = function()
-                dropdown.Set_DB(widgetName, kind, item[2], keys)
+                dropdown.Set_DB(widgetName, kind, value, keys)
                 CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind,
                     keys and unpack(keys))
             end,
@@ -757,82 +766,30 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param ... OPTION_KIND|AURA_OPTION_KIND Extra keys to traverse to the property
 ---@return FontOptions
-function Builder:CreateFontOptions(parent, widgetName)
+function Builder:CreateFontOptions(parent, widgetName, ...)
     ---@class FontOptions: Frame
     local f = CreateFrame("Frame", "FontOptions" .. widgetName, parent)
-    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+    P:Size(f, 401, 44)
 
-    ---@param kind string
-    ---@param value any
-    f.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).font[kind] = value
-    end
-    ---@param kind string
-    f.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).font[kind]
-    end
+    local fontItems = Util:GetFontItems()
 
-    f.nameFontDropdown = Cell:CreateDropdown(parent, 117)
-    f.nameFontDropdown:SetPoint("TOPLEFT", f)
-    f.nameFontDropdown:SetLabel(L["Font"])
+    f.styleDropdown = self:CreateDropdown(parent, widgetName, "Font", nil, fontItems,
+        const.OPTION_KIND.FONT, { ..., "style" })
+    f.styleDropdown:SetPoint("TOPLEFT", f)
 
-    local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
-    f.defaultFontName = defaultFontName
-    f.fonts = fonts
-    for _, item in pairs(items) do
-        item["onClick"] = function()
-            f.Set_DB("style", item["text"])
-            CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
-                "name")
-        end
-    end
-    f.nameFontDropdown:SetItems(items)
+    f.outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, CUF.outlines,
+        const.OPTION_KIND.FONT, { ..., "outline" })
+    self:AnchorRight(f.outlineDropdown, f.styleDropdown)
 
-    function f.nameFontDropdown:SetFont(font)
-        f.nameFontDropdown:SetSelected(font, fonts[font])
-    end
+    f.sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 5, 50,
+        const.OPTION_KIND.FONT, { ..., "size" })
+    self:AnchorRight(f.sizeSlider, f.outlineDropdown)
 
-    f.nameOutlineDropdown = Cell:CreateDropdown(parent, 117)
-    f.nameOutlineDropdown:SetPoint("TOPLEFT", f.nameFontDropdown, "TOPRIGHT", self.spacingX, 0)
-    f.nameOutlineDropdown:SetLabel(L["Outline"])
-
-    items = {}
-    for _, v in pairs(CUF.outlines) do
-        tinsert(items, {
-            ["text"] = L[v],
-            ["value"] = v,
-            ["onClick"] = function()
-                f.Set_DB("outline", v)
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.FONT, "outline")
-            end,
-        })
-    end
-    f.nameOutlineDropdown:SetItems(items)
-
-    f.nameSizeSilder = Cell:CreateSlider(L["Size"], parent, 5, 50, 117, 1)
-    f.nameSizeSilder:SetPoint("TOPLEFT", f.nameOutlineDropdown, "TOPRIGHT", self.spacingX, 0)
-    f.nameSizeSilder.afterValueChangedFn = function(value)
-        f.Set_DB("size", value)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
-            "size")
-    end
-
-    f.nameShadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked)
-        f.Set_DB("shadow", checked)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.FONT,
-            "shadow")
-    end)
-    f.nameShadowCB:SetPoint("TOPLEFT", f.nameFontDropdown, "BOTTOMLEFT", 0, -10)
-
-    local function LoadPageDB()
-        f.nameSizeSilder:SetValue(f.Get_DB("size"))
-        f.nameOutlineDropdown:SetSelectedValue(f.Get_DB("outline"))
-        f.nameShadowCB:SetChecked(f.Get_DB("shadow"))
-        f.nameFontDropdown:SetSelected(f.Get_DB("style"), f.fonts, f.defaultFontName)
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "FontOptions")
+    f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], const.OPTION_KIND.FONT,
+        { ..., "shadow" })
+    f.shadowCB:SetPoint("TOPLEFT", f.styleDropdown, "BOTTOMLEFT", 0, -10)
 
     return f
 end
@@ -1011,21 +968,12 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
         return DB.GetWidgetTable(widgetName).font.stacks[kind]
     end
 
-    -- Middle Options
-    f.fontOptions = self:CreateFontOptions(f, widgetName)
+    f.fontOptions = self:CreateFontOptions(f, widgetName, "stacks")
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
 
-    -- Override to target proper DB
-    f.fontOptions.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).font.stacks[kind] = value
-    end
-    f.fontOptions.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).font.stacks[kind]
-    end
-
     f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
-    self:AnchorBelow(f.showStacksCB, f.fontOptions.nameFontDropdown)
-    self:AnchorBelow(f.fontOptions.nameShadowCB, f.fontOptions.nameOutlineDropdown)
+    self:AnchorBelow(f.showStacksCB, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
         DB.GetWidgetTable(widgetName).font.stacks.rgb[1] = r
@@ -1073,23 +1021,15 @@ function Builder:CreateAuraDurationFontOptions(parent, widgetName)
     end
 
     -- Middle Options
-    f.fontOptions = self:CreateFontOptions(f, widgetName)
+    f.fontOptions = self:CreateFontOptions(f, widgetName, "duration")
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
-
-    -- Override to target proper DB
-    f.fontOptions.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).font.duration[kind] = value
-    end
-    f.fontOptions.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).font.duration[kind]
-    end
 
     -- Bottom Options
     f.iconDurationDropdown = Cell:CreateDropdown(f, 117)
     f.iconDurationDropdown:SetPoint("TOPLEFT", 5, -27)
     f.iconDurationDropdown:SetLabel(L["showDuration"])
-    self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.nameFontDropdown)
-    self:AnchorBelow(f.fontOptions.nameShadowCB, f.fontOptions.nameOutlineDropdown)
+    self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     local function ShowDuration(_, val)
         DB.GetWidgetTable(widgetName).showDuration = val

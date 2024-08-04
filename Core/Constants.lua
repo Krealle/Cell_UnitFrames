@@ -94,6 +94,8 @@ const.WIDGET_KIND = {
 ---| "anchor"
 ---| "offsetX"
 ---| "offsetY"
+---| "color"
+---| "type"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -108,6 +110,7 @@ const.OPTION_KIND = {
     OUTLINE = "outline",
     STYLE = "style",
     SHADOW = "shadow",
+    COLOR = "color",
 }
 
 ---@alias AURA_OPTION_KIND

@@ -534,9 +534,29 @@ end
 ---@param includePowerType? boolean
 ---@return UnitColorOptions
 function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includePowerType)
-    ---@class UnitColorOptions
+    ---@class UnitColorOptions: Frame
     local f = CreateFrame("Frame", "UnitColorOptions" .. widgetName, parent)
     P:Size(f, 117, 20)
+
+    local items = {
+        { L["Class Color"],  const.ColorType.CLASS_COLOR },
+        { L["Custom Color"], const.ColorType.CUSTOM },
+    }
+    if includePowerType then
+        tinsert(items, { L["Power Color"], const.PowerColorType.POWER_COLOR })
+    end
+    f.dropdown = self:CreateDropdown(f, widgetName, L["Color"], nil, items,
+        const.OPTION_KIND.COLOR,
+        { "type" })
+    f.dropdown:SetPoint("TOPLEFT")
+    f.dropdown.Set_DB = function(...)
+        Set_DB(...)
+        if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
+            f.colorPicker:Show()
+        else
+            f.colorPicker:Hide()
+        end
+    end
 
     f.colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
         DB.GetWidgetTable(widgetName).color.rgb[1] = r
@@ -545,46 +565,6 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
             .TEXT_COLOR, "rgb")
     end)
-
-    f.dropdown = Cell:CreateDropdown(f, 117)
-    f.dropdown:SetPoint("TOPLEFT")
-    f.dropdown:SetLabel(L["Color"])
-    local items = {
-        {
-            ["text"] = L["Class Color"],
-            ["value"] = const.ColorType.CLASS_COLOR,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).color.type = const.ColorType.CLASS_COLOR
-                f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.TEXT_COLOR, "type")
-            end,
-        },
-        {
-            ["text"] = L["Custom Color"],
-            ["value"] = const.ColorType.CUSTOM,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).color.type = const.ColorType.CUSTOM
-                f.colorPicker:Show()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.TEXT_COLOR, "type")
-            end,
-        },
-    }
-    if includePowerType then
-        tinsert(items, {
-            ["text"] = L["Power Color"],
-            ["value"] = const.PowerColorType.POWER_COLOR,
-            ["onClick"] = function()
-                DB.GetWidgetTable(widgetName).color.type = const.PowerColorType.POWER_COLOR
-                f.colorPicker:Hide()
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.TEXT_COLOR, "type")
-            end,
-        })
-    end
-    f.dropdown:SetItems(items)
-
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
 
     if includeWidth then
@@ -595,7 +575,6 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
     local function LoadPageDB()
         f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).color.rgb[1], DB.GetWidgetTable(widgetName).color.rgb[2],
             DB.GetWidgetTable(widgetName).color.rgb[3])
-        f.dropdown:SetSelectedValue(DB.GetWidgetTable(widgetName).color.type)
         if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else

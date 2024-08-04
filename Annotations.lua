@@ -194,10 +194,6 @@
 ---@class WidgetMenuPageButton: Button
 ---@field id WIDGET_KIND
 
----@class UnitColorOptions: Frame
----@field colorPicker CellColorPicker
----@field dropdown CellDropdown
-
 ---@class AnchorOptions: Frame
 ---@field nameAnchorDropdown CellDropdown
 ---@field nameXSlider CellSlider

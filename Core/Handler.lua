@@ -25,7 +25,7 @@ CUF.Handler = Handler
 ---@param setting OPTION_KIND
 ---@param subSetting string
 local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
-    local widget = button.widgets[widgetName]
+    local widget = button.widgets[widgetName] ---@type Widget
     if not widget then return end
 
     if (not setting or setting == "enabled") and type(widget.SetEnabled) == "function" then
@@ -37,7 +37,7 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if (not setting or setting == const.OPTION_KIND.FONT) and type(widget.SetFontStyle) == "function" then
         widget:SetFontStyle(unit)
     end
-    if (not setting or setting == const.OPTION_KIND.TEXT_COLOR) and type(widget.SetFontColor) == "function" then
+    if (not setting or setting == const.OPTION_KIND.COLOR) and type(widget.SetFontColor) == "function" then
         widget:SetFontColor(unit)
     end
 end

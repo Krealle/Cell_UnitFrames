@@ -91,6 +91,9 @@ const.WIDGET_KIND = {
 ---| "outline"
 ---| "style"
 ---| "shadow"
+---| "anchor"
+---| "offsetX"
+---| "offsetY"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",

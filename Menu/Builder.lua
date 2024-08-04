@@ -278,7 +278,7 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, k
         local value = type(item) == "table" and item[2] or item
 
         tinsert(dropDownItems, {
-            ["text"] = text,
+            ["text"] = L[text],
             ["value"] = value,
             ["onClick"] = function()
                 dropdown.Set_DB(widgetName, kind, value, keys)
@@ -627,62 +627,27 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param altKind? OPTION_KIND | AURA_OPTION_KIND
+---@param ... OPTION_KIND|AURA_OPTION_KIND Extra keys to traverse to the property
 ---@return AnchorOptions
-function Builder:CreateAnchorOptions(parent, widgetName)
+function Builder:CreateAnchorOptions(parent, widgetName, altKind, ...)
     ---@class AnchorOptions: Frame
     local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
-    P:Size(f, self.tripleOptionWidth, self.singleOptionHeight)
+    P:Size(f, 401, 25)
 
-    ---@param kind string
-    ---@param value any
-    f.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).position[kind] = value
-    end
-    ---@param kind string
-    f.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).position[kind]
-    end
+    f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, CUF.anchorPoints,
+        altKind or const.OPTION_KIND.POSITION, { ..., "anchor" })
+    f.anchorDropdown:SetPoint("TOPLEFT", f)
 
-    f.nameAnchorDropdown = Cell:CreateDropdown(parent, 117)
-    f.nameAnchorDropdown:SetPoint("TOPLEFT", f)
-    f.nameAnchorDropdown:SetLabel(L["Anchor Point"])
+    f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, -100, 100, altKind or const.OPTION_KIND
+        .POSITION,
+        { ..., "offsetX" })
+    self:AnchorRight(f.sliderX, f.anchorDropdown)
 
-    local items = {}
-    for _, v in pairs(CUF.anchorPoints) do
-        tinsert(items, {
-            ["text"] = L[v],
-            ["value"] = v,
-            ["onClick"] = function()
-                f.Set_DB("anchor", v)
-                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName,
-                    const.OPTION_KIND.POSITION, "anchor")
-            end,
-        })
-    end
-    f.nameAnchorDropdown:SetItems(items)
-
-    f.nameXSlider = Cell:CreateSlider(L["X Offset"], parent, -100, 100, 117, 1)
-    f.nameXSlider:SetPoint("TOPLEFT", f.nameAnchorDropdown, "TOPRIGHT", self.spacingX, 0)
-    f.nameXSlider.afterValueChangedFn = function(value)
-        f.Set_DB("offsetX", value)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
-            "offsetX")
-    end
-
-    f.nameYSlider = Cell:CreateSlider(L["Y Offset"], parent, -100, 100, 117, 1)
-    f.nameYSlider:SetPoint("TOPLEFT", f.nameXSlider, "TOPRIGHT", self.spacingX, 0)
-    f.nameYSlider.afterValueChangedFn = function(value)
-        f.Set_DB("offsetY", value)
-        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND.POSITION,
-            "offsetY")
-    end
-
-    local function LoadPageDB()
-        f.nameAnchorDropdown:SetSelectedValue(f.Get_DB("anchor"))
-        f.nameXSlider:SetValue(f.Get_DB("offsetX"))
-        f.nameYSlider:SetValue(f.Get_DB("offsetY"))
-    end
-    Handler:RegisterOption(LoadPageDB, widgetName, "AnchorOptions")
+    f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, -100, 100, altKind or const.OPTION_KIND
+        .POSITION,
+        { ..., "offsetY" })
+    self:AnchorRight(f.sliderY, f.sliderX)
 
     return f
 end
@@ -913,7 +878,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
 
     f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], nil, 1, 10,
         const.AURA_OPTION_KIND.MAX_ICONS)
-    self:AnchorBelow(f.maxIconsSlider, f.anchorOptions.nameYSlider)
+    self:AnchorBelow(f.maxIconsSlider, f.anchorOptions.sliderY)
 
     -- Third Row
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
@@ -957,16 +922,8 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
     f.title = self:CreateOptionTitle(f, "Stack Font")
 
     --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, "stacks")
     f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
-
-    -- Override to target proper DB
-    f.anchorOptions.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).font.stacks[kind] = value
-    end
-    f.anchorOptions.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).font.stacks[kind]
-    end
 
     f.fontOptions = self:CreateFontOptions(f, widgetName, "stacks")
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
@@ -1009,16 +966,8 @@ function Builder:CreateAuraDurationFontOptions(parent, widgetName)
     f.title = self:CreateOptionTitle(f, "Duration Font")
 
     --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, "duration")
     f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
-
-    -- Override to target proper DB
-    f.anchorOptions.Set_DB = function(kind, value)
-        DB.GetWidgetTable(widgetName).font.duration[kind] = value
-    end
-    f.anchorOptions.Get_DB = function(kind)
-        return DB.GetWidgetTable(widgetName).font.duration[kind]
-    end
 
     -- Middle Options
     f.fontOptions = self:CreateFontOptions(f, widgetName, "duration")

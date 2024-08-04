@@ -143,3 +143,9 @@ const.AURA_ORIENTATION = {
     TOP_TO_BOTTOM = "top-to-bottom",
     BOTTOM_TO_TOP = "bottom-to-top",
 }
+
+---@enum FontKind
+const.FONTS = {
+    CELL_WIGET = "CELL_FONT_WIDGET",
+    CELL_SPECIAL = "CELL_FONT_SPECIAL",
+}

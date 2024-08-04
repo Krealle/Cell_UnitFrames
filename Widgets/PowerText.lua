@@ -110,7 +110,7 @@ end
 ---@param button CUFUnitButton
 function W:CreatePowerText(button)
     ---@class PowerTextWidget: FontString
-    local powerText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    local powerText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     button.widgets.powerText = powerText
     powerText:ClearAllPoints()
     powerText:SetPoint("CENTER", 0, 0)

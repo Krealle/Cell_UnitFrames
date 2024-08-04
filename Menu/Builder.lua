@@ -372,7 +372,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
     lengthEB = Cell:CreateEditBox(f, 34, 20, false, false, true)
     lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
 
-    lengthEB.text = lengthEB:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    lengthEB.text = lengthEB:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     lengthEB.text:SetText(L["En"])
     lengthEB.text:SetPoint("BOTTOMLEFT", lengthEB, "TOPLEFT", 0, 1)
 
@@ -408,7 +408,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
     lengthEB2 = Cell:CreateEditBox(f, 33, 20, false, false, true)
     lengthEB2:SetPoint("TOPLEFT", lengthEB, "TOPRIGHT", 25, 0)
 
-    lengthEB2.text = lengthEB2:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+    lengthEB2.text = lengthEB2:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     lengthEB2.text:SetText(L["Non-En"])
     lengthEB2.text:SetPoint("BOTTOMLEFT", lengthEB2, "TOPLEFT", 0, 1)
 

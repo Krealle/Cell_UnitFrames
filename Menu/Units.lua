@@ -165,7 +165,7 @@ for _, unit in pairs(CUF.vars.units) do
                 },
             })
 
-            self.anchorText = self.frame:CreateFontString(nil, "OVERLAY", "CELL_FONT_WIDGET")
+            self.anchorText = self.frame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
             self.anchorText:SetPoint("BOTTOMLEFT", self.anchorDropdown, "TOPLEFT", 0, 1)
             self.anchorText:SetText(L["Anchor Point"])
 

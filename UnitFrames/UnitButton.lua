@@ -250,6 +250,7 @@ end
 ---@param button CUFUnitButton
 ---@param frame CUFUnitFrame
 function U:UpdateUnitFrameVisibility(which, unit, button, frame)
+    if InCombatLockdown() then return end
     if not which or which == unit then
         if Cell.vars.currentLayoutTable[unit]["enabled"] then
             RegisterUnitWatch(button)

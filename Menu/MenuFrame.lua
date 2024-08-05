@@ -57,6 +57,16 @@ function menuWindow:ShowMenu()
     CUF:Debug("|cff00ccffShow Menu|r")
     if not self.window then
         self:Create()
+
+        self.window:Show()
+
+        self.unitsButtons[1]:Click()
+        self.widgetsButtons[1]:Click()
+
+        self.init = true
+        CUF.vars.isMenuOpen = true
+
+        return
     end
 
     self.window:Show()
@@ -184,11 +194,6 @@ function menuWindow:Create()
     Cell:CreateButtonGroup(self.widgetsButtons, function(widget, b)
         self:SetWidget(widget)
     end)
-
-    self.unitsButtons[1]:Click()
-    self.widgetsButtons[1]:Click()
-
-    self.init = true
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

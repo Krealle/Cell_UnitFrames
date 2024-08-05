@@ -411,6 +411,26 @@ end
 U.UpdateAll = UnitFrame_UpdateAll
 
 -------------------------------------------------
+-- MARK: Helpers
+-------------------------------------------------
+
+---@param button CUFUnitButton
+local function UnitFrame_ShouldShowAuras(button)
+    return button.widgets.buffs.enabled or button.widgets.debuffs.enabled
+end
+
+-- Register/Unregister UNIT_AURA event
+---@param button CUFUnitButton
+---@param show? boolean
+function U:ToggleAuras(button, show)
+    if UnitFrame_ShouldShowAuras(button) or show then
+        button:RegisterEvent("UNIT_AURA")
+    else
+        button:UnregisterEvent("UNIT_AURA")
+    end
+end
+
+-------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
 
@@ -425,7 +445,6 @@ local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("UNIT_MAXPOWER")
     self:RegisterEvent("UNIT_DISPLAYPOWER")
 
-    self:RegisterEvent("UNIT_AURA")
     --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
     self:RegisterEvent("UNIT_HEAL_PREDICTION")

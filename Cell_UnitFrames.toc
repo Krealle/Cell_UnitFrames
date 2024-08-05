@@ -27,19 +27,23 @@ Menu/Builder.lua
 Menu/AuraFilterList.lua
 Menu/MenuFrame.lua
 Menu/Menu.lua
-Menu/Units.lua
 
 Widgets/Common.lua
-Widgets/Name.lua
-Widgets/HealthBar.lua
-Widgets/PowerBar.lua
+Widgets/Base/HealthBar.lua
+Widgets/Base/PowerBar.lua
+Widgets/NameText.lua
 Widgets/HealthText.lua
 Widgets/PowerText.lua
 
-Widgets/Auras.lua
+Widgets/Auras/Auras.lua
+Widgets/Auras/Updater.lua
+Widgets/Auras/Handler.lua
 
 UnitFrames/UnitButton.xml
+UnitFrames/MenuOptions.lua
+
 UnitFrames/UnitButton.lua
-UnitFrames/PlayerFrame.lua
-UnitFrames/FocusFrame.lua
-UnitFrames/TargetFrame.lua
+UnitFrames/OnLoad.lua
+UnitFrames/Units/PlayerFrame.lua
+UnitFrames/Units/FocusFrame.lua
+UnitFrames/Units/TargetFrame.lua

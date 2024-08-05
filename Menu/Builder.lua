@@ -140,7 +140,7 @@ end
 local function Set_DB(widgetName, kind, value, keys)
     local widgetTable = DB.GetWidgetTable(widgetName)
 
-    if not keys then
+    if not keys or #keys == 0 then
         widgetTable[kind] = value
         return
     end

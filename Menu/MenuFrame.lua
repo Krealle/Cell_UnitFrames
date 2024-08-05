@@ -116,8 +116,7 @@ function menuWindow:InitWidgets()
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetsMenuPage
-        local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, widget.menuHeight,
-            unpack(widget.options))
+        local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, unpack(widget.options))
 
         self.widgets[widgetPage.id] = widgetPage
 
@@ -130,8 +129,6 @@ function menuWindow:InitWidgets()
             if idx % 4 == 0 then
                 widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane, 0, 16)
                 idx = 0
-                --[[ self.window:SetHeight(self.window:GetHeight() + 16)
-                self.unitPane:SetHeight(self.unitPane:GetHeight() + 16) ]]
             else
                 widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
             end
@@ -158,6 +155,7 @@ function menuWindow:Create()
     self.unitHeight = 200
     self.widgetHeight = 300
     self.baseWidth = 450
+    ---@class CellCombatFrame
     self.window = CUF:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
         self.unitHeight + self.widgetHeight + 10 + 17)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)

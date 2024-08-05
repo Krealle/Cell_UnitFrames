@@ -19,7 +19,8 @@ local DB = CUF.DB
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, 230, "Power", Builder.MenuOptions.TextColorWithPowerType,
+menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, "Power",
+    Builder.MenuOptions.TextColorWithPowerType,
     Builder.MenuOptions.PowerFormat,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font)

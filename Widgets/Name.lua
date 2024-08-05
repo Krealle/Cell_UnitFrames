@@ -24,7 +24,9 @@ end
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
-menu:AddWidget(const.WIDGET_KIND.NAME_TEXT, 230, "Name", Builder.MenuOptions.TextColorWithWidth,
+menu:AddWidget(const.WIDGET_KIND.NAME_TEXT, "Name",
+    Builder.MenuOptions.TextColor,
+    Builder.MenuOptions.TextWidth,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font)
 

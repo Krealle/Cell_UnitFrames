@@ -446,7 +446,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
 
     local title = Util:ToTitleCase(which, kind)
 
-    ---@class Cell.SettingsAuras: Frame
+    ---@class Cell.SettingsAuras: OptionsFrame
     local widget = CUF:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
 
     widget.frame = CUF:CreateFrame(nil, widget, 20, 20)

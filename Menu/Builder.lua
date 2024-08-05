@@ -24,7 +24,7 @@ Builder.tripleOptionWidth = 117 * 3
 ---@enum MenuOptions
 Builder.MenuOptions = {
     TextColor = 1,
-    TextColorWithWidth = 2,
+    TextWidth = 2,
     TextColorWithPowerType = 3,
     Anchor = 4,
     Font = 5,
@@ -54,10 +54,9 @@ CUF.Builder = Builder
 
 ---@param settingsFrame Frame
 ---@param widgetName WIDGET_KIND
----@param menuHeight number
 ---@param ... MenuOptions
 ---@return WidgetsMenuPage
-function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...)
+function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
     ---@class WidgetsMenuPage
     local widgetPage = {}
 
@@ -87,24 +86,47 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
         local optPage = Builder.MenuFuncs[option](self, widgetPage.frame, widgetName)
         optPage:Show()
 
-        if option == Builder.MenuOptions.HealthFormat or option == Builder.MenuOptions.PowerFormat then
-            optPage:SetPoint("TOPLEFT", prevOption, "TOPRIGHT", self.spacingX, 0)
-        else
-            if widgetName == const.WIDGET_KIND.BUFFS or widgetName == const.WIDGET_KIND.DEBUFFS then
-                widgetPage.height = widgetPage.height + optPage:GetHeight() + 12
-                optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
-            else
-                widgetPage.height = widgetPage.height + optPage:GetHeight() + self.spacingY
-                optPage:SetPoint("TOPLEFT", prevOption, 0, -self.spacingY)
-            end
-
+        if option == Builder.MenuOptions.AuraWhitelist
+            or option == Builder.MenuOptions.AuraBlacklist
+        then
+            optPage:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
+            widgetPage.height = widgetPage.height + optPage:GetHeight() + 12
             prevOption = optPage
+        else
+            local wrapper = self:WrapOption(widgetPage.frame, optPage, widgetName)
+            wrapper:SetPoint("TOPLEFT", prevOption, "BOTTOMLEFT", 0, -10)
+
+            widgetPage.height = widgetPage.height + wrapper:GetHeight() + 12
+            prevOption = wrapper
         end
     end
 
     widgetPage._originalHeight = widgetPage.height
 
     return widgetPage
+end
+
+---@class OptionsFrame: Frame
+---@field optionHeight number
+---@field id string
+---@field wrapperFrame Frame
+
+---@param parent WidgetsMenuPageFrame
+---@param option OptionsFrame
+function Builder:WrapOption(parent, option, widgetName)
+    local f = CUF:CreateFrame(
+        "CUFWidgetSettings_" .. Util:ToTitleCase(widgetName) .. "_" .. (option.id or "N/A"),
+        parent,
+        self.optionWidth,
+        ((option["optionHeight"] or option:GetHeight()) + 35),
+        false,
+        true)
+
+    option:SetParent(f)
+    option:SetPoint("TOPLEFT", f, 10, -25)
+    option.wrapperFrame = f
+
+    return f
 end
 
 -------------------------------------------------
@@ -231,6 +253,7 @@ end
 function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, kind, ...)
     ---@class CUFSlider: CellSlider
     local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1)
+    slider.id = kind
 
     slider.Set_DB = Set_DB
     slider.Get_DB = Get_DB
@@ -268,6 +291,8 @@ end
 function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, ...)
     ---@class CUFDropdown: CellDropdown
     local dropdown = Cell:CreateDropdown(parent, width or 117)
+    dropdown.optionHeight = 20
+    dropdown.id = kind
     dropdown:SetLabel(L[title])
 
     dropdown.Set_DB = Set_DB
@@ -308,9 +333,8 @@ end
 ---@return OptionTitle
 function Builder:CreateOptionTitle(parent, txt)
     ---@class OptionTitle: Frame
-    local f = CUF:CreateFrame(nil, parent, 1, 1, true)
-    f:Show()
-    f:SetPoint("TOPLEFT", 10, -10)
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f:SetPoint("TOPLEFT", 0, 10)
 
     f.title = f:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
     f.title:SetText(L[txt])
@@ -326,14 +350,17 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@return TextWidthOption
 function Builder:CreateTextWidthOption(parent, widgetName)
-    local f = CreateFrame("Frame", nil, parent)
-    P:Size(f, 117, 20)
+    ---@class TextWidthOption: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+    f.id = "TextWidth"
 
     local dropdown, percentDropdown, lengthEB, lengthEB2
 
     dropdown = Cell:CreateDropdown(f, 117)
-    dropdown:SetPoint("TOPLEFT")
+    dropdown:SetPoint("TOPLEFT", f)
     dropdown:SetLabel(L["Text Width"])
     dropdown:SetItems({
         {
@@ -537,13 +564,13 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
----@param includeWidth? boolean
 ---@param includePowerType? boolean
 ---@return UnitColorOptions
-function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includePowerType)
-    ---@class UnitColorOptions: Frame
-    local f = CreateFrame("Frame", "UnitColorOptions" .. widgetName, parent)
-    P:Size(f, 117, 20)
+function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
+    ---@class UnitColorOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+    f.id = "TextColor"
 
     local items = {
         { L["Class Color"],  const.ColorType.CLASS_COLOR },
@@ -552,9 +579,11 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
     if includePowerType then
         tinsert(items, { L["Power Color"], const.PowerColorType.POWER_COLOR })
     end
+
     f.dropdown = self:CreateDropdown(f, widgetName, L["Color"], nil, items,
         const.OPTION_KIND.COLOR, "type")
-    f.dropdown:SetPoint("TOPLEFT")
+    f.dropdown:SetPoint("TOPLEFT", f)
+
     f.dropdown.Set_DB = function(...)
         Set_DB(...)
         if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
@@ -573,11 +602,6 @@ function Builder:CreateTextColorOptions(parent, widgetName, includeWidth, includ
     end)
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
 
-    if includeWidth then
-        f.nameWidth = Builder:CreateTextWidthOption(parent, widgetName)
-        f.nameWidth:SetPoint("TOPLEFT", f, "TOPRIGHT", self.spacingX, 0)
-    end
-
     local function LoadPageDB()
         f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).color.rgb[1], DB.GetWidgetTable(widgetName).color.rgb[2],
             DB.GetWidgetTable(widgetName).color.rgb[3])
@@ -595,15 +619,8 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return UnitColorOptions
-function Builder:CreateTextColorOptionsWithWidth(parent, widgetName)
-    return self:CreateTextColorOptions(parent, widgetName, true)
-end
-
----@param parent Frame
----@param widgetName WIDGET_KIND
----@return UnitColorOptions
 function Builder:CreateTextColorOptionsWithPowerType(parent, widgetName)
-    return self:CreateTextColorOptions(parent, widgetName, false, true)
+    return self:CreateTextColorOptions(parent, widgetName, true)
 end
 
 -------------------------------------------------
@@ -616,9 +633,10 @@ end
 ---@param ... OPTION_KIND|AURA_OPTION_KIND Extra keys to traverse to the property
 ---@return AnchorOptions
 function Builder:CreateAnchorOptions(parent, widgetName, altKind, ...)
-    ---@class AnchorOptions: Frame
-    local f = CreateFrame("Frame", "AnchorOptions" .. widgetName, parent)
-    P:Size(f, 401, 25)
+    ---@class AnchorOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+    f.id = "Anchor"
 
     f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, CUF.anchorPoints,
         altKind or const.OPTION_KIND.POSITION, ..., "anchor")
@@ -657,7 +675,7 @@ function Builder:CreateOrientationOptions(parent, widgetName)
     local orientationItems = { const.AURA_ORIENTATION.RIGHT_TO_LEFT, const.AURA_ORIENTATION.LEFT_TO_RIGHT,
         const.AURA_ORIENTATION.BOTTOM_TO_TOP, const.AURA_ORIENTATION.TOP_TO_BOTTOM }
 
-    ---@class OrientationOptions: CUFDropdown
+    ---@class OrientationOptions: CUFDropdown, OptionsFrame
     return self:CreateDropdown(parent, widgetName, "Orientation", nil, orientationItems, const.OPTION_KIND.ORIENTATION)
 end
 
@@ -670,9 +688,10 @@ end
 ---@param ... OPTION_KIND|AURA_OPTION_KIND Extra keys to traverse to the property
 ---@return FontOptions
 function Builder:CreateFontOptions(parent, widgetName, ...)
-    ---@class FontOptions: Frame
-    local f = CreateFrame("Frame", "FontOptions" .. widgetName, parent)
-    P:Size(f, 401, 44)
+    ---@class FontOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 45
+    f.id = "Font"
 
     local fontItems = Util:GetFontItems()
 
@@ -734,7 +753,7 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE },
     }
 
-    ---@class HealthFormatOptions: CUFDropdown
+    ---@class HealthFormatOptions: CUFDropdown, OptionsFrame
     return self:CreateDropdown(parent, widgetName, "Format", 200,
         healthFormats, const.OPTION_KIND.FORMAT)
 end
@@ -753,7 +772,7 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
         { F:FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, }
     }
 
-    ---@class PowerFormatOptions: CUFDropdown
+    ---@class PowerFormatOptions: CUFDropdown, OptionsFrame
     return self:CreateDropdown(parent, widgetName, "Format", nil,
         powerFormatItems, const.OPTION_KIND.FORMAT)
 end
@@ -766,9 +785,8 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return SizeOptions
 function Builder:CreateSizeOptions(parent, widgetName)
-    ---@class SizeOptions: Frame
-    local f = CUF:CreateFrame(nil, parent, 259, 30)
-    f:Show()
+    ---@class SizeOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
 
     f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
         const.AURA_OPTION_KIND.SIZE,
@@ -791,8 +809,10 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return AuraIconOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
-    ---@class AuraIconOptions: Frame
-    local f = CUF:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 290)
+    ---@class AuraIconOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "AuraIconOptions"
+    f.optionHeight = 260
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Icon")
@@ -849,9 +869,10 @@ end
 ---@return AuraFontOptions
 function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     local titleKind = Util:ToTitleCase(kind)
-    ---@class AuraFontOptions: Frame
-    local f = CUF:CreateFrame("Aura" .. titleKind .. "FontOptions" .. widgetName, parent, self.optionWidth,
-        190)
+    ---@class AuraFontOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "Aura" .. titleKind .. "FontOptions"
+    f.optionHeight = 160
 
     -- Title
     f.title = self:CreateOptionTitle(f, titleKind .. " Font")
@@ -928,8 +949,10 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return AuraFilterOptions
 function Builder:CreateAuraFilterOptions(parent, widgetName)
-    ---@class AuraFilterOptions: Frame
-    local f = CUF:CreateFrame("AuraFilterOptions" .. widgetName, parent, self.optionWidth, 165)
+    ---@class AuraFilterOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "AuraFilterOptions"
+    f.optionHeight = 135
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Filter")
@@ -995,8 +1018,8 @@ end
 
 Builder.MenuFuncs = {
     [Builder.MenuOptions.TextColor] = Builder.CreateTextColorOptions,
-    [Builder.MenuOptions.TextColorWithWidth] = Builder.CreateTextColorOptionsWithWidth,
     [Builder.MenuOptions.TextColorWithPowerType] = Builder.CreateTextColorOptionsWithPowerType,
+    [Builder.MenuOptions.TextWidth] = Builder.CreateTextWidthOption,
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.ExtraAnchor] = Builder.CreateExtraAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,

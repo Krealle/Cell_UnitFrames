@@ -27,13 +27,12 @@ function menu:AddUnit(unit)
 end
 
 ---@param widgetName WIDGET_KIND
----@param menuHeight number
 ---@param pageName string
 ---@param ... MenuOptions
-function menu:AddWidget(widgetName, menuHeight, pageName, ...)
+function menu:AddWidget(widgetName, pageName, ...)
     --CUF:Debug("Menu - AddWidget")
     table.insert(self.widgetsToAdd,
-        { ["widgetName"] = widgetName, ["menuHeight"] = menuHeight, ["pageName"] = pageName, ["options"] = { ... } })
+        { ["widgetName"] = widgetName, ["pageName"] = pageName, ["options"] = { ... } })
 end
 
 -------------------------------------------------

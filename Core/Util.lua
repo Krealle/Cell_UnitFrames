@@ -7,6 +7,10 @@ local F = Cell.funcs
 ---@class CUF.Util
 CUF.Util = {}
 
+-------------------------------------------------
+-- MARK: Prop Hunting
+-------------------------------------------------
+
 ---@param frame Frame
 ---@param name string
 ---@return Frame|CellUnknowFrame? child
@@ -32,6 +36,10 @@ function CUF.Util.findChildByProp(frame, prop)
         end
     end
 end
+
+-------------------------------------------------
+-- MARK: Table Functions
+-------------------------------------------------
 
 ---@param tableA table
 ---@param tableB table
@@ -72,6 +80,10 @@ function CUF.Util:AddMissingProps(tableA, tableB)
     end
 end
 
+-------------------------------------------------
+-- MARK: IterateAllUnitButtons
+-------------------------------------------------
+
 ---@param func function
 ---@param unitToIterate string?
 function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
@@ -81,6 +93,10 @@ function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
         end
     end
 end
+
+-------------------------------------------------
+-- MARK: Util
+-------------------------------------------------
 
 ---@param fs FontString
 ---@param text string
@@ -109,6 +125,37 @@ function CUF.Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
     end
 end
 
+-- Returns a table of all fonts.
+---@return string[]
+function CUF.Util:GetFontItems()
+    local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
+
+    local newItems = {}
+    for idx, item in pairs(items) do
+        newItems[idx] = item.text
+    end
+
+    return newItems
+end
+
+---@param name? string
+---@param parent Frame
+---@param width number
+---@param height number
+---@param isTransparent? boolean
+---@param isShown? boolean
+---@param template? string
+---@return Frame
+function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, template)
+    local f = Cell:CreateFrame(name, parent, width, height, isTransparent, template)
+    if isShown then f:Show() end
+    return f
+end
+
+-------------------------------------------------
+-- MARK: Formatting
+-------------------------------------------------
+
 -- Function to capitalize the first letter to a series of strings
 ---@param ... string
 ---@return string
@@ -125,20 +172,16 @@ function CUF.Util:ToTitleCase(...)
     return table.concat(args)
 end
 
--- Returns a table of all fonts.
----@return string[]
-function CUF.Util:GetFontItems()
-    local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
-
-    local newItems = {}
-    for idx, item in pairs(items) do
-        newItems[idx] = item.text
-    end
-
-    return newItems
+local function GetFormattedTimestamp()
+    local time = date("*t")
+    local millisec = math.floor(GetTime() * 1000) % 1000
+    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
 end
 
--- Callbacks
+-------------------------------------------------
+-- MARK: Callbacks
+-------------------------------------------------
+
 local callbacks = {}
 
 ---@param eventName Callbacks
@@ -172,11 +215,9 @@ function CUF:Fire(eventName, ...)
     end
 end
 
-local function GetFormattedTimestamp()
-    local time = date("*t")
-    local millisec = math.floor(GetTime() * 1000) % 1000
-    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
-end
+-------------------------------------------------
+-- MARK: Debug
+-------------------------------------------------
 
 ---@param ... any
 function CUF:Debug(...)

@@ -62,7 +62,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, menuHeight, ...
     local widgetPage = {}
 
     ---@class WidgetsMenuPageFrame: Frame
-    widgetPage.frame = Cell:CreateFrame(nil, settingsFrame.scrollFrame.content,
+    widgetPage.frame = CUF:CreateFrame(nil, settingsFrame.scrollFrame.content,
         settingsFrame:GetWidth(), settingsFrame:GetHeight(), true)
     widgetPage.frame:SetPoint("TOPLEFT")
     widgetPage.frame:Hide()
@@ -204,7 +204,7 @@ end
 ---@return EnabledCheckBox
 function Builder:CreatEnabledCheckBox(parent, widgetName)
     ---@class EnabledCheckBox
-    local f = Cell:CreateFrame(nil, parent, self.optionWidth, 30)
+    local f = CUF:CreateFrame(nil, parent, self.optionWidth, 30)
     f:SetPoint("TOPLEFT", parent, 5, -5)
     f:Show()
 
@@ -308,7 +308,7 @@ end
 ---@return OptionTitle
 function Builder:CreateOptionTitle(parent, txt)
     ---@class OptionTitle: Frame
-    local f = Cell:CreateFrame(nil, parent, 1, 1, true)
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true)
     f:Show()
     f:SetPoint("TOPLEFT", 10, -10)
 
@@ -767,7 +767,7 @@ end
 ---@return SizeOptions
 function Builder:CreateSizeOptions(parent, widgetName)
     ---@class SizeOptions: Frame
-    local f = Cell:CreateFrame(nil, parent, 259, 30)
+    local f = CUF:CreateFrame(nil, parent, 259, 30)
     f:Show()
 
     f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
@@ -792,7 +792,7 @@ end
 ---@return AuraIconOptions
 function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraIconOptions: Frame
-    local f = Cell:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 290)
+    local f = CUF:CreateFrame("AuraIconOptions" .. widgetName, parent, self.optionWidth, 290)
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Icon")
@@ -850,7 +850,7 @@ end
 function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     local titleKind = Util:ToTitleCase(kind)
     ---@class AuraFontOptions: Frame
-    local f = Cell:CreateFrame("Aura" .. titleKind .. "FontOptions" .. widgetName, parent, self.optionWidth,
+    local f = CUF:CreateFrame("Aura" .. titleKind .. "FontOptions" .. widgetName, parent, self.optionWidth,
         190)
 
     -- Title
@@ -929,7 +929,7 @@ end
 ---@return AuraFilterOptions
 function Builder:CreateAuraFilterOptions(parent, widgetName)
     ---@class AuraFilterOptions: Frame
-    local f = Cell:CreateFrame("AuraFilterOptions" .. widgetName, parent, self.optionWidth, 165)
+    local f = CUF:CreateFrame("AuraFilterOptions" .. widgetName, parent, self.optionWidth, 165)
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Filter")

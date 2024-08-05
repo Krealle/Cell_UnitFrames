@@ -370,7 +370,7 @@ local auraImportExportFrame
 function Builder.CreateSetting_Auras(parent, which, kind)
     if not auraImportExportFrame then
         ---@class Cell.auraImportExportFrame: Frame
-        auraImportExportFrame = Cell:CreateFrame(nil, parent, 1, 200)
+        auraImportExportFrame = CUF:CreateFrame(nil, parent, 1, 200)
         auraImportExportFrame:SetBackdropBorderColor(Cell:GetAccentColorRGB())
         auraImportExportFrame:EnableMouse(true)
         auraImportExportFrame:Hide()
@@ -447,9 +447,9 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     local title = Util:ToTitleCase(which, kind)
 
     ---@class Cell.SettingsAuras: Frame
-    local widget = Cell:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
+    local widget = CUF:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
 
-    widget.frame = Cell:CreateFrame(nil, widget, 20, 20)
+    widget.frame = CUF:CreateFrame(nil, widget, 20, 20)
     widget.frame:SetPoint("TOPLEFT", 5, -22)
     widget.frame:SetPoint("RIGHT", -5, 0)
     widget.frame:Show()

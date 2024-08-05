@@ -148,7 +148,7 @@ function menuWindow:Create()
     self.unitHeight = 200
     self.widgetHeight = 300
     self.baseWidth = 450
-    self.window = Cell:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
+    self.window = CUF:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
         self.unitHeight + self.widgetHeight + 10 + 17)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)
 
@@ -171,7 +171,7 @@ function menuWindow:Create()
     self.widgetPane:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT", 0, 0)
 
     -- settings frame
-    self.settingsFrame = Cell:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane, 10, 10, true)
+    self.settingsFrame = CUF:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane, 10, 10, true)
     self.settingsFrame:SetSize(self.widgetPane:GetWidth(), self.widgetHeight)
     self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -5)
     self.settingsFrame:Show()

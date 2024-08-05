@@ -111,19 +111,19 @@ end
 -- MARK: Builder
 -------------------------------------------------
 
----@param option frame|table
+---@param option Frame
 ---@param prevOptions Frame
 function Builder:AnchorBelow(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, 0, -self.spacingY)
 end
 
----@param option frame|table
+---@param option Frame
 ---@param prevOptions Frame
 function Builder:AnchorRight(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.spacingX, 0)
 end
 
----@param option frame|table
+---@param option Frame
 ---@param prevOptions Frame
 function Builder:AnchorRightOfCB(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + 117, 0)
@@ -305,14 +305,19 @@ end
 
 ---@param parent Frame
 ---@param txt string
----@return FontString
+---@return OptionTitle
 function Builder:CreateOptionTitle(parent, txt)
-    local title = parent:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
-    title:SetText(L[txt])
-    title:SetScale(1.2)
-    title:SetPoint("TOPLEFT", parent, 10, -10)
+    ---@class OptionTitle: Frame
+    local f = Cell:CreateFrame(nil, parent, 1, 1, true)
+    f:Show()
+    f:SetPoint("TOPLEFT", 10, -10)
 
-    return title
+    f.title = f:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
+    f.title:SetText(L[txt])
+    f.title:SetScale(1.2)
+    f.title:SetPoint("TOPLEFT")
+
+    return f
 end
 
 -------------------------------------------------
@@ -794,7 +799,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
 
     --- Top Row
     f.anchorOptions = self:CreateAnchorOptions(f, widgetName)
-    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
+    self:AnchorBelow(f.anchorOptions, f.title)
 
     -- Second Row
     f.extraAnchorDropdown = self:CreateExtraAnchorOptions(f, widgetName)
@@ -853,7 +858,7 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
 
     --- Top Options
     f.anchorOptions = self:CreateAnchorOptions(f, widgetName, const.OPTION_KIND.FONT, kind)
-    f.anchorOptions:SetPoint("TOPLEFT", f, 10, -60)
+    self:AnchorBelow(f.anchorOptions, f.title)
 
     f.fontOptions = self:CreateFontOptions(f, widgetName, kind)
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
@@ -932,7 +937,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     --- First Row
     f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
         const.AURA_OPTION_KIND.FILTER, "maxDuration")
-    f.maxDurationSlider:SetPoint("TOPLEFT", f, 10, -60)
+    self:AnchorBelow(f.maxDurationSlider, f.title)
     f.maxDurationSlider.currentEditBox:SetWidth(60)
 
     f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,

@@ -88,6 +88,7 @@
 ---| CellAuraIcons
 ---| RaidIconWidget
 ---| RoleIconWidget
+---| LeaderIconWidget
 
 ---@alias WidgetTable
 ---|TextWidgetTable
@@ -96,6 +97,7 @@
 ---| AuraWidgetTable
 ---| RaidIconWidgetTable
 ---| RoleIconWidgetTable
+---| LeaderIconWidgetTable
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -245,6 +247,8 @@
 ---@field power number
 ---@field inRange boolean
 ---@field wasInRange boolean
+---@field isLeader boolean
+---@field isAssistant boolean
 
 ---@class CUFUnitButton: Button, BackdropTemplate
 ---@field widgets CUFUnitButtonWidgets
@@ -280,5 +284,6 @@
 ---@field debuffs CellAuraIcons
 ---@field raidIcon RaidIconWidget
 ---@field roleIcon RoleIconWidget
+---@field leaderIcon LeaderIconWidget
 
 ---@class HighlightWidget: BackdropTemplate, Frame

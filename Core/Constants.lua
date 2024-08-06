@@ -76,6 +76,7 @@ const.HealthTextFormat = {
 ---| "debuffs"
 ---| "raidIcon"
 ---| "roleIcon"
+---| "leaderIcon"
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
@@ -84,6 +85,7 @@ const.WIDGET_KIND = {
     DEBUFFS = "debuffs",
     RAID_ICON = "raidIcon",
     ROLE_ICON = "roleIcon",
+    LEADER_ICON = "leaderIcon",
 }
 
 ---@alias OPTION_KIND

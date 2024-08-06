@@ -58,7 +58,6 @@ end
 -------------------------------------------------
 -- MARK: Funcs
 -------------------------------------------------
-local ICON_PATH = "Interface\\AddOns\\Cell\\Media\\Roles\\"
 
 ---@param self LeaderIconWidget
 ---@param isLeader boolean

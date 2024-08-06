@@ -23,6 +23,9 @@ Core/DataBase.lua
 Core/Core.lua
 Core/Handler.lua
 
+Debug/DebugWindow.lua
+Debug/Debug.lua
+
 Menu/Builder.lua
 Menu/AuraFilterList.lua
 Menu/MenuFrame.lua

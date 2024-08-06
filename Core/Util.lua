@@ -152,6 +152,33 @@ function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, te
     return f
 end
 
+---@param parent Frame
+---@param text string
+---@param size { [1]: number, [2]: number }
+---@param onClick? function
+---@param buttonColor? "red"|"red-hover"|"green"|"green-hover"|"blue"|"blue-hover"|"yellow"|"yellow-hover"|"accent"|"accent-hover"|"chartreuse"|"magenta"|"transparent"|"transparent-white"|"transparent-light"|"transparent-accent"|"none"
+---@param noBorder? boolean
+---@param noBackground? boolean
+---@param fontNormal? string
+---@param fontDisable? string
+---@param template? TemplateType
+---@param ... any
+---@return Button
+function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, noBackground, fontNormal, fontDisable,
+                          template, ...)
+    local b = Cell:CreateButton(parent, text, (buttonColor or "accent-hover"), size or 16, noBorder, noBackground,
+        fontNormal,
+        fontDisable,
+        template,
+        ...)
+
+    if onClick then
+        b:SetScript("OnClick", onClick)
+    end
+
+    return b
+end
+
 -------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------

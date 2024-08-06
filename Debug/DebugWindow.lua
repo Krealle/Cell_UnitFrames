@@ -17,7 +17,7 @@ function DebugWindow:Create()
     ---@class CUF_DebugWindow: Frame
     self.frame = CUF:CreateFrame("CUF_DebugWindow", UIParent, 300, 60, false, true)
     self.frame:SetFrameStrata("DIALOG")
-    self.frame:SetPoint("CENTER", -400, 0)
+    self.frame:SetPoint("CENTER", -600, 200)
 
     self.frame:SetMovable(true)
     self.frame:EnableMouse(true)

@@ -40,6 +40,12 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if (not setting or setting == const.OPTION_KIND.COLOR) and type(widget.SetFontColor) == "function" then
         widget:SetFontColor(unit)
     end
+    if (not setting or setting == const.OPTION_KIND.SIZE) and type(widget.SetWidgetSize) == "function" then
+        widget:SetWidgetSize(unit)
+    end
+    if (not setting or setting == const.OPTION_KIND.FRAMELEVEL) and type(widget.SetWidgetFrameLevel) == "function" then
+        widget:SetWidgetFrameLevel(unit)
+    end
 end
 
 ---@param layout string?

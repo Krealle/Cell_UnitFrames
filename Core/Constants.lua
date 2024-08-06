@@ -68,13 +68,14 @@ const.HealthTextFormat = {
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
 }
 
----@alias WIDGET_KIND "nameText" | "healthText" | "powerText" | "buffs" | "debuffs"
+---@alias WIDGET_KIND "nameText" | "healthText" | "powerText" | "buffs" | "debuffs" | "raidIcon"
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
     POWER_TEXT = "powerText",
     BUFFS = "buffs",
     DEBUFFS = "debuffs",
+    RAID_ICON = "raidIcon",
 }
 
 ---@alias OPTION_KIND
@@ -97,6 +98,9 @@ const.WIDGET_KIND = {
 ---| "color"
 ---| "type"
 ---| "extraAnchor"
+---| "height"
+---| "size"
+---| "frameLevel"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -112,6 +116,9 @@ const.OPTION_KIND = {
     STYLE = "style",
     SHADOW = "shadow",
     COLOR = "color",
+    HEIGHT = "height",
+    SIZE = "size",
+    FRAMELEVEL = "frameLevel",
 }
 
 ---@alias AURA_OPTION_KIND

@@ -60,22 +60,6 @@ local spacingOpt = {
     vertical = 0,
 }
 
-local unitFrameIndicators = {
-    ["buffs"] = {
-        ["enabled"] = true,
-        ["size"] = 4,
-        ["spacing"] = 4,
-        ["max"] = 16,
-        ["blacklist"] = {
-            ["enabled"] = false,
-            ["list"] = {},
-        },
-        ["anchor"] = "TOPLEFT",
-        ["offset"] = { 0, 0 },
-        ["orientation"] = "right",
-    },
-}
-
 ---@type FontWidth
 local defaultFontWidth = {
     ["type"] = "percentage",
@@ -167,18 +151,31 @@ local auraWidget = {
     maxIcons = 10
 }
 
+---@class RaidIconWidgetTable
+---@field enabled boolean
+---@field size SizeOpt
+---@field position PositionOpt
+local raidIconWidget = {
+    enabled = false,
+    size = sizeOpt,
+    position = positionOpt,
+    frameLevel = 10
+}
+
 ---@class UnitFrameWidgetsTable
 ---@field nameText TextWidgetTable
 ---@field healthText HealthTextWidgetTable
 ---@field powerText PowerTextWidgetTable
 ---@field buffs AuraWidgetTable
 ---@field debuffs AuraWidgetTable
+---@field raidIcon RaidIconWidgetTable
 local unitFrameWidgets = {
     nameText = nameWidget,
     healthText = healthTextWidget,
     powerText = powerTextWidget,
     buffs = auraWidget,
     debuffs = auraWidget,
+    raidIcon = raidIconWidget,
 }
 
 ---@class Layout

@@ -79,6 +79,7 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
+    U:UnitFrame_UpdateRaidIcon(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -107,10 +108,23 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleAuras(button, show)
+    if not button:IsShown() then return end
     if UnitFrame_ShouldShowAuras(button) or show then
         button:RegisterEvent("UNIT_AURA")
     else
         button:UnregisterEvent("UNIT_AURA")
+    end
+end
+
+-- Register/Unregister UNIT_AURA event
+---@param button CUFUnitButton
+---@param show? boolean
+function U:ToggleRaidIcon(button, show)
+    if not button:IsShown() then return end
+    if button.widgets.raidIcon.enabled or show then
+        button:RegisterEvent("RAID_TARGET_UPDATE")
+    else
+        button:UnregisterEvent("RAID_TARGET_UPDATE")
     end
 end
 
@@ -154,6 +168,7 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.FOCUS then
         self:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
+    U:ToggleRaidIcon(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 
@@ -242,6 +257,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             UnitFrame_UpdateAll(self)
         elseif event == "PLAYER_FOCUS_CHANGED" then
             UnitFrame_UpdateAll(self)
+        elseif event == "RAID_TARGET_UPDATE" then
+            U:UnitFrame_UpdateRaidIcon(self)
         end
     end
 end
@@ -452,6 +469,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreatePowerBar(button, buttonName)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
+    W:CreateRaidIcon(button, buttonName)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

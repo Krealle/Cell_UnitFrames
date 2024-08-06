@@ -38,6 +38,9 @@ Builder.MenuOptions = {
     AuraFilter = 13,
     AuraBlacklist = 14,
     AuraWhitelist = 15,
+    Size = 16,
+    SingleSize = 17,
+    FrameLevel = 18,
 }
 
 CUF.Builder = Builder
@@ -801,6 +804,46 @@ function Builder:CreateSizeOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return SingleSizeOptions
+function Builder:CreateSingleSizeOptions(parent, widgetName)
+    ---@class SingleSizeOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+
+    f.sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 0, 100,
+        const.AURA_OPTION_KIND.SIZE, const.OPTION_KIND.WIDTH)
+    f.sizeSlider:SetPoint("TOPLEFT", f)
+
+    f.sizeSlider.Set_DB = function(_which, _kind, value)
+        Set_DB(widgetName, const.AURA_OPTION_KIND.SIZE, value, { const.OPTION_KIND.WIDTH })
+        Set_DB(widgetName, const.AURA_OPTION_KIND.SIZE, value, { const.OPTION_KIND.HEIGHT })
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.AURA_OPTION_KIND.SIZE)
+    end
+
+    return f
+end
+
+-------------------------------------------------
+-- MARK: FrameLevel
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return FrameLevelOptions
+function Builder:CreateFrameLevelOptions(parent, widgetName)
+    ---@class FrameLevelOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "FrameLevelOptions"
+    f.optionHeight = 20
+
+    f.frameLevelSlider = self:CreateSlider(f, widgetName, L["Frame Level"], nil, 0, 100, const.OPTION_KIND.FRAMELEVEL)
+    f.frameLevelSlider:SetPoint("TOPLEFT", f)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: Aura Icon
 -------------------------------------------------
@@ -1032,4 +1075,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.AuraFilter] = Builder.CreateAuraFilterOptions,
     [Builder.MenuOptions.AuraBlacklist] = Builder.CreateAuraBlacklistOptions,
     [Builder.MenuOptions.AuraWhitelist] = Builder.CreateAuraWhitelistOptions,
+    [Builder.MenuOptions.Size] = Builder.CreateSizeOptions,
+    [Builder.MenuOptions.SingleSize] = Builder.CreateSingleSizeOptions,
+    [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
 }

@@ -81,8 +81,8 @@
 -- MARK: CUF Widgets
 -------------------------------------------------
 
----@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget | CellAuraIcons
----@alias WidgetTable TextWidgetTable | HealthTextWidgetTable | PowerTextWidgetTable | AuraWidgetTable
+---@alias Widget NameTextWidget | HealthTextWidget | PowerTextWidget | CellAuraIcons | RaidIconWidget
+---@alias WidgetTable TextWidgetTable | HealthTextWidgetTable | PowerTextWidgetTable | AuraWidgetTable | RaidIconWidgetTable
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -265,5 +265,6 @@
 ---@field healthText HealthTextWidget
 ---@field buffs CellAuraIcons
 ---@field debuffs CellAuraIcons
+---@field raidIcon RaidIconWidget
 
 ---@class HighlightWidget: BackdropTemplate, Frame

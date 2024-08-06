@@ -81,3 +81,20 @@ end
 function W.SetIsSelected(widget, val)
     widget._isSelected = val
 end
+
+---@param widget Widget
+---@param unit Unit
+function W.SetWidgetSize(widget, unit)
+    local size = DB.GetWidgetTable(widget.id, unit).size
+
+    widget:SetWidth(size.width)
+    widget:SetHeight(size.height)
+end
+
+---@param widget Widget
+---@param unit Unit
+function W.SetWidgetFrameLevel(widget, unit)
+    local frameLevel = DB.GetWidgetTable(widget.id, unit).frameLevel
+
+    widget:SetFrameLevel(frameLevel)
+end

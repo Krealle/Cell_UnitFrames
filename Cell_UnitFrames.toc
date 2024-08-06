@@ -35,6 +35,7 @@ Widgets/Common.lua
 Widgets/Bars/HealthBar.lua
 Widgets/Bars/PowerBar.lua
 
+Widgets/Texts/CustomFormats.lua
 Widgets/Texts/NameText.lua
 Widgets/Texts/HealthText.lua
 Widgets/Texts/PowerText.lua

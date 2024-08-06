@@ -218,8 +218,6 @@
 
 ---@class EnabledCheckBox: Frame
 
----@class HealthFormatOptions: Frame
-
 -------------------------------------------------
 -- MARK: CUF UnitButton
 -------------------------------------------------

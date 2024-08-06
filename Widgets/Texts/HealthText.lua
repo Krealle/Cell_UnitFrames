@@ -29,11 +29,16 @@ menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT, "Health",
 ---@param unit Unit
 ---@param setting string
 ---@param subSetting string
-function W.UpdateHealthTextWidget(button, unit, setting, subSetting)
+function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.healthText
+    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.HEALTH_TEXT, unit) --[[@as HealthTextWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.FORMAT then
-        widget:SetFormat(DB.GetWidgetTable(const.WIDGET_KIND.HEALTH_TEXT, unit).format)
+        widget:SetFormat(styleTable.format)
+    end
+    if not setting or setting == const.OPTION_KIND.TEXT_FORMAT then
+        widget:SetTextFormat(styleTable.textFormat)
+        widget:SetFormat(styleTable.format)
     end
 
     U:UnitFrame_UpdateHealthText(button)
@@ -207,6 +212,23 @@ local function SetHealth_Absorbs_Only_Percentage(self, current, max, totalAbsorb
     self:SetWidth(self:GetStringWidth())
 end
 
+-------------------------------------------------
+-- MARK: Custom Format
+-------------------------------------------------
+
+---@param self HealthTextWidget
+local function SetHealth_Custom(self)
+    local formatFn = W.ProcessCustomTextFormat(self.textFormat)
+    self.SetValue = function(_, current, max, totalAbsorbs)
+        self:SetText(formatFn(current, max, totalAbsorbs))
+        self:SetWidth(self:GetStringWidth())
+    end
+end
+
+-------------------------------------------------
+-- MARK: Setters
+-------------------------------------------------
+
 ---@class HealthTextWidget
 ---@param self HealthTextWidget
 ---@param format HealthTextFormat
@@ -239,7 +261,16 @@ local function HealthText_SetFormat(self, format)
         self.SetValue = SetHealth_Absorbs_Only_Short
     elseif format == const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE then
         self.SetValue = SetHealth_Absorbs_Only_Percentage
+    elseif format == const.HealthTextFormat.CUSTOM then
+        self.SetValue = SetHealth_Custom
     end
+end
+
+---@class HealthTextWidget
+---@param self HealthTextWidget
+---@param format string
+local function HealthText_SetTextFormat(self, format)
+    self.textFormat = format
 end
 
 -------------------------------------------------
@@ -256,11 +287,13 @@ function W:CreateHealthText(button)
     healthText:SetFont("Cell Default", 12, "Outline")
     healthText.enabled = false
     healthText.id = const.WIDGET_KIND.HEALTH_TEXT
-    ---@type ColorType
-    healthText.colorType = const.ColorType.CLASS_COLOR
+
+    healthText.colorType = const.ColorType.CLASS_COLOR ---@type ColorType
     healthText.rgb = { 1, 1, 1 }
+    healthText.textFormat = ""
 
     healthText.SetFormat = HealthText_SetFormat
+    healthText.SetTextFormat = HealthText_SetTextFormat
     healthText.SetValue = SetHealth_Percentage
     healthText.SetEnabled = W.SetEnabled
     healthText.SetPosition = W.SetPosition

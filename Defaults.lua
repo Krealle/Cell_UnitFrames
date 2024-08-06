@@ -86,6 +86,7 @@ local healthTextWidget = {
     ["width"] = defaultFontWidth,
     ["format"] = "percentage",
     ["hideIfEmptyOrFull"] = false,
+    textFormat = ""
 }
 
 ---@type PowerTextWidgetTable

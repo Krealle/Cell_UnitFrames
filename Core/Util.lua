@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 
+local const = CUF.constants
+
 ---@class CUF.Util
 CUF.Util = {}
 
@@ -177,6 +179,27 @@ function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, no
     end
 
     return b
+end
+
+---@param parent Frame
+---@param width number
+---@param height number
+---@param text? string
+---@param isTransparent? boolean
+---@param isMultiLine? boolean
+---@param isNumeric? boolean
+---@param font? string
+---@return EditBox
+function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLine, isNumeric, font)
+    local editBox = Cell:CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
+
+    if text then
+        local label = editBox:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        label:SetText(text)
+        label:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 0, 2)
+    end
+
+    return editBox
 end
 
 -------------------------------------------------

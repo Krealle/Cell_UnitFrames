@@ -51,6 +51,7 @@ const.PowerTextFormat = {
 ---| "absorbs-only"
 ---| "absorbs-only-short"
 ---| "absorbs-only-percentage"
+---| "custom"
 const.HealthTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
@@ -66,6 +67,7 @@ const.HealthTextFormat = {
     ABSORBS_ONLY = "absorbs-only",
     ABSORBS_ONLY_SHORT = "absorbs-only-short",
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
+    CUSTOM = "custom"
 }
 
 ---@alias WIDGET_KIND
@@ -113,6 +115,7 @@ const.WIDGET_KIND = {
 ---| "height"
 ---| "size"
 ---| "frameLevel"
+---| "textFormat"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -131,6 +134,7 @@ const.OPTION_KIND = {
     HEIGHT = "height",
     SIZE = "size",
     FRAMELEVEL = "frameLevel",
+    TEXT_FORMAT = "textFormat",
 }
 
 ---@alias AURA_OPTION_KIND

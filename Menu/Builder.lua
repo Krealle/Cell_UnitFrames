@@ -327,6 +327,43 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, kind, .
     return dropdown
 end
 
+-------------------------------------------------
+-- MARK: EditBox
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param title string
+---@param width number? Default: 117
+---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
+---@param ... OPTION_KIND | AURA_OPTION_KIND Keys to traverse to the property
+---@return CUFEditBox
+function Builder:CreateEditBox(parent, widgetName, title, width, kind, ...)
+    ---@class CUFEditBox: EditBox, OptionsFrame
+    local editBox = CUF:CreateEditBox(parent, width or 117, 20, L[title])
+    editBox.id = kind
+    editBox.optionHeight = 20
+
+    editBox.Set_DB = Set_DB
+    editBox.Get_DB = Get_DB
+
+    local keys = { ... }
+
+    editBox:SetScript("OnEnterPressed", function()
+        editBox:ClearFocus()
+        local value = editBox:GetText()
+        editBox.Set_DB(widgetName, kind, value, keys)
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind)
+    end)
+
+    local function LoadPageDB()
+        editBox:SetText(editBox.Get_DB(widgetName, kind, keys))
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "EditBox_" .. kind)
+
+    return editBox
+end
+
 -----------------------------------------------
 -- MARK: Option Title
 -------------------------------------------------
@@ -754,11 +791,22 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             const.HealthTextFormat.ABSORBS_ONLY_SHORT },
         { "25% |cFFA7A7A7" .. L["shields"],
             const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE },
+        { L["Custom"], const.HealthTextFormat.CUSTOM }
     }
 
-    ---@class HealthFormatOptions: CUFDropdown, OptionsFrame
-    return self:CreateDropdown(parent, widgetName, "Format", 200,
+    ---@class HealthFormatOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 70
+    f.id = "HealthFormatOptions"
+
+    f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
         healthFormats, const.OPTION_KIND.FORMAT)
+    f.formatDropdown:SetPoint("TOPLEFT", f)
+
+    f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
+    self:AnchorBelow(f.formatEditBox, f.formatDropdown)
+
+    return f
 end
 
 -------------------------------------------------

@@ -34,13 +34,15 @@ Menu/Menu.lua
 Widgets/Common.lua
 Widgets/Base/HealthBar.lua
 Widgets/Base/PowerBar.lua
-Widgets/NameText.lua
-Widgets/HealthText.lua
-Widgets/PowerText.lua
-Widgets/RaidIcon.lua
-Widgets/RoleIcon.lua
-Widgets/LeaderIcon.lua
-Widgets/CombatIcon.lua
+
+Widgets/Texts/NameText.lua
+Widgets/Texts/HealthText.lua
+Widgets/Texts/PowerText.lua
+
+Widgets/Icons/RaidIcon.lua
+Widgets/Icons/RoleIcon.lua
+Widgets/Icons/LeaderIcon.lua
+Widgets/Icons/CombatIcon.lua
 
 Widgets/Auras/Auras.lua
 Widgets/Auras/Updater.lua

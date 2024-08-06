@@ -40,6 +40,7 @@ Widgets/PowerText.lua
 Widgets/RaidIcon.lua
 Widgets/RoleIcon.lua
 Widgets/LeaderIcon.lua
+Widgets/CombatIcon.lua
 
 Widgets/Auras/Auras.lua
 Widgets/Auras/Updater.lua

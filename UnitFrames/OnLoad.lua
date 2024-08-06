@@ -82,6 +82,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateRaidIcon(button)
     U:UnitFrame_UpdateRoleIcon(button)
     U:UnitFrame_UpdateLeaderIcon(button)
+    U:UnitFrame_UpdateCombatIcon(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -261,6 +262,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             UnitFrame_UpdateAll(self)
         elseif event == "RAID_TARGET_UPDATE" then
             U:UnitFrame_UpdateRaidIcon(self)
+        elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
+            U:UnitFrame_UpdateCombatIcon(self, event)
         end
     end
 end
@@ -474,6 +477,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateRaidIcon(button, buttonName)
     W:CreateRoleIcon(button, buttonName)
     W:CreateLeaderIcon(button, buttonName)
+    W:CreateCombatIcon(button, buttonName)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

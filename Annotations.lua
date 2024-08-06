@@ -89,6 +89,7 @@
 ---| RaidIconWidget
 ---| RoleIconWidget
 ---| LeaderIconWidget
+---| CombatIconWidget
 
 ---@alias WidgetTable
 ---|TextWidgetTable
@@ -98,6 +99,7 @@
 ---| RaidIconWidgetTable
 ---| RoleIconWidgetTable
 ---| LeaderIconWidgetTable
+---| CombatIconWidgetTable
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -285,5 +287,6 @@
 ---@field raidIcon RaidIconWidget
 ---@field roleIcon RoleIconWidget
 ---@field leaderIcon LeaderIconWidget
+---@field combatIcon CombatIconWidget
 
 ---@class HighlightWidget: BackdropTemplate, Frame

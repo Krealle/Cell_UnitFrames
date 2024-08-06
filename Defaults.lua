@@ -184,6 +184,14 @@ local leaderIconWidget = {
     frameLevel = 10
 }
 
+---@class CombatIconWidgetTable: BaseWidgetTable
+local combatIconWidget = {
+    enabled = false,
+    size = sizeOpt,
+    position = positionOpt,
+    frameLevel = 10
+}
+
 ---@class UnitFrameWidgetsTable
 ---@field nameText TextWidgetTable
 ---@field healthText HealthTextWidgetTable
@@ -202,6 +210,7 @@ local unitFrameWidgets = {
     raidIcon = raidIconWidget,
     roleIcon = roleIconWidget,
     leaderIcon = leaderIconWidget,
+    combatIcon = combatIconWidget,
 }
 
 ---@class Layout

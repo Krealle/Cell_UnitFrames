@@ -162,6 +162,17 @@ local raidIconWidget = {
     frameLevel = 10
 }
 
+---@class RoleIconWidgetTable
+---@field enabled boolean
+---@field size SizeOpt
+---@field position PositionOpt
+local roleIconWidget = {
+    enabled = false,
+    size = sizeOpt,
+    position = positionOpt,
+    frameLevel = 10
+}
+
 ---@class UnitFrameWidgetsTable
 ---@field nameText TextWidgetTable
 ---@field healthText HealthTextWidgetTable
@@ -169,6 +180,7 @@ local raidIconWidget = {
 ---@field buffs AuraWidgetTable
 ---@field debuffs AuraWidgetTable
 ---@field raidIcon RaidIconWidgetTable
+---@field roleIcon RoleIconWidgetTable
 local unitFrameWidgets = {
     nameText = nameWidget,
     healthText = healthTextWidget,
@@ -176,6 +188,7 @@ local unitFrameWidgets = {
     buffs = auraWidget,
     debuffs = auraWidget,
     raidIcon = raidIconWidget,
+    roleIcon = roleIconWidget,
 }
 
 ---@class Layout

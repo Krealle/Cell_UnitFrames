@@ -80,6 +80,7 @@ local function UnitFrame_UpdateAll(button)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
     U:UnitFrame_UpdateRaidIcon(button)
+    U:UnitFrame_UpdateRoleIcon(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -470,6 +471,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
     W:CreateRaidIcon(button, buttonName)
+    W:CreateRoleIcon(button, buttonName)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

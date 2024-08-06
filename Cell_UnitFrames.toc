@@ -38,6 +38,7 @@ Widgets/NameText.lua
 Widgets/HealthText.lua
 Widgets/PowerText.lua
 Widgets/RaidIcon.lua
+Widgets/RoleIcon.lua
 
 Widgets/Auras/Auras.lua
 Widgets/Auras/Updater.lua

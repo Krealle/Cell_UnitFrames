@@ -68,7 +68,14 @@ const.HealthTextFormat = {
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
 }
 
----@alias WIDGET_KIND "nameText" | "healthText" | "powerText" | "buffs" | "debuffs" | "raidIcon"
+---@alias WIDGET_KIND
+---|"nameText"
+---| "healthText"
+---| "powerText"
+---| "buffs"
+---| "debuffs"
+---| "raidIcon"
+---| "roleIcon"
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
@@ -76,6 +83,7 @@ const.WIDGET_KIND = {
     BUFFS = "buffs",
     DEBUFFS = "debuffs",
     RAID_ICON = "raidIcon",
+    ROLE_ICON = "roleIcon",
 }
 
 ---@alias OPTION_KIND

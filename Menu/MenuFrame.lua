@@ -112,6 +112,7 @@ end
 function menuWindow:InitWidgets()
     --CUF:Debug("menuWindow - InitWidgets")
     local prevButton
+    local prevAnchor
     local idx = 1
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
@@ -121,20 +122,22 @@ function menuWindow:InitWidgets()
         self.widgets[widgetPage.id] = widgetPage
 
         -- button
-        widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.pageName], "accent-hover", { 85, 17 })
+        widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.pageName], "accent-hover", { 95, 17 })
         widgetPage.button.id = widget.widgetName
 
         if prevButton then
             -- Max 4 buttons per row
             if idx % 4 == 0 then
-                widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane, 0, 16)
-                idx = 0
+                widgetPage.button:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
+                idx = 1
+                prevAnchor = widgetPage.button
             else
                 widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+                idx = idx + 1
             end
-            idx = idx + 1
         else
             widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane)
+            prevAnchor = widgetPage.button
         end
         prevButton = widgetPage.button
 
@@ -152,7 +155,7 @@ function menuWindow:Create()
     CUF:Debug("|cff00ccffCreate Menu|r")
     local optionsFrame = Cell.frames.optionsFrame
 
-    self.unitHeight = 200
+    self.unitHeight = 230
     self.widgetHeight = 300
     self.baseWidth = 450
     ---@class CellCombatFrame
@@ -166,7 +169,7 @@ function menuWindow:Create()
     self.window.mask:Hide()
 
     self.unitPane = Cell:CreateTitledPane(self.window, L["Unit Frames"], self.baseWidth - 10,
-        200)
+        self.unitHeight)
     self.unitPane:SetPoint("TOPLEFT", 5, -5)
 
     self:InitUnits()

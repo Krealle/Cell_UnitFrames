@@ -32,8 +32,8 @@ Menu/MenuFrame.lua
 Menu/Menu.lua
 
 Widgets/Common.lua
-Widgets/Base/HealthBar.lua
-Widgets/Base/PowerBar.lua
+Widgets/Bars/HealthBar.lua
+Widgets/Bars/PowerBar.lua
 
 Widgets/Texts/NameText.lua
 Widgets/Texts/HealthText.lua

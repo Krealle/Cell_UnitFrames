@@ -188,7 +188,7 @@ function W.ProcessCustomTextFormat(textFormat)
     local lastEnd = 1
 
     -- Process the text format and find all bracketed tags
-    textFormat:gsub("%b[]", function(bracketed)
+    for bracketed in textFormat:gmatch("%b[]") do
         local startPos, endPos = textFormat:find("%b[]", lastEnd)
         if startPos > lastEnd then
             table.insert(elements, textFormat:sub(lastEnd, startPos - 1))
@@ -204,7 +204,7 @@ function W.ProcessCustomTextFormat(textFormat)
         end
 
         lastEnd = endPos + 1
-    end)
+    end
 
     -- Add any remaining text after the last tag
     if lastEnd <= #textFormat then

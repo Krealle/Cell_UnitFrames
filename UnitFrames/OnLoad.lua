@@ -230,6 +230,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_MAXHEALTH" then
             U:UnitFrame_UpdateHealthMax(self)
             U:UnitFrame_UpdateHealth(self)
+        elseif event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+            U:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_MAXPOWER" then
             U:UnitFrame_UpdatePowerMax(self)
             U:UnitFrame_UpdatePower(self)

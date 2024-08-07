@@ -23,7 +23,8 @@ menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT, "Health",
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.HealthFormat,
     Builder.MenuOptions.Anchor,
-    Builder.MenuOptions.Font)
+    Builder.MenuOptions.Font,
+    Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -72,7 +73,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Percentage(self, current, max, totalAbsorbs)
     self:SetFormattedText("%d%%", current / max * 100)
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -85,7 +85,6 @@ local function SetHealth_Percentage_Absorbs(self, current, max, totalAbsorbs)
     else
         self:SetFormattedText("%d%%+%d%%", current / max * 100, totalAbsorbs / max * 100)
     end
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -94,7 +93,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Percentage_Absorbs_Merged(self, current, max, totalAbsorbs)
     self:SetFormattedText("%d%%", (current + totalAbsorbs) / max * 100)
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -103,7 +101,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Percentage_Deficit(self, current, max, totalAbsorbs)
     self:SetFormattedText("%d%%", (current - max) / max * 100)
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -112,7 +109,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number(self, current, max, totalAbsorbs)
     self:SetText(tostring(current))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -121,7 +117,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number_Short(self, current, max, totalAbsorbs)
     self:SetText(F:FormatNumber(current))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -134,7 +129,6 @@ local function SetHealth_Number_Absorbs_Short(self, current, max, totalAbsorbs)
     else
         self:SetFormattedText("%s+%s", F:FormatNumber(current), F:FormatNumber(totalAbsorbs))
     end
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -143,7 +137,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number_Absorbs_Merged_Short(self, current, max, totalAbsorbs)
     self:SetText(F:FormatNumber(current + totalAbsorbs))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -152,7 +145,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number_Deficit(self, current, max, totalAbsorbs)
     self:SetText(tostring(current - max))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -161,7 +153,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number_Deficit_Short(self, current, max, totalAbsorbs)
     self:SetText(F:FormatNumber(current - max))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -170,7 +161,6 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Current_Short_Percentage(self, current, max, totalAbsorbs)
     self:SetFormattedText("%s %d%%", F:FormatNumber(current), (current / max * 100))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -183,7 +173,6 @@ local function SetHealth_Absorbs_Only(self, current, max, totalAbsorbs)
     else
         self:SetText(tostring(totalAbsorbs))
     end
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -196,7 +185,6 @@ local function SetHealth_Absorbs_Only_Short(self, current, max, totalAbsorbs)
     else
         self:SetText(F:FormatNumber(totalAbsorbs))
     end
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self HealthTextWidget
@@ -209,7 +197,6 @@ local function SetHealth_Absorbs_Only_Percentage(self, current, max, totalAbsorb
     else
         self:SetFormattedText("%d%%", totalAbsorbs / max * 100)
     end
-    self:SetWidth(self:GetStringWidth())
 end
 
 -------------------------------------------------
@@ -221,7 +208,6 @@ local function SetHealth_Custom(self)
     local formatFn = W.ProcessCustomTextFormat(self.textFormat)
     self.SetValue = function(_, current, max, totalAbsorbs)
         self:SetText(formatFn(current, max, totalAbsorbs))
-        self:SetWidth(self:GetStringWidth())
     end
 end
 
@@ -280,26 +266,14 @@ end
 ---@param button CUFUnitButton
 function W:CreateHealthText(button)
     ---@class HealthTextWidget: TextWidget
-    local healthText = button:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local healthText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.HEALTH_TEXT)
     button.widgets.healthText = healthText
-    healthText:ClearAllPoints()
-    healthText:SetPoint("CENTER", 0, 0)
-    healthText:SetFont("Cell Default", 12, "OUTLINE")
-    healthText.enabled = false
-    healthText.id = const.WIDGET_KIND.HEALTH_TEXT
 
-    healthText.colorType = const.ColorType.CLASS_COLOR ---@type ColorType
-    healthText.rgb = { 1, 1, 1 }
     healthText.textFormat = ""
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
     healthText.SetValue = SetHealth_Percentage
-    healthText.SetEnabled = W.SetEnabled
-    healthText.SetPosition = W.SetPosition
-    healthText.SetFontStyle = W.SetFontStyle
-    healthText.SetFontColor = W.SetFontColor
-    healthText._SetIsSelected = W.SetIsSelected
 
     function healthText:UpdateValue()
         if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then
@@ -307,14 +281,6 @@ function W:CreateHealthText(button)
             button.widgets.healthText:Show()
         else
             button.widgets.healthText:Hide()
-        end
-    end
-
-    function healthText:UpdateTextColor()
-        if self.colorType == const.ColorType.CLASS_COLOR then
-            self:SetTextColor(F:GetClassColor(button.states.class))
-        else
-            self:SetTextColor(unpack(self.rgb))
         end
     end
 end

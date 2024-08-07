@@ -188,6 +188,7 @@ local function UnitFrame_RegisterEvents(self)
     end
     U:ToggleRaidIcon(self)
     U:TogglePowerEvents(self)
+    U:ToggleAuras(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 

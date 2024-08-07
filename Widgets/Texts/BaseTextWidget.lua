@@ -69,18 +69,26 @@ function W.CreateBaseTextWidget(button, kind)
 
     ---@param styleTable WidgetTable
     function textWidget:SetPosition(styleTable)
-        self:SetPoint(styleTable.position.anchor, button,
+        self.text:ClearAllPoints()
+        self.text:SetPoint(styleTable.position.anchor, button,
             styleTable.position.offsetX,
             styleTable.position.offsetY)
-
-        self.text:ClearAllPoints()
-        self.text:SetPoint(styleTable.position.anchor)
     end
 
-    function textWidget:UpdateSize()
-        self:SetSize(self.text:GetWidth(), self.text:GetHeight())
+    -- Forward common methods to text
+    function textWidget:SetText(...)
+        self.text:SetText(...)
     end
 
+    function textWidget:SetFormattedText(...)
+        self.text:SetFormattedText(...)
+    end
+
+    function textWidget:SetTextColor(...)
+        self.text:SetTextColor(...)
+    end
+
+    -- Implement common methods
     textWidget.SetEnabled = W.SetEnabled
     textWidget._SetIsSelected = W.SetIsSelected
     textWidget.SetWidgetFrameLevel = W.SetWidgetFrameLevel

@@ -83,6 +83,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateRoleIcon(button)
     U:UnitFrame_UpdateLeaderIcon(button)
     U:UnitFrame_UpdateCombatIcon(button)
+    U:UnitFrame_UpdateShieldBar(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -244,11 +245,14 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             --UnitFrame_UpdateCasts(self, arg2)
         elseif event == "UNIT_HEALTH" then
             U:UnitFrame_UpdateHealth(self)
+            U:UnitFrame_UpdateShieldBar(self)
         elseif event == "UNIT_MAXHEALTH" then
             U:UnitFrame_UpdateHealthMax(self)
             U:UnitFrame_UpdateHealth(self)
+            U:UnitFrame_UpdateShieldBar(self)
         elseif event == "UNIT_ABSORB_AMOUNT_CHANGED" then
             U:UnitFrame_UpdateHealth(self)
+            U:UnitFrame_UpdateShieldBar(self)
         elseif event == "UNIT_MAXPOWER" then
             U:UnitFrame_UpdatePowerMax(self)
             U:UnitFrame_UpdatePower(self)
@@ -497,6 +501,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateRoleIcon(button, buttonName)
     W:CreateLeaderIcon(button, buttonName)
     W:CreateCombatIcon(button, buttonName)
+    W:CreateShieldBar(button, buttonName)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

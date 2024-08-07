@@ -41,6 +41,8 @@ Builder.MenuOptions = {
     Size = 16,
     SingleSize = 17,
     FrameLevel = 18,
+    FullAnchor = 19,
+    ColorPicker = 20,
 }
 
 CUF.Builder = Builder
@@ -365,8 +367,39 @@ function Builder:CreateEditBox(parent, widgetName, title, width, kind, ...)
 end
 
 -----------------------------------------------
+-- MARK: Color Picker
+-----------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CUFColorPicker
+function Builder:CreateColorPickerOptions(parent, widgetName)
+    ---@class CUFColorPicker: CellColorPicker, OptionsFrame
+    local colorPicker = Cell:CreateColorPicker(parent, L["Color"], true)
+    colorPicker.id = "ColorPicker"
+    colorPicker.optionHeight = 25
+
+    colorPicker.Set_DB = Set_DB
+    colorPicker.Get_DB = Get_DB
+
+    colorPicker.onChange = function(r, g, b, a)
+        colorPicker.Set_DB(widgetName, const.OPTION_KIND.RGBA, { r, g, b, a })
+        CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
+            .COLOR, const.OPTION_KIND.RGBA)
+    end
+
+    local function LoadPageDB()
+        local r, g, b, a = unpack(colorPicker.Get_DB(widgetName, const.OPTION_KIND.RGBA))
+        colorPicker:SetColor(r, g, b, a)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "ColorPicker_" .. widgetName)
+
+    return colorPicker
+end
+
+-----------------------------------------------
 -- MARK: Option Title
--------------------------------------------------
+-----------------------------------------------
 
 ---@param parent Frame
 ---@param txt string
@@ -702,6 +735,24 @@ function Builder:CreateExtraAnchorOptions(parent, widgetName, altKind, ...)
     ---@class ExtraAnchorOptions: AnchorOptions
     return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, CUF.anchorPoints,
         altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param altKind? OPTION_KIND | AURA_OPTION_KIND
+---@param ... OPTION_KIND|AURA_OPTION_KIND Extra keys to traverse to the property
+---@return FullAnchorOptions
+function Builder:CreateFullAnchorOptions(parent, widgetName, altKind, ...)
+    ---@class FullAnchorOptions: AnchorOptions
+    local anchorOpt = self:CreateAnchorOptions(parent, widgetName, altKind, ...)
+    anchorOpt.optionHeight = 70
+    anchorOpt.id = "FullAnchor"
+
+    anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, "Relative To", nil, CUF.anchorPoints,
+        altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
+    self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
+
+    return anchorOpt
 end
 
 -------------------------------------------------
@@ -1124,6 +1175,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.TextWidth] = Builder.CreateTextWidthOption,
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.ExtraAnchor] = Builder.CreateExtraAnchorOptions,
+    [Builder.MenuOptions.FullAnchor] = Builder.CreateFullAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
@@ -1137,4 +1189,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Size] = Builder.CreateSizeOptions,
     [Builder.MenuOptions.SingleSize] = Builder.CreateSingleSizeOptions,
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
+    [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
 }

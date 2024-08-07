@@ -90,6 +90,7 @@
 ---| RoleIconWidget
 ---| LeaderIconWidget
 ---| CombatIconWidget
+---| ShieldBarWidget
 
 ---@alias WidgetTable
 ---|TextWidgetTable
@@ -100,10 +101,12 @@
 ---| RoleIconWidgetTable
 ---| LeaderIconWidgetTable
 ---| CombatIconWidgetTable
+---| ShieldBarWidgetTable
 
 ---@class BaseWidget
 ---@field enabled boolean
 ---@field id WIDGET_KIND
+---@field _isSelected boolean
 
 ---@class BaseWidgetTable
 ---@field enabled boolean
@@ -282,5 +285,6 @@
 ---@field roleIcon RoleIconWidget
 ---@field leaderIcon LeaderIconWidget
 ---@field combatIcon CombatIconWidget
+---@field shieldBar ShieldBarWidget
 
 ---@class HighlightWidget: BackdropTemplate, Frame

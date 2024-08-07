@@ -197,15 +197,16 @@ local combatIconWidget = {
     frameLevel = 10
 }
 
+---@class ShieldBarWidgetTable: BaseWidgetTable
+local shieldBarWidget = {
+    enabled = false,
+    size = sizeOpt,
+    position = positionOpt,
+    rgba = { 1, 1, 0, 0.25 },
+    frameLevel = 10,
+}
+
 ---@class UnitFrameWidgetsTable
----@field nameText TextWidgetTable
----@field healthText HealthTextWidgetTable
----@field powerText PowerTextWidgetTable
----@field buffs AuraWidgetTable
----@field debuffs AuraWidgetTable
----@field raidIcon RaidIconWidgetTable
----@field roleIcon RoleIconWidgetTable
----@field leaderIcon LeaderIconWidgetTable
 local unitFrameWidgets = {
     nameText = nameWidget,
     healthText = healthTextWidget,
@@ -216,6 +217,7 @@ local unitFrameWidgets = {
     roleIcon = roleIconWidget,
     leaderIcon = leaderIconWidget,
     combatIcon = combatIconWidget,
+    shieldBar = shieldBarWidget,
 }
 
 ---@class Layout

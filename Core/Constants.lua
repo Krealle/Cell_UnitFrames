@@ -81,6 +81,7 @@ const.HealthTextFormat = {
 ---| "roleIcon"
 ---| "leaderIcon"
 ---| "combatIcon"
+---| "shieldBar"
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
@@ -91,6 +92,7 @@ const.WIDGET_KIND = {
     ROLE_ICON = "roleIcon",
     LEADER_ICON = "leaderIcon",
     COMBAT_ICON = "combatIcon",
+    SHIELD_BAR = "shieldBar",
 }
 
 ---@alias OPTION_KIND
@@ -117,6 +119,8 @@ const.WIDGET_KIND = {
 ---| "size"
 ---| "frameLevel"
 ---| "textFormat"
+---| "rgb"
+---| "rgba"
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -136,6 +140,8 @@ const.OPTION_KIND = {
     SIZE = "size",
     FRAMELEVEL = "frameLevel",
     TEXT_FORMAT = "textFormat",
+    RGB = "rgb",
+    RGBA = "rgba",
 }
 
 ---@alias AURA_OPTION_KIND

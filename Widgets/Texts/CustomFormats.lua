@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 
+local Util = CUF.Util
+
 ---@class CUF.widgets
 local W = CUF.widgets
 
@@ -11,15 +13,151 @@ local W = CUF.widgets
 -- MARK: Tags
 -------------------------------------------------
 
+-- Formats a percent value with decimals
+--
+-- Returns an empty string if cur is 0 or nil
+---@param max number
+---@param cur number
+---@return string
+local function FormatPercent(max, cur)
+    if not cur or cur == 0 then return "" end
+
+    return string.format("%.2f%%", (cur / max * 100))
+end
+
+-- Formats a percent value without decimals
+--
+-- Returns an empty string if cur is 0 or nil
+---@param max number
+---@param cur number
+---@return string
+local function FormatPercentShort(max, cur)
+    if not cur or cur == 0 then return "" end
+
+    return string.format("%d%%", (cur / max * 100))
+end
+
+-- Format a number using tostring
+---@param num number
+---@return string
+local function FormatNumber(num)
+    return tostring(num)
+end
+
+-- Format a number using tostring
+--
+-- Returns an empty string if the number is 0
+---@param num number
+---@return string
+local function FormatNumberNoZeroes(num)
+    if not num or num == 0 then return "" end
+    return FormatNumber(num)
+end
+
+-- Formats a number using F:FormatNumber
+--
+-- eg. 12.3k, 12.3M or 12.3B
+---@param num number
+---@return string
+local function FormatNumberShort(num)
+    return F:FormatNumber(num)
+end
+
+-- Formats a number using F:FormatNumber
+--
+-- eg. 12.3k, 12.3M or 12.3B
+--
+-- Returns an empty string if the number is 0 or nil
+local function FormatNumberShortNoZeroes(num)
+    if not num or num == 0 then return "" end
+    return FormatNumberShort(num)
+end
+
+-- Formats two formats together with a separator
+--
+-- Will return the first format if the second is empty
+---@param format1 string
+---@param format2 string
+---@param seperator? string Default: "+"
+---@return string
+local function CombineFormats(format1, format2, seperator)
+    if format2 == "" then return format1 end
+
+    return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
+end
+
 local valid_tags = {
-    ["perhp"] = function(current, max, totalAbsorbs)
-        return string.format("%d%%", current / max * 100)
+    -- Current
+    ["cur"] = function(current, max, totalAbsorbs)
+        return FormatNumber(current)
     end,
-    ["curhp"] = function(current, max, totalAbsorbs)
-        return tostring(current)
+    ["cur:short"] = function(current, max, totalAbsorbs)
+        return FormatNumberShort(current)
     end,
-    ["curhp-short"] = function(current, max, totalAbsorbs)
-        return F:FormatNumber(current)
+    ["cur:per"] = function(current, max, totalAbsorbs)
+        return FormatPercent(max, current)
+    end,
+    ["cur:per-short"] = function(current, max, totalAbsorbs)
+        return FormatPercentShort(max, current)
+    end,
+    -- Max
+    ["max"] = function(current, max, totalAbsorbs)
+        return FormatNumber(max)
+    end,
+    ["max:short"] = function(current, max, totalAbsorbs)
+        return FormatNumberShort(max)
+    end,
+    -- Absorbs
+    ["abs"] = function(current, max, totalAbsorbs)
+        return FormatNumberNoZeroes(totalAbsorbs)
+    end,
+    ["abs:short"] = function(current, max, totalAbsorbs)
+        return FormatNumberShortNoZeroes(totalAbsorbs)
+    end,
+    ["abs:per"] = function(current, max, totalAbsorbs)
+        return FormatPercent(max, totalAbsorbs)
+    end,
+    ["abs:per-short"] = function(current, max, totalAbsorbs)
+        return FormatPercentShort(max, totalAbsorbs)
+    end,
+    -- Current + Absorbs
+    ["cur:abs"] = function(current, max, totalAbsorbs)
+        return CombineFormats(FormatNumber(current), FormatNumberNoZeroes(totalAbsorbs))
+    end,
+    ["cur:abs-short"] = function(current, max, totalAbsorbs)
+        return CombineFormats(FormatNumberShort(current), FormatNumberShortNoZeroes(totalAbsorbs))
+    end,
+    ["cur:abs:per"] = function(current, max, totalAbsorbs)
+        return CombineFormats(FormatPercent(max, current), FormatPercent(max, totalAbsorbs))
+    end,
+    ["cur:abs:per-short"] = function(current, max, totalAbsorbs)
+        return CombineFormats(FormatPercentShort(max, current), FormatPercentShort(max, totalAbsorbs))
+    end,
+    -- Current:Absorbs merge
+    ["cur:abs:merge"] = function(current, max, totalAbsorbs)
+        return FormatNumber(current + totalAbsorbs)
+    end,
+    ["cur:abs:merge:short"] = function(current, max, totalAbsorbs)
+        return FormatNumberShort(current + totalAbsorbs)
+    end,
+    ["cur:abs:merge:per"] = function(current, max, totalAbsorbs)
+        return FormatPercent(max, (current + totalAbsorbs))
+    end,
+    ["cur:abs:merge:per-short"] = function(current, max, totalAbsorbs)
+        return FormatPercentShort(max, (current + totalAbsorbs))
+    end,
+    -- Deficit
+    ["def"] = function(current, max, totalAbsorbs)
+        return FormatNumberNoZeroes(current - max)
+    end,
+    ["def:short"] = function(current, max, totalAbsorbs)
+        return FormatNumberShortNoZeroes(current - max)
+    end,
+    ["def:per"] = function(current, max, totalAbsorbs)
+        return FormatPercent(max, (current - max))
+    end,
+    ["def:per-short"] = function(current, max, totalAbsorbs)
+        return FormatPercentShort(max, (current - max))
     end,
 }
 
@@ -39,7 +177,7 @@ end
 --
 -- Example usage:
 --
--- local preBuiltFunction = W.ProcessCustomTextFormat("[perhp] | [curhp-short]")
+-- local preBuiltFunction = W.ProcessCustomTextFormat("[cur:per-short] | [cur:short]")
 --
 -- local finalString = preBuiltFunction(100, 12600, 0)
 --
@@ -93,6 +231,6 @@ function W.ProcessCustomTextFormat(textFormat)
             end
         end
 
-        return table.concat(result)
+        return Util:trim(table.concat(result))
     end
 end

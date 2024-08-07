@@ -228,6 +228,15 @@ local function GetFormattedTimestamp()
     return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
 end
 
+-- Trims whitespace from the start and end of a string
+--
+-- https://snippets.bentasker.co.uk/page-1706031030-Trim-whitespace-from-string-LUA.html
+---@param string string
+---@return string
+function CUF.Util:trim(string)
+    return string:match '^()%s*$' and '' or string:match '^%s*(.*%S)'
+end
+
 -------------------------------------------------
 -- MARK: Callbacks
 -------------------------------------------------

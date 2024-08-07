@@ -20,6 +20,9 @@ function W.CreateBaseTextWidget(button, kind)
     ---@class TextWidget.text: FontString
     local text = textWidget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
 
+    -- Point frame to text so size is always correct
+    textWidget:SetAllPoints(text)
+
     textWidget.text = text
     textWidget.enabled = false
     textWidget.id = kind

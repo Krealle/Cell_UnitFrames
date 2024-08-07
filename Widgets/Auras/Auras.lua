@@ -59,13 +59,12 @@ local function Icons_SetFont(icons, fonts)
     end
 end
 
----@param widget Widget
----@param unit Unit
-local function Icons_SetPosition(widget, unit)
-    ---@type PositionOpt
-    local position = CUF.vars.selectedLayoutTable[unit].widgets[widget.id].position
-    P:ClearPoints(widget)
-    P:Point(widget, position.anchor, widget:GetParent(), position.extraAnchor, position.offsetX, position.offsetY)
+---@param self CellAuraIcons
+---@param styleTable WidgetTable
+local function Icons_SetPosition(self, styleTable)
+    local position = styleTable.position
+    P:ClearPoints(self)
+    P:Point(self, position.anchor, self:GetParent(), position.extraAnchor, position.offsetX, position.offsetY)
 end
 
 ---@param icons CellAuraIcons

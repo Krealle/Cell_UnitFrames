@@ -13,12 +13,10 @@ local DB = CUF.DB
 -------------------------------------------------
 
 ---@param widget Widget
----@param unit Unit
-function W.SetEnabled(widget, unit)
-    local enabled = DB.IsWidgetEnabled(widget.id, unit)
-
-    widget.enabled = enabled
-    if not enabled then
+---@param styleTable WidgetTable
+function W.SetEnabled(widget, styleTable)
+    widget.enabled = styleTable.enabled
+    if not styleTable.enabled then
         widget:Hide()
         return
     else
@@ -27,21 +25,17 @@ function W.SetEnabled(widget, unit)
 end
 
 ---@param widget Widget
----@param unit Unit
-function W.SetPosition(widget, unit)
-    local position = DB.GetWidgetPosition(widget.id, unit)
-
+---@param styleTable WidgetTable
+function W.SetPosition(widget, styleTable)
     widget:ClearAllPoints()
-    widget:SetPoint(position.anchor, widget:GetParent(),
-        position.offsetX,
-        position.offsetY)
+    widget:SetPoint(styleTable.position.anchor, widget:GetParent(),
+        styleTable.position.offsetX,
+        styleTable.position.offsetY)
 end
 
 ---@param widget Widget
----@param unit Unit
-function W.SetFontStyle(widget, unit)
-    local styleTable = DB.GetWidgetTable(widget.id, unit)
-
+---@param styleTable WidgetTable
+function W.SetFontStyle(widget, styleTable)
     local font = F:GetFont(styleTable.font.style)
 
     local fontFlags
@@ -65,12 +59,10 @@ function W.SetFontStyle(widget, unit)
 end
 
 ---@param widget Widget
----@param unit Unit
-function W.SetFontColor(widget, unit)
-    local color = DB.GetWidgetTable(widget.id, unit).color
-
-    widget.colorType = color.type
-    widget.rgb = color.rgb
+---@param styleTable WidgetTable
+function W.SetFontColor(widget, styleTable)
+    widget.colorType = styleTable.color.type
+    widget.rgb = styleTable.color.rgb
 
     ---@diagnostic disable-next-line: param-type-mismatch
     widget:UpdateTextColor()
@@ -84,18 +76,14 @@ function W.SetIsSelected(widget, val)
 end
 
 ---@param widget Widget
----@param unit Unit
-function W.SetWidgetSize(widget, unit)
-    local size = DB.GetWidgetTable(widget.id, unit).size
-
-    widget:SetWidth(size.width)
-    widget:SetHeight(size.height)
+---@param styleTable WidgetTable
+function W.SetWidgetSize(widget, styleTable)
+    widget:SetWidth(styleTable.size.width)
+    widget:SetHeight(styleTable.size.height)
 end
 
 ---@param widget Widget
----@param unit Unit
-function W.SetWidgetFrameLevel(widget, unit)
-    local frameLevel = DB.GetWidgetTable(widget.id, unit).frameLevel
-
-    widget:SetFrameLevel(frameLevel)
+---@param styleTable WidgetTable
+function W.SetWidgetFrameLevel(widget, styleTable)
+    widget:SetFrameLevel(styleTable.frameLevel)
 end

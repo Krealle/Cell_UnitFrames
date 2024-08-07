@@ -5,6 +5,7 @@ local Cell = CUF.Cell
 
 local Util = CUF.Util
 local const = CUF.constants
+local DB = CUF.DB
 
 ---@class CUF.Handler
 ---@field widgets table<WIDGET_KIND, function>
@@ -28,23 +29,25 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     local widget = button.widgets[widgetName] ---@type Widget
     if not widget then return end
 
+    local styleTable = DB.GetWidgetTable(widgetName, unit)
+
     if (not setting or setting == "enabled") and type(widget.SetEnabled) == "function" then
-        widget:SetEnabled(unit)
+        widget:SetEnabled(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.POSITION) and type(widget.SetPosition) == "function" then
-        widget:SetPosition(unit)
+        widget:SetPosition(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.FONT) and type(widget.SetFontStyle) == "function" then
-        widget:SetFontStyle(unit)
+        widget:SetFontStyle(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.COLOR) and type(widget.SetFontColor) == "function" then
-        widget:SetFontColor(unit)
+        widget:SetFontColor(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.SIZE) and type(widget.SetWidgetSize) == "function" then
-        widget:SetWidgetSize(unit)
+        widget:SetWidgetSize(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.FRAMELEVEL) and type(widget.SetWidgetFrameLevel) == "function" then
-        widget:SetWidgetFrameLevel(unit)
+        widget:SetWidgetFrameLevel(styleTable)
     end
 end
 

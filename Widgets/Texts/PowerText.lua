@@ -24,7 +24,8 @@ menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, "Power",
     Builder.MenuOptions.TextColorWithPowerType,
     Builder.MenuOptions.PowerFormat,
     Builder.MenuOptions.Anchor,
-    Builder.MenuOptions.Font)
+    Builder.MenuOptions.Font,
+    Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -81,7 +82,6 @@ end
 ---@param max number
 local function SetPower_Percentage(self, current, max)
     self:SetFormattedText("%d%%", current / max * 100)
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self PowerTextWidget
@@ -89,7 +89,6 @@ end
 ---@param max number
 local function SetPower_Number(self, current, max)
     self:SetText(tostring(current))
-    self:SetWidth(self:GetStringWidth())
 end
 
 ---@param self PowerTextWidget
@@ -97,7 +96,6 @@ end
 ---@param max number
 local function SetPower_Number_Short(self, current, max)
     self:SetText(F:FormatNumber(current))
-    self:SetWidth(self:GetStringWidth())
 end
 
 -------------------------------------------------
@@ -109,7 +107,6 @@ local function SetPower_Custom(self)
     local formatFn = W.ProcessCustomTextFormat(self.textFormat)
     self.SetValue = function(_, current, max)
         self:SetText(formatFn(current, max))
-        self:SetWidth(self:GetStringWidth())
     end
     self:UpdateValue() -- Fixes annoying race condition
 end
@@ -146,27 +143,15 @@ end
 
 ---@param button CUFUnitButton
 function W:CreatePowerText(button)
-    ---@class PowerTextWidget: FontString
-    local powerText = button:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    ---@class PowerTextWidget: TextWidget
+    local powerText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.HEALTH_TEXT)
     button.widgets.powerText = powerText
-    powerText:ClearAllPoints()
-    powerText:SetPoint("CENTER", 0, 0)
-    powerText:SetFont("Cell Default", 12, "OUTLINE")
-    powerText.enabled = false
-    powerText.id = const.WIDGET_KIND.POWER_TEXT
 
-    powerText.colorType = const.PowerColorType.CLASS_COLOR ---@type PowerColorType
-    powerText.rgb = { 1, 1, 1 }
     powerText.textFormat = ""
 
     powerText.SetFormat = PowerText_SetFormat
     powerText.SetTextFormat = PowerText_SetTextFormat
     powerText.SetValue = SetPower_Percentage
-    powerText.SetEnabled = W.SetEnabled
-    powerText.SetPosition = W.SetPosition
-    powerText.SetFontStyle = W.SetFontStyle
-    powerText.SetFontColor = W.SetFontColor
-    powerText._SetIsSelected = W.SetIsSelected
 
     function powerText:UpdateValue()
         if button.widgets.powerText.enabled and button.states.powerMax ~= 0 and button.states.power then

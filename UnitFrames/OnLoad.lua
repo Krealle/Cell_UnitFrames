@@ -163,19 +163,19 @@ local function UnitFrame_RegisterEvents(self)
 
     --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
-    self:RegisterEvent("UNIT_HEAL_PREDICTION")
+    --self:RegisterEvent("UNIT_HEAL_PREDICTION")
     self:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-    self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
+    --self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 
-    self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
-    self:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-    self:RegisterEvent("UNIT_ENTERED_VEHICLE")
-    self:RegisterEvent("UNIT_EXITED_VEHICLE")
+    --self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+    --self:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
+    --self:RegisterEvent("UNIT_ENTERED_VEHICLE")
+    --self:RegisterEvent("UNIT_EXITED_VEHICLE")
 
-    self:RegisterEvent("UNIT_CONNECTION")       -- offline
-    self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
-    self:RegisterEvent("UNIT_NAME_UPDATE")      -- unknown target
-    self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
+    self:RegisterEvent("UNIT_CONNECTION")  -- offline
+    --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
+    self:RegisterEvent("UNIT_NAME_UPDATE") -- unknown target
+    --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
     self:RegisterEvent("PLAYER_REGEN_ENABLED")
     self:RegisterEvent("PLAYER_REGEN_DISABLED")

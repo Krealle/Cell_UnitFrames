@@ -449,6 +449,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     ---@class Cell.SettingsAuras: OptionsFrame
     local widget = CUF:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
 
+    ---@class Cell.SettingsAuras.frame: Frame
     widget.frame = CUF:CreateFrame(nil, widget, 20, 20)
     widget.frame:SetPoint("TOPLEFT", 5, -22)
     widget.frame:SetPoint("RIGHT", -5, 0)

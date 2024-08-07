@@ -72,6 +72,7 @@ function W.SetFontColor(widget, unit)
     widget.colorType = color.type
     widget.rgb = color.rgb
 
+    ---@diagnostic disable-next-line: param-type-mismatch
     widget:UpdateTextColor()
 end
 

@@ -115,7 +115,7 @@ function W:CreatePowerText(button)
     button.widgets.powerText = powerText
     powerText:ClearAllPoints()
     powerText:SetPoint("CENTER", 0, 0)
-    powerText:SetFont("Cell Default", 12, "Outline")
+    powerText:SetFont("Cell Default", 12, "OUTLINE")
     powerText.enabled = false
     powerText.id = const.WIDGET_KIND.POWER_TEXT
     ---@type PowerColorType

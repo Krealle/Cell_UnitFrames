@@ -163,7 +163,7 @@ end
 ---@param noBackground? boolean
 ---@param fontNormal? string
 ---@param fontDisable? string
----@param template? TemplateType
+---@param template? Template
 ---@param ... any
 ---@return Button
 function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, noBackground, fontNormal, fontDisable,

@@ -19,8 +19,8 @@ local Util = CUF.Util
 -------------------------------------------------
 
 ---@param unit Unit
----@param tooltipPoint AnchorPoint
----@param tooltipRelativePoint AnchorPoint
+---@param tooltipPoint FramePoint
+---@param tooltipRelativePoint FramePoint
 ---@param tooltipX number
 ---@param tooltipY number
 function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)

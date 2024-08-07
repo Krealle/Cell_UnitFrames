@@ -66,7 +66,7 @@
 ---@field position table<string, number>
 ---@field tooltipPosition table<number, string|number>
 ---@field powerSize number
----@field anchor AnchorPoint
+---@field anchor FramePoint
 ---@field widgets UnitFrameWidgetsTable
 ---@field barOrientation table
 ---@field powerFilters table<string, boolean|string>
@@ -142,7 +142,7 @@
 ---@field outline "None" | "Outline" | "Monochrome"
 ---@field shadow boolean
 ---@field style string
----@field anchor AnchorPoint
+---@field anchor FramePoint
 ---@field offsetX number
 ---@field offsetY number
 ---@field rgb table<number>
@@ -156,8 +156,8 @@
 ---@field rgb table<number>
 
 ---@class PositionOpt
----@field anchor AnchorPoint
----@field extraAnchor AnchorPoint?
+---@field anchor FramePoint
+---@field extraAnchor FramePoint?
 ---@field offsetX number
 ---@field offsetY number
 

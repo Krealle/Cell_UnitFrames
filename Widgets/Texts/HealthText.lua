@@ -284,7 +284,7 @@ function W:CreateHealthText(button)
     button.widgets.healthText = healthText
     healthText:ClearAllPoints()
     healthText:SetPoint("CENTER", 0, 0)
-    healthText:SetFont("Cell Default", 12, "Outline")
+    healthText:SetFont("Cell Default", 12, "OUTLINE")
     healthText.enabled = false
     healthText.id = const.WIDGET_KIND.HEALTH_TEXT
 

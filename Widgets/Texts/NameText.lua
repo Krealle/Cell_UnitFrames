@@ -81,7 +81,7 @@ function W:CreateNameText(button)
     nameText.width = CUF.defaults.fontWidth
     nameText:ClearAllPoints()
     nameText:SetPoint("CENTER", 0, 0)
-    nameText:SetFont("Cell Default", 12, "Outline")
+    nameText:SetFont("Cell Default", 12, "OUTLINE")
     nameText.enabled = false
     nameText.id = const.WIDGET_KIND.NAME_TEXT
     ---@type ColorType

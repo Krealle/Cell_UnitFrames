@@ -28,7 +28,8 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT, "Name",
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.TextWidth,
     Builder.MenuOptions.Anchor,
-    Builder.MenuOptions.Font)
+    Builder.MenuOptions.Font,
+    Builder.MenuOptions.FrameLevel)
 
 
 ---@param button CUFUnitButton
@@ -76,17 +77,10 @@ end
 ---@param button CUFUnitButton
 function W:CreateNameText(button)
     ---@class NameTextWidget: TextWidget
-    local nameText = button:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local nameText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.NAME_TEXT)
     button.widgets.nameText = nameText
+
     nameText.width = CUF.defaults.fontWidth
-    nameText:ClearAllPoints()
-    nameText:SetPoint("CENTER", 0, 0)
-    nameText:SetFont("Cell Default", 12, "OUTLINE")
-    nameText.enabled = false
-    nameText.id = const.WIDGET_KIND.NAME_TEXT
-    ---@type ColorType
-    nameText.colorType = const.ColorType.CLASS_COLOR
-    nameText.rgb = { 1, 1, 1 }
 
     function nameText:UpdateName()
         local name
@@ -96,20 +90,6 @@ function W:CreateNameText(button)
         end
         name = name or F:GetNickname(button.states.name, button.states.fullName)
 
-        Util:UpdateTextWidth(nameText, name, nameText.width, button)
+        Util:UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
-
-    function nameText:UpdateTextColor()
-        if self.colorType == const.ColorType.CLASS_COLOR then
-            self:SetTextColor(F:GetClassColor(button.states.class))
-        else
-            self:SetTextColor(unpack(self.rgb))
-        end
-    end
-
-    nameText.SetEnabled = W.SetEnabled
-    nameText.SetPosition = W.SetPosition
-    nameText.SetFontStyle = W.SetFontStyle
-    nameText.SetFontColor = W.SetFontColor
-    nameText._SetIsSelected = W.SetIsSelected
 end

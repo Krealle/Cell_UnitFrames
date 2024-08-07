@@ -75,6 +75,7 @@ local nameWidget = {
     ["font"] = smallFontOpt,
     ["position"] = positionOpt,
     ["width"] = defaultFontWidth,
+    frameLevel = 10
 }
 
 ---@type HealthTextWidgetTable

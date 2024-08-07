@@ -105,12 +105,6 @@
 ---@field enabled boolean
 ---@field id WIDGET_KIND
 
----@class TextWidget: BaseWidget, FontString
----@field colorType ColorType
----@field rgb table<number>
----@field UpdateTextColor function
----@field UpdateValue function
-
 ---@class BaseWidgetTable
 ---@field enabled boolean
 ---@field position PositionOpt

@@ -131,6 +131,25 @@ function U:ToggleRaidIcon(button, show)
     end
 end
 
+-- Register/Unregister UNIT_POWER_FREQUENT, UNIT_MAXPOWER, UNIT_DISPLAYPOWER
+---@param button CUFUnitButton
+---@param show? boolean
+function U:TogglePowerEvents(button, show)
+    if not button:IsShown() then return end
+    if button.widgets.powerBar:IsVisible()
+        or button.widgets.powerText.enabled
+        or show
+    then
+        button:RegisterEvent("UNIT_POWER_FREQUENT")
+        button:RegisterEvent("UNIT_MAXPOWER")
+        button:RegisterEvent("UNIT_DISPLAYPOWER")
+    else
+        button:UnregisterEvent("UNIT_POWER_FREQUENT")
+        button:UnregisterEvent("UNIT_MAXPOWER")
+        button:UnregisterEvent("UNIT_DISPLAYPOWER")
+    end
+end
+
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -141,10 +160,6 @@ local function UnitFrame_RegisterEvents(self)
 
     self:RegisterEvent("UNIT_HEALTH")
     self:RegisterEvent("UNIT_MAXHEALTH")
-
-    self:RegisterEvent("UNIT_POWER_FREQUENT")
-    self:RegisterEvent("UNIT_MAXPOWER")
-    self:RegisterEvent("UNIT_DISPLAYPOWER")
 
     --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
@@ -172,6 +187,7 @@ local function UnitFrame_RegisterEvents(self)
         self:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
     U:ToggleRaidIcon(self)
+    U:TogglePowerEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 

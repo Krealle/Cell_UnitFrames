@@ -97,13 +97,10 @@ end
 ---@field ShowPowerBar function
 ---@param self CUFUnitButton
 local function ShowPowerBar(self)
-    if self:IsVisible() then
-        self:RegisterEvent("UNIT_POWER_FREQUENT")
-        self:RegisterEvent("UNIT_MAXPOWER")
-        self:RegisterEvent("UNIT_DISPLAYPOWER")
-    end
     self.widgets.powerBar:Show()
     self.widgets.powerBarLoss:Show()
+
+    U:TogglePowerEvents(self)
 
     P:ClearPoints(self.widgets.healthBar)
     P:ClearPoints(self.widgets.powerBar)
@@ -134,11 +131,10 @@ end
 ---@field HidePowerBar function
 ---@param self CUFUnitButton
 local function HidePowerBar(self)
-    self:UnregisterEvent("UNIT_POWER_FREQUENT")
-    self:UnregisterEvent("UNIT_MAXPOWER")
-    self:UnregisterEvent("UNIT_DISPLAYPOWER")
     self.widgets.powerBar:Hide()
     self.widgets.powerBarLoss:Hide()
+
+    U:TogglePowerEvents(self)
 
     P:ClearPoints(self.widgets.healthBar)
     P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)

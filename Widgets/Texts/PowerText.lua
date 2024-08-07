@@ -34,6 +34,9 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.powerText
     local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.POWER_TEXT, unit) --[[@as PowerTextWidgetTable]]
 
+    if not setting or setting == "enabled" then
+        U:TogglePowerEvents(button)
+    end
     if not setting or setting == const.OPTION_KIND.FORMAT then
         widget:SetFormat(styleTable.format)
     end

@@ -14,6 +14,7 @@ local Builder = CUF.Builder
 local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
+local Util = CUF.Util
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -31,9 +32,14 @@ menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, "Power",
 ---@param subSetting string
 function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.powerText
+    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.POWER_TEXT, unit) --[[@as PowerTextWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.FORMAT then
-        widget:SetFormat(DB.GetAllWidgetTables(unit).powerText.format)
+        widget:SetFormat(styleTable.format)
+    end
+    if not setting or setting == const.OPTION_KIND.TEXT_FORMAT then
+        widget:SetTextFormat(styleTable.textFormat)
+        widget:SetFormat(styleTable.format)
     end
 
     U:UnitFrame_UpdatePowerText(button)
@@ -91,6 +97,24 @@ local function SetPower_Number_Short(self, current, max)
     self:SetWidth(self:GetStringWidth())
 end
 
+-------------------------------------------------
+-- MARK: Custom Format
+-------------------------------------------------
+
+---@param self PowerTextWidget
+local function SetPower_Custom(self)
+    local formatFn = W.ProcessCustomTextFormat(self.textFormat)
+    self.SetValue = function(_, current, max)
+        self:SetText(formatFn(current, max))
+        self:SetWidth(self:GetStringWidth())
+    end
+    self:UpdateValue() -- Fixes annoying race condition
+end
+
+-------------------------------------------------
+-- MARK: Setters
+-------------------------------------------------
+
 ---@class PowerTextWidget
 ---@param self PowerTextWidget
 ---@param format PowerTextFormat
@@ -101,7 +125,16 @@ local function PowerText_SetFormat(self, format)
         self.SetValue = SetPower_Number
     elseif format == const.PowerTextFormat.NUMBER_SHORT then
         self.SetValue = SetPower_Number_Short
+    elseif format == const.PowerTextFormat.CUSTOM then
+        self.SetValue = SetPower_Custom
     end
+end
+
+---@class PowerTextWidget
+---@param self PowerTextWidget
+---@param format string
+local function PowerText_SetTextFormat(self, format)
+    self.textFormat = format
 end
 
 -------------------------------------------------
@@ -118,11 +151,13 @@ function W:CreatePowerText(button)
     powerText:SetFont("Cell Default", 12, "OUTLINE")
     powerText.enabled = false
     powerText.id = const.WIDGET_KIND.POWER_TEXT
-    ---@type PowerColorType
-    powerText.colorType = const.PowerColorType.CLASS_COLOR
+
+    powerText.colorType = const.PowerColorType.CLASS_COLOR ---@type PowerColorType
     powerText.rgb = { 1, 1, 1 }
+    powerText.textFormat = ""
 
     powerText.SetFormat = PowerText_SetFormat
+    powerText.SetTextFormat = PowerText_SetTextFormat
     powerText.SetValue = SetPower_Percentage
     powerText.SetEnabled = W.SetEnabled
     powerText.SetPosition = W.SetPosition
@@ -130,8 +165,13 @@ function W:CreatePowerText(button)
     powerText.SetFontColor = W.SetFontColor
     powerText._SetIsSelected = W.SetIsSelected
 
-    function powerText:SetColor(r, g, b)
-        self:SetTextColor(r, g, b)
+    function powerText:UpdateValue()
+        if button.widgets.powerText.enabled and button.states.powerMax ~= 0 and button.states.power then
+            button.widgets.powerText:SetValue(button.states.power, button.states.powerMax)
+            button.widgets.powerText:Show()
+        else
+            button.widgets.powerText:Hide()
+        end
     end
 
     function powerText:UpdateTextColor()
@@ -139,20 +179,11 @@ function W:CreatePowerText(button)
         if not unit then return end
 
         if self.colorType == const.PowerColorType.CLASS_COLOR then
-            self:SetColor(F:GetClassColor(button.states.class))
+            self:SetTextColor(F:GetClassColor(button.states.class))
         elseif self.colorType == const.PowerColorType.POWER_COLOR then
-            self:SetColor(F:GetPowerColor(unit))
+            self:SetTextColor(Util:GetPowerColor(unit))
         else
-            self:SetColor(unpack(self.rgb))
-        end
-    end
-
-    function powerText:UpdateValue()
-        if button.widgets.powerText.enabled and button.states.powerMax ~= 0 and button.states.power then
-            button.widgets.powerText:SetValue(button.states.power, button.states.powerMax)
-            button.widgets.powerText:Show()
-        else
-            button.widgets.powerText:Hide()
+            self:SetTextColor(unpack(self.rgb))
         end
     end
 end

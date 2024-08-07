@@ -202,6 +202,17 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     return editBox
 end
 
+-- Returns rgb values for a unit's power color
+--
+-- Doesn't return type prop from F:GetPowerColor
+---@param unit Unit
+---@return number, number, number
+function CUF.Util:GetPowerColor(unit)
+    local r, g, b, type = F:GetPowerColor(unit)
+
+    return r, g, b
+end
+
 -------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------

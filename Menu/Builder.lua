@@ -820,12 +820,23 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
     local powerFormatItems = {
         { "32%",                 const.PowerTextFormat.PERCENTAGE, },
         { "21377",               const.PowerTextFormat.NUMBER, },
-        { F:FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, }
+        { F:FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, },
+        { L["Custom"],           const.PowerTextFormat.CUSTOM }
     }
 
-    ---@class PowerFormatOptions: CUFDropdown, OptionsFrame
-    return self:CreateDropdown(parent, widgetName, "Format", nil,
+    ---@class PowerFormatOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 70
+    f.id = "PowerFormatOptions"
+
+    f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
         powerFormatItems, const.OPTION_KIND.FORMAT)
+    f.formatDropdown:SetPoint("TOPLEFT", f)
+
+    f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
+    self:AnchorBelow(f.formatEditBox, f.formatDropdown)
+
+    return f
 end
 
 -------------------------------------------------

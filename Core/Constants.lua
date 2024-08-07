@@ -32,10 +32,12 @@ const.ColorType = {
 ---| "percentage"
 ---| "number"
 ---| "number-short"
+---| "custom"
 const.PowerTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
     NUMBER_SHORT = "number-short",
+    CUSTOM = "custom"
 }
 
 ---@alias HealthTextFormat
@@ -51,7 +53,6 @@ const.PowerTextFormat = {
 ---| "absorbs-only"
 ---| "absorbs-only-short"
 ---| "absorbs-only-percentage"
----| "custom"
 const.HealthTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
@@ -67,7 +68,7 @@ const.HealthTextFormat = {
     ABSORBS_ONLY = "absorbs-only",
     ABSORBS_ONLY_SHORT = "absorbs-only-short",
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
-    CUSTOM = "custom"
+    CUSTOM = "custom",
 }
 
 ---@alias WIDGET_KIND

@@ -98,6 +98,7 @@ local powerTextWidget = {
     ["width"] = defaultFontWidth,
     ["format"] = "percentage",
     ["hideIfEmptyOrFull"] = false,
+    textFormat = ""
 }
 
 ---@class AuraFilterOpt

@@ -122,9 +122,11 @@
 
 ---@class HealthTextWidgetTable: TextWidgetTable
 ---@field format HealthTextFormat
+---@field textFormat string
 
 ---@class PowerTextWidgetTable: TextWidgetTable
 ---@field format PowerTextFormat
+---@field textFormat string
 
 ---@class FontWidth
 ---@field type "percentage" | "unlimited" | "length"

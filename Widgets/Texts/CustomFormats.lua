@@ -213,7 +213,7 @@ function W.ProcessCustomTextFormat(textFormat)
 
     ---@param current number
     ---@param max number
-    ---@param totalAbsorbs number
+    ---@param totalAbsorbs? number
     ---@return string
     return function(current, max, totalAbsorbs)
         local result = {}

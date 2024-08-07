@@ -76,7 +76,7 @@ end
 ---@param button CUFUnitButton
 function W:CreateNameText(button)
     ---@class NameTextWidget: TextWidget
-    local nameText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local nameText = button:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     button.widgets.nameText = nameText
     nameText.width = CUF.defaults.fontWidth
     nameText:ClearAllPoints()

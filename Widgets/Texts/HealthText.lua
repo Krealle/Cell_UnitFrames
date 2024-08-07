@@ -280,7 +280,7 @@ end
 ---@param button CUFUnitButton
 function W:CreateHealthText(button)
     ---@class HealthTextWidget: TextWidget
-    local healthText = button.widgets.healthBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local healthText = button:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     button.widgets.healthText = healthText
     healthText:ClearAllPoints()
     healthText:SetPoint("CENTER", 0, 0)

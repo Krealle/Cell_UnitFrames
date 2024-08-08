@@ -62,3 +62,4 @@ UnitFrames/OnLoad.lua
 UnitFrames/Units/PlayerFrame.lua
 UnitFrames/Units/FocusFrame.lua
 UnitFrames/Units/TargetFrame.lua
+UnitFrames/Units/PetFrame.lua

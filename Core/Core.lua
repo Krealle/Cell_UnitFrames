@@ -28,7 +28,7 @@ local Util = CUF.Util
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field units table<number, Unit>
 CUF.vars = {}
-CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS }
+CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS, const.UNIT.PET }
 CUF.vars.isMenuOpen = false
 CUF.vars.testMode = true
 CUF.vars.debug = false

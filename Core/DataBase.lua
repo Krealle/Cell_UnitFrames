@@ -5,7 +5,7 @@ local CUF = select(2, ...)
 local DB = {}
 CUF.DB = DB
 
-local dbDebug = function(...) if CUF.vars.debugDB then CUF:Log(...) end end
+local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...) end end
 
 -----------------------------------------
 -- Getters

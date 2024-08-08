@@ -351,3 +351,16 @@ function U:SetOrientation(button, orientation, rotateTexture)
     -- update actions
     --I.UpdateActionsOrientation(button, orientation)
 end
+
+-- We need this to get clickCasting properly set up
+local IterateAllUnitButtons = Cell.funcs.IterateAllUnitButtons
+function Cell.funcs:IterateAllUnitButtons(...)
+    IterateAllUnitButtons(self, ...)
+
+    local func, updateCurrentGroupOnly, updateQuickAssist = ...
+    if func and type(func) == "function" and not updateCurrentGroupOnly and updateQuickAssist then
+        for _, unit in pairs(CUF.constants.UNIT) do
+            func(CUF.unitButtons[unit])
+        end
+    end
+end

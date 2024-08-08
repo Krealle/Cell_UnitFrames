@@ -89,7 +89,7 @@ end
 ---@param func function
 ---@param unitToIterate string?
 function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
-    for _, unit in pairs(CUF.vars.units) do
+    for _, unit in pairs(CUF.constants.UNIT) do
         if not unitToIterate or unitToIterate == unit then
             func(CUF.unitButtons[unit], unit, ...)
         end
@@ -293,20 +293,37 @@ function CUF:Fire(eventName, ...)
     end
 end
 
+-- Borrowed from XephCD
+---@param event WowEvent
+---@param callback fun(ownerId: number, ...: any): boolean
+---@return number
+function CUF:AddEventListener(event, callback)
+    local function wrappedFn(...)
+        local unregister = callback(...)
+
+        if unregister then
+            local id = select(1, ...)
+            EventRegistry:UnregisterFrameEventAndCallback(event, id)
+        end
+    end
+
+    return EventRegistry:RegisterFrameEventAndCallback(event, wrappedFn)
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------
 
 ---@param ... any
 function CUF:Log(...)
-    if not CUF.vars.debug then return end
+    if not CUF.IsInDebugMode() then return end
     print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any
 ---@param name string|number
 function CUF:DevAdd(data, name)
-    if not CUF.vars.debugDB or not DevTool then return end
+    if not CUF.IsInDebugMode() or not DevTool then return end
 
     DevTool:AddData(data, name)
 end

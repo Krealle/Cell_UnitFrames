@@ -1,5 +1,5 @@
 ## Interface: 110000,110002
-## SavedVariables: CUFDB
+## SavedVariables: CUF_DB
 ## IconTexture: Interface\ICONS\spell_progenitor_buff
 
 ## Title: Cell - Unit Frames

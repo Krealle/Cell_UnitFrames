@@ -10,15 +10,13 @@ function SlashCmdList.CUF(msg, editbox)
         CUF.vars.testMode = not CUF.vars.testMode
         CUF:Print("Test mode: " .. (CUF.vars.testMode and "ON" or "OFF"))
     elseif command == "dev" then
-        CUF.vars.debug = not CUF.vars.debug
-        CUF:Print("Debug: " .. (CUF.vars.debug and "ON" or "OFF"))
-    elseif command == "debug" then
+        CUF.SetDebugMode(not CUF.IsInDebugMode())
         Debug:ToggleDebugWindow()
+        CUF:Print("Debug: " .. (CUF.IsInDebugMode() and "ON" or "OFF"))
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
-            "/cuf dev - toggle debug mode" .. "\n" ..
-            "/cuf debug - toggle dev window"
+            "/cuf dev - toggle debug mode"
         )
     end
 end

@@ -21,6 +21,7 @@ function Debug:InitDebugWindow()
         "selectedLayoutTable", function() CUF:DevAdd(CUF.vars.selectedLayoutTable, "selectedLayoutTable") end)
     self.window:AddVar("selectedWidgetTable",
         function() CUF:DevAdd(CUF.vars.selectedWidgetTable, "selectedWidgetTable") end)
+    self.window:AddVar("Buttons", function() CUF:DevAdd(CUF.unitButtons, "unitButtons") end)
     self.window:AddVar("Cell", function() CUF:DevAdd(Cell, "Cell") end)
     self.window:AddVar("Cell.vars", function() CUF:DevAdd(Cell.vars, "Cell.vars") end)
     self.window:AddVar("CellDB", function() CUF:DevAdd(CellDB, "CellDB") end)
@@ -39,4 +40,26 @@ function Debug:ToggleDebugWindow()
     else
         self.window.frame:Show()
     end
+end
+
+---@param playerLoginOwnerId number
+---@return boolean
+local function OnPlayerLogin(playerLoginOwnerId)
+    if CUF.IsInDebugMode() then
+        Debug:InitDebugWindow()
+    end
+    return true
+end
+CUF:AddEventListener("PLAYER_LOGIN", OnPlayerLogin)
+
+function CUF.IsInDebugMode()
+    return CUF_DB.debug
+end
+
+---@param mode boolean
+function CUF.SetDebugMode(mode)
+    if type(mode) ~= "boolean" then
+        mode = false
+    end
+    CUF_DB.debug = mode
 end

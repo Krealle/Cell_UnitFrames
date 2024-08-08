@@ -3,6 +3,7 @@ local CUF = select(2, ...)
 _G.CUF = CUF
 
 CUF.Cell = Cell
+local F = Cell.funcs
 
 CellDB = CellDB --[[@as CellDB]]
 Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
@@ -14,8 +15,10 @@ CUF.version = 2
 CUF.widgets = {}
 ---@class CUF.uFuncs
 CUF.uFuncs = {}
----@class CUF.constants
+CUF.unitButtons = {}
+
 local const = CUF.constants
+local Util = CUF.Util
 
 ---@class CUF.vars
 ---@field selectedLayout string
@@ -31,9 +34,6 @@ CUF.vars.testMode = true
 CUF.vars.debug = false
 CUF.vars.debugDB = false
 
-local F = Cell.funcs
-local Util = CUF.Util
-
 -- MARK: Overrides
 -------------------------------------------------------
 -- local Cell functions
@@ -46,22 +46,17 @@ function F:IterateAllUnitButtons(...)
     -- We need this to get clickCasting properly set up
     local func, updateCurrentGroupOnly, updateQuickAssist = ...
     if func and type(func) == "function" and not updateCurrentGroupOnly and updateQuickAssist then
-        -- player
-        func(Cell.unitButtons.player)
-
-        -- Target
-        func(Cell.unitButtons.target)
-
-        -- Focus
-        func(Cell.unitButtons.focus)
+        for _, unit in pairs(CUF.vars.units) do
+            func(CUF.unitButtons[unit])
+        end
     end
 end
 
 for _, unit in pairs(CUF.vars.units) do
     -- Load layout defaults (Layout_Defaults.lua)
     Cell.defaults.layout[unit] = CUF.defaults.unitFrame
-    -- Insert unit buttons (MainFrame.lua)
-    Cell.unitButtons[unit] = {}
+    -- Insert unit buttons
+    CUF.unitButtons[unit] = {}
 end
 
 -- MARK: Verify DB

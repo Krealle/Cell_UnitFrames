@@ -12,13 +12,11 @@ local const = CUF.constants
 local unit = const.UNIT.FOCUS
 
 local focusFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit)
-Cell.frames.focusFrame = focusFrame
-Cell.frames.focusFrameAnchor = anchorFrame
 
 local focusButton = CreateFrame("Button", "CUFFocusButton", focusFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
 focusButton:SetAttribute("unit", unit)
 focusButton:SetPoint("TOPLEFT")
-Cell.unitButtons.focus = focusButton
+CUF.unitButtons.focus = focusButton
 
 -------------------------------------------------
 -- callbacks

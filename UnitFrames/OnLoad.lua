@@ -297,7 +297,7 @@ end
 
 ---@param self CUFUnitButton
 local function UnitFrame_OnShow(self)
-    --CUF:Debug(GetTime(), "OnShow", self:GetName())
+    --CUF:Log(GetTime(), "OnShow", self:GetName())
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
     self._powerBarUpdateRequired = true
     UnitFrame_RegisterEvents(self)
@@ -309,12 +309,12 @@ end
 
 ---@param self CUFUnitButton
 local function UnitFrame_OnHide(self)
-    --CUF:Debug(GetTime(), "OnHide", self:GetName())
+    --CUF:Log(GetTime(), "OnHide", self:GetName())
     UnitFrame_UnregisterEvents(self)
     ResetAuraTables(self)
 
     -- NOTE: update Cell.vars.guids
-    -- CUF:Debug("hide", self.states.unit, self.__unitGuid, self.__unitName)
+    -- CUF:Log("hide", self.states.unit, self.__unitGuid, self.__unitName)
     if self.__unitGuid then
         Cell.vars.guids[self.__unitGuid] = nil
         self.__unitGuid = nil
@@ -362,7 +362,7 @@ local UNKNOWNOBJECT = _G["UNKNOWNOBJECT"]
 
 ---@param self CUFUnitButton
 local function UnitFrame_OnTick(self)
-    -- CUF:Debug(GetTime(), "OnTick", self._updateRequired, self:GetAttribute("refreshOnUpdate"), self:GetName())
+    -- CUF:Log(GetTime(), "OnTick", self._updateRequired, self:GetAttribute("refreshOnUpdate"), self:GetName())
     local e = (self.__tickCount or 0) + 1
     if e >= 2 then -- every 0.5 second
         e = 0
@@ -379,7 +379,7 @@ local function UnitFrame_OnTick(self)
 
             local guid = UnitGUID(self.states.unit)
             if guid and guid ~= self.__unitGuid then
-                -- CUF:Debug("guidChanged:", self:GetName(), self.states.unit, guid)
+                -- CUF:Log("guidChanged:", self:GetName(), self.states.unit, guid)
                 -- NOTE: unit entity changed
                 -- update Cell.vars.guids
                 self.__unitGuid = guid
@@ -465,7 +465,7 @@ end
 ---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
-    --CUF:Debug(buttonName, "OnLoad")
+    --CUF:Log(buttonName, "OnLoad")
 
     ---@diagnostic disable-next-line: missing-fields
     button.widgets = {}
@@ -532,5 +532,5 @@ function CUFUnitButton_OnLoad(button)
     --[[ button:SetScript("OnSizeChanged", UnitFrame_OnSizeChanged) ]]
     button:SetScript("OnEvent", UnitFrame_OnEvent)
     button:RegisterForClicks("AnyDown")
-    --CUF:Debug(button:GetName(), "OnLoad end")
+    --CUF:Log(button:GetName(), "OnLoad end")
 end

@@ -22,7 +22,7 @@ CUF.Menu = menu
 
 ---@param unit function
 function menu:AddUnit(unit)
-    --CUF:Debug("Menu - AddUnit")
+    --CUF:Log("Menu - AddUnit")
     table.insert(self.unitsToAdd, unit)
 end
 
@@ -30,7 +30,7 @@ end
 ---@param pageName string
 ---@param ... MenuOptions
 function menu:AddWidget(widgetName, pageName, ...)
-    --CUF:Debug("Menu - AddWidget")
+    --CUF:Log("Menu - AddWidget")
     table.insert(self.widgetsToAdd,
         { ["widgetName"] = widgetName, ["pageName"] = pageName, ["options"] = { ... } })
 end
@@ -43,7 +43,7 @@ end
 ---@param unit Unit|nil
 ---@param widget WIDGET_KIND|nil
 function menu:UpdateSelectedPages(unit, widget)
-    --CUF:Debug("|cff00ff00menu:UpdateSelected:|r", unit, widget)
+    --CUF:Log("|cff00ff00menu:UpdateSelected:|r", unit, widget)
 
     if unit then
         CUF.vars.selectedUnit = unit
@@ -67,7 +67,7 @@ end
 -- Fires `LoadPageDB` and `UpdateVisibility` callbacks
 ---@param layout string
 local function LoadLayoutDB(layout)
-    CUF:Debug("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
     CUF.vars.selectedLayout = layout
     CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
@@ -95,7 +95,7 @@ end
 --
 -- We then unhook on to the `UpdatePreview` callback, since we no longer need it.
 local function UpdatePreview()
-    --CUF:Debug("Cell_UpdatePreview")
+    --CUF:Log("Cell_UpdatePreview")
     local layoutsTab = Util.findChildByName(Cell.frames.optionsFrame, "CellOptionsFrame_LayoutsTab")
     if not layoutsTab then return end
 
@@ -106,7 +106,7 @@ local function UpdatePreview()
     if not layoutDropdown then return end
 
     hooksecurefunc(layoutDropdown, "SetSelectedValue", function(self)
-        --CUF:Debug("Cell_SetSelectedValue", self:GetSelected())
+        --CUF:Log("Cell_SetSelectedValue", self:GetSelected())
         LoadLayoutDB(self:GetSelected())
     end)
 
@@ -119,7 +119,7 @@ end
 
 ---@param tab string
 local function ShowTab(tab)
-    --CUF:Debug("Cell_ShowTab", tab)
+    --CUF:Log("Cell_ShowTab", tab)
     if tab ~= "layouts" then
         menuWindow:HideMenu()
     elseif not menu.window.init then

@@ -56,7 +56,7 @@ end
 ---@param widgetName WIDGET_KIND?
 ---@param setting OPTION_KIND?
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
-    CUF:Debug("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
+    CUF:Log("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
 
     if layout and layout ~= Cell.vars.currentLayout then return end
 
@@ -73,7 +73,7 @@ CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidge
 ---@param func function
 ---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
-    --CUF:Debug("|cffff7777RegisterWidget:|r", widgetName)
+    --CUF:Log("|cffff7777RegisterWidget:|r", widgetName)
     self.widgets[widgetName] = func
 end
 
@@ -87,7 +87,7 @@ end
 ---@param selectedUnit Unit?
 ---@param selectedWidget WIDGET_KIND?
 function Handler.UpdateSelected(selectedUnit, selectedWidget)
-    CUF:Debug("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
+    CUF:Log("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
     Util:IterateAllUnitButtons(
     ---@param button CUFUnitButton
         function(button)
@@ -106,12 +106,12 @@ function Handler.LoadPageDB(page, subPage)
     if not page or not subPage then
         if (page and page == Handler.previousPage)
             or (subPage and subPage == Handler.previousSubPage) then
-            CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage, "skipping")
+            CUF:Log("|cffff7777Handler.LoadPageDB:|r", page, subPage, "skipping")
             return
         end
     end
 
-    CUF:Debug("|cffff7777Handler.LoadPageDB:|r", page, subPage)
+    CUF:Log("|cffff7777Handler.LoadPageDB:|r", page, subPage)
 
     subPage = subPage or CUF.vars.selectedWidget
     page = page or CUF.vars.selectedUnit
@@ -136,7 +136,7 @@ CUF:RegisterCallback("LoadPageDB", "Handler_LoadPageDB", Handler.LoadPageDB)
 --- @param widgetName WIDGET_KIND
 --- @param optName string
 function Handler:RegisterOption(func, widgetName, optName)
-    --CUF:Debug("|cffff7777RegisterOption:|r", widgetName, optName)
+    --CUF:Log("|cffff7777RegisterOption:|r", widgetName, optName)
     if not self.options[widgetName] then
         self.options[widgetName] = {}
     end

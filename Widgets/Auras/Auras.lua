@@ -204,7 +204,7 @@ end
 ---@param type "buffs" | "debuffs"
 ---@return CellAuraIcons auraIcons
 function W:CreateAuraIcons(button, type)
-    --CUF:Debug("CreateIndicators", button:GetName())
+    --CUF:Log("CreateIndicators", button:GetName())
     ---@class CellAuraIcons
     local auraIcons = I.CreateAura_Icons(button:GetName() .. Util:ToTitleCase(type) .. "Icons", button, 10)
 

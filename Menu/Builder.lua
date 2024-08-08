@@ -87,7 +87,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
     ---@type Frame
     local prevOption = enabledCheckBox
     for _, option in pairs({ ... }) do
-        --CUF:Debug("|cffff7777MenuBuilder:|r", option)
+        --CUF:Log("|cffff7777MenuBuilder:|r", option)
         local optPage = Builder.MenuFuncs[option](self, widgetPage.frame, widgetName)
         optPage:Show()
 

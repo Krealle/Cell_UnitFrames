@@ -60,7 +60,7 @@ function menuWindow:SetWidget(widget)
 end
 
 function menuWindow:ShowMenu()
-    CUF:Debug("|cff00ccffShow Menu|r")
+    CUF:Log("|cff00ccffShow Menu|r")
     if not self.window then
         self:Create()
 
@@ -81,7 +81,7 @@ end
 
 function menuWindow:HideMenu()
     if not self.window or not self.window:IsShown() then return end
-    CUF:Debug("|cff00ccffHide Menu|r")
+    CUF:Log("|cff00ccffHide Menu|r")
     self.window:Hide()
 
     CUF.vars.isMenuOpen = false
@@ -93,7 +93,7 @@ end
 -------------------------------------------------
 
 function menuWindow:InitUnits()
-    --CUF:Debug("menuWindow - InitUnits")
+    --CUF:Log("menuWindow - InitUnits")
     local prevButton
 
     for _, fn in pairs(CUF.Menu.unitsToAdd) do
@@ -116,7 +116,7 @@ function menuWindow:InitUnits()
 end
 
 function menuWindow:InitWidgets()
-    --CUF:Debug("menuWindow - InitWidgets")
+    --CUF:Log("menuWindow - InitWidgets")
     local prevButton
     local prevAnchor
     local idx = 1
@@ -158,7 +158,7 @@ end
 -------------------------------------------------
 
 function menuWindow:Create()
-    CUF:Debug("|cff00ccffCreate Menu|r")
+    CUF:Log("|cff00ccffCreate Menu|r")
     local optionsFrame = Cell.frames.optionsFrame
 
     self.unitHeight = 230

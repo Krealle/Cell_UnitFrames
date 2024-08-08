@@ -290,7 +290,7 @@ end
 -------------------------------------------------
 
 ---@param ... any
-function CUF:Debug(...)
+function CUF:Log(...)
     if not CUF.vars.debug then return end
     print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
 end

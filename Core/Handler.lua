@@ -38,9 +38,11 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
         widget:SetPosition(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.FONT) and type(widget.SetFontStyle) == "function" then
+        ---@diagnostic disable-next-line: param-type-mismatch
         widget:SetFontStyle(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.COLOR) and type(widget.SetFontColor) == "function" then
+        ---@diagnostic disable-next-line: param-type-mismatch
         widget:SetFontColor(styleTable)
     end
     if (not setting or setting == const.OPTION_KIND.SIZE) and type(widget.SetWidgetSize) == "function" then

@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local L = Cell.L
-local P = Cell.pixelPerfectFuncs
 local F = Cell.funcs
 
 local Builder = CUF.Builder
@@ -210,7 +209,7 @@ function menuWindow:Create()
     self.unitPane.line:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT")
 
     -- Unit Settings
-    self.unitSection = CUF:CreateFrame("UnitSection", self.unitPane,
+    self.unitSection = CUF:CreateFrame("CUFOptionsFrame_UnitSettingsFrame", self.unitPane,
         sectionWidth,
         self.unitHeight, true, true)
     self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")

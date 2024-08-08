@@ -17,7 +17,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.ROLE_ICON, "Role Icon",
+menu:AddWidget(const.WIDGET_KIND.ROLE_ICON,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.SingleSize,
     Builder.MenuOptions.FrameLevel)

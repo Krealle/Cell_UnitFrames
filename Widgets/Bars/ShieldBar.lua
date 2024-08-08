@@ -20,7 +20,7 @@ local Handler = CUF.Handler
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR, "Shield Bar",
+menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
     Builder.MenuOptions.ColorPicker,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.SingleSize,

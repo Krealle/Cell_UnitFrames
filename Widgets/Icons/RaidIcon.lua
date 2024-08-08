@@ -17,7 +17,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.RAID_ICON, "Raid Icon",
+menu:AddWidget(const.WIDGET_KIND.RAID_ICON,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.SingleSize,
     Builder.MenuOptions.FrameLevel)

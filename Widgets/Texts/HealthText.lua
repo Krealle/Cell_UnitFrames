@@ -19,7 +19,7 @@ local DB = CUF.DB
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT, "Health",
+menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT,
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.HealthFormat,
     Builder.MenuOptions.Anchor,

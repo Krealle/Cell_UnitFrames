@@ -20,7 +20,7 @@ local Util = CUF.Util
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.POWER_TEXT, "Power",
+menu:AddWidget(const.WIDGET_KIND.POWER_TEXT,
     Builder.MenuOptions.TextColorWithPowerType,
     Builder.MenuOptions.PowerFormat,
     Builder.MenuOptions.Anchor,

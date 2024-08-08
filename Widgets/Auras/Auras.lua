@@ -33,7 +33,7 @@ for _, kind in pairs({ const.WIDGET_KIND.BUFFS, const.WIDGET_KIND.DEBUFFS }) do
 
     Handler:RegisterWidget(UpdateAuraWidget, kind)
 
-    menu:AddWidget(kind, Util:ToTitleCase(kind),
+    menu:AddWidget(kind,
         Builder.MenuOptions.AuraIconOptions,
         Builder.MenuOptions.AuraFilter,
         Builder.MenuOptions.AuraBlacklist,

@@ -27,12 +27,11 @@ function menu:AddUnit(unit)
 end
 
 ---@param widgetName WIDGET_KIND
----@param pageName string
 ---@param ... MenuOptions
-function menu:AddWidget(widgetName, pageName, ...)
+function menu:AddWidget(widgetName, ...)
     --CUF:Log("Menu - AddWidget")
     table.insert(self.widgetsToAdd,
-        { ["widgetName"] = widgetName, ["pageName"] = pageName, ["options"] = { ... } })
+        { ["widgetName"] = widgetName, ["options"] = { ... } })
 end
 
 -------------------------------------------------

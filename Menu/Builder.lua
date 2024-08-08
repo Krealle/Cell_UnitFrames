@@ -2,9 +2,8 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
+local L = CUF.L
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 local Handler = CUF.Handler
 local const = CUF.constants
@@ -1111,35 +1110,35 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     f.title = self:CreateOptionTitle(f, "Filter")
 
     --- First Row
-    f.maxDurationSlider = self:CreateSlider(f, widgetName, L["Maximum Duration"], 165, 0, 10800,
+    f.maxDurationSlider = self:CreateSlider(f, widgetName, L.MaxDuration, 165, 0, 10800,
         const.AURA_OPTION_KIND.FILTER, "maxDuration")
     self:AnchorBelow(f.maxDurationSlider, f.title)
     f.maxDurationSlider.currentEditBox:SetWidth(60)
 
-    f.minDurationSlider = self:CreateSlider(f, widgetName, L["Minimum Duration"], 165, 0, 10800,
+    f.minDurationSlider = self:CreateSlider(f, widgetName, L.MinDuration, 165, 0, 10800,
         const.AURA_OPTION_KIND.FILTER, "minDuration")
     self:AnchorRight(f.minDurationSlider, f.maxDurationSlider)
     f.minDurationSlider.currentEditBox:SetWidth(60)
 
     -- Second Row
-    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L["Hide No Duration"], const.AURA_OPTION_KIND.FILTER,
+    f.hideNoDuration = self:CreateCheckBox(f, widgetName, L.HideNoDuration, const.AURA_OPTION_KIND.FILTER,
         { "hideNoDuration" })
     self:AnchorBelow(f.hideNoDuration, f.maxDurationSlider)
 
-    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L["Hide Personal"], const.AURA_OPTION_KIND.FILTER,
+    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L.HidePersonal, const.AURA_OPTION_KIND.FILTER,
         { "hidePersonal" })
     self:AnchorRightOfCB(f.hidePersonalCB, f.hideNoDuration)
 
-    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L["Hide External"], const.AURA_OPTION_KIND.FILTER,
+    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L.HideExternal, const.AURA_OPTION_KIND.FILTER,
         { "hideExternal" })
     self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
 
     -- Third Row
-    f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L["Use Blacklist"], const.AURA_OPTION_KIND.FILTER,
+    f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist, const.AURA_OPTION_KIND.FILTER,
         { "useBlacklist" })
     f.useBlacklistCB:SetPoint("TOPLEFT", f.hideNoDuration, 0, -30)
 
-    f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L["Use Whitelist"], const.AURA_OPTION_KIND.FILTER,
+    f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L.UseWhitelist, const.AURA_OPTION_KIND.FILTER,
         { "useWhitelist" })
     self:AnchorRightOfCB(f.useWhitelistCB, f.useBlacklistCB)
 

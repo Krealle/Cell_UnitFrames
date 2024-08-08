@@ -17,7 +17,7 @@ local const = CUF.constants
 -- MARK: AddWidget
 -------------------------------------------------
 
-menu:AddWidget(const.WIDGET_KIND.COMBAT_ICON, "Combat Icon",
+menu:AddWidget(const.WIDGET_KIND.COMBAT_ICON,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.SingleSize,
     Builder.MenuOptions.FrameLevel)

@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
+local L = CUF.L
 local F = Cell.funcs
 
 local Builder = CUF.Builder
@@ -141,7 +141,7 @@ function menuWindow:InitWidgets()
         self.widgets[widgetPage.id] = widgetPage
 
         -- button
-        widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.pageName], "accent-hover", { 95, 17 })
+        widgetPage.button = Cell:CreateButton(self.widgetPane, L[widget.widgetName], "accent-hover", { 95, 17 })
         widgetPage.button.id = widget.widgetName
 
         if prevButton then
@@ -221,7 +221,7 @@ function menuWindow:Create()
     end)
 
     -- Widget Buttons
-    self.widgetPane = Cell:CreateTitledPane(self.unitSection, L["Widgets"],
+    self.widgetPane = Cell:CreateTitledPane(self.unitSection, L.Widgets,
         sectionWidth, self.paneHeight)
     self.widgetPane:SetPoint("TOPLEFT", self.unitSection, "BOTTOMLEFT")
 

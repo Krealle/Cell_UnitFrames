@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
+local L = CUF.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
 local A = Cell.animations
@@ -82,7 +82,7 @@ function U:CreateBaseUnitFrame(unit, onEnterLogic)
             ["tooltipPosition"])
         P:Point(CellTooltip, tooltipPoint, config, tooltipRelativePoint, tooltipX, tooltipY)
 
-        CellTooltip:AddLine(L[Util:ToTitleCase(unit) .. " Frame"])
+        CellTooltip:AddLine(L[unit] .. " " .. L.Frame)
 
         -- Execute additional logic passed to the function
         if type(onEnterLogic) == "function" then

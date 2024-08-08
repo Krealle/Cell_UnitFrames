@@ -2,8 +2,8 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = Cell.L
 
+local L = CUF.L
 local menu = CUF.Menu
 local const = CUF.constants
 local Util = CUF.Util
@@ -75,10 +75,10 @@ for _, unit in pairs(CUF.vars.units) do
             self.id = unit
 
             -- button
-            self.button = Cell:CreateButton(parent.unitSection, L[unitName], "accent-hover", { 85, 17 })
+            self.button = Cell:CreateButton(parent.unitSection, L[unit], "accent-hover", { 85, 17 })
             self.button.id = unit
 
-            self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable " .. unitName .. " Frame"],
+            self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable"] .. " " .. L[unitName] .. " " .. L.Frame,
                 function(checked)
                     CUF.vars.selectedLayoutTable[unit]["enabled"] = checked
                     if CUF.vars.selectedLayout == Cell.vars.currentLayout then

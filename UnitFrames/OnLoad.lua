@@ -187,6 +187,9 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.FOCUS then
         self:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
+    if self.states.unit == const.UNIT.PET then
+        self:RegisterEvent("UNIT_PET")
+    end
     U:ToggleRaidIcon(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
@@ -282,6 +285,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             UnitButton_UpdateThreatBar(self) ]]
             UnitFrame_UpdateAll(self)
         elseif event == "PLAYER_FOCUS_CHANGED" then
+            UnitFrame_UpdateAll(self)
+        elseif event == "UNIT_PET" and unit == const.UNIT.PLAYER then
             UnitFrame_UpdateAll(self)
         elseif event == "RAID_TARGET_UPDATE" then
             U:UnitFrame_UpdateRaidIcon(self)

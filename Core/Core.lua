@@ -9,8 +9,6 @@ Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
 Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
 
 CUF.version = 2
-CUF.debug = true
-CUF.debugDB = true
 
 ---@class CUF.widgets
 CUF.widgets = {}
@@ -30,6 +28,8 @@ CUF.vars = {}
 CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS }
 CUF.vars.isMenuOpen = false
 CUF.vars.testMode = true
+CUF.vars.debug = false
+CUF.vars.debugDB = false
 
 local F = Cell.funcs
 local Util = CUF.Util

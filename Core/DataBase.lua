@@ -5,8 +5,7 @@ local CUF = select(2, ...)
 local DB = {}
 CUF.DB = DB
 
-local debugDB = false
-local dbDebug = function(...) if debugDB then CUF.Debug(...) end end
+local dbDebug = function(...) if CUF.vars.debugDB then CUF:Debug(...) end end
 
 -----------------------------------------
 -- Getters

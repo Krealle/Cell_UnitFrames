@@ -291,14 +291,14 @@ end
 
 ---@param ... any
 function CUF:Debug(...)
-    if not CUF.debug then return end
+    if not CUF.vars.debug then return end
     print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any
 ---@param name string|number
 function CUF:DevAdd(data, name)
-    if not CUF.debugDB or not DevTool then return end
+    if not CUF.vars.debugDB or not DevTool then return end
 
     DevTool:AddData(data, name)
 end

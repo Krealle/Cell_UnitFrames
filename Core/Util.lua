@@ -213,6 +213,14 @@ function CUF.Util:GetPowerColor(unit)
     return r, g, b
 end
 
+function CUF:Print(...)
+    print("|cffffa500[CUF]|r", ...)
+end
+
+function CUF:Warn(...)
+    CUF:Print("|cFFFF3030[WARN]|r", ...)
+end
+
 -------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------

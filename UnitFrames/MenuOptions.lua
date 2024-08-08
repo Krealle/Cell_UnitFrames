@@ -66,14 +66,16 @@ for _, unit in pairs(CUF.vars.units) do
             ---@class UnitsMenuPage
             local self = {}
 
-            self.frame = CreateFrame("Frame", nil, parent.unitPane)
-            self.frame:SetSize(parent.unitPane:GetWidth(), parent.unitPane:GetHeight())
-            self.frame:SetPoint("TOPLEFT", parent.unitPane)
-            self.frame:Hide()
+            self.frame = CUF:CreateFrame(nil, parent.unitSection,
+                parent.unitSection:GetWidth(),
+                parent.unitSection:GetHeight(),
+                true)
+            self.frame:SetPoint("TOPLEFT")
+
             self.id = unit
 
             -- button
-            self.button = Cell:CreateButton(parent.unitPane, L[unitName], "accent-hover", { 85, 17 })
+            self.button = Cell:CreateButton(parent.unitSection, L[unitName], "accent-hover", { 85, 17 })
             self.button.id = unit
 
             self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable " .. unitName .. " Frame"],
@@ -84,7 +86,7 @@ for _, unit in pairs(CUF.vars.units) do
                     end
                     Cell:Fire("UpdateVisibility", unit)
                 end)
-            self.unitFrameCB:SetPoint("TOPLEFT", 5, -25)
+            self.unitFrameCB:SetPoint("TOPLEFT", 5, -10)
 
             if unit ~= const.UNIT.PLAYER then
                 -- same size as player

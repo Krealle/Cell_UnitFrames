@@ -95,6 +95,8 @@ end
 function menuWindow:InitUnits()
     --CUF:Log("menuWindow - InitUnits")
     local prevButton
+    local prevAnchor
+    local idx = 1
 
     for _, fn in pairs(CUF.Menu.unitsToAdd) do
         ---@type UnitsMenuPage
@@ -103,9 +105,21 @@ function menuWindow:InitUnits()
         self.units[unit.id] = unit
 
         if prevButton then
-            unit.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+            -- Max 4 buttons per row
+            if idx % 4 == 0 then
+                unit.button:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
+                idx = 1
+                prevAnchor = unit.button
+
+                self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
+                self.unitPane:SetHeight(self.unitPane:GetHeight() + self.paneHeight)
+            else
+                unit.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1)
+                idx = idx + 1
+            end
         else
-            unit.button:SetPoint("TOPRIGHT", self.unitPane)
+            unit.button:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT", 0, 1)
+            prevAnchor = unit.button
         end
         prevButton = unit.button
 
@@ -137,12 +151,15 @@ function menuWindow:InitWidgets()
                 widgetPage.button:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
                 idx = 1
                 prevAnchor = widgetPage.button
+
+                self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
+                self.widgetPane:SetHeight(self.widgetPane:GetHeight() + self.paneHeight)
             else
-                widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", P:Scale(1), 0)
+                widgetPage.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1, 0)
                 idx = idx + 1
             end
         else
-            widgetPage.button:SetPoint("TOPRIGHT", self.widgetPane)
+            widgetPage.button:SetPoint("BOTTOMRIGHT", self.widgetPane, "BOTTOMRIGHT", 0, 1)
             prevAnchor = widgetPage.button
         end
         prevButton = widgetPage.button
@@ -161,12 +178,20 @@ function menuWindow:Create()
     CUF:Log("|cff00ccffCreate Menu|r")
     local optionsFrame = Cell.frames.optionsFrame
 
-    self.unitHeight = 230
-    self.widgetHeight = 300
+    self.unitHeight = 180
+    self.widgetHeight = 310
     self.baseWidth = 450
+    self.paneHeight = 17
+
+    local buffer = 5
+    local gap = buffer * 2
+    local windowHeight = self.unitHeight + self.widgetHeight + (self.paneHeight * 2)
+    local sectionWidth = self.baseWidth - gap
+
     ---@class CellCombatFrame
-    self.window = CUF:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame, self.baseWidth,
-        self.unitHeight + self.widgetHeight + 10 + 17)
+    self.window = CUF:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame,
+        self.baseWidth,
+        windowHeight)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)
 
     -- mask
@@ -174,9 +199,21 @@ function menuWindow:Create()
     Cell:CreateMask(self.window, nil, { 1, -1, -1, 1 })
     self.window.mask:Hide()
 
-    self.unitPane = Cell:CreateTitledPane(self.window, L["Unit Frames"], self.baseWidth - 10,
-        self.unitHeight)
-    self.unitPane:SetPoint("TOPLEFT", 5, -5)
+    -- Unit Buttons
+    self.unitPane = Cell:CreateTitledPane(self.window, L["Unit Frames"], sectionWidth,
+        self.paneHeight)
+    self.unitPane:SetPoint("TOPLEFT", buffer, -buffer)
+
+    -- Repoint so it's anchored to bottom
+    self.unitPane.line:ClearAllPoints()
+    self.unitPane.line:SetPoint("BOTTOMLEFT", self.unitPane, "BOTTOMLEFT")
+    self.unitPane.line:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT")
+
+    -- Unit Settings
+    self.unitSection = CUF:CreateFrame("UnitSection", self.unitPane,
+        sectionWidth,
+        self.unitHeight, true, true)
+    self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")
 
     self:InitUnits()
     CUF:DevAdd(self.unitsButtons, "unitsButtons")
@@ -184,14 +221,21 @@ function menuWindow:Create()
         self:SetUnit(unit)
     end)
 
-    self.widgetPane = Cell:CreateTitledPane(self.window, L["Widgets"], self.baseWidth - 10, 17)
-    self.widgetPane:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT", 0, 0)
+    -- Widget Buttons
+    self.widgetPane = Cell:CreateTitledPane(self.unitSection, L["Widgets"],
+        sectionWidth, self.paneHeight)
+    self.widgetPane:SetPoint("TOPLEFT", self.unitSection, "BOTTOMLEFT")
+
+    -- Repoint so it's anchored to bottom
+    self.widgetPane.line:ClearAllPoints()
+    self.widgetPane.line:SetPoint("BOTTOMLEFT", self.widgetPane, "BOTTOMLEFT")
+    self.widgetPane.line:SetPoint("BOTTOMRIGHT", self.widgetPane, "BOTTOMRIGHT")
 
     -- settings frame
-    self.settingsFrame = CUF:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane, 10, 10, true)
-    self.settingsFrame:SetSize(self.widgetPane:GetWidth(), self.widgetHeight)
-    self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -5)
-    self.settingsFrame:Show()
+    self.settingsFrame = CUF:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane,
+        sectionWidth,
+        (self.widgetHeight - self.paneHeight), true, true)
+    self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -buffer)
 
     Cell:CreateScrollFrame(self.settingsFrame)
     self.settingsFrame.scrollFrame:SetScrollStep(25)

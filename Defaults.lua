@@ -5,8 +5,6 @@ local CUF = select(2, ...)
 local const = CUF.constants
 
 CUF.defaults = {}
-CUF.anchorPoints = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
-CUF.outlines = { "None", "Outline", "Monochrome" }
 
 ---@type ColorOpt
 local colorOpt = {

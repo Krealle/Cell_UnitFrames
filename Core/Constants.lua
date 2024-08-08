@@ -197,3 +197,6 @@ const.FONTS = {
     CELL_SPECIAL = "CELL_FONT_SPECIAL",
     CLASS_TITLE = "CELL_FONT_CLASS_TITLE",
 }
+
+const.ANCHOR_POINTS = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
+const.OUTLINES = { "None", "Outline", "Monochrome" }

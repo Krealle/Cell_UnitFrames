@@ -711,7 +711,7 @@ function Builder:CreateAnchorOptions(parent, widgetName, altKind, ...)
     f.optionHeight = 20
     f.id = "Anchor"
 
-    f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, CUF.anchorPoints,
+    f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, const.ANCHOR_POINTS,
         altKind or const.OPTION_KIND.POSITION, ..., "anchor")
     f.anchorDropdown:SetPoint("TOPLEFT", f)
 
@@ -733,7 +733,7 @@ end
 ---@return ExtraAnchorOptions
 function Builder:CreateExtraAnchorOptions(parent, widgetName, altKind, ...)
     ---@class ExtraAnchorOptions: AnchorOptions
-    return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, CUF.anchorPoints,
+    return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, const.ANCHOR_POINTS,
         altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
 end
 
@@ -748,7 +748,7 @@ function Builder:CreateFullAnchorOptions(parent, widgetName, altKind, ...)
     anchorOpt.optionHeight = 70
     anchorOpt.id = "FullAnchor"
 
-    anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, "Relative To", nil, CUF.anchorPoints,
+    anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, "Relative To", nil, const.ANCHOR_POINTS,
         altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
     self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
 
@@ -790,7 +790,7 @@ function Builder:CreateFontOptions(parent, widgetName, ...)
         const.OPTION_KIND.FONT, ..., "style")
     f.styleDropdown:SetPoint("TOPLEFT", f)
 
-    f.outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, CUF.outlines,
+    f.outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, const.OUTLINES,
         const.OPTION_KIND.FONT, ..., "outline")
     self:AnchorRight(f.outlineDropdown, f.styleDropdown)
 

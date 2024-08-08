@@ -26,6 +26,8 @@ Core/Handler.lua
 Debug/DebugWindow.lua
 Debug/Debug.lua
 
+Core/SlashCommands.lua
+
 Menu/Builder.lua
 Menu/AuraFilterList.lua
 Menu/MenuFrame.lua

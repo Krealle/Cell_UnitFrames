@@ -222,32 +222,46 @@ end
 ---@param format HealthTextFormat
 local function HealthText_SetFormat(self, format)
     if format == const.HealthTextFormat.PERCENTAGE then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage
     elseif format == const.HealthTextFormat.PERCENTAGE_ABSORBS then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Percentage_Absorbs
     elseif format == const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Percentage_Absorbs_Merged
     elseif format == const.HealthTextFormat.PERCENTAGE_DEFICIT then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage_Deficit
     elseif format == const.HealthTextFormat.NUMBER then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Number
     elseif format == const.HealthTextFormat.NUMBER_SHORT then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Number_Short
     elseif format == const.HealthTextFormat.NUMBER_ABSORBS_SHORT then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Number_Absorbs_Short
     elseif format == const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Number_Absorbs_Merged_Short
     elseif format == const.HealthTextFormat.NUMBER_DEFICIT then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Number_Deficit
     elseif format == const.HealthTextFormat.NUMBER_DEFICIT_SHORT then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Number_Deficit_Short
     elseif format == const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE then
+        self._showingAbsorbs = false
         self.SetValue = SetHealth_Current_Short_Percentage
     elseif format == const.HealthTextFormat.ABSORBS_ONLY then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Absorbs_Only
     elseif format == const.HealthTextFormat.ABSORBS_ONLY_SHORT then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Absorbs_Only_Short
     elseif format == const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE then
+        self._showingAbsorbs = true
         self.SetValue = SetHealth_Absorbs_Only_Percentage
     elseif format == const.HealthTextFormat.CUSTOM then
         self.SetValue = SetHealth_Custom

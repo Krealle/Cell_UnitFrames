@@ -2,8 +2,6 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -82,8 +80,10 @@ end
 -- MARK: Functions
 -------------------------------------------------
 
+---@param bar ShieldBarWidget
+---@param percent number
 local function ShieldBar_SetValue(bar, percent)
-    local maxWidth = bar:GetParent():GetWidth()
+    local maxWidth = bar.parentHealthBar:GetWidth()
     local barWidth
     if percent >= 1 then
         barWidth = maxWidth
@@ -92,7 +92,6 @@ local function ShieldBar_SetValue(bar, percent)
     end
     bar:SetWidth(barWidth)
 end
-
 
 -------------------------------------------------
 -- MARK: CreateShieldBar
@@ -108,9 +107,13 @@ function W:CreateShieldBar(button, buttonName)
     shieldBar.id = const.WIDGET_KIND.SHIELD_BAR
     shieldBar.enabled = false
     shieldBar._isSelected = false
+    shieldBar.parentHealthBar = button.widgets.healthBar
+
+    -- Used to size the shield bar, 0 means use the health bar height
+    shieldBar._height = 0
 
     shieldBar:Hide()
-    shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = P:Scale(1) })
+    shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 1 })
     shieldBar:SetBackdropBorderColor(0, 0, 0, 1)
 
     local tex = shieldBar:CreateTexture(nil, "BORDER", nil, -7)
@@ -124,16 +127,26 @@ function W:CreateShieldBar(button, buttonName)
     function shieldBar:SetPosition(styleTable)
         local pos = styleTable.position
         self:ClearAllPoints()
-        self:SetPoint(pos.anchor, button, pos.extraAnchor, pos.offsetX, pos.offsetY)
-        self:SetHeight(button:GetHeight())
+        self:SetPoint(pos.anchor, self.parentHealthBar, pos.extraAnchor, pos.offsetX, pos.offsetY)
+        shieldBar:UpdateSize()
     end
 
+    ---@param styleTable ShieldBarWidgetTable
     function shieldBar:SetWidgetSize(styleTable)
         if styleTable.size.height == 0 then
-            self:SetHeight(button:GetHeight())
+            self._height = 0
         else
-            self:SetHeight(styleTable.size.height)
+            self._height = styleTable.size.height
         end
+        shieldBar:UpdateSize()
+    end
+
+    function shieldBar:UpdateSize()
+        if self._height == 0 then
+            self:SetHeight(self.parentHealthBar:GetHeight())
+            return
+        end
+        self:SetHeight(self._height)
     end
 
     ---@param bar ShieldBarWidget

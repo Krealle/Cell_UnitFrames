@@ -29,11 +29,14 @@ function W.SetPosition(widget, styleTable)
         styleTable.position.offsetY)
 end
 
--- Set `_isSelected` property for the widget
+-- Set `_isSelected` property for the widget and call `_OnIsSelected` if it exists
 ---@param widget Widget
 ---@param val boolean
 function W.SetIsSelected(widget, val)
     widget._isSelected = val
+    if widget._OnIsSelected then
+        widget:_OnIsSelected()
+    end
 end
 
 ---@param widget Widget

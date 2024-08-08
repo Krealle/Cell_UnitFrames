@@ -60,14 +60,17 @@ end
 -------------------------------------------------
 
 ---@param self LeaderIconWidget
----@param isLeader boolean
----@param isAssistant boolean
+---@param isLeader? boolean
+---@param isAssistant? boolean
 local function LeaderIcon_SetIcon(self, isLeader, isAssistant)
     if isLeader then
         self.tex:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
         self:Show()
     elseif isAssistant then
         self.tex:SetTexture("Interface\\GroupFrame\\UI-Group-AssistantIcon")
+        self:Show()
+    elseif self._isSelected then -- Preview
+        self.tex:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
         self:Show()
     else
         self:Hide()
@@ -80,19 +83,24 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateLeaderIcon(button, buttonName)
-    ---@class LeaderIconWidget: Frame
+    ---@class LeaderIconWidget: Frame, BaseWidget
     local leaderIcon = CreateFrame("Frame", buttonName .. "LeaderIcon", button)
     button.widgets.leaderIcon = leaderIcon
 
     leaderIcon:SetPoint("TOPLEFT", 0, 0)
     leaderIcon.enabled = false
     leaderIcon.id = const.WIDGET_KIND.LEADER_ICON
+    leaderIcon._isSelected = false
 
     leaderIcon.tex = leaderIcon:CreateTexture(nil, "ARTWORK")
     leaderIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     leaderIcon.tex:SetAllPoints(leaderIcon)
 
     leaderIcon.SetIcon = LeaderIcon_SetIcon
+
+    function leaderIcon:_OnIsSelected()
+        leaderIcon:SetIcon()
+    end
 
     leaderIcon.SetEnabled = W.SetEnabled
     leaderIcon.SetPosition = W.SetPosition

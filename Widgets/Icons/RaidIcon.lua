@@ -46,11 +46,18 @@ function U:UnitFrame_UpdateRaidIcon(button)
     if not unit then return end
 
     local raidIcon = button.widgets.raidIcon
-    local index = GetRaidTargetIndex(unit)
+    if not raidIcon.enabled then
+        raidIcon:Hide()
+        return
+    end
 
-    if raidIcon.enabled and index then
+    local index = GetRaidTargetIndex(unit)
+    if index then
         raidIcon:Show()
         SetRaidTargetIconTexture(raidIcon.tex, index)
+    elseif raidIcon._isSelected then -- Preview
+        raidIcon:Show()
+        SetRaidTargetIconTexture(raidIcon.tex, 1)
     else
         raidIcon:Hide()
     end
@@ -62,17 +69,22 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateRaidIcon(button, buttonName)
-    ---@class RaidIconWidget: Frame
+    ---@class RaidIconWidget: Frame, BaseWidget
     local raidIcon = CreateFrame("Frame", buttonName .. "RaidIcon", button)
     button.widgets.raidIcon = raidIcon
 
     raidIcon:SetPoint("TOPLEFT", 0, 0)
     raidIcon.enabled = false
     raidIcon.id = const.WIDGET_KIND.RAID_ICON
+    raidIcon._isSelected = false
 
     raidIcon.tex = raidIcon:CreateTexture(nil, "ARTWORK")
     raidIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     raidIcon.tex:SetAllPoints(raidIcon)
+
+    function raidIcon:_OnIsSelected()
+        U:UnitFrame_UpdateRaidIcon(button)
+    end
 
     raidIcon.SetEnabled = W.SetEnabled
     raidIcon.SetPosition = W.SetPosition

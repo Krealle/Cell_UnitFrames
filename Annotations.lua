@@ -107,6 +107,8 @@
 ---@field enabled boolean
 ---@field id WIDGET_KIND
 ---@field _isSelected boolean
+---@field _SetIsSelected function
+---@field _OnIsSelected function?
 
 ---@class BaseWidgetTable
 ---@field enabled boolean

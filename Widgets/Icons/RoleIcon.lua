@@ -67,6 +67,9 @@ local function RoleIcon_SetRole(self, role)
     if role == "TANK" or role == "HEALER" or role == "DAMAGER" then
         self.tex:SetTexture(ICON_PATH .. "Default_" .. role)
         self:Show()
+    elseif self._isSelected then -- Preview
+        self.tex:SetTexture(ICON_PATH .. "Default_" .. "DAMAGER")
+        self:Show()
     else
         self:Hide()
     end
@@ -78,19 +81,24 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateRoleIcon(button, buttonName)
-    ---@class RoleIconWidget: Frame
+    ---@class RoleIconWidget: Frame, BaseWidget
     local roleIcon = CreateFrame("Frame", buttonName .. "RoleIcon", button)
     button.widgets.roleIcon = roleIcon
 
     roleIcon:SetPoint("TOPLEFT", 0, 0)
     roleIcon.enabled = false
     roleIcon.id = const.WIDGET_KIND.ROLE_ICON
+    roleIcon._isSelected = false
 
     roleIcon.tex = roleIcon:CreateTexture(nil, "ARTWORK")
     roleIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     roleIcon.tex:SetAllPoints(roleIcon)
 
     roleIcon.SetRole = RoleIcon_SetRole
+
+    function roleIcon:_OnIsSelected()
+        U:UnitFrame_UpdateRoleIcon(button)
+    end
 
     roleIcon.SetEnabled = W.SetEnabled
     roleIcon.SetPosition = W.SetPosition

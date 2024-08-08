@@ -44,7 +44,10 @@ function U:UnitFrame_UpdateCombatIcon(button, event)
 
     local combatIcon = button.widgets.combatIcon
 
-    if combatIcon.enabled and (InCombatLockdown() or event == "PLAYER_REGEN_DISABLED") then
+    if combatIcon.enabled
+        and (InCombatLockdown()
+            or event == "PLAYER_REGEN_DISABLED"
+            or combatIcon._isSelected) then
         combatIcon:Show()
     else
         combatIcon:Hide()
@@ -57,18 +60,23 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateCombatIcon(button, buttonName)
-    ---@class CombatIconWidget: Frame
+    ---@class CombatIconWidget: Frame, BaseWidget
     local combatIcon = CreateFrame("Frame", buttonName .. "CombatIcon", button)
     button.widgets.combatIcon = combatIcon
 
     combatIcon:SetPoint("TOPLEFT", 0, 0)
     combatIcon.enabled = false
     combatIcon.id = const.WIDGET_KIND.COMBAT_ICON
+    combatIcon._isSelected = false
 
     combatIcon.tex = combatIcon:CreateTexture(nil, "ARTWORK")
     combatIcon.tex:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
     combatIcon.tex:SetAllPoints(combatIcon)
     combatIcon.tex:SetTexCoord(.5, 1, 0, .49)
+
+    function combatIcon:_OnIsSelected()
+        U:UnitFrame_UpdateCombatIcon(button)
+    end
 
     combatIcon.SetEnabled = W.SetEnabled
     combatIcon.SetPosition = W.SetPosition

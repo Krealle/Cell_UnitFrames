@@ -8,12 +8,13 @@ CUF.Cell = Cell
 local const = {}
 CUF.constants = const
 
----@alias Unit "player" | "target" | "focus" | "pet"
+---@alias Unit "player" | "target" | "focus" | "pet" | "targettarget"
 const.UNIT = {
     PLAYER = "player",
     TARGET = "target",
     FOCUS = "focus",
     PET = "pet",
+    TARGET_TARGET = "targettarget",
 }
 
 ---@enum PowerColorType

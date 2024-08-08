@@ -28,7 +28,7 @@ local Util = CUF.Util
 ---@field selectedWidgetTable UnitFrameWidgetsTable
 ---@field units table<number, Unit>
 CUF.vars = {}
-CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS, const.UNIT.PET }
+CUF.vars.units = { const.UNIT.PLAYER, const.UNIT.TARGET, const.UNIT.FOCUS, const.UNIT.PET, const.UNIT.TARGET_TARGET }
 CUF.vars.isMenuOpen = false
 CUF.vars.testMode = true
 CUF.vars.debug = false
@@ -55,8 +55,6 @@ end
 for _, unit in pairs(CUF.vars.units) do
     -- Load layout defaults (Layout_Defaults.lua)
     Cell.defaults.layout[unit] = CUF.defaults.unitFrame
-    -- Insert unit buttons
-    CUF.unitButtons[unit] = {}
 end
 
 -- MARK: Verify DB

@@ -38,6 +38,7 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
         widget:SetColor(unpack(styleTable.rgba))
     end
 
+    U:ToggleAbsorbEvents(button)
     U:UnitFrame_UpdateShieldBar(button)
 end
 

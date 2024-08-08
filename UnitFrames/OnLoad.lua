@@ -151,6 +151,20 @@ function U:TogglePowerEvents(button, show)
     end
 end
 
+-- Register/Unregister UNIT_ABSORB_AMOUNT_CHANGED event
+---@param button CUFUnitButton
+---@param show? boolean
+function U:ToggleAbsorbEvents(button, show)
+    if not button:IsShown() then return end
+    if button.widgets.shieldBar.enabled
+        or (button.widgets.healthText._showingAbsorbs and button.widgets.healthText.enabled)
+        or show then
+        button:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+    else
+        button:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+    end
+end
+
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -165,7 +179,6 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
     --self:RegisterEvent("UNIT_HEAL_PREDICTION")
-    self:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
     --self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 
     --self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
@@ -193,6 +206,7 @@ local function UnitFrame_RegisterEvents(self)
     U:ToggleRaidIcon(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
+    U:ToggleAbsorbEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 

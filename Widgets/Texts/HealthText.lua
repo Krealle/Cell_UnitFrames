@@ -43,6 +43,7 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
     end
 
     U:UnitFrame_UpdateHealthText(button)
+    U:ToggleAbsorbEvents(button)
 end
 
 Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
@@ -205,7 +206,8 @@ end
 
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
-    local formatFn = W.ProcessCustomTextFormat(self.textFormat)
+    local formatFn, hasAbsorb = W.ProcessCustomTextFormat(self.textFormat)
+    self._showingAbsorbs = hasAbsorb
     self.SetValue = function(_, current, max, totalAbsorbs)
         self:SetText(formatFn(current, max, totalAbsorbs))
     end
@@ -270,6 +272,7 @@ function W:CreateHealthText(button)
     button.widgets.healthText = healthText
 
     healthText.textFormat = ""
+    healthText._showingAbsorbs = false
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat

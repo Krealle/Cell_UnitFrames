@@ -14,7 +14,7 @@ local const = CUF.constants
 ---@param kind WIDGET_KIND
 ---@return TextWidget
 function W.CreateBaseTextWidget(button, kind)
-    ---@class TextWidget: Frame, BaseWidget
+    ---@class TextWidget: Frame
     local textWidget = CreateFrame("Frame", button:GetName() .. Util:ToTitleCase(kind), button)
 
     ---@class TextWidget.text: FontString
@@ -26,6 +26,7 @@ function W.CreateBaseTextWidget(button, kind)
     textWidget.text = text
     textWidget.enabled = false
     textWidget.id = kind
+    textWidget._isSelected = false
     textWidget.colorType = const.ColorType.CLASS_COLOR ---@type ColorType
     textWidget.rgb = { 1, 1, 1 }
 

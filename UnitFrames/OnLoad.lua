@@ -481,6 +481,7 @@ end
 -------------------------------------------------
 -- MARK: OnLoad
 -------------------------------------------------
+
 ---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
     local buttonName = button:GetName()
@@ -490,7 +491,6 @@ function CUFUnitButton_OnLoad(button)
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
-    --button.indicators = {}
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)
@@ -526,7 +526,7 @@ function CUFUnitButton_OnLoad(button)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
 
     -- targetHighlight
-    ---@class HighlightWidget
+    ---@class HighlightWidget: BackdropTemplate, Frame
     local targetHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate")
     button.widgets.targetHighlight = targetHighlight
     targetHighlight:SetIgnoreParentAlpha(true)
@@ -534,8 +534,7 @@ function CUFUnitButton_OnLoad(button)
     targetHighlight:Hide()
 
     -- mouseoverHighlight
-    ---@class HighlightWidget
-    local mouseoverHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate")
+    local mouseoverHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate") --[[@as HighlightWidget]]
     button.widgets.mouseoverHighlight = mouseoverHighlight
     mouseoverHighlight:SetIgnoreParentAlpha(true)
     mouseoverHighlight:SetFrameLevel(button:GetFrameLevel() + 3)

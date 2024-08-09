@@ -13,7 +13,7 @@ local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...
 
 ---@param unit Unit?
 ---@param layout string?
----@return UnitFrameWidgetsTable
+---@return WidgetTables
 function DB.GetAllWidgetTables(unit, layout)
     dbDebug("|cffff7777DB:GetWidgetTable:|r", unit, layout)
     return CellDB["layouts"][layout or CUF.vars.selectedLayout][unit or CUF.vars.selectedUnit].widgets

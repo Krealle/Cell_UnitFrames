@@ -144,5 +144,12 @@ const.FONTS = {
     CLASS_TITLE = "CELL_FONT_CLASS_TITLE",
 }
 
+---@enum FontWidthType
+const.FontWidthType = {
+    UNLIMITED = "unlimited",
+    PERCENTAGE = "percentage",
+    LENGTH = "length",
+}
+
 const.ANCHOR_POINTS = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
 const.OUTLINES = { "None", "Outline", "Monochrome" }

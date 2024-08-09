@@ -1,232 +1,324 @@
 ---@class CUF
 local CUF = select(2, ...)
 
----@class CUF.constants
-local const = CUF.constants
+---@class CUF.defaults
+local Defaults = {}
+Defaults.Units = {}
+Defaults.Options = {}
 
-CUF.defaults = {}
+CUF.Defaults = Defaults
 
 ---@type ColorOpt
-local colorOpt = {
-    ["type"] = const.ColorType.CLASS_COLOR,
-    ["rgb"] = { 1, 1, 1 },
+Defaults.Options.colorOpt = {
+    rgb = { 1, 1, 1 },
+    type = "class_color",
 }
-
 ---@type SmallFontOpt
-local smallFontOpt = {
-    ["size"] = 12,
-    ["outline"] = "Outline",
-    ["shadow"] = true,
-    ["style"] = "Cell Default",
+Defaults.Options.smallFontOpt = {
+    size = 12,
+    outline = "Outline",
+    shadow = true,
+    style = "Cell Default",
 }
-
 ---@type BigFontOpt
-local bigFontOpt = {
-    ["size"] = 16,
-    ["outline"] = "Outline",
-    ["shadow"] = true,
-    ["style"] = "Cell Default",
-    ["anchor"] = "CENTER",
-    ["offsetX"] = 0,
-    ["offsetY"] = 0,
-    ["rgb"] = { 1, 1, 1 },
+Defaults.Options.auraStacksFontOpt = {
+    size = 12,
+    outline = "Outline",
+    shadow = true,
+    style = "Cell Default",
+    anchor = "BOTTOMRIGHT",
+    offsetX = 0,
+    offsetY = 0,
+    rgb = { 1, 1, 1 },
+}
+---@type BigFontOpt
+Defaults.Options.auraDurationFontOpt = Defaults.Options.auraStacksFontOpt
+Defaults.Options.auraDurationFontOpt.anchor = "CENTER"
+
+---@class WidgetTables
+Defaults.Widgets = {
+    ---@type NameTextWidgetTable
+    nameText = {
+        enabled = true,
+        frameLevel = 10,
+        font = Defaults.Options.smallFontOpt,
+        color = Defaults.Options.colorOpt,
+        width = {
+            value = 0.75,
+            type = "percentage",
+            auxValue = 3,
+        },
+        position = {
+            anchor = "TOPLEFT",
+            offsetY = 8,
+            offsetX = 2,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type HealthTextWidgetTable
+    healthText = {
+        enabled = true,
+        font = Defaults.Options.smallFontOpt,
+        color = Defaults.Options.colorOpt,
+        format = "percentage",
+        textFormat = "",
+        hideIfEmptyOrFull = false,
+        frameLevel = 10,
+        position = {
+            anchor = "RIGHT",
+            offsetY = 0,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type PowerTextWidgetTable
+    powerText = {
+        enabled = true,
+        font = Defaults.Options.smallFontOpt,
+        color = Defaults.Options.colorOpt,
+        format = "percentage",
+        hideIfEmptyOrFull = false,
+        textFormat = "",
+        frameLevel = 10,
+        position = {
+            anchor = "BOTTOMRIGHT",
+            offsetY = 0,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type AuraWidgetTable
+    buffs = {
+        enabled = false,
+        orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        showStack = true,
+        showDuration = true,
+        showAnimation = true,
+        showTooltip = true,
+        numPerLine = 4,
+        maxIcons = 10,
+        spacing = {
+            horizontal = 0,
+            vertical = 0,
+        },
+        font = {
+            stacks = Defaults.Options.auraStacksFontOpt,
+            duration = Defaults.Options.auraDurationFontOpt,
+        },
+        size = {
+            width = 20,
+            height = 20,
+        },
+        filter = {
+            useBlacklist = false,
+            blacklist = {},
+            useWhitelist = false,
+            whitelist = {},
+            minDuration = 0,
+            maxDuration = 0,
+            hidePersonal = false,
+            hideExternal = false,
+            hideNoDuration = false,
+        },
+        position = {
+            anchor = "BOTTOMLEFT",
+            offsetY = 20,
+            offsetX = 0,
+            extraAnchor = "TOPLEFT",
+        },
+    },
+    ---@type AuraWidgetTable
+    debuffs = {
+        enabled = false,
+        orientation = CUF.constants.AURA_ORIENTATION.RIGHT_TO_LEFT,
+        showStack = true,
+        showDuration = true,
+        showAnimation = true,
+        showTooltip = true,
+        numPerLine = 4,
+        maxIcons = 10,
+        spacing = {
+            horizontal = 0,
+            vertical = 0,
+        },
+        font = {
+            stacks = Defaults.Options.auraStacksFontOpt,
+            duration = Defaults.Options.auraDurationFontOpt,
+        },
+        size = {
+            width = 20,
+            height = 20,
+        },
+        filter = {
+            useBlacklist = false,
+            blacklist = {},
+            useWhitelist = false,
+            whitelist = {},
+            minDuration = 0,
+            maxDuration = 0,
+            hidePersonal = false,
+            hideExternal = false,
+            hideNoDuration = false,
+        },
+        position = {
+            anchor = "BOTTOMRIGHT",
+            offsetY = 20,
+            offsetX = 0,
+            extraAnchor = "TOPRIGHT",
+        },
+    },
+    ---@type RaidIconWidgetTable
+    raidIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            anchor = "TOP",
+            offsetY = 12,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type RoleIconWidgetTable
+    roleIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            anchor = "TOPRIGHT",
+            offsetY = 0,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type LeaderIconWidgetTable
+    leaderIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            anchor = "TOPRIGHT",
+            offsetY = 14,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type CombatIconWidgetTable
+    combatIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            anchor = "CENTER",
+            offsetY = 0,
+            offsetX = 0,
+            extraAnchor = "CENTER",
+        },
+    },
+    ---@type ShieldBarWidgetTable
+    shieldBar = {
+        enabled = false,
+        frameLevel = 10,
+        rgba = { 1, 1, 0, 0.25 },
+        size = {
+            width = 0,
+            height = 0,
+        },
+        position = {
+            anchor = "BOTTOMRIGHT",
+            offsetY = 0,
+            offsetX = 0,
+            extraAnchor = "BOTTOMRIGHT",
+        },
+    },
 }
 
----@type AuraFontOpt
-local auraFontOpt = {
-    ["stacks"] = bigFontOpt,
-    ["duration"] = bigFontOpt,
-}
+---@class Size
+---@field [1] number
+---@field [2] number
 
----@type PositionOpt
-local positionOpt = {
-    ["anchor"] = "CENTER",
-    ["extraAnchor"] = "CENTER",
-    ["offsetX"] = 0,
-    ["offsetY"] = 0,
-}
+---@class Position
+---@field [1] number
+---@field [2] number
 
----@type SizeOpt
-local sizeOpt = {
-    ["width"] = 20,
-    ["height"] = 20,
-}
+---@class TooltipPosition
+---@field [1] FramePoint
+---@field [2] FramePoint
+---@field [3] number
+---@field [4] number
 
----@class SpacingOpt
-local spacingOpt = {
-    horizontal = 0,
-    vertical = 0,
-}
-
----@type FontWidth
-local defaultFontWidth = {
-    ["type"] = "percentage",
-    ["value"] = 0.75,
-    ["auxValue"] = 3,
-}
-CUF.defaults.fontWidth = defaultFontWidth
-
----@type TextWidgetTable
-local nameWidget = {
-    ["enabled"] = true,
-    ["color"] = colorOpt,
-    ["font"] = smallFontOpt,
-    ["position"] = positionOpt,
-    ["width"] = defaultFontWidth,
-    frameLevel = 10
-}
-
----@type HealthTextWidgetTable
-local healthTextWidget = {
-    ["enabled"] = true,
-    ["color"] = colorOpt,
-    ["font"] = smallFontOpt,
-    ["position"] = positionOpt,
-    ["width"] = defaultFontWidth,
-    ["format"] = "percentage",
-    ["hideIfEmptyOrFull"] = false,
-    textFormat = "",
-    frameLevel = 10
-}
-
----@type PowerTextWidgetTable
-local powerTextWidget = {
-    ["enabled"] = true,
-    ["color"] = colorOpt,
-    ["font"] = smallFontOpt,
-    ["position"] = positionOpt,
-    ["width"] = defaultFontWidth,
-    ["format"] = "percentage",
-    ["hideIfEmptyOrFull"] = false,
-    textFormat = "",
-    frameLevel = 10
-}
-
----@class AuraFilterOpt
----@field useBlacklist boolean
----@field blacklist table<number>
----@field useWhitelist boolean
----@field whitelist table<number>
----@field minDuration number
----@field maxDuration number
----@field hidePersonal boolean
----@field hideExternal boolean
----@field hideNoDuration boolean
-local auraFilterOpt = {
-    ["useBlacklist"] = false,
-    ["blacklist"] = {},
-    ["useWhitelist"] = false,
-    ["whitelist"] = {},
-    ["minDuration"] = 0,
-    ["maxDuration"] = 0,
-    ["hidePersonal"] = false,
-    ["hideExternal"] = false,
-    ["hideNoDuration"] = false,
-}
-
----@class AuraWidgetTable
+---@class UnitLayout
 ---@field enabled boolean
----@field size SizeOpt
----@field font AuraFontOpt
----@field orientation AuraOrientation
----@field showStack boolean
----@field showDuration boolean|number
----@field showAnimation boolean
----@field filter AuraFilterOpt
----@field showTooltip boolean
----@field position PositionOpt
----@field spacing SpacingOpt
----@field numPerLine number
----@field maxIcons number
-local auraWidget = {
-    enabled = false,
-    font = auraFontOpt,
-    position = positionOpt,
-    size = sizeOpt,
-    orientation = const.AURA_ORIENTATION.RIGHT_TO_LEFT,
-    showStack = true,
-    showDuration = true,
-    showAnimation = true,
-    showTooltip = true,
-    filter = auraFilterOpt,
-    spacing = spacingOpt,
-    numPerLine = 5,
-    maxIcons = 10
-}
+---@field powerSize number
+---@field size Size
+---@field anchor string
+---@field position Position
+---@field widgets WidgetTables
+---@field tooltipPosition TooltipPosition
+---@field sameSizeAsPlayer boolean?
 
----@class RaidIconWidgetTable
----@field enabled boolean
----@field size SizeOpt
----@field position PositionOpt
-local raidIconWidget = {
-    enabled = false,
-    size = sizeOpt,
-    position = positionOpt,
-    frameLevel = 10
-}
-
----@class RoleIconWidgetTable
----@field enabled boolean
----@field size SizeOpt
----@field position PositionOpt
-local roleIconWidget = {
-    enabled = false,
-    size = sizeOpt,
-    position = positionOpt,
-    frameLevel = 10
-}
-
----@class LeaderIconWidgetTable
----@field enabled boolean
----@field size SizeOpt
----@field position PositionOpt
-local leaderIconWidget = {
-    enabled = false,
-    size = sizeOpt,
-    position = positionOpt,
-    frameLevel = 10
-}
-
----@class CombatIconWidgetTable: BaseWidgetTable
-local combatIconWidget = {
-    enabled = false,
-    size = sizeOpt,
-    position = positionOpt,
-    frameLevel = 10
-}
-
----@class ShieldBarWidgetTable: BaseWidgetTable
-local shieldBarWidget = {
-    enabled = false,
-    size = sizeOpt,
-    position = positionOpt,
-    rgba = { 1, 1, 0, 0.25 },
-    frameLevel = 10,
-}
-
----@class UnitFrameWidgetsTable
-local unitFrameWidgets = {
-    nameText = nameWidget,
-    healthText = healthTextWidget,
-    powerText = powerTextWidget,
-    buffs = auraWidget,
-    debuffs = auraWidget,
-    raidIcon = raidIconWidget,
-    roleIcon = roleIconWidget,
-    leaderIcon = leaderIconWidget,
-    combatIcon = combatIconWidget,
-    shieldBar = shieldBarWidget,
-}
-
----@class Layout
-CUF.defaults.unitFrame = {
-    ["enabled"] = false,
-    ["sameSizeAsPlayer"] = false,
-    ["size"] = { 66, 46 },
-    ["position"] = {},
-    ["tooltipPosition"] = {},
-    ["powerSize"] = 2,
-    ["anchor"] = "TOPLEFT",
-    ["widgets"] = unitFrameWidgets,
-    --[[ ["indicators"] = unitFrameIndicators, ]]
+---@type table<Unit, UnitLayout>
+Defaults.Layouts = {
+    player = {
+        enabled = false,
+        powerSize = 2,
+        size = { 200, 40 },
+        anchor = "BOTTOMLEFT",
+        position = { 800, 500 },
+        widgets = Defaults.Widgets,
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+    },
+    ---@type UnitLayout
+    target = {
+        enabled = false,
+        powerSize = 2,
+        size = { 200, 40 },
+        anchor = "BOTTOMLEFT",
+        position = { 1400, 500 },
+        widgets = Defaults.Widgets,
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        sameSizeAsPlayer = false,
+    },
+    focus = {
+        enabled = false,
+        powerSize = 2,
+        size = { 100, 30 },
+        anchor = "BOTTOMLEFT",
+        position = { 800, 700 },
+        widgets = Defaults.Widgets,
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        sameSizeAsPlayer = false,
+    },
+    targettarget = {
+        enabled = false,
+        powerSize = 2,
+        size = { 200, 40 },
+        anchor = "BOTTOMLEFT",
+        position = { 1620, 500 },
+        widgets = Defaults.Widgets,
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        sameSizeAsPlayer = false,
+    },
+    pet = {
+        enabled = false,
+        powerSize = 2,
+        size = { 200, 30 },
+        anchor = "BOTTOMLEFT",
+        position = { 800, 460 },
+        widgets = Defaults.Widgets,
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        sameSizeAsPlayer = false,
+    },
 }

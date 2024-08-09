@@ -17,7 +17,7 @@ CUF.unitButtons = {}
 ---@field selectedUnit Unit
 ---@field selectedWidget WIDGET_KIND
 ---@field selectedLayoutTable LayoutTable
----@field selectedWidgetTable UnitFrameWidgetsTable
+---@field selectedWidgetTable WidgetTables
 ---@field testMode boolean
 CUF.vars = {}
 
@@ -35,21 +35,14 @@ local function OnAddonLoaded(owner, loadedAddonName)
         Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
         Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
 
-        -- Load layout defaults (Layout_Defaults.lua)
-        for _, unit in pairs(CUF.constants.UNIT) do
-            Cell.defaults.layout[unit] = CUF.defaults.unitFrame
-        end
-
         -- Verify DB
-        for _, layout in pairs(CellDB["layouts"]) do
-            for _, unit in pairs(CUF.constants.UNIT) do
-                --layout[unit].widgets.debuffs = nil
-
+        for _layoutName, layout in pairs(CellDB["layouts"]) do
+            for unit, unitLayout in pairs(CUF.Defaults.Layouts) do
                 if type(layout[unit]) ~= "table" then
-                    layout[unit] = Cell.funcs:Copy(Cell.defaults.layout[unit])
+                    layout[unit] = Cell.funcs:Copy(unitLayout)
                 else
                     --layout[unit].widgets["nameText"] = layout[unit].widgets.name
-                    CUF.Util:AddMissingProps(layout[unit], CUF.defaults.unitFrame)
+                    CUF.Util:AddMissingProps(layout[unit], unitLayout)
                 end
             end
         end

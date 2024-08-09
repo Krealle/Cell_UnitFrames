@@ -33,25 +33,25 @@ end
 
 ---@param unit Unit
 ---@param onEnterLogic function?
----@return CUFUnitFrame Frame
----@return CUFAnchorFrame anchorFrame
----@return CUFHoverFrame Frame
----@return CUFConfigButton config
+---@return CUFUnitFrame CUFUnitFrame
+---@return CUFAnchorFrame CUFAnchorFrame
+---@return CUFHoverFrame CUFHoverFrame
+---@return CUFConfigButton CUFConfigButton
 function U:CreateBaseUnitFrame(unit, onEnterLogic)
     local name = Util:ToTitleCase(unit)
 
-    ---@class CUFUnitFrame
+    ---@class CUFUnitFrame: Frame
     local frame = CreateFrame("Frame", "CUF" .. name .. "Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
 
     -- Anchor
-    ---@class CUFAnchorFrame
+    ---@class CUFAnchorFrame: Frame, CellAnimation
     local anchorFrame = CreateFrame("Frame", "CUF" .. name .. "AnchorFrame", frame)
     PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
     anchorFrame:SetMovable(true)
     anchorFrame:SetClampedToScreen(true)
 
     -- Hover
-    ---@class CUFHoverFrame
+    ---@class CUFHoverFrame: Frame
     local hoverFrame = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     hoverFrame:SetPoint("TOP", anchorFrame, 0, 1)
     hoverFrame:SetPoint("BOTTOM", anchorFrame, 0, -1)
@@ -60,7 +60,8 @@ function U:CreateBaseUnitFrame(unit, onEnterLogic)
 
     A:ApplyFadeInOutToMenu(anchorFrame, hoverFrame)
 
-    ---@class CUFConfigButton
+    ---@class CUFConfigButton: Button
+    ---@field UpdatePixelPerfect function
     local config = Cell:CreateButton(anchorFrame, nil, "accent", { 20, 10 }, false, true, nil, nil,
         "SecureHandlerAttributeTemplate,SecureHandlerClickTemplate")
     config:SetFrameStrata("MEDIUM")

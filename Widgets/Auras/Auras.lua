@@ -215,7 +215,9 @@ function W:CreateAuraIcons(button, type)
     auraIcons._maxNum = 10
     auraIcons._isSelected = false
 
+    ---@type table<number, AuraData>
     auraIcons._auraCache = {}
+    ---@type number[]
     auraIcons._auraInstanceIDs = {}
     auraIcons._auraCount = 0
 
@@ -288,11 +290,7 @@ end
 ---@field preview CellAuraIcon.preview
 
 ---@class CellAuraIcons
----@field enabled boolean
----@field id "buffs" | "debuffs"
 ---@field indicatorType "icons"
----@field auraFilter "HELPFUL" | "HARMFUL"
----@field maxNum number
 ---@field numPerLine number
 ---@field spacingX number
 ---@field spacingY number
@@ -309,11 +307,6 @@ end
 ---@field ShowAnimation fun(icons: any, show: any) Icons_ShowAnimation
 ---@field UpdatePixelPerfect function
 ---@field [number] CellAuraIcon
----@field parent CUFUnitButton
----@field _isSelected boolean
----@field _auraCache table<number, AuraData>
----@field _auraInstanceIDs table<number>
----@field _auraCount number
 ---@field hidePersonal boolean
 ---@field hideExternal boolean
 ---@field hideNoDuration boolean

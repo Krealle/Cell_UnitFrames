@@ -102,7 +102,7 @@ end
 
 ---@param fs FontString
 ---@param text string
----@param widthTable FontWidth
+---@param widthTable FontWidthOpt
 ---@param relativeTo Frame
 function CUF.Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
     if not text or not widthTable then return end
@@ -260,6 +260,7 @@ end
 -- MARK: Callbacks
 -------------------------------------------------
 
+---@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility"
 local callbacks = {}
 
 ---@param eventName Callbacks

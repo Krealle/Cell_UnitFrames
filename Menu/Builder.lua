@@ -596,7 +596,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         end
     end)
 
-    ---@param t FontWidth
+    ---@param t FontWidthOpt
     function f:SetNameWidth(t)
         if t.type == "unlimited" then
             dropdown:SetSelectedItem(1)

@@ -8,7 +8,7 @@ local menuWindow = CUF.MenuWindow
 local DB = CUF.DB
 
 ---@class CUF.Menu
----@field selectedWidgetTable UnitFrameWidgetsTable
+---@field selectedWidgetTable WidgetTable
 ---@field unitsToAdd table<number, function>
 ---@field widgetsToAdd table<number, WidgetsMenuPageArgs>
 local menu = {}

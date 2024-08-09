@@ -57,13 +57,7 @@ Widgets/Auras/Updater.lua
 Widgets/Auras/Handler.lua
 
 UnitFrames/UnitButton.xml
-UnitFrames/MenuOptions.lua
-
 UnitFrames/UnitButton.lua
 UnitFrames/OnLoad.lua
-
-UnitFrames/Units/PlayerFrame.lua
-UnitFrames/Units/PetFrame.lua
-UnitFrames/Units/FocusFrame.lua
-UnitFrames/Units/TargetFrame.lua
-UnitFrames/Units/TargetTargetFrame.lua
+UnitFrames/Units.lua
+UnitFrames/MenuOptions.lua

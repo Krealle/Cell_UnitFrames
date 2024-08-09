@@ -161,14 +161,14 @@ end
 -------------------------------------------------
 
 ---@param unit Unit
----@param which string?
+---@param kind string?
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
-function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
+function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
     local layout = Cell.vars.currentLayoutTable
 
     -- Size
-    if not which or strfind(which, "size$") then
+    if not kind or strfind(kind, "size$") then
         local width, height
         if layout[unit]["sameSizeAsPlayer"] then
             width, height = unpack(layout[const.UNIT.PLAYER]["size"])
@@ -180,7 +180,7 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     end
 
     -- Anchor points
-    if not which or strfind(which, "arrangement$") then
+    if not kind or strfind(kind, "arrangement$") then
         local anchor
         if layout[unit]["sameSizeAsPlayer"] then
             anchor = layout[const.UNIT.PLAYER]["anchor"]
@@ -207,11 +207,11 @@ function U:UpdateUnitButtonLayout(unit, which, button, anchorFrame)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
-    if not which or which == "barOrientation" then
+    if not kind or kind == "barOrientation" then
         U:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
     end
 
-    if not which or strfind(which, "power$") or which == "barOrientation" then
+    if not kind or strfind(kind, "power$") or kind == "barOrientation" then
         if layout[unit]["sameSizeAsPlayer"] then
             W:SetPowerSize(button, layout[const.UNIT.PLAYER]["powerSize"])
         else
@@ -231,13 +231,13 @@ end
 -- MARK: Update Menu
 -------------------------------------------------
 
----@param which string?
+---@param kind ("lock" | "fadeOut" | "position")?
 ---@param unit Unit
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 ---@param config CUFConfigButton
-function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
-    if not which or which == "lock" then
+function U:UpdateUnitButtonMenu(kind, unit, button, anchorFrame, config)
+    if not kind or kind == "lock" then
         if CellDB["general"]["locked"] then
             config:RegisterForDrag()
         else
@@ -245,7 +245,7 @@ function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
         end
     end
 
-    if not which or which == "fadeOut" then
+    if not kind or kind == "fadeOut" then
         if CellDB["general"]["fadeOut"] then
             anchorFrame.fadeOut:Play()
         else
@@ -253,7 +253,7 @@ function U:UpdateUnitButtonMenu(which, unit, button, anchorFrame, config)
         end
     end
 
-    if which == "position" then
+    if kind == "position" then
         U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
 end
@@ -351,17 +351,4 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
     -- update actions
     --I.UpdateActionsOrientation(button, orientation)
-end
-
--- We need this to get clickCasting properly set up
-local IterateAllUnitButtons = Cell.funcs.IterateAllUnitButtons
-function Cell.funcs:IterateAllUnitButtons(...)
-    IterateAllUnitButtons(self, ...)
-
-    local func, updateCurrentGroupOnly, updateQuickAssist = ...
-    if func and type(func) == "function" and not updateCurrentGroupOnly and updateQuickAssist then
-        for _, unit in pairs(CUF.constants.UNIT) do
-            func(CUF.unitButtons[unit])
-        end
-    end
 end

@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 ---@class CUF.defaults
 local Defaults = {}
-Defaults.Units = {}
 Defaults.Options = {}
 
 CUF.Defaults = Defaults

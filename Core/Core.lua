@@ -21,6 +21,10 @@ CUF.unitButtons = {}
 ---@field testMode boolean
 CUF.vars = {}
 
+-------------------------------------------------
+-- MARK: OnAddonLoaded
+-------------------------------------------------
+
 ---@param owner number
 ---@param loadedAddonName string
 ---@return boolean
@@ -56,6 +60,10 @@ local function OnAddonLoaded(owner, loadedAddonName)
 end
 CUF:AddEventListener("ADDON_LOADED", OnAddonLoaded)
 
+-------------------------------------------------
+-- MARK: OnPlayerLogin
+-------------------------------------------------
+
 ---@param playerLoginOwnerId number
 ---@return boolean
 local function OnPlayerLogin(playerLoginOwnerId)
@@ -76,12 +84,16 @@ local function OnPlayerLogin(playerLoginOwnerId)
         end
     end
 
+    -- Init Unit Buttons
+    CUF.uFuncs:InitUnitButtons()
+    CUF:Fire("UpdateUnitButtons")
+
     -- Register callbacks
     Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
         function(layout) CUF:Fire("UpdateWidget", layout) end)
 
     -- Init widgets
-    CUF:Fire("UpdateWidget", Cell.vars.currentLayout)
+    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
 
     return true
 end

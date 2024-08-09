@@ -24,7 +24,7 @@ local Util = CUF.Util
 ---@param tooltipX number
 ---@param tooltipY number
 function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)
-    Cell.vars.currentLayoutTable[unit]["tooltipPosition"] = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
+    CUF.DB.CurrentLayoutTable()[unit]["tooltipPosition"] = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
 end
 
 -------------------------------------------------
@@ -73,13 +73,13 @@ function U:CreateBaseUnitFrame(unit, onEnterLogic)
     end)
     config:SetScript("OnDragStop", function()
         anchorFrame:StopMovingOrSizing()
-        P:SavePosition(anchorFrame, Cell.vars.currentLayoutTable[unit]["position"])
+        P:SavePosition(anchorFrame, CUF.DB.CurrentLayoutTable()[unit]["position"])
     end)
     config:HookScript("OnEnter", function()
         hoverFrame:GetScript("OnEnter")(hoverFrame)
         CellTooltip:SetOwner(config, "ANCHOR_NONE")
 
-        local tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY = unpack(Cell.vars.currentLayoutTable[unit]
+        local tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY = unpack(CUF.DB.CurrentLayoutTable()[unit]
             ["tooltipPosition"])
         P:Point(CellTooltip, tooltipPoint, config, tooltipRelativePoint, tooltipX, tooltipY)
 
@@ -108,7 +108,7 @@ end
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
-    local layout = Cell.vars.currentLayoutTable
+    local layout = CUF.DB.CurrentLayoutTable()
 
     local anchor
     if layout[unit]["sameSizeAsPlayer"] then
@@ -165,7 +165,7 @@ end
 ---@param button CUFUnitButton
 ---@param anchorFrame CUFAnchorFrame
 function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
-    local layout = Cell.vars.currentLayoutTable
+    local layout = CUF.DB.CurrentLayoutTable()
 
     -- Size
     if not kind or strfind(kind, "size$") then
@@ -208,7 +208,8 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
     if not kind or kind == "barOrientation" then
-        U:SetOrientation(button, layout["barOrientation"][1], layout["barOrientation"][2])
+        U:SetOrientation(button, Cell.vars.currentLayoutTable["barOrientation"][1],
+            Cell.vars.currentLayoutTable["barOrientation"][2])
     end
 
     if not kind or strfind(kind, "power$") or kind == "barOrientation" then
@@ -269,7 +270,7 @@ end
 function U:UpdateUnitFrameVisibility(which, unit, button, frame)
     if InCombatLockdown() then return end
     if not which or which == unit then
-        if Cell.vars.currentLayoutTable[unit]["enabled"] then
+        if CUF.DB.CurrentLayoutTable()[unit]["enabled"] then
             RegisterUnitWatch(button)
             frame:Show()
             --F:HideBlizzardUnitFrame(unit)

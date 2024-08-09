@@ -16,8 +16,6 @@ CUF.unitButtons = {}
 ---@field selectedLayout string
 ---@field selectedUnit Unit
 ---@field selectedWidget WIDGET_KIND
----@field selectedLayoutTable LayoutTable
----@field selectedWidgetTable WidgetTables
 ---@field testMode boolean
 CUF.vars = {}
 
@@ -40,13 +38,23 @@ local function OnAddonLoaded(owner, loadedAddonName)
         Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
 
         -- Verify DB
-        for _layoutName, layout in pairs(CellDB["layouts"]) do
-            for unit, unitLayout in pairs(CUF.Defaults.Layouts) do
-                if type(layout[unit]) ~= "table" then
-                    layout[unit] = Cell.funcs:Copy(unitLayout)
-                else
-                    --layout[unit].widgets["nameText"] = layout[unit].widgets.name
-                    CUF.Util:AddMissingProps(layout[unit], unitLayout)
+        ---@type table<string, UnitLayoutTable>
+        CUF_DB.layouts = CUF_DB.layouts or {}
+
+        for layoutName, _ in pairs(CellDB["layouts"]) do
+            if type(CUF_DB.layouts[layoutName]) ~= "table" then
+                CUF_DB.layouts[layoutName] = Cell.funcs:Copy(CUF.Defaults.Layouts)
+            else
+                for unit, unitLayout in pairs(CUF.Defaults.Layouts) do
+                    if type(CUF_DB.layouts[layoutName][unit]) ~= "table" then
+                        CUF_DB.layouts[layoutName][unit] = Cell.funcs:Copy(unitLayout)
+                    else
+                        --[[ if unit == "pet" then
+                            CUF_DB.layouts[layoutName][unit] = Cell.funcs:Copy(CellDB["layouts"][layoutName][unit])
+                        end ]]
+                        --layout[unit].widgets["nameText"] = layout[unit].widgets.name
+                        CUF.Util:AddMissingProps(CUF_DB.layouts[layoutName][unit], unitLayout)
+                    end
                 end
             end
         end
@@ -74,12 +82,10 @@ local function OnPlayerLogin(playerLoginOwnerId)
     CUF.vars.selectedUnit = CUF.constants.UNIT.PLAYER
     CUF.vars.selectedWidget = CUF.constants.WIDGET_KIND.NAME_TEXT
     CUF.vars.selectedLayout = Cell.vars.currentLayout
-    CUF.vars.selectedLayoutTable = Cell.vars.currentLayoutTable
-    CUF.vars.selectedWidgetTable = CUF.vars.selectedLayoutTable[CUF.vars.selectedUnit].widgets
 
     -- Hide Blizzard Unit Frames
     for _, unit in pairs(CUF.constants.UNIT) do
-        if CUF.vars.selectedLayoutTable[unit].enabled then
+        if CUF.DB.SelectedLayoutTable()[unit].enabled then
             CUF:HideBlizzardUnitFrame(unit)
         end
     end

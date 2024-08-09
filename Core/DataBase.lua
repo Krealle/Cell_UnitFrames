@@ -11,12 +11,30 @@ local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...
 -- Getters
 -----------------------------------------
 
+-- Returns selected layout table (differes from current in menu)
+---@return UnitLayoutTable
+function DB.SelectedLayoutTable()
+    return CUF_DB.layouts[CUF.vars.selectedLayout]
+end
+
+-- Returns selected widget tables
+---@return WidgetTables
+function DB.SelectedWidgetTables()
+    return DB.SelectedLayoutTable()[CUF.vars.selectedUnit].widgets
+end
+
+-- Returns active layout table
+---@return UnitLayoutTable
+function DB.CurrentLayoutTable()
+    return CUF_DB.layouts[Cell.vars.currentLayout]
+end
+
 ---@param unit Unit?
 ---@param layout string?
 ---@return WidgetTables
 function DB.GetAllWidgetTables(unit, layout)
     dbDebug("|cffff7777DB:GetWidgetTable:|r", unit, layout)
-    return CellDB["layouts"][layout or CUF.vars.selectedLayout][unit or CUF.vars.selectedUnit].widgets
+    return CUF_DB.layouts[layout or CUF.vars.selectedLayout][unit or CUF.vars.selectedUnit].widgets
 end
 
 ---@param which WIDGET_KIND

@@ -268,7 +268,8 @@ Defaults.Widgets = {
 ---@field tooltipPosition TooltipPosition
 ---@field sameSizeAsPlayer boolean?
 
----@type table<Unit, UnitLayout>
+---@alias UnitLayoutTable table<Unit, UnitLayout>
+---@type UnitLayoutTable
 Defaults.Layouts = {
     player = {
         enabled = false,

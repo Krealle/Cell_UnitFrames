@@ -46,7 +46,6 @@ function menu:UpdateSelectedPages(unit, widget)
 
     if unit then
         CUF.vars.selectedUnit = unit
-        CUF.vars.selectedWidgetTable = DB.GetAllWidgetTables(unit)
     end
 
     if widget then
@@ -69,8 +68,6 @@ local function LoadLayoutDB(layout)
     CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
     CUF.vars.selectedLayout = layout
-    CUF.vars.selectedLayoutTable = CellDB["layouts"][layout]
-    CUF.vars.selectedWidgetTable = DB.GetAllWidgetTables(CUF.vars.selectedUnit, layout)
 
     menu.window:ShowMenu()
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)

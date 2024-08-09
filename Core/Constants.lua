@@ -8,7 +8,7 @@ CUF.Cell = Cell
 local const = {}
 CUF.constants = const
 
----@alias Unit "player" | "target" | "focus" | "pet" | "targettarget"
+---@enum Unit
 const.UNIT = {
     PLAYER = "player",
     TARGET = "target",
@@ -30,11 +30,7 @@ const.ColorType = {
     CUSTOM = "custom",
 }
 
----@alias PowerTextFormat
----| "percentage"
----| "number"
----| "number-short"
----| "custom"
+---@enum PowerTextFormat
 const.PowerTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
@@ -42,19 +38,7 @@ const.PowerTextFormat = {
     CUSTOM = "custom"
 }
 
----@alias HealthTextFormat
----| PowerTextFormat
----| "percentage-absorbs"
----| "percentage-absorbs-merged"
----| "percentage-deficit"
----| "number-absorbs-short"
----| "number-absorbs-merged-short"
----| "number-deficit"
----| "number-deficit-short"
----| "current-short-percentage"
----| "absorbs-only"
----| "absorbs-only-short"
----| "absorbs-only-percentage"
+---@enum HealthTextFormat
 const.HealthTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
@@ -73,17 +57,7 @@ const.HealthTextFormat = {
     CUSTOM = "custom",
 }
 
----@alias WIDGET_KIND
----|"nameText"
----| "healthText"
----| "powerText"
----| "buffs"
----| "debuffs"
----| "raidIcon"
----| "roleIcon"
----| "leaderIcon"
----| "combatIcon"
----| "shieldBar"
+---@enum WIDGET_KIND
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
@@ -97,32 +71,7 @@ const.WIDGET_KIND = {
     SHIELD_BAR = "shieldBar",
 }
 
----@alias OPTION_KIND
----| "enabled"
----| "position"
----| "font"
----| "width"
----| "textWidth"
----| "textColor"
----| "healthFormat"
----| "powerFormat"
----| "format"
----| "height"
----| "outline"
----| "style"
----| "shadow"
----| "anchor"
----| "offsetX"
----| "offsetY"
----| "color"
----| "type"
----| "extraAnchor"
----| "height"
----| "size"
----| "frameLevel"
----| "textFormat"
----| "rgb"
----| "rgba"
+---@enum OPTION_KIND
 const.OPTION_KIND = {
     ENABLED = "enabled",
     POSITION = "position",
@@ -144,32 +93,14 @@ const.OPTION_KIND = {
     TEXT_FORMAT = "textFormat",
     RGB = "rgb",
     RGBA = "rgba",
+    ANCHOR = "anchor",
+    EXTRA_ANCHOR = "extraAnchor",
+    OFFSET_X = "offsetX",
+    OFFSET_Y = "offsetY",
+    TYPE = "type",
 }
 
----@alias AURA_OPTION_KIND
----| "size"
----| "font"
----| "orientation"
----| "position"
----| "showDuration"
----| "showAnimation"
----| "showStack"
----| "showTooltip"
----| "spacing"
----| "numPerLine"
----| "filter"
----| "maxIcons"
----| "minDuration"
----| "maxDuration"
----| "hidePersonal"
----| "hideExternal"
----| "horizontal"
----| "vertical"
----| "hideNoDuration"
----| "useBlacklist"
----| "useWhitelist"
----| "duration"
----| "stacks"
+---@enum AURA_OPTION_KIND
 const.AURA_OPTION_KIND = {
     SIZE = "size",
     FONT = "font",
@@ -182,10 +113,23 @@ const.AURA_OPTION_KIND = {
     SPACING = "spacing",
     NUM_PER_LINE = "numPerLine",
     FILTER = "filter",
-    MAX_ICONS = "maxIcons"
+    MAX_ICONS = "maxIcons",
+    MIN_DURATION = "minDuration",
+    MAX_DURATION = "maxDuration",
+    HIDE_PERSONAL = "hidePersonal",
+    HIDE_EXTERNAL = "hideExternal",
+    HIDE_NO_DURATION = "hideNoDuration",
+    BLACKLIST = "blacklist",
+    WHITELIST = "whitelist",
+    USE_BLACKLIST = "useBlacklist",
+    USE_WHITELIST = "useWhitelist",
+    HORIZONTAL = "horizontal",
+    VERTICAL = "vertical",
+    DURATION = "duration",
+    STACKS = "stacks",
 }
 
----@alias AuraOrientation "right-to-left" | "left-to-right" | "top-to-bottom" | "bottom-to-top"
+---@enum AuraOrientation
 const.AURA_ORIENTATION = {
     RIGHT_TO_LEFT = "right-to-left",
     LEFT_TO_RIGHT = "left-to-right",

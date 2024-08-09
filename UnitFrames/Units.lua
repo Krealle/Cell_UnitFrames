@@ -81,22 +81,10 @@ function U:InitUnitButtons()
     for _, unit in pairs(CUF.constants.UNIT) do
         local unitFrame, anchorFrame, hoverFrame, config = U:CreateBaseUnitFrame(unit)
         local button = CreateUnitButton(unit, unitFrame)
+
         RegisterUnitButtonCallbacks(unit, button, unitFrame, anchorFrame, hoverFrame, config)
-    end
-end
 
--- We need this to get clickCasting properly set up
-local IterateAllUnitButtons = Cell.funcs.IterateAllUnitButtons
-function Cell.funcs:IterateAllUnitButtons(...)
-    IterateAllUnitButtons(self, ...)
-
-    local func, updateCurrentGroupOnly, updateQuickAssist = ...
-    if func and type(func) == "function" and not updateCurrentGroupOnly and updateQuickAssist then
-        C_Timer.After(0.1, function() -- temp hack
-            CUF:Log("Click run")
-            for _, unit in pairs(CUF.constants.UNIT) do
-                func(CUF.unitButtons[unit])
-            end
-        end)
+        button:SetAttribute('*type1', 'target')     -- makes left click target the unit
+        button:SetAttribute('*type2', 'togglemenu') -- makes right click toggle a unit menu
     end
 end

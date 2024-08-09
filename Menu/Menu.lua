@@ -67,6 +67,8 @@ end
 local function LoadLayoutDB(layout)
     CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
+    DB.HandleLayoutLoad(layout)
+
     CUF.vars.selectedLayout = layout
 
     menu.window:ShowMenu()

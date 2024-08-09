@@ -11,6 +11,54 @@ local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...
 -- Getters
 -----------------------------------------
 
+---@param name string
+local function OnLayoutoutImported(name)
+    if CUF_DB.layouts[name] then return end
+
+    CUF_DB.layouts[name] = Cell.funcs:Copy(CUF.Defaults.Layouts)
+end
+Cell:RegisterCallback("LayoutImported", "CUF_DB_LayoutImported", OnLayoutoutImported)
+
+-- Verify we have DB entry for a layout change
+--
+-- TODO: Proper delete/rename handling
+---@param layout string
+function DB.HandleLayoutLoad(layout)
+    --[[ local state = CUF.vars.CellLayoutButtonState
+    CUF:Log("HandleLayoutLoad",
+        "state:", state,
+        "Old:", CUF.vars.selectedLayout, (CUF_DB.layouts[CUF.vars.selectedLayout] ~= nil),
+        "New:", layout, (CUF_DB.layouts[layout] ~= nil))
+
+    if state == "Delete" then
+        if CUF_DB.layouts[CUF.vars.selectedLayout]
+            and strlower(CUF.vars.selectedLayout) ~= "default"
+            and CUF.vars.selectedLayout ~= _G.DEFAULT then
+            CUF:Print("Layout Deleted:", CUF.vars.selectedLayout)
+
+            CUF_DB.layouts[CUF.vars.selectedLayout] = nil
+        end
+    end
+
+    if state == "Rename" then
+        if CUF_DB.layouts[CUF.vars.selectedLayout]
+            and not CUF_DB.layouts[layout]
+            and strlower(CUF.vars.selectedLayout) ~= "default"
+            and CUF.vars.selectedLayout ~= _G.DEFAULT then
+            CUF:Print("Layout renamed:", CUF.vars.selectedLayout, "=>", layout)
+
+            CUF_DB.layouts[layout] = Cell.funcs:Copy(CUF_DB.layouts[CUF.vars.selectedLayout])
+            CUF_DB.layouts[CUF.vars.selectedLayout] = nil
+        end
+    end ]]
+
+    if not CUF_DB.layouts[layout] then
+        CUF:Print("Layout added:", layout)
+        CUF_DB.layouts[layout] = Cell.funcs:Copy(CUF.Defaults.Layouts)
+    end
+    CUF.vars.CellLayoutButtonState = "Unknown"
+end
+
 -- Returns selected layout table (differes from current in menu)
 ---@return UnitLayoutTable
 function DB.SelectedLayoutTable()

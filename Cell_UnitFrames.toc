@@ -20,9 +20,9 @@ HideBlizzard.lua
 
 Data/Constants.lua
 Data/Defaults.lua
+Data/Database.lua
 
 Core/Util.lua
-Core/DataBase.lua
 Core/Core.lua
 Core/Handler.lua
 

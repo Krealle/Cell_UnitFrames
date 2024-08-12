@@ -35,6 +35,7 @@ end
 function W.SetIsSelected(widget, val)
     widget._isSelected = val
     if widget._OnIsSelected then
+        ---@diagnostic disable-next-line: param-type-mismatch
         widget:_OnIsSelected()
     end
 end

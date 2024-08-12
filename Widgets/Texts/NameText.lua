@@ -80,7 +80,7 @@ function W:CreateNameText(button)
     local nameText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.NAME_TEXT)
     button.widgets.nameText = nameText
 
-    nameText.width = CUF.Defaults.fontWidth
+    nameText.width = CUF.Defaults.Options.fontWidth
 
     function nameText:UpdateName()
         local name

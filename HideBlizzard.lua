@@ -44,6 +44,7 @@ local function HideFrame(frame)
     end
 end
 
+---@diagnostic disable: undefined-field
 ---@param unit Unit
 function CUF:HideBlizzardUnitFrame(unit)
     if unit == "player" and _G.PlayerFrame then

@@ -31,7 +31,7 @@ local function GetExportString(t)
     return s, n
 end
 
----@param parent Frame
+---@param parent Cell.SettingsAuras.frame
 ---@param auraButtons table
 ---@param auraTable table
 ---@param noUpDownButtons boolean
@@ -41,6 +41,8 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
 
     -- tooltip
     if not parent.popupEditBox then
+        ---@class CUFEditBox: EditBox
+        ---@field SetTips fun(self, text: string)
         local popup = Cell:CreatePopupEditBox(parent)
         popup:SetNumeric(true)
 
@@ -369,7 +371,7 @@ local auraImportExportFrame
 ---@return Cell.SettingsAuras
 function Builder.CreateSetting_Auras(parent, which, kind)
     if not auraImportExportFrame then
-        ---@class Cell.auraImportExportFrame: Frame
+        ---@class Cell.auraImportExportFrame: Frame, BackdropTemplate
         auraImportExportFrame = CUF:CreateFrame(nil, parent, 1, 200)
         auraImportExportFrame:SetBackdropBorderColor(Cell:GetAccentColorRGB())
         auraImportExportFrame:EnableMouse(true)
@@ -450,6 +452,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     local widget = CUF:CreateFrame("AuraOptions_" .. title, parent, 420, 128)
 
     ---@class Cell.SettingsAuras.frame: Frame
+    ---@field popupEditBox CUFEditBox
     widget.frame = CUF:CreateFrame(nil, widget, 20, 20)
     widget.frame:SetPoint("TOPLEFT", 5, -22)
     widget.frame:SetPoint("RIGHT", -5, 0)

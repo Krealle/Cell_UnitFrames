@@ -33,6 +33,12 @@ Defaults.Options.auraStacksFontOpt = {
 ---@type BigFontOpt
 Defaults.Options.auraDurationFontOpt = Defaults.Options.auraStacksFontOpt
 Defaults.Options.auraDurationFontOpt.anchor = "CENTER"
+---@type FontWidthOpt
+Defaults.Options.fontWidth = {
+    value = 0.75,
+    type = "percentage",
+    auxValue = 3,
+}
 
 ---@class WidgetTables
 Defaults.Widgets = {

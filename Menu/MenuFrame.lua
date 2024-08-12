@@ -231,6 +231,8 @@ function menuWindow:Create()
     self.widgetPane.line:SetPoint("BOTTOMRIGHT", self.widgetPane, "BOTTOMRIGHT")
 
     -- settings frame
+    ---@class MenuFrame.settingsFrame: Frame
+    ---@field scrollFrame CellScrollFrame
     self.settingsFrame = CUF:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane,
         sectionWidth,
         (self.widgetHeight - self.paneHeight), true, true)

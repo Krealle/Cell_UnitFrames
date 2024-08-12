@@ -52,7 +52,7 @@ end
 local function Icons_SetFont(icons, fonts)
     local fs = fonts.stacks
     local fd = fonts.duration
-    for i = 1, icons.maxNum do
+    for i = 1, icons._maxNum do
         icons[i]:SetFont(
             { fs.style, fs.size, fs.outline, fs.shadow, fs.anchor, fs.offsetX, fs.offsetY, fs.rgb },
             { fd.style, fd.size, fd.outline, fd.shadow, fd.anchor, fd.offsetX, fd.offsetY, fd.rgb })
@@ -271,7 +271,7 @@ end
 -------------------------------------------------
 -- MARK: Cell typing
 -------------------------------------------------
----@class CellAuraIcon
+---@class CellAuraIcon: Frame
 ---@field icon Texture
 ---@field stack FontString
 ---@field duration FontString
@@ -289,7 +289,7 @@ end
 ---@field index number
 ---@field preview CellAuraIcon.preview
 
----@class CellAuraIcons
+---@class CellAuraIcons: Frame
 ---@field indicatorType "icons"
 ---@field numPerLine number
 ---@field spacingX number

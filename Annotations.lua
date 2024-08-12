@@ -47,6 +47,7 @@
 
 ---@class CellSlider: Slider
 ---@field afterValueChangedFn function
+---@field currentEditBox Frame
 
 ---@class CellUnknowFrame: Frame
 ---@field title FontString
@@ -63,6 +64,12 @@
 ---@field barOrientation table
 ---@field powerFilters table<string, boolean|string>
 ---@field groupFilter table<number, boolean>
+
+---@class CellScrollFrame: ScrollFrame
+---@field content Frame
+---@field SetScrollStep fun(self: CellScrollFrame, step: number)
+---@field ResetScroll fun(self: CellScrollFrame)
+---@field SetContentHeight fun(self: CellScrollFrame, height: number)
 
 -------------------------------------------------
 -- MARK: CUF Frames

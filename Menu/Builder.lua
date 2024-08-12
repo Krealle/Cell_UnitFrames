@@ -56,7 +56,7 @@ CUF.Builder = Builder
 ---@field pageName string
 ---@field options table<MenuOptions>
 
----@param settingsFrame Frame
+---@param settingsFrame MenuFrame.settingsFrame
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
 ---@return WidgetsMenuPage

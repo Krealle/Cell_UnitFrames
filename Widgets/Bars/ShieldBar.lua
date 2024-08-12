@@ -100,7 +100,7 @@ end
 ---@param button CUFUnitButton
 ---@param buttonName string
 function W:CreateShieldBar(button, buttonName)
-    ---@class ShieldBarWidget: Frame, BaseWidget
+    ---@class ShieldBarWidget: Frame, BaseWidget, BackdropTemplate
     local shieldBar = CreateFrame("Frame", buttonName .. "ShieldBar", button, "BackdropTemplate")
     button.widgets.shieldBar = shieldBar
 

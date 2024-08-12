@@ -49,12 +49,12 @@ end
 CUF:AddEventListener("ADDON_LOADED", OnAddonLoaded)
 
 -------------------------------------------------
--- MARK: OnPlayerLogin
+-- MARK: OnPlayerEnteringWorld
 -------------------------------------------------
 
 ---@param playerLoginOwnerId number
 ---@return boolean
-local function OnPlayerLogin(playerLoginOwnerId)
+local function OnPlayerEnteringWorld(playerLoginOwnerId)
     -- Load vars
     CUF.vars.isMenuOpen = false
     CUF.vars.testMode = true
@@ -83,4 +83,4 @@ local function OnPlayerLogin(playerLoginOwnerId)
 
     return true
 end
-CUF:AddEventListener("PLAYER_LOGIN", OnPlayerLogin)
+CUF:AddEventListener("PLAYER_ENTERING_WORLD", OnPlayerEnteringWorld)

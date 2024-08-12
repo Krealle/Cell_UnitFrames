@@ -37,27 +37,7 @@ local function OnAddonLoaded(owner, loadedAddonName)
         Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
         Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
 
-        -- Verify DB
-        ---@type table<string, UnitLayoutTable>
-        CUF_DB.layouts = CUF_DB.layouts or {}
-
-        for layoutName, _ in pairs(CellDB["layouts"]) do
-            if type(CUF_DB.layouts[layoutName]) ~= "table" then
-                CUF_DB.layouts[layoutName] = Cell.funcs:Copy(CUF.Defaults.Layouts)
-            else
-                for unit, unitLayout in pairs(CUF.Defaults.Layouts) do
-                    if type(CUF_DB.layouts[layoutName][unit]) ~= "table" then
-                        CUF_DB.layouts[layoutName][unit] = Cell.funcs:Copy(unitLayout)
-                    else
-                        --[[ if unit == "pet" then
-                            CUF_DB.layouts[layoutName][unit] = Cell.funcs:Copy(CellDB["layouts"][layoutName][unit])
-                        end ]]
-                        --layout[unit].widgets["nameText"] = layout[unit].widgets.name
-                        CUF.Util:AddMissingProps(CUF_DB.layouts[layoutName][unit], unitLayout)
-                    end
-                end
-            end
-        end
+        CUF.DB.VerifyDB()
 
         CUF_DB.version = CUF.version
 

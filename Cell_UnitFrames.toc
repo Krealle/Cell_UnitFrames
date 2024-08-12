@@ -16,9 +16,10 @@
 
 Core/Localization.lua
 
-Core/Constants.lua
-Defaults.lua
 HideBlizzard.lua
+
+Data/Constants.lua
+Data/Defaults.lua
 
 Core/Util.lua
 Core/DataBase.lua

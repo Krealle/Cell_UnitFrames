@@ -113,7 +113,7 @@ function W:CreateShieldBar(button, buttonName)
     shieldBar._height = 0
 
     shieldBar:Hide()
-    shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 1 })
+    shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 0.1 })
     shieldBar:SetBackdropBorderColor(0, 0, 0, 1)
 
     local tex = shieldBar:CreateTexture(nil, "BORDER", nil, -7)

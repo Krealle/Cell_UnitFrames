@@ -359,14 +359,28 @@ end
 -------------------------------------------------
 
 ---@param kind ("texture"|"color"|"fullColor"|"deathColor"|"animation"|"highlightColor"|"highlightSize"|"alpha"|"outOfRangeAlpha"|"shields")?
----@param button CUFUnitButton
-function U:UpdateUnitButtonAppearance(kind, button)
+local function UpdateAppearance(kind)
     if not kind or kind == "texture" then
-        U:UnitFrame_UpdateHealthTexture(button)
-        U:UnitFrame_UpdatePowerTexture(button)
+        Util:IterateAllUnitButtons(function(button)
+            U:UnitFrame_UpdateHealthTexture(button)
+            U:UnitFrame_UpdatePowerTexture(button)
+        end)
     end
-    if not kind or kind == "color" or kind == "fullColor" or kind == "deathColor" or kind == "alpha" then
-        U:UnitFrame_UpdateHealthColor(button)
-        U:UnitFrame_UpdatePowerType(button)
+    if not kind or kind == "color" or kind == "deathColor" or kind == "alpha" then
+        Util:IterateAllUnitButtons(function(button)
+            U:UnitFrame_UpdateHealthColor(button)
+            U:UnitFrame_UpdatePowerType(button)
+        end)
+    end
+    if not kind or kind == "fullColor" then
+        -- Most likely a better way to do this
+        -- But it resolves a race condition so yea...
+        C_Timer.After(0.01, function()
+            Util:IterateAllUnitButtons(function(button)
+                U:UnitFrame_UpdateHealthColor(button)
+                U:UnitFrame_UpdatePowerType(button)
+            end)
+        end)
     end
 end
+Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance", UpdateAppearance)

@@ -62,19 +62,12 @@ local function RegisterUnitButtonCallbacks(unit, button, unitFrame, anchorFrame,
     Cell:RegisterCallback("UpdateVisibility", L[unit] .. "Frame_UpdateVisibility", UnitFrame_UpdateVisibility)
     CUF:RegisterCallback("UpdateVisibility", L[unit] .. "Frame_UpdateVisibility", UnitFrame_UpdateVisibility)
 
-    ---@param kind ("texture")?
-    local function UpdateAppearance(kind)
-        U:UpdateUnitButtonAppearance(kind, button)
-    end
-    Cell:RegisterCallback("UpdateAppearance", L[unit] .. "Frame_UpdateAppearance", UpdateAppearance)
-
     -- Call all callback functions and do a full update
     local function UpdateUnitButtons()
         UpdateMenu()
         UpdateLayout()
         UpdatePixelPerfect()
         UnitFrame_UpdateVisibility()
-        UpdateAppearance()
     end
     CUF:RegisterCallback("UpdateUnitButtons", L[unit] .. "UpdateUnitButtons", UpdateUnitButtons)
 end

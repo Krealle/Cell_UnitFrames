@@ -353,3 +353,20 @@ function U:SetOrientation(button, orientation, rotateTexture)
     -- update actions
     --I.UpdateActionsOrientation(button, orientation)
 end
+
+-------------------------------------------------
+-- MARK: Update Appearance
+-------------------------------------------------
+
+---@param kind ("texture"|"color"|"fullColor"|"deathColor"|"animation"|"highlightColor"|"highlightSize"|"alpha"|"outOfRangeAlpha"|"shields")?
+---@param button CUFUnitButton
+function U:UpdateUnitButtonAppearance(kind, button)
+    if not kind or kind == "texture" then
+        U:UnitFrame_UpdateHealthTexture(button)
+        U:UnitFrame_UpdatePowerTexture(button)
+    end
+    if not kind or kind == "color" or kind == "fullColor" or kind == "deathColor" or kind == "alpha" then
+        U:UnitFrame_UpdateHealthColor(button)
+        U:UnitFrame_UpdatePowerType(button)
+    end
+end

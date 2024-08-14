@@ -173,6 +173,12 @@ function U:UnitFrame_UpdateHealthMax(button)
     end
 end
 
+---@param button CUFUnitButton
+function U:UnitFrame_UpdateHealthTexture(button)
+    button.widgets.healthBar:SetStatusBarTexture(F:GetBarTexture())
+    button.widgets.healthBarLoss:SetTexture(F:GetBarTexture())
+end
+
 -------------------------------------------------
 -- MARK: CreateHealthBar
 -------------------------------------------------

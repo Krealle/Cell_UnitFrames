@@ -192,6 +192,12 @@ function U:UnitFrame_UpdatePowerType(button)
     button.widgets.powerBarLoss:SetVertexColor(lossR, lossG, lossB)
 end
 
+---@param button CUFUnitButton
+function U:UnitFrame_UpdatePowerTexture(button)
+    button.widgets.powerBar:SetStatusBarTexture(F:GetBarTexture())
+    button.widgets.powerBarLoss:SetTexture(F:GetBarTexture())
+end
+
 -------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------

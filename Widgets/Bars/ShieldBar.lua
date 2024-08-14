@@ -46,6 +46,11 @@ Handler:RegisterWidget(W.UpdateShieldBarWidget, const.WIDGET_KIND.SHIELD_BAR)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
+function U:UnitFrame_UpdateShieldBarHeight(button)
+    button.widgets.shieldBar:UpdateSize()
+end
+
+---@param button CUFUnitButton
 function U:UnitFrame_UpdateShieldBar(button)
     local unit = button.states.displayedUnit
     if not unit then return end
@@ -89,7 +94,7 @@ local function ShieldBar_SetValue(bar, percent)
     else
         barWidth = maxWidth * percent
     end
-    bar:UpdateSize(barWidth)
+    bar:SetWidth(barWidth)
 end
 
 -------------------------------------------------
@@ -130,11 +135,7 @@ function W:CreateShieldBar(button, buttonName)
         shieldBar:UpdateSize()
     end
 
-    ---@param width uiUnit?
-    function shieldBar:UpdateSize(width)
-        if width then
-            self:SetWidth(width)
-        end
+    function shieldBar:UpdateSize()
         self:SetHeight(self.parentHealthBar:GetHeight())
     end
 

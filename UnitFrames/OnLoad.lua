@@ -84,6 +84,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateLeaderIcon(button)
     U:UnitFrame_UpdateCombatIcon(button)
     U:UnitFrame_UpdateShieldBar(button)
+    U:UnitFrame_UpdateShieldBarHeight(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil

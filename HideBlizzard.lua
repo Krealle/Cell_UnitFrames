@@ -49,6 +49,7 @@ end
 function CUF:HideBlizzardUnitFrame(unit)
     if unit == "player" and _G.PlayerFrame then
         HideFrame(_G.PlayerFrame)
+        PlayerCastingBarFrame:UnregisterAllEvents()
     elseif unit == "target" and _G.TargetFrame then
         HideFrame(_G.TargetFrame)
     elseif unit == "focus" and _G.FocusFrame then

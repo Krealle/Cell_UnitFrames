@@ -35,5 +35,6 @@
     "FrameStackTooltip_Toggle",
     "GAME_LOCALE",
     "SetRaidTargetIconTexture",
+    "PlayerCastingBarFrame",
   ],
 }

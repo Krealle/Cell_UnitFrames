@@ -90,7 +90,7 @@ local function ShieldBar_SetValue(bar, percent)
     else
         barWidth = maxWidth * percent
     end
-    bar:SetWidth(barWidth)
+    bar:UpdateSize(barWidth)
 end
 
 -------------------------------------------------
@@ -131,22 +131,12 @@ function W:CreateShieldBar(button, buttonName)
         shieldBar:UpdateSize()
     end
 
-    ---@param styleTable ShieldBarWidgetTable
-    function shieldBar:SetWidgetSize(styleTable)
-        if styleTable.size.height == 0 then
-            self._height = 0
-        else
-            self._height = styleTable.size.height
+    ---@param width uiUnit?
+    function shieldBar:UpdateSize(width)
+        if width then
+            self:SetWidth(width)
         end
-        shieldBar:UpdateSize()
-    end
-
-    function shieldBar:UpdateSize()
-        if self._height == 0 then
-            self:SetHeight(self.parentHealthBar:GetHeight())
-            return
-        end
-        self:SetHeight(self._height)
+        self:SetHeight(self.parentHealthBar:GetHeight())
     end
 
     ---@param bar ShieldBarWidget

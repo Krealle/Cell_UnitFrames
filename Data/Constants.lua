@@ -127,6 +127,11 @@ const.AURA_OPTION_KIND = {
     VERTICAL = "vertical",
     DURATION = "duration",
     STACKS = "stacks",
+    PERSONAL = "personal",
+    NON_PERSONAL = "nonPersonal",
+    BOSS = "boss",
+    CAST_BY_PLAYERS = "castByPlayers",
+    CAST_BY_NPC = "castByNPC",
 }
 
 ---@enum AuraOrientation

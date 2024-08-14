@@ -80,6 +80,21 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         if not subSetting or subSetting == "useWhitelist" then
             auras:SetUseWhitelist(styleTable.filter.useWhitelist)
         end
+        if not subSetting or subSetting == "boss" then
+            auras:SetBoss(styleTable.filter.boss)
+        end
+        if not subSetting or subSetting == "castByPlayers" then
+            auras:SetCastByPlayers(styleTable.filter.castByPlayers)
+        end
+        if not subSetting or subSetting == "castByNPC" then
+            auras:SetCastByNPC(styleTable.filter.castByNPC)
+        end
+        if not subSetting or subSetting == "nonPersonal" then
+            auras:SetNonPersonal(styleTable.filter.nonPersonal)
+        end
+        if not subSetting or subSetting == "personal" then
+            auras:SetPersonal(styleTable.filter.personal)
+        end
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then

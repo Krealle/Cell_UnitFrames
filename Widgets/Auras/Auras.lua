@@ -153,6 +153,36 @@ local function Icons_SetUseWhitelist(icons, useWhitelist)
     icons.useWhitelist = useWhitelist
 end
 
+---@param icons CellAuraIcons
+---@param boss boolean
+local function Icons_SetBoss(icons, boss)
+    icons.boss = boss
+end
+
+---@param icons CellAuraIcons
+---@param castByPlayers boolean
+local function Icons_SetCastByPlayers(icons, castByPlayers)
+    icons.castByPlayers = castByPlayers
+end
+
+---@param icons CellAuraIcons
+---@param castByNPC boolean
+local function Icons_SetCastByNPC(icons, castByNPC)
+    icons.castByNPC = castByNPC
+end
+
+---@param icons CellAuraIcons
+---@param nonPersonal boolean
+local function Icons_SetNonPersonal(icons, nonPersonal)
+    icons.nonPersonal = nonPersonal
+end
+
+---@param icons CellAuraIcons
+---@param personal boolean
+local function Icons_SetPersonal(icons, personal)
+    icons.personal = personal
+end
+
 -------------------------------------------------
 -- MARK: Preview Helpers
 -------------------------------------------------
@@ -243,6 +273,12 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetUseBlacklist = Icons_SetUseBlacklist
     auraIcons.SetUseWhitelist = Icons_SetUseWhitelist
 
+    auraIcons.SetBoss = Icons_SetBoss
+    auraIcons.SetCastByPlayers = Icons_SetCastByPlayers
+    auraIcons.SetCastByNPC = Icons_SetCastByNPC
+    auraIcons.SetNonPersonal = Icons_SetNonPersonal
+    auraIcons.SetPersonal = Icons_SetPersonal
+
     auraIcons.ShowPreview = Icons_ShowPreview
     auraIcons.HidePreview = Icons_HidePreview
 
@@ -316,3 +352,10 @@ end
 ---@field whitelist table<number, boolean>
 ---@field useBlacklist boolean
 ---@field useWhitelist boolean
+---@field boss boolean
+---@field castByPlayers boolean
+---@field castByNPC boolean
+---@field notDispellable boolean
+---@field Dispellable boolean
+---@field nonPersonal boolean
+---@field personal boolean

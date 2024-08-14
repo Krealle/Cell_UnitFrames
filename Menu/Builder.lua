@@ -203,13 +203,14 @@ end
 ---@param title string
 ---@param kind OPTION_KIND | AURA_OPTION_KIND Which property to set
 ---@param keys? (OPTION_KIND | AURA_OPTION_KIND)[] Keys to traverse to the property
+---@param tooltip? string
 ---@return CUFCheckBox
-function Builder:CreateCheckBox(parent, widgetName, title, kind, keys)
+function Builder:CreateCheckBox(parent, widgetName, title, kind, keys, tooltip)
     ---@class CUFCheckBox: CheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
         cb.Set_DB(widgetName, kind, checked, keys)
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, kind, keys and unpack(keys))
-    end)
+    end, tooltip)
 
     checkbox.Set_DB = Set_DB
     checkbox.Get_DB = Get_DB
@@ -1104,7 +1105,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     ---@class AuraFilterOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "AuraFilterOptions"
-    f.optionHeight = 135
+    f.optionHeight = 165
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Filter")
@@ -1125,18 +1126,31 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         { "hideNoDuration" })
     self:AnchorBelow(f.hideNoDuration, f.maxDurationSlider)
 
-    f.hidePersonalCB = self:CreateCheckBox(f, widgetName, L.HidePersonal, const.AURA_OPTION_KIND.FILTER,
-        { "hidePersonal" })
-    self:AnchorRightOfCB(f.hidePersonalCB, f.hideNoDuration)
+    f.personal = self:CreateCheckBox(f, widgetName, L.Personal, const.AURA_OPTION_KIND.FILTER,
+        { const.AURA_OPTION_KIND.PERSONAL }, L.PersonalTooltip)
+    self:AnchorRightOfCB(f.personal, f.hideNoDuration)
 
-    f.hideExternalCB = self:CreateCheckBox(f, widgetName, L.HideExternal, const.AURA_OPTION_KIND.FILTER,
-        { "hideExternal" })
-    self:AnchorRightOfCB(f.hideExternalCB, f.hidePersonalCB)
+    f.nonPersonal = self:CreateCheckBox(f, widgetName, L.NonPersonal, const.AURA_OPTION_KIND.FILTER,
+        { const.AURA_OPTION_KIND.NON_PERSONAL }, L.NonPersonalTooltip)
+    self:AnchorRightOfCB(f.nonPersonal, f.personal)
 
     -- Third Row
+    f.boss = self:CreateCheckBox(f, widgetName, L.Boss, const.AURA_OPTION_KIND.FILTER,
+        { const.AURA_OPTION_KIND.BOSS }, L.BossTooltip)
+    f.boss:SetPoint("TOPLEFT", f.hideNoDuration, 0, -30)
+
+    f.castByPlayers = self:CreateCheckBox(f, widgetName, L.CastByPlayers, const.AURA_OPTION_KIND.FILTER,
+        { const.AURA_OPTION_KIND.CAST_BY_PLAYERS }, L.CastByPlayersTooltip)
+    self:AnchorRightOfCB(f.castByPlayers, f.boss)
+
+    f.castByNPC = self:CreateCheckBox(f, widgetName, L.CastByNPC, const.AURA_OPTION_KIND.FILTER,
+        { const.AURA_OPTION_KIND.CAST_BY_NPC }, L.CastByNPCTooltip)
+    self:AnchorRightOfCB(f.castByNPC, f.castByPlayers)
+
+    -- Fourth Row
     f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist, const.AURA_OPTION_KIND.FILTER,
         { "useBlacklist" })
-    f.useBlacklistCB:SetPoint("TOPLEFT", f.hideNoDuration, 0, -30)
+    f.useBlacklistCB:SetPoint("TOPLEFT", f.boss, 0, -30)
 
     f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L.UseWhitelist, const.AURA_OPTION_KIND.FILTER,
         { "useWhitelist" })

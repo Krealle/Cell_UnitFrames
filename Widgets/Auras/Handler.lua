@@ -37,28 +37,39 @@ end
 -------------------------------------------------
 
 ---@param icon CellAuraIcons
----@param auraData AuraData?
-local function HandleAura(icon, auraData)
-    if not auraData then return end
-
+---@param auraData AuraData
+---@return boolean show
+local function CheckFilter(icon, auraData)
     --TODO: Filter prio?
-
-    -- Blacklist / Whitelist Check
     local spellId = auraData.spellId
 
-    if icon.useBlacklist and icon.blacklist[spellId] then return end
-    if icon.useWhitelist and not icon.whitelist[spellId] then return end
+    -- Blacklist / Whitelist Check
+    if icon.useBlacklist and icon.blacklist[spellId] then return false end
+    if icon.useWhitelist and not icon.whitelist[spellId] then return false end
 
     -- Duration Check
     local duration = auraData.duration
+    if icon.hideNoDuration and duration == 0 then return false end
+    if icon.minDuration and duration < icon.minDuration then return false end
+    if icon.maxDuration and duration > icon.maxDuration then return false end
 
-    if icon.hideNoDuration and duration == 0 then return end
-    if icon.minDuration and duration < icon.minDuration then return end
-    if icon.maxDuration and duration > icon.maxDuration then return end
+    -- Personal / Non-Personal Check
+    if icon.nonPersonal and auraData.sourceUnit ~= "player" then return true end
+    if icon.personal and auraData.sourceUnit == "player" then return true end
 
-    -- Personal / External Check
-    if icon.hidePersonal and auraData.sourceUnit == "player" then return end
-    if icon.hideExternal and auraData.sourceUnit ~= "player" then return end
+    -- Source Unit Check
+    if icon.boss and auraData.isBossAura then return true end
+    if icon.castByPlayers and auraData.isFromPlayerOrPlayerPet then return true end
+    if icon.castByNPC and auraData.sourceUnit == "npc" then return true end
+
+    return false
+end
+
+---@param icon CellAuraIcons
+---@param auraData AuraData?
+local function HandleAura(icon, auraData)
+    if not auraData then return end
+    if not CheckFilter(icon, auraData) then return end
 
     local auraInstanceID = auraData.auraInstanceID
     local count = auraData.applications

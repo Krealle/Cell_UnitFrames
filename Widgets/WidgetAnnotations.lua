@@ -137,6 +137,11 @@
 ---@field useBlacklist boolean
 ---@field whitelist table<number>
 ---@field minDuration number
+---@field boss boolean
+---@field castByPlayers boolean
+---@field castByNPC boolean
+---@field nonPersonal boolean
+---@field personal boolean
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

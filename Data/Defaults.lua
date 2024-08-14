@@ -124,6 +124,11 @@ Defaults.Widgets = {
             hidePersonal = false,
             hideExternal = false,
             hideNoDuration = false,
+            castByPlayers = false,
+            nonPersonal = false,
+            castByNPC = false,
+            personal = false,
+            boss = false,
         },
         position = {
             anchor = "BOTTOMLEFT",
@@ -164,6 +169,11 @@ Defaults.Widgets = {
             hidePersonal = false,
             hideExternal = false,
             hideNoDuration = false,
+            castByPlayers = false,
+            nonPersonal = false,
+            castByNPC = false,
+            personal = false,
+            boss = false,
         },
         position = {
             anchor = "BOTTOMRIGHT",

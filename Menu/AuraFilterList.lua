@@ -233,7 +233,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             auraButtons[i].spellIdText:SetText(spell)
             auraButtons[i].spellId = spell
             auraButtons[i].spellTex = icon
-            auraButtons[i].spellNameText:SetText((name or "|cffff2222") .. L["Invalid"])
+            auraButtons[i].spellNameText:SetText(name or ("|cffff2222" .. L["Invalid"]))
             if icon then
                 auraButtons[i].spellIcon:SetTexture(icon)
                 auraButtons[i].spellIconBg:Show()

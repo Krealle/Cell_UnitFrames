@@ -155,7 +155,6 @@
 ---@field enabled boolean
 ---@field frameLevel number
 ---@field position PositionOpt
----@field size SizeOpt
 ---@field rgba RGBAOpt
 
 -------------------------------------------------

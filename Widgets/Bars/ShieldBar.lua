@@ -21,7 +21,6 @@ local Handler = CUF.Handler
 menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
     Builder.MenuOptions.ColorPicker,
     Builder.MenuOptions.FullAnchor,
-    Builder.MenuOptions.SingleSize,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton

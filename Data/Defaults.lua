@@ -247,10 +247,6 @@ Defaults.Widgets = {
         enabled = false,
         frameLevel = 10,
         rgba = { 1, 1, 0, 0.25 },
-        size = {
-            width = 0,
-            height = 0,
-        },
         position = {
             anchor = "BOTTOMRIGHT",
             offsetY = 0,

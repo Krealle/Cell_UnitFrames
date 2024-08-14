@@ -20,41 +20,11 @@ CUF.unitButtons = {}
 CUF.vars = {}
 
 -------------------------------------------------
--- MARK: OnAddonLoaded
--------------------------------------------------
-
----@param owner number
----@param loadedAddonName string
----@return boolean
-local function OnAddonLoaded(owner, loadedAddonName)
-    if loadedAddonName == AddonName then
-        -- Load our DB
-        CUF_DB = CUF_DB or {}
-
-        -- Load Cell and type it
-        CUF.Cell = Cell
-        CellDB = CellDB --[[@as CellDB]]
-        Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
-        Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
-
-        CUF.DB.VerifyDB()
-
-        CUF_DB.version = CUF.version
-
-        return true
-    end
-
-    return false
-end
-CUF:AddEventListener("ADDON_LOADED", OnAddonLoaded)
-
--------------------------------------------------
 -- MARK: OnPlayerEnteringWorld
 -------------------------------------------------
 
----@param playerLoginOwnerId number
----@return boolean
-local function OnPlayerEnteringWorld(playerLoginOwnerId)
+---@param _layout string
+local function OnCellInitialUpdateLayout(_layout)
     -- Load vars
     CUF.vars.isMenuOpen = false
     CUF.vars.testMode = true
@@ -81,6 +51,36 @@ local function OnPlayerEnteringWorld(playerLoginOwnerId)
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
 
-    return true
+    Cell:UnregisterCallback("UpdateLayout", "CUFInitial_UpdateLayout")
 end
-CUF:AddEventListener("PLAYER_ENTERING_WORLD", OnPlayerEnteringWorld)
+
+-------------------------------------------------
+-- MARK: OnAddonLoaded
+-------------------------------------------------
+
+---@param owner number
+---@param loadedAddonName string
+---@return boolean
+local function OnAddonLoaded(owner, loadedAddonName)
+    if loadedAddonName == AddonName then
+        -- Load our DB
+        CUF_DB = CUF_DB or {}
+
+        -- Load Cell and type it
+        CUF.Cell = Cell
+        CellDB = CellDB --[[@as CellDB]]
+        Cell.vars.currentLayout = Cell.vars.currentLayout --[[@as string]]
+        Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
+
+        CUF.DB.VerifyDB()
+
+        CUF_DB.version = CUF.version
+
+        Cell:RegisterCallback("UpdateLayout", "CUFInitial_UpdateLayout", OnCellInitialUpdateLayout)
+
+        return true
+    end
+
+    return false
+end
+CUF:AddEventListener("ADDON_LOADED", OnAddonLoaded)

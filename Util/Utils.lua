@@ -243,9 +243,6 @@ function Util:trim(string)
     return string:match '^()%s*$' and '' or string:match '^%s*(.*%S)'
 end
 
----@class CUF
-local CUF = select(2, ...)
-
 -------------------------------------------------
 -- MARK: Callbacks
 -------------------------------------------------

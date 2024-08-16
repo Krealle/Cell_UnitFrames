@@ -10,7 +10,7 @@ local DB = CUF.DB
 ---@class CUF.Menu
 ---@field selectedWidgetTable WidgetTable
 ---@field unitsToAdd table<number, function>
----@field widgetsToAdd table<number, WidgetsMenuPageArgs>
+---@field widgetsToAdd table<number, WidgetMenuPage.Args>
 local menu = {}
 menu.window = menuWindow
 menu.unitsToAdd = {}

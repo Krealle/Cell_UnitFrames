@@ -50,7 +50,7 @@ CUF.Builder = Builder
 -- MARK: Build Menu
 -------------------------------------------------
 
----@class WidgetsMenuPageArgs
+---@class WidgetMenuPage.Args
 ---@field widgetName WIDGET_KIND
 ---@field menuHeight number
 ---@field pageName string
@@ -59,9 +59,13 @@ CUF.Builder = Builder
 ---@param settingsFrame MenuFrame.settingsFrame
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
----@return WidgetsMenuPage
+---@return WidgetMenuPage
 function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
-    ---@class WidgetsMenuPage
+    ---@class WidgetMenuPage
+    ---@field pageButton WidgetMenuPage.pageButton
+    ---@field height number
+    ---@field _originalHeight number
+    ---@field id WIDGET_KIND
     local widgetPage = {}
 
     ---@class WidgetsMenuPageFrame: Frame
@@ -71,11 +75,12 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
     widgetPage.frame:Hide()
 
     widgetPage.id = widgetName
-    widgetPage.height = 40 -- enabledCheckBox + spacingY
+    widgetPage.height = 40
 
     widgetPage.frame._GetHeight = function()
         return widgetPage.height
     end
+    ---@param height number
     widgetPage.frame._SetHeight = function(height)
         widgetPage.height = height
         settingsFrame.scrollFrame:SetContentHeight(height)
@@ -83,8 +88,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
 
     local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
 
-    ---@type Frame
-    local prevOption = enabledCheckBox
+    local prevOption = enabledCheckBox ---@type Frame
     for _, option in pairs({ ... }) do
         --CUF:Log("|cffff7777MenuBuilder:|r", option)
         local optPage = Builder.MenuFuncs[option](self, widgetPage.frame, widgetName)
@@ -236,7 +240,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return EnabledCheckBox
 function Builder:CreatEnabledCheckBox(parent, widgetName)
-    ---@class EnabledCheckBox
+    ---@class EnabledCheckBox: Frame
     local f = CUF:CreateFrame(nil, parent, self.optionWidth, 30)
     f:SetPoint("TOPLEFT", parent, 5, -5)
     f:Show()

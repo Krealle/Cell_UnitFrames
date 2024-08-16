@@ -82,26 +82,6 @@
 ---@field SetSmoothedValue number
 
 -------------------------------------------------
--- MARK: CUF Menu
--------------------------------------------------
-
----@class WidgetsMenuPage
----@field frame WidgetsMenuPageFrame
----@field id WIDGET_KIND
----@field button WidgetMenuPageButton
----@field height number
-
----@class WidgetMenuPageButton: Button
----@field id WIDGET_KIND
-
----@class AnchorOptions: Frame
----@field nameAnchorDropdown CellDropdown
----@field nameXSlider CellSlider
----@field nameYSlider CellSlider
-
----@class EnabledCheckBox: Frame
-
--------------------------------------------------
 -- MARK: CUF UnitButton
 -------------------------------------------------
 

@@ -6,13 +6,13 @@ local L = CUF.L
 
 local function UpdateSize()
     if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-size")
+        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-size")
     end
 end
 
 local function UpdateArrangement()
     if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-arrangement")
+        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-arrangement")
     end
 end
 
@@ -83,9 +83,9 @@ local function AddUnitsToMenu()
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked
                         if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-                            Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit)
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit)
                         end
-                        Cell:Fire("UpdateVisibility", unit)
+                        CUF:Fire("UpdateVisibility", unit)
                     end)
                 unitPage.enabledCB:SetPoint("TOPLEFT", 5, -10)
 
@@ -104,7 +104,7 @@ local function AddUnitsToMenu()
                             -- update size and power
                             UpdateSize()
                             if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-                                Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                             end
                         end)
                     unitPage.sameSizeAsPlayerCB:SetPoint("TOPLEFT", unitPage.enabledCB, "TOPRIGHT", 200, 0)
@@ -129,7 +129,7 @@ local function AddUnitsToMenu()
                     function(value)
                         CUF.DB.SelectedLayoutTable()[unit].powerSize = value
                         if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-                            Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                         end
                     end)
                 unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)

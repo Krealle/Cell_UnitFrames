@@ -382,4 +382,4 @@ local function UpdateAppearance(kind)
         end)
     end
 end
-Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance", UpdateAppearance)
+CUF:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance", UpdateAppearance)

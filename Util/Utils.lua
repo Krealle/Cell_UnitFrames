@@ -247,7 +247,16 @@ end
 -- MARK: Callbacks
 -------------------------------------------------
 
----@alias Callbacks "UpdateMenu" | "UpdateWidget" | "LoadPageDB" | "UpdateVisibility" | "UpdateUnitButtons"
+---@alias Callbacks
+---| "UpdateMenu"
+---| "UpdateWidget"
+---| "LoadPageDB"
+---| "UpdateVisibility"
+---| "UpdateUnitButtons"
+---| "UpdateLayout"
+---| "ShowOptionsTab"
+---| "UpdatePixelPerfect"
+---| "UpdateAppearance"
 local callbacks = {}
 
 ---@param eventName Callbacks

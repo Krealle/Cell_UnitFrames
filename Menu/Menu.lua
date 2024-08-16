@@ -122,4 +122,4 @@ local function ShowTab(tab)
         Cell:RegisterCallback("UpdatePreview", "CUF_UpdatePreview", UpdatePreview)
     end
 end
-Cell:RegisterCallback("ShowOptionsTab", "CUFShowTab", ShowTab)
+CUF:RegisterCallback("ShowOptionsTab", "ShowTab", ShowTab)

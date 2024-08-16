@@ -32,6 +32,24 @@ local function OnCellInitialUpdateLayout(_layout)
     Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
         function(layout) CUF:Fire("UpdateWidget", layout) end)
 
+    Cell:RegisterCallback("UpdateLayout", "CUF_UpdateLayout",
+        function(layout, kind) CUF:Fire("UpdateLayout", layout, kind) end)
+
+    Cell:RegisterCallback("ShowOptionsTab", "CUF_ShowOptionsTab",
+        function(tab) CUF:Fire("ShowOptionsTab", tab) end)
+
+    Cell:RegisterCallback("UpdateMenu", "CUF_UpdateMenu",
+        function(kind) CUF:Fire("UpdateMenu", kind) end)
+
+    Cell:RegisterCallback("UpdatePixelPerfect", "CUF_UpdatePixelPerfect",
+        function() CUF:Fire("UpdatePixelPerfect") end)
+
+    Cell:RegisterCallback("UpdateVisibility", "CUF_UpdateVisibility",
+        function(which) CUF:Fire("UpdateVisibility", which) end)
+
+    Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance",
+        function(kind) CUF:Fire("UpdateAppearance", kind) end)
+
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
 

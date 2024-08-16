@@ -82,6 +82,22 @@ function CUF.Util:AddMissingProps(tableA, tableB)
     end
 end
 
+---@param table table
+---@param oldKey string
+---@param newKey string
+function CUF.Util:RenameProp(table, oldKey, newKey)
+    if type(table) ~= "table" then return end
+
+    for curKey, entry in pairs(table) do
+        if type(entry) == "table" then
+            self:RenameProp(entry, oldKey, newKey)
+        elseif curKey == oldKey then
+            table[newKey] = entry
+            table[oldKey] = nil
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------

@@ -199,7 +199,7 @@ function menuWindow:Create()
     self.window.mask:Hide()
 
     -- Unit Buttons
-    self.unitPane = Cell:CreateTitledPane(self.window, L["Unit Frames"], sectionWidth,
+    self.unitPane = Cell:CreateTitledPane(self.window, L.UnitFrames, sectionWidth,
         self.paneHeight)
     self.unitPane:SetPoint("TOPLEFT", buffer, -buffer)
 

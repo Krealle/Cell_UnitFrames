@@ -58,8 +58,6 @@ end
 
 local function AddUnitsToMenu()
     for _, unit in pairs(CUF.constants.UNIT) do
-        local unitName = Util:ToTitleCase(unit)
-
         menu:AddUnit(
         ---@param parent MenuFrame
         ---@return UnitsMenuPage
@@ -79,7 +77,7 @@ local function AddUnitsToMenu()
                 self.button = Cell:CreateButton(parent.unitSection, L[unit], "accent-hover", { 85, 17 })
                 self.button.id = unit
 
-                self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable"] .. " " .. L[unitName] .. " " .. L
+                self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable"] .. " " .. L[unit] .. " " .. L
                     .Frame,
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked

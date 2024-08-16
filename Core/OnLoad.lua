@@ -2,22 +2,6 @@
 local AddonName = ...
 ---@class CUF
 local CUF = select(2, ...)
-_G.CUF = CUF
-
-CUF.version = 2
-
----@class CUF.widgets
-CUF.widgets = {}
----@class CUF.uFuncs
-CUF.uFuncs = {}
-CUF.unitButtons = {}
-
----@class CUF.vars
----@field selectedLayout string
----@field selectedUnit Unit
----@field selectedWidget WIDGET_KIND
----@field testMode boolean
-CUF.vars = {}
 
 -------------------------------------------------
 -- MARK: OnPlayerEnteringWorld

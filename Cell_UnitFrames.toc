@@ -15,17 +15,16 @@
 ## Notes: Unitframes for our beloved Cell!
 
 Core/Localization.lua
-
-HideBlizzard.lua
+Core/Init.lua
 
 Data/Constants.lua
 Data/Defaults.lua
 Data/Database.lua
 Data/DBUtil.lua
 
-Core/Util.lua
-Core/Core.lua
-Core/Handler.lua
+Util/Utils.lua
+Util/Handler.lua
+Util/HideBlizzard.lua
 
 Debug/DebugWindow.lua
 Debug/Debug.lua
@@ -63,3 +62,5 @@ UnitFrames/UnitButton.lua
 UnitFrames/OnLoad.lua
 UnitFrames/Units.lua
 UnitFrames/MenuOptions.lua
+
+Core/OnLoad.lua

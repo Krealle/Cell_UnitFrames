@@ -1,12 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
-_G.CUF = CUF
-
-CUF.Cell = Cell
 
 ---@class CUF.constants
-local const = {}
-CUF.constants = const
+local const = CUF.constants
 
 ---@enum Unit
 const.UNIT = {

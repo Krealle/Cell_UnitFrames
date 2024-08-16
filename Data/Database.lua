@@ -2,8 +2,7 @@
 local CUF = select(2, ...)
 
 ---@class CUF.database
-local DB = {}
-CUF.DB = DB
+local DB = CUF.DB
 
 local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...) end end
 

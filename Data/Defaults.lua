@@ -2,10 +2,8 @@
 local CUF = select(2, ...)
 
 ---@class CUF.defaults
-local Defaults = {}
+local Defaults = CUF.Defaults
 Defaults.Options = {}
-
-CUF.Defaults = Defaults
 
 ---@type ColorOpt
 Defaults.Options.colorOpt = {

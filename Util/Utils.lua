@@ -4,10 +4,8 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 
-local const = CUF.constants
-
 ---@class CUF.Util
-CUF.Util = {}
+local Util = CUF.Util
 
 -------------------------------------------------
 -- MARK: Prop Hunting
@@ -16,7 +14,7 @@ CUF.Util = {}
 ---@param frame Frame
 ---@param name string
 ---@return Frame|CellUnknowFrame? child
-function CUF.Util.findChildByName(frame, name)
+function Util.findChildByName(frame, name)
     for _, child in pairs({ frame:GetChildren() }) do
         ---@cast child CellUnknowFrame
         local childName = child:GetName() or (child.title and child.title:GetText()) or ""
@@ -30,7 +28,7 @@ end
 ---@param frame Frame
 ---@param prop string
 ---@return Frame|CellUnknowFrame? child
-function CUF.Util.findChildByProp(frame, prop)
+function Util.findChildByProp(frame, prop)
     for _, child in pairs({ frame:GetChildren() }) do
         ---@cast child CellUnknowFrame
         if child[prop] then
@@ -45,7 +43,7 @@ end
 
 ---@param tableA table
 ---@param tableB table
-function CUF.Util:AddMissingProps(tableA, tableB)
+function Util:AddMissingProps(tableA, tableB)
     if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
 
     for key, bVal in pairs(tableB) do
@@ -62,7 +60,7 @@ end
 ---@param table table
 ---@param oldKey string
 ---@param newKey string
-function CUF.Util:RenameProp(table, oldKey, newKey)
+function Util:RenameProp(table, oldKey, newKey)
     if type(table) ~= "table" then return end
 
     for curKey, entry in pairs(table) do
@@ -81,7 +79,7 @@ end
 
 ---@param func function
 ---@param unitToIterate string?
-function CUF.Util:IterateAllUnitButtons(func, unitToIterate, ...)
+function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     for _, unit in pairs(CUF.constants.UNIT) do
         if not unitToIterate or unitToIterate == unit then
             func(CUF.unitButtons[unit], unit, ...)
@@ -97,7 +95,7 @@ end
 ---@param text string
 ---@param widthTable FontWidthOpt
 ---@param relativeTo Frame
-function CUF.Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
+function Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
     if not text or not widthTable then return end
 
     if widthTable.type == "unlimited" then
@@ -122,7 +120,7 @@ end
 
 -- Returns a table of all fonts.
 ---@return string[]
-function CUF.Util:GetFontItems()
+function Util:GetFontItems()
     local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
 
     local newItems = {}
@@ -132,6 +130,21 @@ function CUF.Util:GetFontItems()
 
     return newItems
 end
+
+-- Returns rgb values for a unit's power color
+--
+-- Doesn't return type prop from F:GetPowerColor
+---@param unit Unit
+---@return number, number, number
+function Util:GetPowerColor(unit)
+    local r, g, b, type = F:GetPowerColor(unit)
+
+    return r, g, b
+end
+
+-------------------------------------------------
+-- MARK: Frames
+-------------------------------------------------
 
 ---@param name? string
 ---@param parent Frame
@@ -187,31 +200,12 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     local editBox = Cell:CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
 
     if text then
-        local label = editBox:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        local label = editBox:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIGET)
         label:SetText(text)
         label:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 0, 2)
     end
 
     return editBox
-end
-
--- Returns rgb values for a unit's power color
---
--- Doesn't return type prop from F:GetPowerColor
----@param unit Unit
----@return number, number, number
-function CUF.Util:GetPowerColor(unit)
-    local r, g, b, type = F:GetPowerColor(unit)
-
-    return r, g, b
-end
-
-function CUF:Print(...)
-    print("|cffffa500[CUF]|r", ...)
-end
-
-function CUF:Warn(...)
-    CUF:Print("|cFFFF3030[WARN]|r", ...)
 end
 
 -------------------------------------------------
@@ -221,7 +215,7 @@ end
 -- Function to capitalize the first letter to a series of strings
 ---@param ... string
 ---@return string
-function CUF.Util:ToTitleCase(...)
+function Util:ToTitleCase(...)
     local args = { ... }
     local function capitalizeFirst(word)
         return word:gsub("^%l", string.upper)
@@ -245,9 +239,12 @@ end
 -- https://snippets.bentasker.co.uk/page-1706031030-Trim-whitespace-from-string-LUA.html
 ---@param string string
 ---@return string
-function CUF.Util:trim(string)
+function Util:trim(string)
     return string:match '^()%s*$' and '' or string:match '^%s*(.*%S)'
 end
+
+---@class CUF
+local CUF = select(2, ...)
 
 -------------------------------------------------
 -- MARK: Callbacks
@@ -307,6 +304,14 @@ end
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------
+
+function CUF:Print(...)
+    print("|cffffa500[CUF]|r", ...)
+end
+
+function CUF:Warn(...)
+    CUF:Print("|cFFFF3030[WARN]|r", ...)
+end
 
 ---@param ... any
 function CUF:Log(...)

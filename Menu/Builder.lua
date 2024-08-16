@@ -11,7 +11,7 @@ local DB = CUF.DB
 local Util = CUF.Util
 
 ---@class CUF.builder
-local Builder = {}
+local Builder = CUF.Builder
 Builder.spacingY = 50
 Builder.spacingX = 25
 Builder.optionWidth = 420
@@ -43,8 +43,6 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
 }
-
-CUF.Builder = Builder
 
 -------------------------------------------------
 -- MARK: Build Menu

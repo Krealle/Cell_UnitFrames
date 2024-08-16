@@ -5,7 +5,6 @@ local Cell = CUF.Cell
 local Util = CUF.Util
 
 local menuWindow = CUF.MenuWindow
-local DB = CUF.DB
 
 ---@class CUF.Menu
 ---@field selectedWidgetTable WidgetTable

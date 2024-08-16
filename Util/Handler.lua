@@ -80,7 +80,7 @@ function Handler:RegisterWidget(func, widgetName)
 end
 
 -------------------------------------------------
--- MARK: Pages
+-- MARK: Menu Pages
 -------------------------------------------------
 
 -- Set `_isSelected` for the button and corresponding widget that is selected in menu.

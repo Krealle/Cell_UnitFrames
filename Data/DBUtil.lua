@@ -17,6 +17,8 @@ function DB.VerifyDB()
                 layoutTable.CUFUnits[unit] = Cell.funcs:Copy(unitLayout)
             else
                 CUF.Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout)
+                --[[ CUF.Util:RenameProp(layoutTable.CUFUnits[unit], "anchor", "point") ]]
+                CUF.Util:RenameProp(layoutTable.CUFUnits[unit], "pointTo", "relativePoint")
             end
         end
     end

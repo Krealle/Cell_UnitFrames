@@ -54,3 +54,34 @@ L.shieldBar = "Shield Bar"
 L.Frame = "Frame"
 L.UnitFrames = "Unit Frames"
 L.RelativeTo = "Relative To"
+
+-- Custom Formats
+L.ValidTags = "Valid Tags"
+
+L["cur"] = "Displays the current amount."
+L["cur:short"] = "Displays the current amount as a shortvalue."
+L["cur:per"] = "Displays the current amount as a percentage."
+L["cur:per-short"] = "Displays the current amount as a percentage without decimals."
+
+L["max"] = "Displays the maximum amount."
+L["max:short"] = "Displays the maximum amount as a shortvalue."
+
+L["abs"] = "Displays the amount of absorbs."
+L["abs:short"] = "Displays the amount of absorbs as a shortvalue."
+L["abs:per"] = "Displays the absorbs as a percentage."
+L["abs:per-short"] = "Displays the absorbs as a percentage without decimals."
+
+L["cur:abs"] = "Displays the current amount and absorbs."
+L["cur:abs-short"] = "Displays the current amount and absorbs as shortvalues."
+L["cur:abs:per"] = "Displays the current amount and absorbs as percentages."
+L["cur:abs:per-short"] = "Displays the current amount and absorbs as percentages without decimals."
+
+L["cur:abs:merge"] = "Displays the sum of the current amount and absorbs."
+L["cur:abs:merge:short"] = "Displays the sum of the current amount and absorbs as a shortvalue."
+L["cur:abs:merge:per"] = "Displays the sum of the current amount and absorbs as a percentage."
+L["cur:abs:merge:per-short"] = "Displays the sum of the current amount and absorbs as a percentage without decimals."
+
+L["def"] = "Displays the deficit."
+L["def:short"] = "Displays the deficit as a shortvalue."
+L["def:per"] = "Displays the deficit as a percentage."
+L["def:per-short"] = "Displays the deficit as a percentage without decimals."

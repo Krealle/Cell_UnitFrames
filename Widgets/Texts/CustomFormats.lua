@@ -9,6 +9,8 @@ local Util = CUF.Util
 ---@class CUF.widgets
 local W = CUF.widgets
 
+local L = CUF.L
+
 -------------------------------------------------
 -- MARK: Tags
 -------------------------------------------------
@@ -159,6 +161,55 @@ local valid_tags = {
     ["def:per-short"] = function(current, max, totalAbsorbs)
         return FormatPercentShort(max, (current - max))
     end,
+}
+
+W.CustomHealtFormatsTooltip = {
+    "[cur] - " .. L["cur"],
+    "[cur:short] - " .. L["cur:short"],
+    "[cur:per] - " .. L["cur:per"],
+    "[cur:per-short] - " .. L["cur:per-short"],
+    "",
+    "[max] - " .. L["max"],
+    "[max:short] - " .. L["max:short"],
+    "",
+    "[abs] - " .. L["abs"],
+    "[abs:short] - " .. L["abs:short"],
+    "[abs:per] - " .. L["abs:per"],
+    "[abs:per-short] - " .. L["abs:per-short"],
+    "",
+    "[cur:abs] - " .. L["cur:abs"],
+    "[cur:abs-short] - " .. L["cur:abs-short"],
+    "[cur:abs:per] - " .. L["cur:abs:per"],
+    "[cur:abs:per-short] - " .. L["cur:abs:per-short"],
+    "",
+    "[cur:abs:merge] - " .. L["cur:abs:merge"],
+    "[cur:abs:merge:short] - " .. L["cur:abs:merge:short"],
+    "[cur:abs:merge:per] - " .. L["cur:abs:merge:per"],
+    "[cur:abs:merge:per-short] - " .. L["cur:abs:merge:per-short"],
+    "",
+    "[def] - " .. L["def"],
+    "[def:short] - " .. L["def:short"],
+    "[def:per] - " .. L["def:per"],
+    "[def:per-short] - " .. L["def:per-short"],
+}
+
+-- Okay so technically we are lying a little bit here
+-- Since we are using the excact same functions for both
+-- power and health formats
+-- Buuuuuuuuut thats a future problem
+W.CustomPowerFormatsTooltip = {
+    "[cur] - " .. L["cur"],
+    "[cur:short] - " .. L["cur:short"],
+    "[cur:per] - " .. L["cur:per"],
+    "[cur:per-short] - " .. L["cur:per-short"],
+    "",
+    "[max] - " .. L["max"],
+    "[max:short] - " .. L["max:short"],
+    "",
+    "[def] - " .. L["def"],
+    "[def:short] - " .. L["def:short"],
+    "[def:per] - " .. L["def:per"],
+    "[def:per-short] - " .. L["def:per-short"],
 }
 
 ---@param textFormat string

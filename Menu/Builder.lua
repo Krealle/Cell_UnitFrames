@@ -865,6 +865,25 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
     f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
     self:AnchorBelow(f.formatEditBox, f.formatDropdown)
 
+    local function SetEnabled(enabled)
+        f.formatEditBox:SetEnabled(enabled)
+        if enabled then
+            CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
+                unpack(CUF.widgets.CustomHealtFormatsTooltip))
+        else
+            CUF:ClearTooltips(f.formatEditBox)
+        end
+    end
+
+    hooksecurefunc(f.formatDropdown, "SetSelected", function(_, text)
+        SetEnabled(text == L["Custom"])
+    end)
+
+    local function LoadPageDB()
+        SetEnabled(Get_DB(widgetName, const.OPTION_KIND.FORMAT) == const.HealthTextFormat.CUSTOM)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "HealthFormatOptions")
+
     return f
 end
 
@@ -894,6 +913,25 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
 
     f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
     self:AnchorBelow(f.formatEditBox, f.formatDropdown)
+
+    local function SetEnabled(enabled)
+        f.formatEditBox:SetEnabled(enabled)
+        if enabled then
+            CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
+                unpack(CUF.widgets.CustomPowerFormatsTooltip))
+        else
+            CUF:ClearTooltips(f.formatEditBox)
+        end
+    end
+
+    hooksecurefunc(f.formatDropdown, "SetSelected", function(_, text)
+        SetEnabled(text == L["Custom"])
+    end)
+
+    local function LoadPageDB()
+        SetEnabled(Get_DB(widgetName, const.OPTION_KIND.FORMAT) == const.PowerTextFormat.CUSTOM)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "PowerFormatOptions")
 
     return f
 end

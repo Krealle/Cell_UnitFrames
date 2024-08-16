@@ -208,6 +208,20 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     return editBox
 end
 
+---@param frame Frame
+---@param anchor "ANCHOR_TOP" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_RIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_CURSOR"
+---@param x number
+---@param y number
+---@param ... any
+function CUF:SetTooltips(frame, anchor, x, y, ...)
+    Cell:SetTooltips(frame, anchor, x, y, ...)
+end
+
+---@param frame Frame
+function CUF:ClearTooltips(frame)
+    Cell:ClearTooltips(frame)
+end
+
 -------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------

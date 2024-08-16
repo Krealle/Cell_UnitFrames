@@ -24,7 +24,7 @@ local Util = CUF.Util
 ---@param tooltipX number
 ---@param tooltipY number
 function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)
-    CUF.DB.CurrentLayoutTable()[unit]["tooltipPosition"] = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
+    CUF.DB.CurrentLayoutTable()[unit].tooltipPosition = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
 end
 
 -------------------------------------------------
@@ -41,11 +41,11 @@ function U:CreateBaseUnitFrame(unit, onEnterLogic)
     local name = Util:ToTitleCase(unit)
 
     ---@class CUFUnitFrame: Frame
-    local frame = CreateFrame("Frame", "CUF" .. name .. "Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
+    local frame = CreateFrame("Frame", "CUF" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
 
     -- Anchor
     ---@class CUFAnchorFrame: Frame, CellAnimation
-    local anchorFrame = CreateFrame("Frame", "CUF" .. name .. "AnchorFrame", frame)
+    local anchorFrame = CreateFrame("Frame", "CUF" .. name .. "_AnchorFrame", frame)
     PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
     anchorFrame:SetMovable(true)
     anchorFrame:SetClampedToScreen(true)
@@ -73,14 +73,14 @@ function U:CreateBaseUnitFrame(unit, onEnterLogic)
     end)
     config:SetScript("OnDragStop", function()
         anchorFrame:StopMovingOrSizing()
-        P:SavePosition(anchorFrame, CUF.DB.CurrentLayoutTable()[unit]["position"])
+        P:SavePosition(anchorFrame, CUF.DB.CurrentLayoutTable()[unit].position)
     end)
     config:HookScript("OnEnter", function()
         hoverFrame:GetScript("OnEnter")(hoverFrame)
         CellTooltip:SetOwner(config, "ANCHOR_NONE")
 
         local tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY = unpack(CUF.DB.CurrentLayoutTable()[unit]
-            ["tooltipPosition"])
+            .tooltipPosition)
         P:Point(CellTooltip, tooltipPoint, config, tooltipRelativePoint, tooltipX, tooltipY)
 
         CellTooltip:AddLine(L[unit] .. " " .. L.Frame)
@@ -110,11 +110,11 @@ end
 function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     local layout = CUF.DB.CurrentLayoutTable()
 
-    local anchor
-    if layout[unit]["sameSizeAsPlayer"] then
-        anchor = layout[const.UNIT.PLAYER].point
+    local anchorPoint
+    if layout[unit].sameSizeAsPlayer then
+        anchorPoint = layout[const.UNIT.PLAYER].point
     else
-        anchor = layout[unit].point
+        anchorPoint = layout[unit].point
     end
 
     button:ClearAllPoints()
@@ -124,32 +124,32 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     if CellDB["general"]["menuPosition"] == "top_bottom" then
         P:Size(anchorFrame, 20, 10)
 
-        if anchor == "BOTTOMLEFT" then
+        if anchorPoint == "BOTTOMLEFT" then
             P:Point(button, "BOTTOMLEFT", anchorFrame, "TOPLEFT", 0, 4)
             U:SaveTooltipPosition(unit, "TOPLEFT", "BOTTOMLEFT", 0, -3)
-        elseif anchor == "BOTTOMRIGHT" then
+        elseif anchorPoint == "BOTTOMRIGHT" then
             P:Point(button, "BOTTOMRIGHT", anchorFrame, "TOPRIGHT", 0, 4)
             U:SaveTooltipPosition(unit, "TOPRIGHT", "BOTTOMRIGHT", 0, -3)
-        elseif anchor == "TOPLEFT" then
+        elseif anchorPoint == "TOPLEFT" then
             P:Point(button, "TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, -4)
             U:SaveTooltipPosition(unit, "BOTTOMLEFT", "TOPLEFT", 0, 3)
-        elseif anchor == "TOPRIGHT" then
+        elseif anchorPoint == "TOPRIGHT" then
             P:Point(button, "TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, -4)
             U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "TOPRIGHT", 0, 3)
         end
     else -- left_right
         P:Size(anchorFrame, 10, 20)
 
-        if anchor == "BOTTOMLEFT" then
+        if anchorPoint == "BOTTOMLEFT" then
             P:Point(button, "BOTTOMLEFT", anchorFrame, "BOTTOMRIGHT", 4, 0)
             U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "BOTTOMLEFT", -3, 0)
-        elseif anchor == "BOTTOMRIGHT" then
+        elseif anchorPoint == "BOTTOMRIGHT" then
             P:Point(button, "BOTTOMRIGHT", anchorFrame, "BOTTOMLEFT", -4, 0)
             U:SaveTooltipPosition(unit, "BOTTOMLEFT", "BOTTOMRIGHT", 3, 0)
-        elseif anchor == "TOPLEFT" then
+        elseif anchorPoint == "TOPLEFT" then
             P:Point(button, "TOPLEFT", anchorFrame, "TOPRIGHT", 4, 0)
             U:SaveTooltipPosition(unit, "TOPRIGHT", "TOPLEFT", -3, 0)
-        elseif anchor == "TOPRIGHT" then
+        elseif anchorPoint == "TOPRIGHT" then
             P:Point(button, "TOPRIGHT", anchorFrame, "TOPLEFT", -4, 0)
             U:SaveTooltipPosition(unit, "TOPLEFT", "TOPRIGHT", 3, 0)
         end
@@ -181,27 +181,27 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
 
     -- Anchor points
     if not kind or strfind(kind, "arrangement$") then
-        local anchor
+        local anchorPoint
         if layout[unit].sameSizeAsPlayer then
-            anchor = layout[const.UNIT.PLAYER].point
+            anchorPoint = layout[const.UNIT.PLAYER].point
         else
-            anchor = layout[unit].point
+            anchorPoint = layout[unit].point
         end
 
         -- anchors
-        local anchorPoint
-        if anchor == "BOTTOMLEFT" then
-            anchorPoint = "TOPLEFT"
-        elseif anchor == "BOTTOMRIGHT" then
-            anchorPoint = "TOPRIGHT"
-        elseif anchor == "TOPLEFT" then
-            anchorPoint = "BOTTOMLEFT"
-        elseif anchor == "TOPRIGHT" then
-            anchorPoint = "BOTTOMRIGHT"
+        local relativePoint
+        if anchorPoint == "BOTTOMLEFT" then
+            relativePoint = "TOPLEFT"
+        elseif anchorPoint == "BOTTOMRIGHT" then
+            relativePoint = "TOPRIGHT"
+        elseif anchorPoint == "TOPLEFT" then
+            relativePoint = "BOTTOMLEFT"
+        elseif anchorPoint == "TOPRIGHT" then
+            relativePoint = "BOTTOMRIGHT"
         end
 
         button:ClearAllPoints()
-        button:SetPoint(anchor, anchorFrame, anchorPoint, 0)
+        button:SetPoint(anchorPoint, anchorFrame, relativePoint, 0)
 
         U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
@@ -213,7 +213,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
     end
 
     if not kind or strfind(kind, "power$") or kind == "barOrientation" then
-        if layout[unit]["sameSizeAsPlayer"] then
+        if layout[unit].sameSizeAsPlayer then
             W:SetPowerSize(button, layout[const.UNIT.PLAYER].powerSize)
         else
             W:SetPowerSize(button, layout[unit].powerSize)
@@ -270,10 +270,9 @@ end
 function U:UpdateUnitFrameVisibility(which, unit, button, frame)
     if InCombatLockdown() then return end
     if not which or which == unit then
-        if CUF.DB.CurrentLayoutTable()[unit]["enabled"] then
+        if CUF.DB.CurrentLayoutTable()[unit].enabled then
             RegisterUnitWatch(button)
             frame:Show()
-            --F:HideBlizzardUnitFrame(unit)
         else
             UnregisterUnitWatch(button)
             frame:Hide()

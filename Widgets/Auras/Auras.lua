@@ -100,18 +100,6 @@ local function Icons_SetMaxNum(icons, maxNum)
 end
 
 ---@param icons CellAuraIcons
----@param hidePersonal boolean
-local function Icons_SetHidePersonal(icons, hidePersonal)
-    icons.hidePersonal = hidePersonal
-end
-
----@param icons CellAuraIcons
----@param hideExternal boolean
-local function Icons_SetHideExternal(icons, hideExternal)
-    icons.hideExternal = hideExternal
-end
-
----@param icons CellAuraIcons
 ---@param hideNoDuration boolean
 local function Icons_SetHideNoDuration(icons, hideNoDuration)
     icons.hideNoDuration = hideNoDuration
@@ -263,8 +251,6 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetFont = Icons_SetFont
     auraIcons.ShowTooltip = Icons_ShowTooltip
     auraIcons.SetMaxNum = Icons_SetMaxNum
-    auraIcons.SetHidePersonal = Icons_SetHidePersonal
-    auraIcons.SetHideExternal = Icons_SetHideExternal
     auraIcons.SetHideNoDuration = Icons_SetHideNoDuration
     auraIcons.SetMaxDuration = Icons_SetMaxDuration
     auraIcons.SetMinDuration = Icons_SetMinDuration

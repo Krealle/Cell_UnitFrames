@@ -134,7 +134,7 @@ function Builder:WrapOption(parent, option, widgetName)
 end
 
 -------------------------------------------------
--- MARK: Builder
+-- MARK: Anchors
 -------------------------------------------------
 
 ---@param option Frame
@@ -153,6 +153,12 @@ end
 ---@param prevOptions Frame
 function Builder:AnchorRightOfCB(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + 117, 0)
+end
+
+---@param option Frame
+---@param prevOptions Frame
+function Builder:AnchorBelowCB(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, 0, -30)
 end
 
 -------------------------------------------------
@@ -1123,7 +1129,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
 
     -- Second Row
     f.hideNoDuration = self:CreateCheckBox(f, widgetName, L.HideNoDuration, const.AURA_OPTION_KIND.FILTER,
-        { "hideNoDuration" })
+        { const.AURA_OPTION_KIND.HIDE_NO_DURATION }, L.HideNoDurationTooltip)
     self:AnchorBelow(f.hideNoDuration, f.maxDurationSlider)
 
     f.personal = self:CreateCheckBox(f, widgetName, L.Personal, const.AURA_OPTION_KIND.FILTER,
@@ -1137,7 +1143,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     -- Third Row
     f.boss = self:CreateCheckBox(f, widgetName, L.Boss, const.AURA_OPTION_KIND.FILTER,
         { const.AURA_OPTION_KIND.BOSS }, L.BossTooltip)
-    f.boss:SetPoint("TOPLEFT", f.hideNoDuration, 0, -30)
+    self:AnchorBelowCB(f.boss, f.hideNoDuration)
 
     f.castByPlayers = self:CreateCheckBox(f, widgetName, L.CastByPlayers, const.AURA_OPTION_KIND.FILTER,
         { const.AURA_OPTION_KIND.CAST_BY_PLAYERS }, L.CastByPlayersTooltip)
@@ -1149,11 +1155,11 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
 
     -- Fourth Row
     f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist, const.AURA_OPTION_KIND.FILTER,
-        { "useBlacklist" })
-    f.useBlacklistCB:SetPoint("TOPLEFT", f.boss, 0, -30)
+        { const.AURA_OPTION_KIND.USE_BLACKLIST })
+    self:AnchorBelowCB(f.useBlacklistCB, f.boss)
 
     f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L.UseWhitelist, const.AURA_OPTION_KIND.FILTER,
-        { "useWhitelist" })
+        { const.AURA_OPTION_KIND.USE_WHITELIST })
     self:AnchorRightOfCB(f.useWhitelistCB, f.useBlacklistCB)
 
     return f

@@ -128,20 +128,18 @@
 ---@field size SizeOpt
 
 ---@class FilterOpt
----@field hideNoDuration boolean
----@field useWhitelist boolean
----@field hidePersonal boolean
 ---@field blacklist table<number>
----@field maxDuration number
----@field hideExternal boolean
----@field useBlacklist boolean
 ---@field whitelist table<number>
----@field minDuration number
----@field boss boolean
+---@field hideNoDuration boolean
 ---@field castByPlayers boolean
----@field castByNPC boolean
+---@field useBlacklist boolean
+---@field useWhitelist boolean
 ---@field nonPersonal boolean
+---@field maxDuration number
+---@field minDuration number
+---@field castByNPC boolean
 ---@field personal boolean
+---@field boss boolean
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

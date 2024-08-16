@@ -461,7 +461,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
 
     widget.text = widget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     widget.text:SetPoint("BOTTOMLEFT", widget.frame, "TOPLEFT", 0, 3)
-    widget.text:SetText(Util:ToTitleCase(kind))
+    widget.text:SetText(L[kind])
 
     widget.export = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Export"])
     widget.export:SetPoint("BOTTOMRIGHT", widget.frame, "TOPRIGHT", 0, 1)

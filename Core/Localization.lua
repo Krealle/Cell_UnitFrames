@@ -27,12 +27,15 @@ L.NonPersonal = "Non Personal"
 L.Boss = "Boss"
 L.CastByPlayers = "Cast By Players"
 L.CastByNPC = "Cast By NPC"
+L.blacklist = "Blacklist"
+L.whitelist = "Whitelist"
 
 L.PersonalTooltip = "Show auras cast by you"
 L.NonPersonalTooltip = "Show auras not cast by you"
 L.BossTooltip = "Show auras cast by bosses"
 L.CastByPlayersTooltip = "Show auras cast by players"
 L.CastByNPCTooltip = "Show auras cast by NPCs"
+L.HideNoDurationTooltip = "Hide auras with no duration"
 
 -- Widgets
 L.Widgets = "Widgets"

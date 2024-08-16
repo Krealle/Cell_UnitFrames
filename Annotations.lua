@@ -60,7 +60,7 @@
 ---@alias Layouts table<string, LayoutTable>
 
 ---@class LayoutTable
----@field [Unit] UnitLayout
+---@field CUFUnits UnitLayoutTable
 ---@field barOrientation table
 ---@field powerFilters table<string, boolean|string>
 ---@field groupFilter table<number, boolean>

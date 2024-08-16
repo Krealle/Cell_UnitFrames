@@ -53,14 +53,8 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         auras:SetMaxNum(styleTable.maxIcons)
     end
     if not setting or setting == const.AURA_OPTION_KIND.FILTER then
-        if not subSetting or subSetting == "hidePersonal" then
-            auras:SetHidePersonal(styleTable.filter.hidePersonal)
-        end
         if not subSetting or subSetting == "hideNoDuration" then
             auras:SetHideNoDuration(styleTable.filter.hideNoDuration)
-        end
-        if not subSetting or subSetting == "hideExternal" then
-            auras:SetHideExternal(styleTable.filter.hideExternal)
         end
         if not subSetting or subSetting == "maxDuration" then
             auras:SetMaxDuration(styleTable.filter.maxDuration)

@@ -206,7 +206,7 @@ end
 
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
-    local formatFn, hasAbsorb = W.ProcessCustomTextFormat(self.textFormat)
+    local formatFn, hasAbsorb = W.ProcessCustomTextFormat(self.textFormat, "health")
     self._showingAbsorbs = hasAbsorb
     self.SetValue = function(_, current, max, totalAbsorbs)
         self:SetText(formatFn(current, max, totalAbsorbs))

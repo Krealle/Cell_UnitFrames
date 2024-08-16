@@ -104,7 +104,7 @@ end
 
 ---@param self PowerTextWidget
 local function SetPower_Custom(self)
-    local formatFn = W.ProcessCustomTextFormat(self.textFormat)
+    local formatFn = W.ProcessCustomTextFormat(self.textFormat, "power")
     self.SetValue = function(_, current, max)
         self:SetText(formatFn(current, max))
     end

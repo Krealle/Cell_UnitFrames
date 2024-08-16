@@ -16,15 +16,35 @@ local L = CUF.L
 -------------------------------------------------
 
 -- Formats a percent value with decimals
+---@param max number
+---@param cur number
+---@return string
+local function FormatPercent(max, cur)
+    if not cur or cur == 0 then return "0.00%" end
+
+    return string.format("%.2f%%", (cur / max * 100))
+end
+
+-- Formats a percent value with decimals
 --
 -- Returns an empty string if cur is 0 or nil
 ---@param max number
 ---@param cur number
 ---@return string
-local function FormatPercent(max, cur)
+local function FormatPercentNoZeroes(max, cur)
     if not cur or cur == 0 then return "" end
 
     return string.format("%.2f%%", (cur / max * 100))
+end
+
+-- Formats a percent value without decimals
+---@param max number
+---@param cur number
+---@return string
+local function FormatPercentShort(max, cur)
+    if not cur or cur == 0 then return "0%" end
+
+    return string.format("%d%%", (cur / max * 100))
 end
 
 -- Formats a percent value without decimals
@@ -33,7 +53,7 @@ end
 ---@param max number
 ---@param cur number
 ---@return string
-local function FormatPercentShort(max, cur)
+local function FormatPercentShortNoZeroes(max, cur)
     if not cur or cur == 0 then return "" end
 
     return string.format("%d%%", (cur / max * 100))
@@ -88,7 +108,7 @@ local function CombineFormats(format1, format2, seperator)
     return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
 end
 
-local valid_tags = {
+local valid_health_tags = {
     -- Current
     ["cur"] = function(current, max, totalAbsorbs)
         return FormatNumber(current)
@@ -97,10 +117,10 @@ local valid_tags = {
         return FormatNumberShort(current)
     end,
     ["cur:per"] = function(current, max, totalAbsorbs)
-        return FormatPercent(max, current)
+        return FormatPercentNoZeroes(max, current)
     end,
     ["cur:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShort(max, current)
+        return FormatPercentShortNoZeroes(max, current)
     end,
     -- Max
     ["max"] = function(current, max, totalAbsorbs)
@@ -117,10 +137,10 @@ local valid_tags = {
         return FormatNumberShortNoZeroes(totalAbsorbs)
     end,
     ["abs:per"] = function(current, max, totalAbsorbs)
-        return FormatPercent(max, totalAbsorbs)
+        return FormatPercentNoZeroes(max, totalAbsorbs)
     end,
     ["abs:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShort(max, totalAbsorbs)
+        return FormatPercentShortNoZeroes(max, totalAbsorbs)
     end,
     -- Current + Absorbs
     ["cur:abs"] = function(current, max, totalAbsorbs)
@@ -130,10 +150,10 @@ local valid_tags = {
         return CombineFormats(FormatNumberShort(current), FormatNumberShortNoZeroes(totalAbsorbs))
     end,
     ["cur:abs:per"] = function(current, max, totalAbsorbs)
-        return CombineFormats(FormatPercent(max, current), FormatPercent(max, totalAbsorbs))
+        return CombineFormats(FormatPercentNoZeroes(max, current), FormatPercentNoZeroes(max, totalAbsorbs))
     end,
     ["cur:abs:per-short"] = function(current, max, totalAbsorbs)
-        return CombineFormats(FormatPercentShort(max, current), FormatPercentShort(max, totalAbsorbs))
+        return CombineFormats(FormatPercentShortNoZeroes(max, current), FormatPercentShortNoZeroes(max, totalAbsorbs))
     end,
     -- Current:Absorbs merge
     ["cur:abs:merge"] = function(current, max, totalAbsorbs)
@@ -143,10 +163,10 @@ local valid_tags = {
         return FormatNumberShort(current + totalAbsorbs)
     end,
     ["cur:abs:merge:per"] = function(current, max, totalAbsorbs)
-        return FormatPercent(max, (current + totalAbsorbs))
+        return FormatPercentNoZeroes(max, (current + totalAbsorbs))
     end,
     ["cur:abs:merge:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShort(max, (current + totalAbsorbs))
+        return FormatPercentShortNoZeroes(max, (current + totalAbsorbs))
     end,
     -- Deficit
     ["def"] = function(current, max, totalAbsorbs)
@@ -156,10 +176,10 @@ local valid_tags = {
         return FormatNumberShortNoZeroes(current - max)
     end,
     ["def:per"] = function(current, max, totalAbsorbs)
-        return FormatPercent(max, (current - max))
+        return FormatPercentNoZeroes(max, (current - max))
     end,
     ["def:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShort(max, (current - max))
+        return FormatPercentShortNoZeroes(max, (current - max))
     end,
 }
 
@@ -193,10 +213,42 @@ W.CustomHealtFormatsTooltip = {
     "[def:per-short] - " .. L["def:per-short"],
 }
 
--- Okay so technically we are lying a little bit here
--- Since we are using the excact same functions for both
--- power and health formats
--- Buuuuuuuuut thats a future problem
+local valid_power_tags = {
+    -- Current
+    ["cur"] = function(current, max)
+        return FormatNumber(current)
+    end,
+    ["cur:short"] = function(current, max)
+        return FormatNumberShort(current)
+    end,
+    ["cur:per"] = function(current, max)
+        return FormatPercent(max, current)
+    end,
+    ["cur:per-short"] = function(current, max)
+        return FormatPercentShort(max, current)
+    end,
+    -- Max
+    ["max"] = function(current, max)
+        return FormatNumber(max)
+    end,
+    ["max:short"] = function(current, max)
+        return FormatNumberShort(max)
+    end,
+    -- Deficit
+    ["def"] = function(current, max)
+        return FormatNumberNoZeroes(current - max)
+    end,
+    ["def:short"] = function(current, max)
+        return FormatNumberShortNoZeroes(current - max)
+    end,
+    ["def:per"] = function(current, max)
+        return FormatPercent(max, (current - max))
+    end,
+    ["def:per-short"] = function(current, max)
+        return FormatPercentShort(max, (current - max))
+    end,
+}
+
 W.CustomPowerFormatsTooltip = {
     "[cur] - " .. L["cur"],
     "[cur:short] - " .. L["cur:short"],
@@ -213,9 +265,14 @@ W.CustomPowerFormatsTooltip = {
 }
 
 ---@param textFormat string
+---@param which "health" | "power"
 ---@return function?
-local function findTagFunction(textFormat)
-    return valid_tags[textFormat]
+local function findTagFunction(textFormat, which)
+    if which == "power" then
+        return valid_power_tags[textFormat]
+    end
+
+    return valid_health_tags[textFormat]
 end
 
 -------------------------------------------------
@@ -234,7 +291,8 @@ end
 --
 -- print(finalString) -- Output: 100% | 12.6k
 ---@param textFormat string
-function W.ProcessCustomTextFormat(textFormat)
+---@param which "health" | "power"
+function W.ProcessCustomTextFormat(textFormat, which)
     local elements = {}
     local lastEnd = 1
     local hasAbsorb = false
@@ -247,7 +305,7 @@ function W.ProcessCustomTextFormat(textFormat)
         end
 
         local tag = bracketed:sub(2, -2)
-        local maybeFunc = findTagFunction(tag)
+        local maybeFunc = findTagFunction(tag, which)
 
         if maybeFunc then
             hasAbsorb = tag:find("abs") ~= nil or hasAbsorb

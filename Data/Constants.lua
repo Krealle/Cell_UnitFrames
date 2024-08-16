@@ -156,5 +156,6 @@ const.FontWidthType = {
     LENGTH = "length",
 }
 
+const.UNIT_ANCHOR_POINTS = { "BOTTOMLEFT", "BOTTOMRIGHT", "TOPLEFT", "TOPRIGHT" }
 const.ANCHOR_POINTS = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT", "RIGHT", "TOP", "TOPLEFT", "TOPRIGHT" }
 const.OUTLINES = { "None", "Outline", "Monochrome" }

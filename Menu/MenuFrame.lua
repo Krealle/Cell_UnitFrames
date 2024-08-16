@@ -10,27 +10,27 @@ local Handler = CUF.Handler
 
 ---@class MenuFrame
 ---@field window CellCombatFrame
----@field units table<Unit, UnitsMenuPage>
----@field unitsButtons table<UnitMenuPageButton>
+---@field unitPages table<Unit, UnitsMenuPage>
+---@field unitPageButtons table<UnitMenuPageButton>
 ---@field widgets table<WIDGET_KIND, WidgetsMenuPage>
 ---@field widgetsButtons table<WidgetMenuPageButton>
 local menuWindow = {}
-menuWindow.units = {}
-menuWindow.unitsButtons = {}
+menuWindow.unitPages = {}
+menuWindow.unitPageButtons = {}
 menuWindow.widgets = {}
 menuWindow.widgetsButtons = {}
 
 CUF.MenuWindow = menuWindow
 
 ---@param unit Unit
-function menuWindow:SetUnit(unit)
+function menuWindow:SetUnitPage(unit)
     -- Hide old unit
-    if self.selectedUnit then
-        self.selectedUnit.frame:Hide()
+    if self.selectedUnitPage then
+        self.selectedUnitPage.frame:Hide()
     end
 
-    self.selectedUnit = self.units[unit]
-    self.selectedUnit.frame:Show()
+    self.selectedUnitPage = self.unitPages[unit]
+    self.selectedUnitPage.frame:Show()
 
     CUF.Menu:UpdateSelectedPages(unit)
 end
@@ -65,7 +65,7 @@ function menuWindow:ShowMenu()
 
         self.window:Show()
 
-        self.unitsButtons[1]:Click()
+        self.unitPageButtons[1]:Click()
         self.widgetsButtons[1]:Click()
 
         self.init = true
@@ -101,31 +101,31 @@ function menuWindow:InitUnits()
         ---@type UnitsMenuPage
         local unit = fn(self)
 
-        self.units[unit.id] = unit
+        self.unitPages[unit.id] = unit
 
         if prevButton then
             -- Max 4 buttons per row
             if idx % 4 == 0 then
-                unit.button:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
+                unit.pageButton:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
                 idx = 1
-                prevAnchor = unit.button
+                prevAnchor = unit.pageButton
 
                 self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
                 self.unitPane:SetHeight(self.unitPane:GetHeight() + self.paneHeight)
             else
-                unit.button:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1)
+                unit.pageButton:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1)
                 idx = idx + 1
             end
         else
-            unit.button:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT", 0, 1)
-            prevAnchor = unit.button
+            unit.pageButton:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT", 0, 1)
+            prevAnchor = unit.pageButton
         end
-        prevButton = unit.button
+        prevButton = unit.pageButton
 
-        table.insert(self.unitsButtons, unit.button)
+        table.insert(self.unitPageButtons, unit.pageButton)
     end
 
-    CUF:DevAdd(self.units, "menuWindow - units")
+    CUF:DevAdd(self.unitPages, "menuWindow - units")
 end
 
 function menuWindow:InitWidgets()
@@ -215,9 +215,9 @@ function menuWindow:Create()
     self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")
 
     self:InitUnits()
-    CUF:DevAdd(self.unitsButtons, "unitsButtons")
-    Cell:CreateButtonGroup(self.unitsButtons, function(unit, b)
-        self:SetUnit(unit)
+    CUF:DevAdd(self.unitPageButtons, "unitsButtons")
+    Cell:CreateButtonGroup(self.unitPageButtons, function(unit, b)
+        self:SetUnitPage(unit)
     end)
 
     -- Widget Buttons

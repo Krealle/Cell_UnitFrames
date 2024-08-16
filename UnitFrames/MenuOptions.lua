@@ -2,11 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-
 local L = CUF.L
-local menu = CUF.Menu
-local const = CUF.constants
-local Util = CUF.Util
 
 local function UpdateSize()
     if CUF.vars.selectedLayout == Cell.vars.currentLayout then
@@ -20,64 +16,69 @@ local function UpdateArrangement()
     end
 end
 
----@param unit UnitsMenuPage
-local function AddLoadPageDB(unit)
+---@param unitPage UnitsMenuPage
+local function AddLoadPageDB(unitPage)
     -- Load page from DB
-    ---@param page Unit
-    local function LoadPageDB(page)
-        if page ~= unit.id then return end
+    ---@param pageId Unit
+    local function LoadPageDB(pageId)
+        if pageId ~= unitPage.id then return end
+        local pageDB = CUF.DB.SelectedLayoutTable()[pageId]
+        local isPlayerPage = pageId == CUF.constants.UNIT.PLAYER
+        local isSameSizeAsPlayer = pageDB.sameSizeAsPlayer
+
         -- size
-        unit.widthSlider:SetValue(CUF.DB.SelectedLayoutTable()[page].size[1])
-        unit.heightSlider:SetValue(CUF.DB.SelectedLayoutTable()[page].size[2])
-        unit.powerSizeSlider:SetValue(CUF.DB.SelectedLayoutTable()[page].powerSize)
+        unitPage.widthSlider:SetValue(pageDB.size[1])
+        unitPage.heightSlider:SetValue(pageDB.size[2])
+        unitPage.powerSizeSlider:SetValue(pageDB.powerSize)
 
         -- unit arrangement
-        unit.anchorDropdown:SetSelectedValue(CUF.DB.SelectedLayoutTable()[page].point)
+        unitPage.anchorDropdown:SetSelectedValue(pageDB.point)
 
         -- same as player
-        if page ~= const.UNIT.PLAYER then
-            unit.sameSizeAsPlayerCB:SetChecked(CUF.DB.SelectedLayoutTable()[page].sameSizeAsPlayer)
+        if not isPlayerPage then
+            unitPage.sameSizeAsPlayerCB:SetChecked(isSameSizeAsPlayer)
         end
 
-        if page == const.UNIT.PLAYER then
-            unit.widthSlider:SetEnabled(true)
-            unit.heightSlider:SetEnabled(true)
-            unit.powerSizeSlider:SetEnabled(true)
-            unit.anchorDropdown:SetEnabled(true)
+        if isPlayerPage then
+            unitPage.widthSlider:SetEnabled(true)
+            unitPage.heightSlider:SetEnabled(true)
+            unitPage.powerSizeSlider:SetEnabled(true)
+            unitPage.anchorDropdown:SetEnabled(true)
         else
-            unit.widthSlider:SetEnabled(not CUF.DB.SelectedLayoutTable()[page].sameSizeAsPlayer)
-            unit.heightSlider:SetEnabled(not CUF.DB.SelectedLayoutTable()[page].sameSizeAsPlayer)
-            unit.powerSizeSlider:SetEnabled(not CUF.DB.SelectedLayoutTable()[page].sameSizeAsPlayer)
-            unit.anchorDropdown:SetEnabled(not CUF.DB.SelectedLayoutTable()[page].sameSizeAsPlayer)
+            unitPage.widthSlider:SetEnabled(not isSameSizeAsPlayer)
+            unitPage.heightSlider:SetEnabled(not isSameSizeAsPlayer)
+            unitPage.powerSizeSlider:SetEnabled(not isSameSizeAsPlayer)
+            unitPage.anchorDropdown:SetEnabled(not isSameSizeAsPlayer)
         end
 
-        unit.unitFrameCB:SetChecked(CUF.DB.SelectedLayoutTable()[unit.id].enabled)
+        unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
-    CUF:RegisterCallback("LoadPageDB", "Units_" .. unit.id .. "_LoadPageDB", LoadPageDB)
+    CUF:RegisterCallback("LoadPageDB", "Units_" .. unitPage.id .. "_LoadPageDB", LoadPageDB)
 end
 
 local function AddUnitsToMenu()
     for _, unit in pairs(CUF.constants.UNIT) do
-        menu:AddUnit(
+        CUF.Menu:AddUnit(
         ---@param parent MenuFrame
         ---@return UnitsMenuPage
             function(parent)
                 ---@class UnitsMenuPage
-                local self = {}
+                local unitPage = {}
 
-                self.frame = CUF:CreateFrame(nil, parent.unitSection,
+                unitPage.frame = CUF:CreateFrame(nil, parent.unitSection,
                     parent.unitSection:GetWidth(),
                     parent.unitSection:GetHeight(),
                     true)
-                self.frame:SetPoint("TOPLEFT")
+                unitPage.frame:SetPoint("TOPLEFT")
+                unitPage.id = unit ---@type Unit
 
-                self.id = unit
+                ---@class UnitMenuPageButton: Button
+                unitPage.pageButton = CUF:CreateButton(parent.unitSection, L[unit], { 85, 17 })
+                unitPage.pageButton.id = unit ---@type Unit
 
-                -- button
-                self.button = Cell:CreateButton(parent.unitSection, L[unit], "accent-hover", { 85, 17 })
-                self.button.id = unit
-
-                self.unitFrameCB = Cell:CreateCheckButton(self.frame, L["Enable"] .. " " .. L[unit] .. " " .. L
+                ---@type CheckButton
+                unitPage.enabledCB = Cell:CreateCheckButton(unitPage.frame,
+                    L["Enable"] .. " " .. L[unit] .. " " .. L
                     .Frame,
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked
@@ -86,101 +87,73 @@ local function AddUnitsToMenu()
                         end
                         Cell:Fire("UpdateVisibility", unit)
                     end)
-                self.unitFrameCB:SetPoint("TOPLEFT", 5, -10)
+                unitPage.enabledCB:SetPoint("TOPLEFT", 5, -10)
 
-                if unit ~= const.UNIT.PLAYER then
+                if unit ~= CUF.constants.UNIT.PLAYER then
                     -- same size as player
-                    self.sameSizeAsPlayerCB = Cell:CreateCheckButton(self.frame, L["Use Same Size As Player"],
+                    ---@type CheckButton?
+                    unitPage.sameSizeAsPlayerCB = Cell:CreateCheckButton(unitPage.frame, L["Use Same Size As Player"],
                         function(checked)
                             CUF.DB.SelectedLayoutTable()[unit].sameSizeAsPlayer = checked
-                            self.widthSlider:SetEnabled(not checked)
-                            self.heightSlider:SetEnabled(not checked)
-                            self.powerSizeSlider:SetEnabled(not checked)
-                            --self.anchorDropdown:SetEnabled(not checked)
+                            unitPage.widthSlider:SetEnabled(not checked)
+                            unitPage.heightSlider:SetEnabled(not checked)
+                            unitPage.powerSizeSlider:SetEnabled(not checked)
+                            -- TODO: should be arrangment based instead
+                            unitPage.anchorDropdown:SetEnabled(not checked)
+
                             -- update size and power
                             UpdateSize()
                             if CUF.vars.selectedLayout == Cell.vars.currentLayout then
                                 Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                             end
                         end)
-                    self.sameSizeAsPlayerCB:SetPoint("TOPLEFT", self.unitFrameCB, "TOPRIGHT", 200, 0)
+                    unitPage.sameSizeAsPlayerCB:SetPoint("TOPLEFT", unitPage.enabledCB, "TOPRIGHT", 200, 0)
                 end
 
-                -- width
-                self.widthSlider = Cell:CreateSlider(L["Width"], self.frame, 20, 500, 117, 1, function(value)
+                ---@type CellSlider
+                unitPage.widthSlider = Cell:CreateSlider(L["Width"], unitPage.frame, 20, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[1] = value
                     UpdateSize()
                 end)
-                self.widthSlider:SetPoint("TOPLEFT", self.unitFrameCB, 0, -50)
+                unitPage.widthSlider:SetPoint("TOPLEFT", unitPage.enabledCB, 0, -50)
 
-                -- height
-                self.heightSlider = Cell:CreateSlider(L["Height"], self.frame, 20, 500, 117, 1, function(value)
+                ---@type CellSlider
+                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[2] = value
                     UpdateSize()
                 end)
-                self.heightSlider:SetPoint("TOPLEFT", self.widthSlider, 0, -55)
+                unitPage.heightSlider:SetPoint("TOPLEFT", unitPage.widthSlider, 0, -55)
 
-                -- power height
-                self.powerSizeSlider = Cell:CreateSlider(L["Power Size"], self.frame, 0, 100, 117, 1, function(value)
-                    CUF.DB.SelectedLayoutTable()[unit].powerSize = value
-                    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
-                        Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
-                    end
-                end)
-                self.powerSizeSlider:SetPoint("TOPLEFT", self.heightSlider, "TOPRIGHT", 30, 0)
+                ---@type CellSlider
+                unitPage.powerSizeSlider = Cell:CreateSlider(L["Power Size"], unitPage.frame, 0, 100, 117, 1,
+                    function(value)
+                        CUF.DB.SelectedLayoutTable()[unit].powerSize = value
+                        if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                            Cell:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
+                        end
+                    end)
+                unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
 
-                -- anchor
-                self.anchorDropdown = Cell:CreateDropdown(self.frame, 117)
-                self.anchorDropdown:SetPoint("TOPLEFT", self.widthSlider, "TOPRIGHT", 30, 0)
-                self.anchorDropdown:SetItems({
-                    {
-                        ["text"] = L["BOTTOMLEFT"],
-                        ["value"] = "BOTTOMLEFT",
+                ---@type CellDropdown
+                unitPage.anchorDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                unitPage.anchorDropdown:SetPoint("TOPLEFT", unitPage.widthSlider, "TOPRIGHT", 30, 0)
+
+                local dropdownItems = {}
+                for _, point in ipairs(CUF.constants.UNIT_ANCHOR_POINTS) do
+                    tinsert(dropdownItems, {
+                        ["text"] = L[point],
+                        ["value"] = point,
                         ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].point = "BOTTOMLEFT"
+                            CUF.DB.SelectedLayoutTable()[unit].point = point
                             UpdateArrangement()
                         end,
-                    },
-                    {
-                        ["text"] = L["BOTTOMRIGHT"],
-                        ["value"] = "BOTTOMRIGHT",
-                        ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].point = "BOTTOMRIGHT"
-                            UpdateArrangement()
-                        end,
-                    },
-                    {
-                        ["text"] = L["TOPLEFT"],
-                        ["value"] = "TOPLEFT",
-                        ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].point = "TOPLEFT"
-                            UpdateArrangement()
-                        end,
-                    },
-                    {
-                        ["text"] = L["TOPRIGHT"],
-                        ["value"] = "TOPRIGHT",
-                        ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].point = "TOPRIGHT"
-                            UpdateArrangement()
-                        end,
-                    },
-                })
+                    })
+                end
+                unitPage.anchorDropdown:SetItems(dropdownItems)
+                unitPage.anchorDropdown:SetLabel(L["Anchor Point"])
 
-                self.anchorText = self.frame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
-                self.anchorText:SetPoint("BOTTOMLEFT", self.anchorDropdown, "TOPLEFT", 0, 1)
-                self.anchorText:SetText(L["Anchor Point"])
-
-                hooksecurefunc(self.anchorDropdown, "SetEnabled", function(_, enabled)
-                    if enabled then
-                        self.anchorText:SetTextColor(1, 1, 1)
-                    else
-                        self.anchorText:SetTextColor(0.4, 0.4, 0.4)
-                    end
-                end)
-
-                AddLoadPageDB(self)
-                return self
+                AddLoadPageDB(unitPage)
+                return unitPage
             end)
     end
 

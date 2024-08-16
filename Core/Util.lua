@@ -45,29 +45,6 @@ end
 
 ---@param tableA table
 ---@param tableB table
----@param overwrite boolean
-function CUF.Util:SafeTableMerge(tableA, tableB, overwrite)
-    if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
-
-    for key, bVal in pairs(tableB) do
-        local aVal = tableA[key]
-
-        if not aVal or type(aVal) ~= type(bVal) then
-            tableA[key] = bVal
-        elseif type(bVal) == "table" then
-            if not overwrite then
-                self:SafeTableMerge(aVal, bVal, overwrite)
-            else
-                tableA[key] = bVal
-            end
-        elseif overwrite then
-            tableA[key] = bVal
-        end
-    end
-end
-
----@param tableA table
----@param tableB table
 function CUF.Util:AddMissingProps(tableA, tableB)
     if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
 

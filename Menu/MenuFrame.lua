@@ -124,8 +124,6 @@ function menuWindow:InitUnits()
 
         table.insert(self.unitPageButtons, unit.pageButton)
     end
-
-    CUF:DevAdd(self.unitPages, "menuWindow - units")
 end
 
 function menuWindow:InitWidgets()
@@ -165,8 +163,6 @@ function menuWindow:InitWidgets()
 
         table.insert(self.widgetPageButtons, widgetPage.pageButton)
     end
-
-    CUF:DevAdd(self.widgetPages, "menuWindow - widgets")
 end
 
 -------------------------------------------------
@@ -215,7 +211,6 @@ function menuWindow:Create()
     self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")
 
     self:InitUnits()
-    CUF:DevAdd(self.unitPageButtons, "unitsButtons")
     Cell:CreateButtonGroup(self.unitPageButtons, function(unit, b)
         self:SetUnitPage(unit)
     end)
@@ -242,7 +237,6 @@ function menuWindow:Create()
     self.settingsFrame.scrollFrame:SetScrollStep(25)
 
     self:InitWidgets()
-    CUF:DevAdd(self.widgetPageButtons, "widgetsButtons")
     Cell:CreateButtonGroup(self.widgetPageButtons, function(widget, b)
         self:SetWidget(widget)
     end)

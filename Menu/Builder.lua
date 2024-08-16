@@ -717,8 +717,8 @@ function Builder:CreateAnchorOptions(parent, widgetName, altKind, ...)
     f.optionHeight = 20
     f.id = "Anchor"
 
-    f.anchorDropdown = self:CreateDropdown(parent, widgetName, "Anchor", nil, const.ANCHOR_POINTS,
-        altKind or const.OPTION_KIND.POSITION, ..., "anchor")
+    f.anchorDropdown = self:CreateDropdown(parent, widgetName, L["Anchor Point"], nil, const.ANCHOR_POINTS,
+        altKind or const.OPTION_KIND.POSITION, ..., const.OPTION_KIND.ANCHOR_POINT)
     f.anchorDropdown:SetPoint("TOPLEFT", f)
 
     f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, -100, 100, altKind or const.OPTION_KIND
@@ -739,8 +739,8 @@ end
 ---@return ExtraAnchorOptions
 function Builder:CreateExtraAnchorOptions(parent, widgetName, altKind, ...)
     ---@class ExtraAnchorOptions: AnchorOptions
-    return self:CreateDropdown(parent, widgetName, "To UnitButton's", nil, const.ANCHOR_POINTS,
-        altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
+    return self:CreateDropdown(parent, widgetName, L["To UnitButton's"], nil, const.ANCHOR_POINTS,
+        altKind or const.OPTION_KIND.POSITION, ..., const.OPTION_KIND.RELATIVE_POINT)
 end
 
 ---@param parent Frame
@@ -754,8 +754,8 @@ function Builder:CreateFullAnchorOptions(parent, widgetName, altKind, ...)
     anchorOpt.optionHeight = 70
     anchorOpt.id = "FullAnchor"
 
-    anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, "Relative To", nil, const.ANCHOR_POINTS,
-        altKind or const.OPTION_KIND.POSITION, ..., "extraAnchor")
+    anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, L.RelativeTo, nil, const.ANCHOR_POINTS,
+        altKind or const.OPTION_KIND.POSITION, ..., const.OPTION_KIND.RELATIVE_POINT)
     self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
 
     return anchorOpt

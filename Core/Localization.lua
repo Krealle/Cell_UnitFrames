@@ -37,6 +37,8 @@ L.CastByPlayersTooltip = "Show auras cast by players"
 L.CastByNPCTooltip = "Show auras cast by NPCs"
 L.HideNoDurationTooltip = "Hide auras with no duration"
 
+L.RelativeTo = "Relative To"
+
 -- Widgets
 L.Widgets = "Widgets"
 L["nameText"] = "Name Text"

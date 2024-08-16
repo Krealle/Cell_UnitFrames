@@ -112,14 +112,14 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
 
     local anchor
     if layout[unit]["sameSizeAsPlayer"] then
-        anchor = layout[const.UNIT.PLAYER]["anchor"]
+        anchor = layout[const.UNIT.PLAYER].point
     else
-        anchor = layout[unit]["anchor"]
+        anchor = layout[unit].point
     end
 
     button:ClearAllPoints()
     -- NOTE: detach from PreviewAnchor
-    P:LoadPosition(anchorFrame, layout[unit]["position"])
+    P:LoadPosition(anchorFrame, layout[unit].position)
 
     if CellDB["general"]["menuPosition"] == "top_bottom" then
         P:Size(anchorFrame, 20, 10)
@@ -170,10 +170,10 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
     -- Size
     if not kind or strfind(kind, "size$") then
         local width, height
-        if layout[unit]["sameSizeAsPlayer"] then
-            width, height = unpack(layout[const.UNIT.PLAYER]["size"])
+        if layout[unit].sameSizeAsPlayer then
+            width, height = unpack(layout[const.UNIT.PLAYER].size)
         else
-            width, height = unpack(layout[unit]["size"])
+            width, height = unpack(layout[unit].size)
         end
 
         P:Size(button, width, height)
@@ -182,10 +182,10 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
     -- Anchor points
     if not kind or strfind(kind, "arrangement$") then
         local anchor
-        if layout[unit]["sameSizeAsPlayer"] then
-            anchor = layout[const.UNIT.PLAYER]["anchor"]
+        if layout[unit].sameSizeAsPlayer then
+            anchor = layout[const.UNIT.PLAYER].point
         else
-            anchor = layout[unit]["anchor"]
+            anchor = layout[unit].point
         end
 
         -- anchors
@@ -214,14 +214,14 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
 
     if not kind or strfind(kind, "power$") or kind == "barOrientation" then
         if layout[unit]["sameSizeAsPlayer"] then
-            W:SetPowerSize(button, layout[const.UNIT.PLAYER]["powerSize"])
+            W:SetPowerSize(button, layout[const.UNIT.PLAYER].powerSize)
         else
-            W:SetPowerSize(button, layout[unit]["powerSize"])
+            W:SetPowerSize(button, layout[unit].powerSize)
         end
     end
 
     -- load position
-    if not P:LoadPosition(anchorFrame, layout[unit]["position"]) then
+    if not P:LoadPosition(anchorFrame, layout[unit].position) then
         P:ClearPoints(anchorFrame)
         -- no position, use default
         anchorFrame:SetPoint("TOPLEFT", UIParent, "CENTER")

@@ -54,8 +54,8 @@ local function Icons_SetFont(icons, fonts)
     local fd = fonts.duration
     for i = 1, icons._maxNum do
         icons[i]:SetFont(
-            { fs.style, fs.size, fs.outline, fs.shadow, fs.anchor, fs.offsetX, fs.offsetY, fs.rgb },
-            { fd.style, fd.size, fd.outline, fd.shadow, fd.anchor, fd.offsetX, fd.offsetY, fd.rgb })
+            { fs.style, fs.size, fs.outline, fs.shadow, fs.point, fs.offsetX, fs.offsetY, fs.rgb },
+            { fd.style, fd.size, fd.outline, fd.shadow, fd.point, fd.offsetX, fd.offsetY, fd.rgb })
     end
 end
 
@@ -64,7 +64,7 @@ end
 local function Icons_SetPosition(self, styleTable)
     local position = styleTable.position
     P:ClearPoints(self)
-    P:Point(self, position.anchor, self:GetParent(), position.extraAnchor, position.offsetX, position.offsetY)
+    P:Point(self, position.point, self:GetParent(), position.relativePoint, position.offsetX, position.offsetY)
 end
 
 ---@param icons CellAuraIcons

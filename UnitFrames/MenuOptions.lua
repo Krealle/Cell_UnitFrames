@@ -32,7 +32,7 @@ local function AddLoadPageDB(unit)
         unit.powerSizeSlider:SetValue(CUF.DB.SelectedLayoutTable()[page].powerSize)
 
         -- unit arrangement
-        unit.anchorDropdown:SetSelectedValue(CUF.DB.SelectedLayoutTable()[page].anchor)
+        unit.anchorDropdown:SetSelectedValue(CUF.DB.SelectedLayoutTable()[page].point)
 
         -- same as player
         if page ~= const.UNIT.PLAYER then
@@ -139,7 +139,7 @@ local function AddUnitsToMenu()
                         ["text"] = L["BOTTOMLEFT"],
                         ["value"] = "BOTTOMLEFT",
                         ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].anchor = "BOTTOMLEFT"
+                            CUF.DB.SelectedLayoutTable()[unit].point = "BOTTOMLEFT"
                             UpdateArrangement()
                         end,
                     },
@@ -147,7 +147,7 @@ local function AddUnitsToMenu()
                         ["text"] = L["BOTTOMRIGHT"],
                         ["value"] = "BOTTOMRIGHT",
                         ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].anchor = "BOTTOMRIGHT"
+                            CUF.DB.SelectedLayoutTable()[unit].point = "BOTTOMRIGHT"
                             UpdateArrangement()
                         end,
                     },
@@ -155,7 +155,7 @@ local function AddUnitsToMenu()
                         ["text"] = L["TOPLEFT"],
                         ["value"] = "TOPLEFT",
                         ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].anchor = "TOPLEFT"
+                            CUF.DB.SelectedLayoutTable()[unit].point = "TOPLEFT"
                             UpdateArrangement()
                         end,
                     },
@@ -163,7 +163,7 @@ local function AddUnitsToMenu()
                         ["text"] = L["TOPRIGHT"],
                         ["value"] = "TOPRIGHT",
                         ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].anchor = "TOPRIGHT"
+                            CUF.DB.SelectedLayoutTable()[unit].point = "TOPRIGHT"
                             UpdateArrangement()
                         end,
                     },

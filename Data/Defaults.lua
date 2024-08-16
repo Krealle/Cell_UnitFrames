@@ -25,14 +25,14 @@ Defaults.Options.auraStacksFontOpt = {
     outline = "Outline",
     shadow = true,
     style = "Cell Default",
-    anchor = "BOTTOMRIGHT",
+    point = "BOTTOMRIGHT",
     offsetX = 0,
     offsetY = 0,
     rgb = { 1, 1, 1 },
 }
 ---@type BigFontOpt
 Defaults.Options.auraDurationFontOpt = Defaults.Options.auraStacksFontOpt
-Defaults.Options.auraDurationFontOpt.anchor = "CENTER"
+Defaults.Options.auraDurationFontOpt.point = "CENTER"
 ---@type FontWidthOpt
 Defaults.Options.fontWidth = {
     value = 0.75,
@@ -54,10 +54,10 @@ Defaults.Widgets = {
             auxValue = 3,
         },
         position = {
-            anchor = "TOPLEFT",
+            point = "TOPLEFT",
             offsetY = 8,
             offsetX = 2,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type HealthTextWidgetTable
@@ -70,10 +70,10 @@ Defaults.Widgets = {
         hideIfEmptyOrFull = false,
         frameLevel = 10,
         position = {
-            anchor = "RIGHT",
+            point = "RIGHT",
             offsetY = 0,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type PowerTextWidgetTable
@@ -86,10 +86,10 @@ Defaults.Widgets = {
         textFormat = "",
         frameLevel = 10,
         position = {
-            anchor = "BOTTOMRIGHT",
+            point = "BOTTOMRIGHT",
             offsetY = 0,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type AuraWidgetTable
@@ -129,10 +129,10 @@ Defaults.Widgets = {
             boss = false,
         },
         position = {
-            anchor = "BOTTOMLEFT",
+            point = "BOTTOMLEFT",
             offsetY = 20,
             offsetX = 0,
-            extraAnchor = "TOPLEFT",
+            relativePoint = "TOPLEFT",
         },
     },
     ---@type AuraWidgetTable
@@ -172,10 +172,10 @@ Defaults.Widgets = {
             boss = false,
         },
         position = {
-            anchor = "BOTTOMRIGHT",
+            point = "BOTTOMRIGHT",
             offsetY = 20,
             offsetX = 0,
-            extraAnchor = "TOPRIGHT",
+            relativePoint = "TOPRIGHT",
         },
     },
     ---@type RaidIconWidgetTable
@@ -187,10 +187,10 @@ Defaults.Widgets = {
             height = 20,
         },
         position = {
-            anchor = "TOP",
+            point = "TOP",
             offsetY = 12,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type RoleIconWidgetTable
@@ -202,10 +202,10 @@ Defaults.Widgets = {
             height = 20,
         },
         position = {
-            anchor = "TOPRIGHT",
+            point = "TOPRIGHT",
             offsetY = 0,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type LeaderIconWidgetTable
@@ -217,10 +217,10 @@ Defaults.Widgets = {
             height = 20,
         },
         position = {
-            anchor = "TOPRIGHT",
+            point = "TOPRIGHT",
             offsetY = 14,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type CombatIconWidgetTable
@@ -232,10 +232,10 @@ Defaults.Widgets = {
             height = 20,
         },
         position = {
-            anchor = "CENTER",
+            point = "CENTER",
             offsetY = 0,
             offsetX = 0,
-            extraAnchor = "CENTER",
+            relativePoint = "CENTER",
         },
     },
     ---@type ShieldBarWidgetTable
@@ -244,10 +244,10 @@ Defaults.Widgets = {
         frameLevel = 10,
         rgba = { 1, 1, 0, 0.25 },
         position = {
-            anchor = "BOTTOMRIGHT",
+            point = "BOTTOMRIGHT",
             offsetY = 0,
             offsetX = 0,
-            extraAnchor = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
         },
     },
 }
@@ -270,7 +270,7 @@ Defaults.Widgets = {
 ---@field enabled boolean
 ---@field powerSize number
 ---@field size Size
----@field anchor string
+---@field point FramePoint
 ---@field position Position
 ---@field widgets WidgetTables
 ---@field tooltipPosition TooltipPosition
@@ -283,7 +283,7 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        anchor = "BOTTOMLEFT",
+        point = "BOTTOMLEFT",
         position = { 800, 500 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
@@ -293,7 +293,7 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        anchor = "BOTTOMLEFT",
+        point = "BOTTOMLEFT",
         position = { 1400, 500 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
@@ -303,7 +303,7 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 100, 30 },
-        anchor = "BOTTOMLEFT",
+        point = "BOTTOMLEFT",
         position = { 800, 700 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
@@ -313,7 +313,7 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        anchor = "BOTTOMLEFT",
+        point = "BOTTOMLEFT",
         position = { 1620, 500 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
@@ -323,7 +323,7 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 30 },
-        anchor = "BOTTOMLEFT",
+        point = "BOTTOMLEFT",
         position = { 800, 460 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },

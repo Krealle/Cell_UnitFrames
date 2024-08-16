@@ -160,10 +160,10 @@
 -------------------------------------------------
 
 ---@class PositionOpt
----@field anchor FramePoint
+---@field point FramePoint
 ---@field offsetY number
 ---@field offsetX number
----@field extraAnchor FramePoint
+---@field relativePoint FramePoint
 
 ---@class FontWidthOpt
 ---@field value number
@@ -196,7 +196,7 @@
 ---@field rgb RGBOpt
 ---@field style string
 ---@field shadow boolean
----@field anchor string
+---@field point FramePoint
 ---@field offsetY number
 ---@field offsetX number
 ---@field size number

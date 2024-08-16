@@ -71,7 +71,7 @@ function W.CreateBaseTextWidget(button, kind)
     ---@param styleTable WidgetTable
     function textWidget:SetPosition(styleTable)
         self.text:ClearAllPoints()
-        self.text:SetPoint(styleTable.position.anchor, button,
+        self.text:SetPoint(styleTable.position.point, button,
             styleTable.position.offsetX,
             styleTable.position.offsetY)
     end

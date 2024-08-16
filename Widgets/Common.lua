@@ -24,7 +24,7 @@ end
 ---@param styleTable WidgetTable
 function W.SetPosition(widget, styleTable)
     widget:ClearAllPoints()
-    widget:SetPoint(styleTable.position.anchor, widget:GetParent(),
+    widget:SetPoint(styleTable.position.point, widget:GetParent(),
         styleTable.position.offsetX,
         styleTable.position.offsetY)
 end

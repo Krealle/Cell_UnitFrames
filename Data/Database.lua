@@ -15,7 +15,7 @@ local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...
 ---@param layout string
 ---@return UnitLayoutTable
 local function GetCUFLayoutTableFromCellDB(layout)
-    return CellDB["layouts"][layout].CUFUnits
+    return CellDB.layouts[layout].CUFUnits
 end
 
 ---@param layout string

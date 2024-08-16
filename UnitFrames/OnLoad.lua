@@ -45,13 +45,13 @@ local function UnitFrame_UpdateInRange(self, ir)
                     if not self.states.healthPercent or self.states.healthPercent < CELL_FADE_OUT_HEALTH_PERCENT then
                         A:FrameFadeIn(self, 0.25, self:GetAlpha(), 1)
                     else
-                        A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB["appearance"]["outOfRangeAlpha"])
+                        A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB.appearance.outOfRangeAlpha)
                     end
                 else
                     A:FrameFadeIn(self, 0.25, self:GetAlpha(), 1)
                 end
             else
-                A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB["appearance"]["outOfRangeAlpha"])
+                A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB.appearance.outOfRangeAlpha)
             end
         end
         self.states.wasInRange = inRange

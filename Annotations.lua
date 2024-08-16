@@ -14,6 +14,7 @@
 ---@class CellDBGeneral
 ---@field menuPosition "top_bottom" | "left_right"
 ---@field locked boolean
+---@field fadeOut boolean
 
 ---@class CellDBAppearance
 ---@field outOfRangeAlpha number

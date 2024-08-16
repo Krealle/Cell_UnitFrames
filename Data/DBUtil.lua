@@ -7,9 +7,9 @@ local DB = CUF.DB
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()
-    if not CellDB or not CellDB["layouts"] then return false end
+    if not CellDB or not CellDB.layouts then return false end
 
-    for _, layoutTable in pairs(CellDB["layouts"]) do
+    for _, layoutTable in pairs(CellDB.layouts) do
         layoutTable.CUFUnits = layoutTable.CUFUnits or {}
 
         for unit, unitLayout in pairs(CUF.Defaults.Layouts) do

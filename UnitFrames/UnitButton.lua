@@ -121,7 +121,7 @@ function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     -- NOTE: detach from PreviewAnchor
     P:LoadPosition(anchorFrame, layout[unit].position)
 
-    if CellDB["general"]["menuPosition"] == "top_bottom" then
+    if CellDB.general.menuPosition == "top_bottom" then
         P:Size(anchorFrame, 20, 10)
 
         if anchorPoint == "BOTTOMLEFT" then
@@ -208,8 +208,8 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
     if not kind or kind == "barOrientation" then
-        U:SetOrientation(button, Cell.vars.currentLayoutTable["barOrientation"][1],
-            Cell.vars.currentLayoutTable["barOrientation"][2])
+        U:SetOrientation(button, Cell.vars.currentLayoutTable.barOrientation[1],
+            Cell.vars.currentLayoutTable.barOrientation[2])
     end
 
     if not kind or strfind(kind, "power$") or kind == "barOrientation" then
@@ -239,7 +239,7 @@ end
 ---@param config CUFConfigButton
 function U:UpdateUnitButtonMenu(kind, unit, button, anchorFrame, config)
     if not kind or kind == "lock" then
-        if CellDB["general"]["locked"] then
+        if CellDB.general.locked then
             config:RegisterForDrag()
         else
             config:RegisterForDrag("LeftButton")
@@ -247,7 +247,7 @@ function U:UpdateUnitButtonMenu(kind, unit, button, anchorFrame, config)
     end
 
     if not kind or kind == "fadeOut" then
-        if CellDB["general"]["fadeOut"] then
+        if CellDB.general.fadeOut then
             anchorFrame.fadeOut:Play()
         else
             anchorFrame.fadeIn:Play()

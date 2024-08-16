@@ -11,9 +11,9 @@ local Handler = CUF.Handler
 ---@class MenuFrame
 ---@field window CellCombatFrame
 ---@field unitPages table<Unit, UnitsMenuPage>
----@field unitPageButtons table<UnitMenuPageButton>
+---@field unitPageButtons UnitMenuPageButton[]
 ---@field widgetPages table<WIDGET_KIND, WidgetMenuPage>
----@field widgetPageButtons table<WidgetMenuPage.pageButton>
+---@field widgetPageButtons WidgetMenuPage.pageButton[]
 local menuWindow = {}
 menuWindow.unitPages = {}
 menuWindow.unitPageButtons = {}

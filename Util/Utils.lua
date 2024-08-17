@@ -142,6 +142,27 @@ function Util:GetPowerColor(unit)
     return r, g, b
 end
 
+---@param unit UnitToken
+---@param class? string
+---@param guid? string
+---@return number, number, number
+function Util:GetUnitClassColor(unit, class, guid)
+    class = class or select(2, UnitClass(unit))
+    guid = guid or UnitGUID(unit)
+
+    if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
+        return F:GetClassColor(class)
+    elseif F:IsPet(guid, unit) then                     -- pet
+        return unpack(CUF.constants.COLORS.PET)
+    elseif UnitIsEnemy("player", unit) then
+        return unpack(CUF.constants.COLORS.HOSTILE)
+    elseif UnitReaction("player", unit) == 5 then -- Friendly
+        return unpack(CUF.constants.COLORS.FRIENDLY)
+    else                                          -- Neutral
+        return unpack(CUF.constants.COLORS.NEUTRAL)
+    end
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

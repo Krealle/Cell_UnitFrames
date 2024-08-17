@@ -59,7 +59,6 @@ function U:UnitFrame_UpdateName(button)
 
     button.states.name = UnitName(unit)
     button.states.fullName = F:UnitFullName(unit)
-    button.states.class = UnitClassBase(unit)
     button.states.guid = UnitGUID(unit)
     button.states.isPlayer = UnitIsPlayer(unit)
     button.states.class = UnitClassBase(unit) --! update class or it may be nil

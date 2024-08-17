@@ -62,7 +62,7 @@ function W.CreateBaseTextWidget(button, kind)
 
     function textWidget:UpdateTextColor()
         if self.colorType == const.ColorType.CLASS_COLOR then
-            self.text:SetTextColor(F:GetClassColor(button.states.class))
+            self.text:SetTextColor(Util:GetUnitClassColor(button.states.unit))
         else
             self.text:SetTextColor(unpack(self.rgb))
         end

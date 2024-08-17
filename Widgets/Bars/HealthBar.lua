@@ -36,26 +36,18 @@ function U:UnitFrame_UpdateHealthColor(button)
         lossA = CellDB["appearance"]["lossAlpha"]
     end
 
-    if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
-        if not UnitIsConnected(unit) then
-            barR, barG, barB = 0.4, 0.4, 0.4
-            lossR, lossG, lossB = 0.4, 0.4, 0.4
-        elseif UnitIsCharmed(unit) then
-            barR, barG, barB, barA = 0.5, 0, 1, 1
-            lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
-        elseif button.states.inVehicle then
-            barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
-                button.states.isDeadOrGhost or button.states.isDead, 0, 1, 0.2)
-        else
-            barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
-                button.states.isDeadOrGhost or button.states.isDead, F:GetClassColor(button.states.class))
-        end
-    elseif F:IsPet(button.states.guid, button.states.unit) then -- pet
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
-            button.states.isDeadOrGhost or button.states.isDead, 0.5, 0.5, 1)
-    else -- npc
+    if not UnitIsConnected(unit) then
+        barR, barG, barB = 0.4, 0.4, 0.4
+        lossR, lossG, lossB = 0.4, 0.4, 0.4
+    elseif UnitIsCharmed(unit) then
+        barR, barG, barB, barA = 0.5, 0, 1, 1
+        lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
+    elseif button.states.inVehicle then
         barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
             button.states.isDeadOrGhost or button.states.isDead, 0, 1, 0.2)
+    else
+        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
+            button.states.isDeadOrGhost or button.states.isDead, CUF.Util:GetUnitClassColor(button.states.unit))
     end
 
     button.widgets.healthBar:SetStatusBarColor(barR, barG, barB, barA)

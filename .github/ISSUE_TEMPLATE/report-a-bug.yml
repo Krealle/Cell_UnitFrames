@@ -2,7 +2,7 @@ name: Bug Report
 description: File a bug report
 labels: ["bug"]
 title: "[Bug] "
-projects: ["Cell_UnitFrames/1"]
+projects: ["Cell_UnitFrames/2"]
 assignees:
   - Krealle
 body:

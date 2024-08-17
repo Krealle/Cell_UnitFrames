@@ -62,17 +62,4 @@ function W:CreateLevelText(button)
     ---@class LevelTextWidget: TextWidget
     local levelText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.LEVEL_TEXT)
     button.widgets.levelText = levelText
-
-    levelText.width = CUF.Defaults.Options.fontWidth
-
-    function levelText:UpdateLevel()
-        local name
-
-        if CELL_NICKTAG_ENABLED and Cell.NickTag then
-            name = Cell.NickTag:GetNickname(button.states.name, nil, true)
-        end
-        name = name or F:GetNickname(button.states.name, button.states.fullName)
-
-        Util:UpdateTextWidth(levelText.text, name, levelText.width, button)
-    end
 end

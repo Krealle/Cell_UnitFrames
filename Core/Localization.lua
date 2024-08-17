@@ -49,6 +49,7 @@ L.roleIcon = "Role Icon"
 L.leaderIcon = "Leader Icon"
 L.combatIcon = "Combat Icon"
 L.shieldBar = "Shield Bar"
+L.levelText = "Level Text"
 
 -- Misc
 L.Frame = "Frame"

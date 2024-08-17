@@ -2,7 +2,7 @@ name: Feature Request
 description: File a new feature request
 labels: ["feature"]
 title: "[Feature] "
-projects: ["Cell_UnitFrames"]
+projects: ["Cell_UnitFrames/1"]
 assignees:
   - Krealle
 body:

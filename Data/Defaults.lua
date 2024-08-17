@@ -14,23 +14,31 @@ Defaults.Options.colorOpt = {
 Defaults.Options.smallFontOpt = {
     size = 12,
     outline = "Outline",
-    shadow = true,
+    shadow = false,
     style = "Cell Default",
 }
 ---@type BigFontOpt
 Defaults.Options.auraStacksFontOpt = {
     size = 12,
     outline = "Outline",
-    shadow = true,
+    shadow = false,
     style = "Cell Default",
     point = "BOTTOMRIGHT",
+    offsetX = 2,
+    offsetY = -1,
+    rgb = { 1, 1, 1 },
+}
+---@type BigFontOpt
+Defaults.Options.auraDurationFontOpt = {
+    size = 12,
+    outline = "Outline",
+    shadow = false,
+    style = "Cell Default",
+    point = "CENTER",
     offsetX = 0,
     offsetY = 0,
     rgb = { 1, 1, 1 },
 }
----@type BigFontOpt
-Defaults.Options.auraDurationFontOpt = Defaults.Options.auraStacksFontOpt
-Defaults.Options.auraDurationFontOpt.point = "CENTER"
 ---@type FontWidthOpt
 Defaults.Options.fontWidth = {
     value = 0.75,
@@ -98,19 +106,19 @@ Defaults.Widgets = {
         showDuration = true,
         showAnimation = true,
         showTooltip = true,
-        numPerLine = 4,
+        numPerLine = 5,
         maxIcons = 10,
         spacing = {
-            horizontal = 0,
-            vertical = 0,
+            horizontal = 1,
+            vertical = 1,
         },
         font = {
             stacks = Defaults.Options.auraStacksFontOpt,
             duration = Defaults.Options.auraDurationFontOpt,
         },
         size = {
-            width = 20,
-            height = 20,
+            width = 25,
+            height = 25,
         },
         filter = {
             useBlacklist = false,
@@ -142,7 +150,7 @@ Defaults.Widgets = {
         showAnimation = true,
         showTooltip = true,
         numPerLine = 4,
-        maxIcons = 10,
+        maxIcons = 4,
         spacing = {
             horizontal = 0,
             vertical = 0,
@@ -152,8 +160,8 @@ Defaults.Widgets = {
             duration = Defaults.Options.auraDurationFontOpt,
         },
         size = {
-            width = 20,
-            height = 20,
+            width = 25,
+            height = 25,
         },
         filter = {
             useBlacklist = false,

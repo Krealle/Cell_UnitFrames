@@ -43,16 +43,18 @@ end
 
 ---@param tableA table
 ---@param tableB table
-function Util:AddMissingProps(tableA, tableB)
+---@param propsToIgnore? table<string, boolean>
+function Util:AddMissingProps(tableA, tableB, propsToIgnore)
     if type(tableA) ~= "table" or type(tableB) ~= "table" then return end
+    propsToIgnore = propsToIgnore or {}
 
     for key, bVal in pairs(tableB) do
         if tableA[key] == nil then
             tableA[key] = bVal
         elseif type(tableA[key]) ~= type(bVal) then
             tableA[key] = bVal
-        elseif type(bVal) == "table" then
-            self:AddMissingProps(tableA[key], bVal)
+        elseif type(bVal) == "table" and not propsToIgnore[key] then
+            self:AddMissingProps(tableA[key], bVal, propsToIgnore)
         end
     end
 end

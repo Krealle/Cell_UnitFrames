@@ -117,10 +117,10 @@ local valid_health_tags = {
         return FormatNumberShort(current)
     end,
     ["cur:per"] = function(current, max, totalAbsorbs)
-        return FormatPercentNoZeroes(max, current)
+        return FormatPercent(max, current)
     end,
     ["cur:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShortNoZeroes(max, current)
+        return FormatPercentShort(max, current)
     end,
     -- Max
     ["max"] = function(current, max, totalAbsorbs)
@@ -150,10 +150,10 @@ local valid_health_tags = {
         return CombineFormats(FormatNumberShort(current), FormatNumberShortNoZeroes(totalAbsorbs))
     end,
     ["cur:abs:per"] = function(current, max, totalAbsorbs)
-        return CombineFormats(FormatPercentNoZeroes(max, current), FormatPercentNoZeroes(max, totalAbsorbs))
+        return CombineFormats(FormatPercent(max, current), FormatPercentNoZeroes(max, totalAbsorbs))
     end,
     ["cur:abs:per-short"] = function(current, max, totalAbsorbs)
-        return CombineFormats(FormatPercentShortNoZeroes(max, current), FormatPercentShortNoZeroes(max, totalAbsorbs))
+        return CombineFormats(FormatPercentShort(max, current), FormatPercentShortNoZeroes(max, totalAbsorbs))
     end,
     -- Current:Absorbs merge
     ["cur:abs:merge"] = function(current, max, totalAbsorbs)
@@ -163,10 +163,10 @@ local valid_health_tags = {
         return FormatNumberShort(current + totalAbsorbs)
     end,
     ["cur:abs:merge:per"] = function(current, max, totalAbsorbs)
-        return FormatPercentNoZeroes(max, (current + totalAbsorbs))
+        return FormatPercent(max, (current + totalAbsorbs))
     end,
     ["cur:abs:merge:per-short"] = function(current, max, totalAbsorbs)
-        return FormatPercentShortNoZeroes(max, (current + totalAbsorbs))
+        return FormatPercentShort(max, (current + totalAbsorbs))
     end,
     -- Deficit
     ["def"] = function(current, max, totalAbsorbs)

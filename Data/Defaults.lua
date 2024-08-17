@@ -153,6 +153,19 @@ Defaults.Widgets = {
             relativePoint = "CENTER",
         },
     },
+    ---@type LevelTextWidgetTable
+    levelText = {
+        enabled = false,
+        font = Defaults.Options.smallFontOpt,
+        color = Defaults.Options.colorOpt,
+        frameLevel = 10,
+        position = {
+            point = "TOPLEFT",
+            offsetY = 8,
+            offsetX = 0,
+            relativePoint = "CENTER",
+        },
+    },
     ---@type AuraWidgetTable
     buffs = {
         enabled = false,

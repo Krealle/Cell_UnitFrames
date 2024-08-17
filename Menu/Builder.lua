@@ -679,7 +679,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
         DB.GetWidgetTable(widgetName).color.rgb[2] = g
         DB.GetWidgetTable(widgetName).color.rgb[3] = b
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
-            .TEXT_COLOR, "rgb")
+            .COLOR, "rgb")
     end)
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
 
@@ -1089,7 +1089,7 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
         DB.GetWidgetTable(widgetName).font[kind].rgb[2] = g
         DB.GetWidgetTable(widgetName).font[kind].rgb[3] = b
         CUF:Fire("UpdateWidget", CUF.vars.selectedLayout, CUF.vars.selectedUnit, widgetName, const.OPTION_KIND
-            .TEXT_COLOR, "rgb")
+            .COLOR, "rgb")
     end)
     self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
 

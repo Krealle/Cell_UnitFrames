@@ -4,6 +4,61 @@ local CUF = select(2, ...)
 ---@class CUF.defaults
 local Defaults = CUF.Defaults
 Defaults.Options = {}
+Defaults.Filters = {
+    buffs = {
+        blacklist = {},
+        whitelist = { -- Mostly borrowed from ElvUI
+            -- Haste effects
+            2825,     -- [Shaman] Bloodlust
+            32182,    -- [Shaman] Heroism
+            80353,    -- [Mage] Time Warp
+            90355,    -- [Hunter] Ancient Hysteria
+            390386,   -- [Evoker] Fury of the Aspects
+            -- Paladin
+            1022,     -- Blessing of Protection
+            1044,     -- Blessing of Freedom
+            6940,     -- Blessing of Sacrifice
+            31821,    -- Aura Mastery
+            204018,   -- Blessing of Spellwarding
+            -- Priest
+            33206,    -- Pain Suppression
+            47788,    -- Guardian Spirit
+            62618,    -- Power Word: Barrier
+            -- Monk
+            116849,   -- Life Cocoon
+            -- Druid
+            102342,   -- Ironbark
+            -- Shaman
+            20608,    -- Reincarnation
+            325174,   -- Spirit Link
+            -- Evoker
+            357170,   -- Time Dilation
+            374227,   -- Zephyr
+            -- Other
+            97462,    -- Rallying Cry
+            196718,   -- Darkness
+        },
+    },
+    debuffs = {
+        blacklist = {
+            8326,   -- Ghost
+            15007,  -- Ress Sickness
+            25771,  -- Forbearance
+            26013,  -- Deserter
+            57723,  -- Exhaustion (Shaman)
+            57724,  -- Sated
+            71041,  -- Dungeon Deserter
+            80354,  -- Temporal Displacement
+            124273, -- Heavy Stagger
+            124274, -- Moderate Stagger
+            124275, -- Light Stagger
+            374037, -- Overwhelming Rage
+            390106, -- Riding Along
+            390435, -- Exhaustion (Evoker)
+        },
+        whitelist = {},
+    }
+}
 
 ---@type ColorOpt
 Defaults.Options.colorOpt = {
@@ -122,9 +177,9 @@ Defaults.Widgets = {
         },
         filter = {
             useBlacklist = false,
-            blacklist = {},
+            blacklist = Defaults.Filters.buffs.blacklist,
             useWhitelist = false,
-            whitelist = {},
+            whitelist = Defaults.Filters.buffs.whitelist,
             minDuration = 0,
             maxDuration = 0,
             hideNoDuration = false,
@@ -165,9 +220,9 @@ Defaults.Widgets = {
         },
         filter = {
             useBlacklist = false,
-            blacklist = {},
+            blacklist = Defaults.Filters.debuffs.blacklist,
             useWhitelist = false,
-            whitelist = {},
+            whitelist = Defaults.Filters.debuffs.whitelist,
             minDuration = 0,
             maxDuration = 0,
             hideNoDuration = false,

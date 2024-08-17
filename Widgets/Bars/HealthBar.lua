@@ -140,11 +140,11 @@ function U:UnitFrame_UpdateHealth(button, diff)
 
     button.states.healthPercentOld = healthPercent
 
-    if UnitIsDeadOrGhost(unit) then
+    --[[ if UnitIsDeadOrGhost(unit) then
         button.widgets.deadTex:Show()
     else
         button.widgets.deadTex:Hide()
-    end
+    end ]]
 end
 
 ---@param button CUFUnitButton
@@ -196,11 +196,11 @@ function W:CreateHealthBar(button, buttonName)
     healthBarLoss:SetPoint("BOTTOMRIGHT")
     healthBarLoss:SetTexture(Cell.vars.texture)
 
-    -- dead texture
+    --[[ -- dead texture
     local deadTex = healthBar:CreateTexture(nil, "OVERLAY")
     button.widgets.deadTex = deadTex
     deadTex:SetAllPoints(healthBar)
     deadTex:SetTexture(Cell.vars.whiteTexture)
     deadTex:SetGradient("VERTICAL", CreateColor(0.545, 0, 0, 1), CreateColor(0, 0, 0, 1))
-    deadTex:Hide()
+    deadTex:Hide() ]]
 end

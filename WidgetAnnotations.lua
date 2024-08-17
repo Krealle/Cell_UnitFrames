@@ -10,6 +10,7 @@
 ---| LeaderIconWidgetTable
 ---| CombatIconWidgetTable
 ---| ShieldBarWidgetTable
+---| LevelTextWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -21,6 +22,7 @@
 ---| LeaderIconWidget
 ---| CombatIconWidget
 ---| ShieldBarWidget
+---| LevelTextWidget
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget
@@ -40,6 +42,7 @@
 ---@field leaderIcon LeaderIconWidget
 ---@field combatIcon CombatIconWidget
 ---@field shieldBar ShieldBarWidget
+---@field levelText LevelTextWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -79,6 +82,13 @@
 ---@field format string
 ---@field font SmallFontOpt
 ---@field textFormat string
+
+---@class LevelTextWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field font SmallFontOpt
+---@field color ColorOpt
+---@field position PositionOpt
 
 -------------------------------------------------
 -- MARK: Icon Widgets

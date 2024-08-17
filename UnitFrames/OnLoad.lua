@@ -85,6 +85,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateCombatIcon(button)
     U:UnitFrame_UpdateShieldBar(button)
     U:UnitFrame_UpdateShieldBarHeight(button)
+    U:UnitFrame_UpdateLevel(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -513,15 +514,18 @@ function CUFUnitButton_OnLoad(button)
 
     -- Widgets
     W:CreateHealthBar(button, buttonName)
-    W:CreateNameText(button)
     W:CreatePowerBar(button, buttonName)
+    W:CreateShieldBar(button, buttonName)
+
+    W:CreateNameText(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
+    W:CreateLevelText(button)
+
     W:CreateRaidIcon(button, buttonName)
     W:CreateRoleIcon(button, buttonName)
     W:CreateLeaderIcon(button, buttonName)
     W:CreateCombatIcon(button, buttonName)
-    W:CreateShieldBar(button, buttonName)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

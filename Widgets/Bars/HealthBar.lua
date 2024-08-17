@@ -96,21 +96,7 @@ function U:UpdateUnitHealthState(button, diff)
         --I.UpdateStatusIcon_Resurrection(self        U:UnitFrame_UpdateHealthColor(self)
     end
 
-    if button.widgets.healthText.enabled and healthMax ~= 0 then
-        --[[ if indicatorBooleans["healthText"] then
-            if health == healthMax or self.states.isDeadOrGhost or self.states.isDead then
-                self.indicators.healthText:Hide()
-            else
-                self.indicators.healthText:SetValue(health, healthMax, self.states.totalAbsorbs)
-                self.indicators.healthText:Show()
-            end
-        else ]]
-        button.widgets.healthText:SetValue(health, healthMax, button.states.totalAbsorbs)
-        button.widgets.healthText:Show()
-        --[[ end ]]
-    else
-        button.widgets.healthText:Hide()
-    end
+    button.widgets.healthText:UpdateValue()
 end
 
 ---@param button CUFUnitButton

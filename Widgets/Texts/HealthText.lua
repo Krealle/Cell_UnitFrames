@@ -295,9 +295,6 @@ function W:CreateHealthText(button)
     function healthText:UpdateValue()
         if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then
             button.widgets.healthText:SetValue(button.states.health, button.states.healthMax, button.states.totalAbsorbs)
-            button.widgets.healthText:Show()
-        else
-            button.widgets.healthText:Hide()
         end
     end
 end

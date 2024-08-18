@@ -59,9 +59,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateCombatIcon(button, buttonName)
+function W:CreateCombatIcon(button)
     ---@class CombatIconWidget: Frame, BaseWidget
-    local combatIcon = CreateFrame("Frame", buttonName .. "CombatIcon", button)
+    local combatIcon = CreateFrame("Frame", button:GetName() .. "_CombatIcon", button)
     button.widgets.combatIcon = combatIcon
 
     combatIcon:SetPoint("TOPLEFT", 0, 0)

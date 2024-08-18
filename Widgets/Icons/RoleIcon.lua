@@ -80,9 +80,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateRoleIcon(button, buttonName)
+function W:CreateRoleIcon(button)
     ---@class RoleIconWidget: Frame, BaseWidget
-    local roleIcon = CreateFrame("Frame", buttonName .. "RoleIcon", button)
+    local roleIcon = CreateFrame("Frame", button:GetName() .. "_RoleIcon", button)
     button.widgets.roleIcon = roleIcon
 
     roleIcon:SetPoint("TOPLEFT", 0, 0)

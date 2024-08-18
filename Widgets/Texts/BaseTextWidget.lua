@@ -15,7 +15,7 @@ local const = CUF.constants
 ---@return TextWidget
 function W.CreateBaseTextWidget(button, kind)
     ---@class TextWidget: Frame
-    local textWidget = CreateFrame("Frame", button:GetName() .. Util:ToTitleCase(kind), button)
+    local textWidget = CreateFrame("Frame", button:GetName() .. "_" .. Util:ToTitleCase(kind), button)
 
     ---@class TextWidget.text: FontString
     local text = textWidget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)

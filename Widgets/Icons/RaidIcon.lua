@@ -68,9 +68,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateRaidIcon(button, buttonName)
+function W:CreateRaidIcon(button)
     ---@class RaidIconWidget: Frame, BaseWidget
-    local raidIcon = CreateFrame("Frame", buttonName .. "RaidIcon", button)
+    local raidIcon = CreateFrame("Frame", button:GetName() .. "_RaidIcon", button)
     button.widgets.raidIcon = raidIcon
 
     raidIcon:SetPoint("TOPLEFT", 0, 0)

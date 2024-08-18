@@ -48,6 +48,7 @@ local L = CUF.L
 -- L.shieldBar = "Schild Bar"
 -- L.levelText = "Level Text"
 -- L.readyCheckIcon = "Ready Check Icon"
+-- L.restingIcon = "Resting Icon"
 
 -- Misc
 -- L.Frame = "Frame"

@@ -54,6 +54,7 @@ Widgets/Icons/RoleIcon.lua
 Widgets/Icons/LeaderIcon.lua
 Widgets/Icons/CombatIcon.lua
 Widgets/Icons/ReadyCheckIcon.lua
+Widgets/Icons/RestingIcon.lua
 
 Widgets/Auras/Auras.lua
 Widgets/Auras/Updater.lua

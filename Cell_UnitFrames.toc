@@ -14,7 +14,7 @@
 
 ## Notes: Unitframes for our beloved Cell!
 
-Core/Localization.lua
+Locales/LoadLocales.xml
 Core/Init.lua
 
 Data/Constants.lua

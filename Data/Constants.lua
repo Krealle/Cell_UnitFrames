@@ -157,8 +157,8 @@ const.ANCHOR_POINTS = { "BOTTOM", "BOTTOMLEFT", "BOTTOMRIGHT", "CENTER", "LEFT",
 const.OUTLINES = { "None", "Outline", "Monochrome" }
 
 const.COLORS = {
-    HOSTILE = { 0.8, 0, 0 },
-    FRIENDLY = { 0, 1, 0.2 },
-    NEUTRAL = { 1, 0.871, 0 },
+    HOSTILE = { 0.78, 0.25, 0.25 },
+    FRIENDLY = { 0.29, 0.69, 0.3, },
+    NEUTRAL = { 0.85, 0.77, 0.36 },
     PET = { 0.5, 0.5, 1 },
 }

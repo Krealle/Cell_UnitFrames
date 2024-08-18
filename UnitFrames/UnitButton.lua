@@ -38,14 +38,14 @@ end
 ---@return CUFHoverFrame CUFHoverFrame
 ---@return CUFConfigButton CUFConfigButton
 function U:CreateBaseUnitFrame(unit, onEnterLogic)
-    local name = Util:ToTitleCase(unit)
+    local name = const.TITLE_CASED_UNITS[unit]
 
     ---@class CUFUnitFrame: Frame
-    local frame = CreateFrame("Frame", "CUF" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
+    local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
 
     -- Anchor
     ---@class CUFAnchorFrame: Frame, CellAnimation
-    local anchorFrame = CreateFrame("Frame", "CUF" .. name .. "_AnchorFrame", frame)
+    local anchorFrame = CreateFrame("Frame", "CUF_" .. name .. "_AnchorFrame", frame)
     PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
     anchorFrame:SetMovable(true)
     anchorFrame:SetClampedToScreen(true)
@@ -382,4 +382,4 @@ local function UpdateAppearance(kind)
         end)
     end
 end
-CUF:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance", UpdateAppearance)
+CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)

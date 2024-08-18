@@ -162,10 +162,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param buttonName string
-function W:CreateHealthBar(button, buttonName)
+function W:CreateHealthBar(button)
     ---@class HealthBarWidget: StatusBar, SmoothStatusBar
-    local healthBar = CreateFrame("StatusBar", buttonName .. "HealthBar", button)
+    local healthBar = CreateFrame("StatusBar", button:GetName() .. "_HealthBar", button)
     button.widgets.healthBar = healthBar
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
@@ -176,7 +175,7 @@ function W:CreateHealthBar(button, buttonName)
     -- smooth
     Mixin(healthBar, SmoothStatusBarMixin)
 
-    local healthBarLoss = healthBar:CreateTexture(nil, "ARTWORK", nil, -7)
+    local healthBarLoss = healthBar:CreateTexture(button:GetName() .. "_HealthBarLoss", "ARTWORK", nil, -7)
     button.widgets.healthBarLoss = healthBarLoss
     healthBarLoss:SetPoint("TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
     healthBarLoss:SetPoint("BOTTOMRIGHT")

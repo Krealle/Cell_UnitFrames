@@ -53,7 +53,7 @@ local function OnCellInitialUpdateLayout(_layout)
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
 
-    Cell:UnregisterCallback("UpdateLayout", "CUFInitial_UpdateLayout")
+    Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end
 
 -------------------------------------------------
@@ -78,7 +78,7 @@ local function OnAddonLoaded(owner, loadedAddonName)
 
         CUF_DB.version = CUF.version
 
-        Cell:RegisterCallback("UpdateLayout", "CUFInitial_UpdateLayout", OnCellInitialUpdateLayout)
+        Cell:RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 
         return true
     end

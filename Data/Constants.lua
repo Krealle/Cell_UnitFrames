@@ -13,6 +13,17 @@ const.UNIT = {
     TARGET_TARGET = "targettarget",
 }
 
+
+---@enum TitleCasedUnits
+-- Used for frame titles
+const.TITLE_CASED_UNITS = {
+    ["player"] = "Player",
+    ["target"] = "Target",
+    ["focus"] = "Focus",
+    ["pet"] = "Pet",
+    ["targettarget"] = "TargetTarget",
+}
+
 ---@enum PowerColorType
 const.PowerColorType = {
     CLASS_COLOR = "class_color",

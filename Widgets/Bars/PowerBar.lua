@@ -203,10 +203,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param buttonName string
-function W:CreatePowerBar(button, buttonName)
+function W:CreatePowerBar(button)
     ---@class PowerBarWidget: SmoothStatusBar
-    local powerBar = CreateFrame("StatusBar", buttonName .. "PowerBar", button)
+    local powerBar = CreateFrame("StatusBar", button:GetName() .. "_PowerBar", button)
     button.widgets.powerBar = powerBar
 
     P:Point(powerBar, "TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
@@ -219,7 +218,7 @@ function W:CreatePowerBar(button, buttonName)
 
     Mixin(powerBar, SmoothStatusBarMixin)
 
-    local powerBarLoss = powerBar:CreateTexture(buttonName .. "PowerBarLoss", "ARTWORK", nil, -7)
+    local powerBarLoss = powerBar:CreateTexture(button:GetName() .. "_PowerBarLoss", "ARTWORK", nil, -7)
     button.widgets.powerBarLoss = powerBarLoss
     powerBarLoss:SetPoint("TOPLEFT", powerBar:GetStatusBarTexture(), "TOPRIGHT")
     powerBarLoss:SetPoint("BOTTOMRIGHT")

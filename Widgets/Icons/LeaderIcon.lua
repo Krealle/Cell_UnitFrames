@@ -82,9 +82,9 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateLeaderIcon(button, buttonName)
+function W:CreateLeaderIcon(button)
     ---@class LeaderIconWidget: Frame, BaseWidget
-    local leaderIcon = CreateFrame("Frame", buttonName .. "LeaderIcon", button)
+    local leaderIcon = CreateFrame("Frame", button:GetName() .. "_LeaderIcon", button)
     button.widgets.leaderIcon = leaderIcon
 
     leaderIcon:SetPoint("TOPLEFT", 0, 0)

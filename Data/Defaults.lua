@@ -327,6 +327,21 @@ Defaults.Widgets = {
             relativePoint = "CENTER",
         },
     },
+    ---@type RestingIconWidgetTable
+    restingIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            point = "TOPLEFT",
+            offsetY = 10,
+            offsetX = -15,
+            relativePoint = "CENTER",
+        },
+    },
     ---@type ShieldBarWidgetTable
     shieldBar = {
         enabled = false,

@@ -125,7 +125,7 @@ end
 -- Register/Unregister UNIT_AURA event
 ---@param button CUFUnitButton
 ---@param show? boolean
-function U:ToggleRaidIcon(button, show)
+function U:ToggleRaidTargetEvents(button, show)
     if not button:IsShown() then return end
     if button.widgets.raidIcon.enabled or show then
         button:RegisterEvent("RAID_TARGET_UPDATE")
@@ -221,7 +221,7 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.PET then
         self:RegisterEvent("UNIT_PET")
     end
-    U:ToggleRaidIcon(self)
+    U:ToggleRaidTargetEvents(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
     U:ToggleAbsorbEvents(self)

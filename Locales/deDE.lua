@@ -47,6 +47,7 @@ local L = CUF.L
 -- L.combatIcon = "Kampf Icon"
 -- L.shieldBar = "Schild Bar"
 -- L.levelText = "Level Text"
+-- L.readyCheckIcon = "Ready Check Icon"
 
 -- Misc
 -- L.Frame = "Frame"

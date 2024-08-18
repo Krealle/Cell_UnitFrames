@@ -5,8 +5,6 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
-local locale = GAME_LOCALE or GetLocale()
-
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"
@@ -18,8 +16,6 @@ L.target = "Target"
 L.MaxDuration = "Maximum Duration"
 L.MinDuration = "Minimum Duration"
 L.HideNoDuration = "Hide No Duration"
-L.HidePersonal = "Hide Personal"
-L.HideExternal = "Hide External"
 L.UseBlacklist = "Use Blacklist"
 L.UseWhitelist = "Use Whitelist"
 L.Personal = "Personal"

@@ -152,15 +152,17 @@ function Util:GetUnitClassColor(unit, class, guid)
     class = class or select(2, UnitClass(unit))
     guid = guid or UnitGUID(unit)
 
+    local selectionType = UnitSelectionType(unit)
+
     if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
         return F:GetClassColor(class)
     elseif F:IsPet(guid, unit) then                     -- pet
         return unpack(CUF.constants.COLORS.PET)
-    elseif UnitIsEnemy("player", unit) then
+    elseif selectionType == 0 then                      -- Hostile
         return unpack(CUF.constants.COLORS.HOSTILE)
-    elseif UnitReaction("player", unit) == 5 then -- Friendly
+    elseif selectionType == 3 then                      -- Friendly
         return unpack(CUF.constants.COLORS.FRIENDLY)
-    else                                          -- Neutral
+    else                                                -- Neutral
         return unpack(CUF.constants.COLORS.NEUTRAL)
     end
 end

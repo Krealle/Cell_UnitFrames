@@ -486,7 +486,6 @@ end
 
 ---@param button CUFUnitButton
 function CUFUnitButton_OnLoad(button)
-    local buttonName = button:GetName()
     --CUF:Log(buttonName, "OnLoad")
 
     ---@diagnostic disable-next-line: missing-fields
@@ -513,19 +512,19 @@ function CUFUnitButton_OnLoad(button)
     button:SetBackdropBorderColor(unpack(CELL_BORDER_COLOR))
 
     -- Widgets
-    W:CreateHealthBar(button, buttonName)
-    W:CreatePowerBar(button, buttonName)
-    W:CreateShieldBar(button, buttonName)
+    W:CreateHealthBar(button)
+    W:CreatePowerBar(button)
+    W:CreateShieldBar(button)
 
     W:CreateNameText(button)
     W:CreateHealthText(button)
     W:CreatePowerText(button)
     W:CreateLevelText(button)
 
-    W:CreateRaidIcon(button, buttonName)
-    W:CreateRoleIcon(button, buttonName)
-    W:CreateLeaderIcon(button, buttonName)
-    W:CreateCombatIcon(button, buttonName)
+    W:CreateRaidIcon(button)
+    W:CreateRoleIcon(button)
+    W:CreateLeaderIcon(button)
+    W:CreateCombatIcon(button)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

@@ -113,6 +113,7 @@
 ---@field isLeader boolean
 ---@field isAssistant boolean
 ---@field readyCheckStatus ("ready" | "waiting" | "notready")?
+---@field isResting boolean
 
 ---@class CUFUnitButton: Button, BackdropTemplate
 ---@field widgets CUFUnitButtonWidgets

@@ -78,6 +78,7 @@ const.WIDGET_KIND = {
     COMBAT_ICON = "combatIcon",
     SHIELD_BAR = "shieldBar",
     READY_CHECK_ICON = "readyCheckIcon",
+    RESTING_ICON = "restingIcon",
 }
 
 ---@enum OPTION_KIND

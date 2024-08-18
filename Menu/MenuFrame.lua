@@ -184,7 +184,7 @@ function menuWindow:Create()
     local sectionWidth = self.baseWidth - gap
 
     ---@class CellCombatFrame
-    self.window = CUF:CreateFrame("CUFOptionsFrame_UnitFramesWindow", optionsFrame,
+    self.window = CUF:CreateFrame("CUF_Menu", optionsFrame,
         self.baseWidth,
         windowHeight)
     self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)
@@ -205,7 +205,7 @@ function menuWindow:Create()
     self.unitPane.line:SetPoint("BOTTOMRIGHT", self.unitPane, "BOTTOMRIGHT")
 
     -- Unit Settings
-    self.unitSection = CUF:CreateFrame("CUFOptionsFrame_UnitSettingsFrame", self.unitPane,
+    self.unitSection = CUF:CreateFrame("CUF_Menu_Unit", self.unitPane,
         sectionWidth,
         self.unitHeight, true, true)
     self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")
@@ -228,7 +228,7 @@ function menuWindow:Create()
     -- settings frame
     ---@class MenuFrame.settingsFrame: Frame
     ---@field scrollFrame CellScrollFrame
-    self.settingsFrame = CUF:CreateFrame("CUFOptionsFrame_WidgetSettingsFrame", self.widgetPane,
+    self.settingsFrame = CUF:CreateFrame("CUF_Menu_Widget", self.widgetPane,
         sectionWidth,
         (self.widgetHeight - self.paneHeight), true, true)
     self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -buffer)

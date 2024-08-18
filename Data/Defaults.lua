@@ -312,6 +312,21 @@ Defaults.Widgets = {
             relativePoint = "CENTER",
         },
     },
+    ---@type ReadyCheckIconWidgetTable
+    readyCheckIcon = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 20,
+            height = 20,
+        },
+        position = {
+            point = "CENTER",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "CENTER",
+        },
+    },
     ---@type ShieldBarWidgetTable
     shieldBar = {
         enabled = false,

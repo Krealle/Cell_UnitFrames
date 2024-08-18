@@ -125,7 +125,7 @@ end
 -- Register/Unregister UNIT_AURA event
 ---@param button CUFUnitButton
 ---@param show? boolean
-function U:ToggleRaidIcon(button, show)
+function U:ToggleRaidTargetEvents(button, show)
     if not button:IsShown() then return end
     if button.widgets.raidIcon.enabled or show then
         button:RegisterEvent("RAID_TARGET_UPDATE")
@@ -167,6 +167,22 @@ function U:ToggleAbsorbEvents(button, show)
     end
 end
 
+-- Register/Unregister UNIT_READY_CHECK
+---@param button CUFUnitButton
+---@param show? boolean
+function U:ToggleReadyCheckEvents(button, show)
+    if not button:IsShown() then return end
+    if button.widgets.readyCheckIcon.enabled or show then
+        button:RegisterEvent("READY_CHECK")
+        button:RegisterEvent("READY_CHECK_FINISHED")
+        button:RegisterEvent("READY_CHECK_CONFIRM")
+    else
+        button:UnregisterEvent("READY_CHECK")
+        button:UnregisterEvent("READY_CHECK_FINISHED")
+        button:UnregisterEvent("READY_CHECK_CONFIRM")
+    end
+end
+
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -205,32 +221,13 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.PET then
         self:RegisterEvent("UNIT_PET")
     end
-    U:ToggleRaidIcon(self)
+    U:ToggleRaidTargetEvents(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
     U:ToggleAbsorbEvents(self)
+    U:ToggleReadyCheckEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
-
-    --[[ if Cell.loaded then
-        if enabledIndicators["playerRaidIcon"] then
-            self:RegisterEvent("RAID_TARGET_UPDATE")
-        end
-        if enabledIndicators["targetRaidIcon"] then
-            self:RegisterEvent("UNIT_TARGET")
-        end
-        if enabledIndicators["readyCheckIcon"] then
-            self:RegisterEvent("READY_CHECK")
-            self:RegisterEvent("READY_CHECK_FINISHED")
-            self:RegisterEvent("READY_CHECK_CONFIRM")
-        end
-    else
-        self:RegisterEvent("RAID_TARGET_UPDATE")
-        self:RegisterEvent("UNIT_TARGET")
-        self:RegisterEvent("READY_CHECK")
-        self:RegisterEvent("READY_CHECK_FINISHED")
-        self:RegisterEvent("READY_CHECK_CONFIRM")
-    end ]]
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
     if not success then
@@ -292,6 +289,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             UnitFrame_UpdateInRange(self, arg)
         elseif event == "UNIT_NAME_UPDATE" then
             U:UnitFrame_UpdatePowerTextColor(self)
+        elseif event == "READY_CHECK_CONFIRM" then
+            U:UnitFrame_UpdateReadyCheckIcon(self)
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
@@ -308,6 +307,8 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
             U:UnitFrame_UpdateRaidIcon(self)
         elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
             U:UnitFrame_UpdateCombatIcon(self, event)
+        elseif event == "READY_CHECK" or event == "READY_CHECK_FINISHED" then
+            U:UnitFrame_UpdateReadyCheckIcon(self)
         end
     end
 end
@@ -525,6 +526,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateRoleIcon(button)
     W:CreateLeaderIcon(button)
     W:CreateCombatIcon(button)
+    W:CreateReadyCheckIcon(button)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

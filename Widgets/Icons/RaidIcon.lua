@@ -28,7 +28,7 @@ menu:AddWidget(const.WIDGET_KIND.RAID_ICON,
 ---@param subSetting string
 function W.UpdateRaidIconWidget(button, unit, setting, subSetting)
     if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleRaidIcon(button)
+        U:ToggleRaidTargetEvents(button)
     end
 
     U:UnitFrame_UpdateRaidIcon(button)

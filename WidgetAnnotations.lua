@@ -11,6 +11,7 @@
 ---| CombatIconWidgetTable
 ---| ShieldBarWidgetTable
 ---| LevelTextWidgetTable
+---| ReadyCheckIconWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -23,6 +24,7 @@
 ---| CombatIconWidget
 ---| ShieldBarWidget
 ---| LevelTextWidget
+---| ReadyCheckIconWidget
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget
@@ -43,6 +45,7 @@
 ---@field combatIcon CombatIconWidget
 ---@field shieldBar ShieldBarWidget
 ---@field levelText LevelTextWidget
+---@field readyCheckIcon ReadyCheckIconWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -88,6 +91,12 @@
 ---@field frameLevel number
 ---@field font SmallFontOpt
 ---@field color ColorOpt
+---@field position PositionOpt
+
+---@class ReadyCheckIconWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field size SizeOpt
 ---@field position PositionOpt
 
 -------------------------------------------------

@@ -45,26 +45,26 @@ local function RegisterUnitButtonCallbacks(unit, button, unitFrame, anchorFrame,
     local function UpdateMenu(kind)
         U:UpdateUnitButtonMenu(kind, unit, button, anchorFrame, config)
     end
-    CUF:RegisterCallback("UpdateMenu", L[unit] .. "Frame_UpdateMenu", UpdateMenu)
+    CUF:RegisterCallback("UpdateMenu", button.name .. "Frame_UpdateMenu", UpdateMenu)
 
     ---@param kind string?
     local function UpdateLayout(_, kind)
         U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
     end
-    CUF:RegisterCallback("UpdateLayout", L[unit] .. "Frame_UpdateLayout", UpdateLayout)
+    CUF:RegisterCallback("UpdateLayout", button.name .. "Frame_UpdateLayout", UpdateLayout)
 
     local function UpdatePixelPerfect()
         P:Resize(unitFrame)
         P:Resize(anchorFrame)
         config:UpdatePixelPerfect()
     end
-    CUF:RegisterCallback("UpdatePixelPerfect", L[unit] .. "Frame_UpdatePixelPerfect", UpdatePixelPerfect)
+    CUF:RegisterCallback("UpdatePixelPerfect", button.name .. "Frame_UpdatePixelPerfect", UpdatePixelPerfect)
 
     ---@param which string? Frame name (unit)
     local function UnitFrame_UpdateVisibility(which)
         U:UpdateUnitFrameVisibility(which, unit, button, unitFrame)
     end
-    CUF:RegisterCallback("UpdateVisibility", L[unit] .. "Frame_UpdateVisibility", UnitFrame_UpdateVisibility)
+    CUF:RegisterCallback("UpdateVisibility", button.name .. "Frame_UpdateVisibility", UnitFrame_UpdateVisibility)
 
     -- Call all callback functions and do a full update
     local function UpdateUnitButtons()
@@ -73,7 +73,7 @@ local function RegisterUnitButtonCallbacks(unit, button, unitFrame, anchorFrame,
         UpdatePixelPerfect()
         UnitFrame_UpdateVisibility()
     end
-    CUF:RegisterCallback("UpdateUnitButtons", L[unit] .. "UpdateUnitButtons", UpdateUnitButtons)
+    CUF:RegisterCallback("UpdateUnitButtons", button.name .. "UpdateUnitButtons", UpdateUnitButtons)
 end
 
 -------------------------------------------------

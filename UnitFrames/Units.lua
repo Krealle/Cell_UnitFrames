@@ -16,10 +16,15 @@ local U = CUF.uFuncs
 ---@param unitFrame CUFUnitFrame
 ---@return CUFUnitButton
 local function CreateUnitButton(unit, unitFrame)
-    local button = CreateFrame("Button", "CUF" .. L[unit] .. "Button", unitFrame, "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
+    local name = CUF.constants.TITLE_CASED_UNITS[unit]
+    local button = CreateFrame("Button",
+        "CUF_" .. name,
+        unitFrame,
+        "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
     button:SetAttribute("unit", unit)
     button:SetPoint("TOPLEFT")
 
+    button.name = name
     CUF.unitButtons[unit] = button
     return button
 end

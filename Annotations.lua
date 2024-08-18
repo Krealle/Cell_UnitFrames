@@ -131,3 +131,4 @@
 ---@field _casts table
 ---@field _timers table
 ---@field _isSelected boolean
+---@field name string

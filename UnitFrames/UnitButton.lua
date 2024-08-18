@@ -382,4 +382,4 @@ local function UpdateAppearance(kind)
         end)
     end
 end
-CUF:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance", UpdateAppearance)
+CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)

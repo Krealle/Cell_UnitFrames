@@ -31,7 +31,7 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.shieldBar
     local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
 
-    if not setting or setting == const.OPTION_KIND.COLOR then
+    if not setting or setting == const.OPTION_KIND.RGBA then
         widget:SetColor(unpack(styleTable.rgba))
     end
 

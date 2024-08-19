@@ -115,6 +115,8 @@ const.OPTION_KIND = {
     BACKGROUND = "background",
     USE_CLASS_COLOR = "useClassColor",
     TEXTURE = "texture",
+    TIMER = "timer",
+    TIMER_FORMAT = "timerFormat",
 }
 
 ---@enum AURA_OPTION_KIND
@@ -182,4 +184,12 @@ const.COLORS = {
     FRIENDLY = { 0.29, 0.69, 0.3, },
     NEUTRAL = { 0.85, 0.77, 0.36 },
     PET = { 0.5, 0.5, 1 },
+}
+
+---@enum CastBarTimerFormat
+const.CastBarTimerFormat = {
+    NORMAL = "normal",
+    REMAINING = "remaining",
+    DURATION = "duration",
+    DURATION_AND_MAX = "duration-and-max",
 }

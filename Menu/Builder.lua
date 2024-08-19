@@ -44,6 +44,7 @@ Builder.MenuOptions = {
     ColorPicker = 20,
     CastBarGeneral = 21,
     CastBarColor = 22,
+    CastBarTimer = 23,
 }
 
 -------------------------------------------------
@@ -183,7 +184,7 @@ local function HandleWidgetOption(widgetName, optionPath, newValue)
         for i = 1, #pathParts - 1 do
             tbl = tbl[pathParts[i]]
             if not tbl then
-                CUF:Warn("Invalid path: " .. widgetName .. table.concat(pathParts, "."))
+                CUF:Warn("Invalid path: " .. widgetName, table.concat(pathParts, "."))
                 return {} -- TODO: this should be handled better
             end
         end
@@ -747,8 +748,44 @@ function Builder:CreateFontOptions(parent, widgetName, path)
         path .. ".size")
     self:AnchorRight(f.sizeSlider, f.outlineDropdown)
 
-    f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], const.OPTION_KIND.FONT .. ".shadow")
+    f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], path .. ".shadow")
     f.shadowCB:SetPoint("TOPLEFT", f.styleDropdown, "BOTTOMLEFT", 0, -10)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param title string?
+---@param path string
+---@return BigFontOptions
+function Builder:CreateBigFontOptions(parent, widgetName, title, path)
+    ---@class BigFontOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "BigFontOptions"
+    f.optionHeight = 160
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, title .. " Font")
+
+    --- Top Options
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, path)
+    self:AnchorBelow(f.anchorOptions, f.title)
+
+    f.fontOptions = self:CreateFontOptions(f, widgetName, path)
+    self:AnchorBelow(f.fontOptions, f.anchorOptions)
+    self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
+
+    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+        HandleWidgetOption(widgetName, path .. ".rgb", { r, g, b })
+    end)
+    self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
+
+    local function LoadPageDB()
+        local r, g, b = unpack(HandleWidgetOption(widgetName, path .. ".rgb"))
+        f.colorPicker:SetColor(r, g, b)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "FontOptions_" .. path)
 
     return f
 end
@@ -1296,6 +1333,26 @@ function Builder:CreateCastBarColorOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarTimerFontOptions
+function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
+    ---@class CastBarTimerFontOptions: BigFontOptions
+    local f = Builder:CreateBigFontOptions(parent, widgetName, "Timer", const.OPTION_KIND.TIMER)
+
+    local items = {
+        const.CastBarTimerFormat.NORMAL,
+        const.CastBarTimerFormat.REMAINING,
+        const.CastBarTimerFormat.DURATION,
+        const.CastBarTimerFormat.DURATION_AND_MAX,
+    }
+    f.timerFormat = self:CreateDropdown(f, widgetName, L.TimerFormat, nil,
+        items, const.OPTION_KIND.TIMER_FORMAT)
+    self:AnchorBelow(f.timerFormat, f.fontOptions.styleDropdown)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1324,4 +1381,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
     [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
     [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
+    [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
 }

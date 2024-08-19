@@ -193,6 +193,8 @@
 ---@field size SizeOpt
 ---@field color CastBarColorsOpt
 ---@field reverse boolean
+---@field timer BigFontOpt
+---@field timerFormat CastBarTimerFormat
 
 ---@class CastBarColorsOpt
 ---@field texture string

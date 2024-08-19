@@ -41,6 +41,11 @@ L.NonInterruptible = "Non-Interruptible"
 L.Background = "Background"
 L.Reverse = "Reverse"
 L.UseClassColor = "Use Class Color"
+L.TimerFormat = "Timer Format"
+L["normal"] = "Normal"
+L["remaining"] = "Remaining"
+L["duration"] = "Duration"
+L["duration-and-max"] = "Duration & Max"
 
 -- Widgets
 L.Widgets = "Widgets"

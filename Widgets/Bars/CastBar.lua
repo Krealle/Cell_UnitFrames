@@ -1,7 +1,7 @@
 ---@class CUF
 local CUF = select(2, ...)
 
-local Cell = CUF.Cell
+local F = Cell.funcs
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -21,6 +21,7 @@ local Handler = CUF.Handler
 menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarGeneral,
     Builder.MenuOptions.CastBarColor,
+    Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -49,6 +50,14 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
             castBar.background:SetVertexColor(unpack(styleTable.color.background))
         end
     end
+
+    if not setting or setting == const.OPTION_KIND.TIMER then
+        castBar.timerText:SetFontStyle(styleTable.timer)
+    end
+    if not setting or setting == const.OPTION_KIND.TIMER_FORMAT then
+        castBar.timerText.format = styleTable.timerFormat
+    end
+
     if not setting or setting == const.OPTION_KIND.ENABLED then
         U:ToggleCastEvents(button, styleTable.enabled)
     end
@@ -281,7 +290,18 @@ local function onUpdate(self, elapsed)
         end
 
         if (self.timerText) and (self.elapsed >= .01) then
-            if self.channeling then
+            local timerFormat = self.timerText.format
+            if timerFormat == const.CastBarTimerFormat.DURATION then
+                self.timerText:SetFormattedText("%.1f", self.duration)
+            elseif timerFormat == const.CastBarTimerFormat.REMAINING then
+                self.timerText:SetFormattedText("%.1f", (self.max - self.duration))
+            elseif timerFormat == const.CastBarTimerFormat.DURATION_AND_MAX then
+                local dur = self.duration
+                if self.channeling then
+                    dur = (self.max - self.duration)
+                end
+                self.timerText:SetFormattedText("%.1f / %.1f", dur, self.max)
+            elseif self.channeling then
                 self.timerText:SetFormattedText("%.1f", self.duration)
             else
                 self.timerText:SetFormattedText("%.1f", (self.max - self.duration))
@@ -346,6 +366,42 @@ local function UpdateColor(self)
     end
 end
 
+---@param self TimerText
+---@param styleTable BigFontOpt
+local function SetFontStyle(self, styleTable)
+    local font = F:GetFont(styleTable.style)
+
+    local fontFlags ---@type TBFFlags|nil
+    if styleTable.outline == "Outline" then
+        fontFlags = "OUTLINE"
+    elseif styleTable.outline == "Monochrome" then
+        fontFlags = "MONOCHROME"
+    end
+
+    self:SetFont(font, styleTable.size, fontFlags)
+
+    if styleTable.shadow then
+        self:SetShadowOffset(1, -1)
+        self:SetShadowColor(0, 0, 0, 1)
+    else
+        self:SetShadowOffset(0, 0)
+        self:SetShadowColor(0, 0, 0, 0)
+    end
+
+    self:SetTextColor(unpack(styleTable.rgb))
+
+    self:SetPosition(styleTable)
+end
+
+---@param self TimerText
+---@param styleTable BigFontOpt
+local function SetFontPosition(self, styleTable)
+    self:ClearAllPoints()
+    self:SetPoint(styleTable.point, self:GetParent(),
+        styleTable.offsetX,
+        styleTable.offsetY)
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -395,8 +451,12 @@ function W:CreateCastBar(button)
     spark:SetPoint("CENTER", castBar:GetStatusBarTexture(), "RIGHT", 0, 0)
     spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]])
 
+    ---@class TimerText: FontString
     local timerText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     timerText:SetPoint("RIGHT", castBar)
+    timerText.SetFontStyle = SetFontStyle
+    timerText.SetPosition = SetFontPosition
+    timerText.format = const.CastBarTimerFormat.REMAINING
 
     local spellText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     spellText:SetPoint("LEFT", castBar, 30, 0)

@@ -376,6 +376,18 @@ Defaults.Widgets = {
             background = { 1, 1, 0, 0.25 },
         },
         reverse = false,
+        timer = {
+            enabled = false,
+            size = 12,
+            outline = "Outline",
+            shadow = false,
+            style = "Cell Default",
+            point = "RIGHT",
+            offsetY = 0,
+            offsetX = 0,
+            rgb = { 1, 1, 1 },
+        },
+        timerFormat = "normal",
     }
 }
 

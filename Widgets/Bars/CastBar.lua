@@ -22,6 +22,7 @@ menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarGeneral,
     Builder.MenuOptions.CastBarColor,
     Builder.MenuOptions.CastBarTimer,
+    Builder.MenuOptions.CastBarSpell,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -56,6 +57,12 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.TIMER_FORMAT then
         castBar.timerText.format = styleTable.timerFormat
+    end
+    if not setting or setting == const.OPTION_KIND.SPELL then
+        castBar.spellText:SetFontStyle(styleTable.spell)
+    end
+    if not setting or setting == const.OPTION_KIND.SHOW_SPELL then
+        castBar.spellText.enabled = styleTable.showSpell
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then
@@ -167,7 +174,10 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
 
     if (castBar.icon) then castBar.icon:SetTexture(texture --[[ or FALLBACK_ICON ]]) end
     if (castBar.spark) then castBar.spark:Show() end
-    if (castBar.spellText) then castBar.spellText:SetText(displayName ~= "" and displayName or name) end
+    if (castBar.spellText and castBar.spellText.enabled) then
+        castBar.spellText:SetText(displayName ~= "" and displayName or
+            name)
+    end
     if (castBar.timerText) then castBar.timerText:SetText() end
 
     castBar:Show()
@@ -366,7 +376,7 @@ local function UpdateColor(self)
     end
 end
 
----@param self TimerText
+---@param self TimerText|SpellText
 ---@param styleTable BigFontOpt
 local function SetFontStyle(self, styleTable)
     local font = F:GetFont(styleTable.style)
@@ -393,7 +403,7 @@ local function SetFontStyle(self, styleTable)
     self:SetPosition(styleTable)
 end
 
----@param self TimerText
+---@param self TimerText|SpellText
 ---@param styleTable BigFontOpt
 local function SetFontPosition(self, styleTable)
     self:ClearAllPoints()
@@ -458,8 +468,12 @@ function W:CreateCastBar(button)
     timerText.SetPosition = SetFontPosition
     timerText.format = const.CastBarTimerFormat.REMAINING
 
+    ---@class SpellText: FontString
     local spellText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     spellText:SetPoint("LEFT", castBar, 30, 0)
+    spellText.SetFontStyle = SetFontStyle
+    spellText.SetPosition = SetFontPosition
+    spellText.enabled = true
 
     local icon = castBar:CreateTexture(nil, "OVERLAY")
     icon:SetSize(30, 30)

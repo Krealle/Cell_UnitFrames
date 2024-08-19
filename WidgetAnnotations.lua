@@ -195,6 +195,8 @@
 ---@field reverse boolean
 ---@field timer BigFontOpt
 ---@field timerFormat CastBarTimerFormat
+---@field spell BigFontOpt
+---@field showSpell boolean
 
 ---@class CastBarColorsOpt
 ---@field texture string

@@ -117,6 +117,8 @@ const.OPTION_KIND = {
     TEXTURE = "texture",
     TIMER = "timer",
     TIMER_FORMAT = "timerFormat",
+    SPELL = "spell",
+    SHOW_SPELL = "showSpell",
 }
 
 ---@enum AURA_OPTION_KIND

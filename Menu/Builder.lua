@@ -45,6 +45,7 @@ Builder.MenuOptions = {
     CastBarGeneral = 21,
     CastBarColor = 22,
     CastBarTimer = 23,
+    CastBarSpell = 24,
 }
 
 -------------------------------------------------
@@ -1353,6 +1354,19 @@ function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarSpellFontOptions
+function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
+    ---@class CastBarSpellFontOptions: BigFontOptions
+    local f = Builder:CreateBigFontOptions(parent, widgetName, "Spell", const.OPTION_KIND.SPELL)
+
+    f.spellCB = self:CreateCheckBox(f, widgetName, L.ShowSpell, const.OPTION_KIND.SHOW_SPELL)
+    self:AnchorBelow(f.spellCB, f.fontOptions.styleDropdown)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1382,4 +1396,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
     [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
+    [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
 }

@@ -46,6 +46,7 @@ L["normal"] = "Normal"
 L["remaining"] = "Remaining"
 L["duration"] = "Duration"
 L["duration-and-max"] = "Duration & Max"
+L.ShowSpell = "Show Spell"
 
 -- Widgets
 L.Widgets = "Widgets"

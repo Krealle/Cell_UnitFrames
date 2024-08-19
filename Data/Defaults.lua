@@ -377,7 +377,7 @@ Defaults.Widgets = {
         },
         reverse = false,
         timer = {
-            enabled = false,
+            enabled = true,
             size = 12,
             outline = "Outline",
             shadow = false,
@@ -388,6 +388,18 @@ Defaults.Widgets = {
             rgb = { 1, 1, 1 },
         },
         timerFormat = "normal",
+        spell = {
+            enabled = true,
+            size = 12,
+            outline = "Outline",
+            shadow = false,
+            style = "Cell Default",
+            point = "LEFT",
+            offsetY = 0,
+            offsetX = 0,
+            rgb = { 1, 1, 1 },
+        },
+        showSpell = true,
     }
 }
 

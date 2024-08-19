@@ -42,6 +42,7 @@ Builder.MenuOptions = {
     FrameLevel = 18,
     FullAnchor = 19,
     ColorPicker = 20,
+    CastBarGeneral = 21,
 }
 
 -------------------------------------------------
@@ -639,24 +640,28 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param path string?
+---@param minVal number?
+---@param maxVal number?
 ---@return AnchorOptions
-function Builder:CreateAnchorOptions(parent, widgetName, path)
+function Builder:CreateAnchorOptions(parent, widgetName, path, minVal, maxVal)
     ---@class AnchorOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.optionHeight = 20
     f.id = "Anchor"
 
     path = path or const.OPTION_KIND.POSITION
+    minVal = minVal or -100
+    maxVal = maxVal or 100
 
     f.anchorDropdown = self:CreateDropdown(parent, widgetName, L["Anchor Point"], nil, const.ANCHOR_POINTS,
         path .. "." .. const.OPTION_KIND.ANCHOR_POINT)
     f.anchorDropdown:SetPoint("TOPLEFT", f)
 
-    f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, -100, 100,
+    f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, minVal, maxVal,
         path .. "." .. "offsetX")
     self:AnchorRight(f.sliderX, f.anchorDropdown)
 
-    f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, -100, 100,
+    f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, minVal, maxVal,
         path .. "." .. "offsetY")
     self:AnchorRight(f.sliderY, f.sliderX)
 
@@ -676,10 +681,12 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param path string?
+---@param minVal number?
+---@param maxVal number?
 ---@return FullAnchorOptions
-function Builder:CreateFullAnchorOptions(parent, widgetName, path)
+function Builder:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVal)
     ---@class FullAnchorOptions: AnchorOptions
-    local anchorOpt = self:CreateAnchorOptions(parent, widgetName, path)
+    local anchorOpt = self:CreateAnchorOptions(parent, widgetName, path, minVal, maxVal)
     anchorOpt.optionHeight = 70
     anchorOpt.id = "FullAnchor"
 
@@ -869,16 +876,20 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param minVal number?
+---@param maxVal number?
 ---@return SizeOptions
-function Builder:CreateSizeOptions(parent, widgetName)
+function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal)
     ---@class SizeOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    minVal = minVal or 0
+    maxVal = maxVal or 100
 
-    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
+    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, minVal, maxVal,
         const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.WIDTH)
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
-    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, 0, 100,
+    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, minVal, maxVal,
         const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.HEIGHT)
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
 
@@ -1151,6 +1162,37 @@ function Builder:CreateAuraWhitelistOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Cast Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarOptions
+function Builder:CreateCastBarGeneralOptions(parent, widgetName)
+    ---@class CastBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarOptions"
+    f.optionHeight = 165
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "General")
+
+    -- First Row
+    f.anchorOptions = self:CreateFullAnchorOptions(f, widgetName, nil, -1000, 1000)
+    self:AnchorBelow(f.anchorOptions, f.title)
+
+    -- Second Row
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
+    self:AnchorBelow(f.sizeOptions, f.anchorOptions.sliderX)
+
+    -- Third Row
+    f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
+    self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1176,4 +1218,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.SingleSize] = Builder.CreateSingleSizeOptions,
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
+    [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
 }

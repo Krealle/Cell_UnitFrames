@@ -46,6 +46,7 @@ Builder.MenuOptions = {
     CastBarColor = 22,
     CastBarTimer = 23,
     CastBarSpell = 24,
+    CastBarSpark = 25,
 }
 
 -------------------------------------------------
@@ -922,19 +923,20 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param minVal number?
 ---@param maxVal number?
+---@param path string?
 ---@return SizeOptions
-function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal)
+function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal, path)
     ---@class SizeOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     minVal = minVal or 0
     maxVal = maxVal or 100
 
     f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, minVal, maxVal,
-        const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.WIDTH)
+        (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.WIDTH)
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
     f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, minVal, maxVal,
-        const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.HEIGHT)
+        (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.HEIGHT)
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
 
     return f
@@ -955,6 +957,24 @@ function Builder:CreateSingleSizeOptions(parent, widgetName)
     f.sizeSlider.Set_DB = function(_which, _kind, value)
         HandleWidgetOption(widgetName, const.AURA_OPTION_KIND.SIZE, { width = value, height = value })
     end
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param minVal number?
+---@param maxVal number?
+---@param path string?
+---@return WidthOptions
+function Builder:CreateWidthOptions(parent, widgetName, minVal, maxVal, path)
+    ---@class WidthOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+
+    f.sizeSlider = self:CreateSlider(f, widgetName, L["Width"], nil, (minVal or 0), (maxVal or 100),
+        (path or const.OPTION_KIND.WIDTH))
+    f.sizeSlider:SetPoint("TOPLEFT", f)
 
     return f
 end
@@ -1367,6 +1387,34 @@ function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarSparkOptions
+function Builder:CreateCastBarSparkOptions(parent, widgetName)
+    ---@class CastBarSparkOptions: BigFontOptions
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarSparkOptions"
+    f.optionHeight = 60
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Spark")
+
+    -- First Row
+    f.enabled = self:CreateCheckBox(f, widgetName, L["Enabled"],
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.ENABLED)
+    self:AnchorBelow(f.enabled, f.title)
+
+    f.color = self:CreateColorPickerOptions(f, widgetName, nil,
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.COLOR)
+    self:AnchorRightOfCB(f.color, f.enabled)
+
+    f.sizeOptions = self:CreateWidthOptions(f, widgetName, nil, nil,
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.WIDTH)
+    self:AnchorRightOfColorPicker(f.sizeOptions, f.color)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1397,4 +1445,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
+    [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
 }

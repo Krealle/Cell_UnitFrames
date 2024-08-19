@@ -23,6 +23,7 @@ menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarColor,
     Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.CastBarSpell,
+    Builder.MenuOptions.CastBarSpark,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -63,6 +64,12 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.SHOW_SPELL then
         castBar.spellText.enabled = styleTable.showSpell
+    end
+
+    if not setting or setting == const.OPTION_KIND.SPARK then
+        castBar.spark.enabled = styleTable.spark.enabled
+        castBar.spark:UpdateColor(styleTable.spark)
+        castBar:UpdateSpark(styleTable.spark)
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then
@@ -412,6 +419,26 @@ local function SetFontPosition(self, styleTable)
         styleTable.offsetY)
 end
 
+---@param self CastBarWidget
+---@param styleTable CastBarSparkOpt
+local function UpdateSpark(self, styleTable)
+    local spark = self.spark
+    if spark.enabled then
+        spark:ClearAllPoints()
+        spark:SetPoint("CENTER", self:GetStatusBarTexture(), "RIGHT")
+        spark:SetHeight(self:GetHeight())
+        spark:SetWidth(styleTable.width)
+    else
+        spark:Hide()
+    end
+end
+
+---@param self SparkTexture
+---@param styleTable CastBarSparkOpt
+local function UpdateSparkColor(self, styleTable)
+    self:SetVertexColor(unpack(styleTable.color))
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -455,11 +482,13 @@ function W:CreateCastBar(button)
     background:SetAllPoints(castBar)
     background:SetColorTexture(1, 1, 1, .5)
 
+    ---@class SparkTexture: Texture
     local spark = castBar:CreateTexture(nil, "OVERLAY")
-    spark:SetSize(2, 30)
+    spark:SetWidth(2)
     spark:SetBlendMode("ADD")
-    spark:SetPoint("CENTER", castBar:GetStatusBarTexture(), "RIGHT", 0, 0)
-    spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]])
+    spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]]) -- Interface\AddOns\WeakAuras\Media\Textures\Square_AlphaGradient.tga
+    spark.UpdateColor = UpdateSparkColor
+    spark.enabled = false
 
     ---@class TimerText: FontString
     local timerText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
@@ -494,6 +523,7 @@ function W:CreateCastBar(button)
 
     castBar.ResetAttributes = ResetAttributes
     castBar.UpdateColor = UpdateColor
+    castBar.UpdateSpark = UpdateSpark
 
     castBar.SetEnabled = W.SetEnabled
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel

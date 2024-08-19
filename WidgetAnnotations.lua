@@ -197,6 +197,7 @@
 ---@field timerFormat CastBarTimerFormat
 ---@field spell BigFontOpt
 ---@field showSpell boolean
+---@field spark CastBarSparkOpt
 
 ---@class CastBarColorsOpt
 ---@field texture string
@@ -204,6 +205,11 @@
 ---@field interruptible RGBAOpt
 ---@field nonInterruptible RGBAOpt
 ---@field background RGBAOpt
+
+---@class CastBarSparkOpt
+---@field enabled boolean
+---@field width number
+---@field color RGBAOpt
 
 -------------------------------------------------
 -- MARK: Generic Options

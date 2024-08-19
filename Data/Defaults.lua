@@ -400,6 +400,11 @@ Defaults.Widgets = {
             rgb = { 1, 1, 1 },
         },
         showSpell = true,
+        spark = {
+            enabled = true,
+            width = 2,
+            color = { 1, 1, 1, 1 },
+        },
     }
 }
 

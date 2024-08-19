@@ -354,6 +354,29 @@ Defaults.Widgets = {
             relativePoint = "BOTTOMRIGHT",
         },
     },
+    ---@type CastBarWidgetTable
+    castBar = {
+        enabled = false,
+        frameLevel = 10,
+        position = {
+            point = "TOPLEFT",
+            offsetY = -30,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+        size = {
+            width = 200,
+            height = 30,
+        },
+        color = {
+            texture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+            useClassColor = true,
+            interruptible = { 1, 1, 0, 0.25 },
+            nonInterruptible = { 1, 1, 0, 0.25 },
+            background = { 1, 1, 0, 0.25 },
+        },
+        reverse = false,
+    }
 }
 
 ---@class Size

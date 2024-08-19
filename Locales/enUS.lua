@@ -48,6 +48,7 @@ L.shieldBar = "Shield Bar"
 L.levelText = "Level Text"
 L.readyCheckIcon = "Ready Check Icon"
 L.restingIcon = "Resting Icon"
+L.castBar = "Cast Bar"
 
 -- Misc
 L.Frame = "Frame"

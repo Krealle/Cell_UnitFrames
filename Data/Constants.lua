@@ -79,6 +79,7 @@ const.WIDGET_KIND = {
     SHIELD_BAR = "shieldBar",
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
+    CAST_BAR = "castBar",
 }
 
 ---@enum OPTION_KIND

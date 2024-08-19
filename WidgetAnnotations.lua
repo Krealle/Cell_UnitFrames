@@ -13,6 +13,7 @@
 ---| LevelTextWidgetTable
 ---| ReadyCheckIconWidgetTable
 ---| RestingIconWidgetTable
+---| CastBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -27,6 +28,7 @@
 ---| LevelTextWidget
 ---| ReadyCheckIconWidget
 ---| RestingIconWidget
+---| CastBarWidget
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget
@@ -49,6 +51,7 @@
 ---@field levelText LevelTextWidget
 ---@field readyCheckIcon ReadyCheckIconWidget
 ---@field restingIcon RestingIconWidget
+---@field castBar CastBarWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -182,6 +185,21 @@
 ---@field frameLevel number
 ---@field position PositionOpt
 ---@field rgba RGBAOpt
+
+---@class CastBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field position PositionOpt
+---@field size SizeOpt
+---@field color CastBarColorsOpt
+---@field reverse boolean
+
+---@class CastBarColorsOpt
+---@field texture string
+---@field useClassColor boolean
+---@field interruptible RGBAOpt
+---@field nonInterruptible RGBAOpt
+---@field background RGBAOpt
 
 -------------------------------------------------
 -- MARK: Generic Options

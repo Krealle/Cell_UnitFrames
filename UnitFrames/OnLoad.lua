@@ -87,6 +87,7 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateShieldBarHeight(button)
     U:UnitFrame_UpdateLevel(button)
     U:UnitFrame_UpdateRestingIcon(button)
+    U:UnitFrame_UpdateCastBar(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
         button._powerBarUpdateRequired = nil
@@ -240,6 +241,7 @@ local function UnitFrame_RegisterEvents(self)
     U:ToggleAbsorbEvents(self)
     U:ToggleReadyCheckEvents(self)
     U:ToggleRestingEvents(self)
+    U:ToggleCastEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 
@@ -265,14 +267,11 @@ end
 ---@param self CUFUnitButton
 ---@param event WowEvent
 ---@param unit string
----@param arg any
----@param arg2 any
-local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
+---@param ... any
+local function UnitFrame_OnEvent(self, event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
-            U:UnitFrame_UpdateAuras(self, arg)
-        elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-            --UnitFrame_UpdateCasts(self, arg2)
+            U:UnitFrame_UpdateAuras(self, ...)
         elseif event == "UNIT_HEALTH" then
             U:UnitFrame_UpdateHealth(self)
             U:UnitFrame_UpdateShieldBar(self)
@@ -300,11 +299,27 @@ local function UnitFrame_OnEvent(self, event, unit, arg, arg2)
         elseif event == "UNIT_NAME_UPDATE" then
             U:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
-            UnitFrame_UpdateInRange(self, arg)
+            UnitFrame_UpdateInRange(self, ...)
         elseif event == "UNIT_NAME_UPDATE" then
             U:UnitFrame_UpdatePowerTextColor(self)
         elseif event == "READY_CHECK_CONFIRM" then
             U:UnitFrame_UpdateReadyCheckIcon(self)
+        elseif event == "UNIT_SPELLCAST_START"
+            or event == "UNIT_SPELLCAST_CHANNEL_START" then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            U:CastBar_CastStart(self, event, unit, ...)
+        elseif event == "UNIT_SPELLCAST_STOP"
+            or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            U:CastBar_CastStop(self, event, unit, ...)
+        elseif event == "UNIT_SPELLCAST_DELAYED"
+            or event == "UNIT_SPELLCAST_CHANNEL_UPDATE" then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            U:CastBar_CastUpdate(self, event, unit, ...)
+        elseif event == "UNIT_SPELLCAST_FAILED"
+            or event == "UNIT_SPELLCAST_INTERRUPTED" then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            U:CastBar_CastFail(self, event, unit, ...)
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
@@ -532,6 +547,7 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthBar(button)
     W:CreatePowerBar(button)
     W:CreateShieldBar(button)
+    W:CreateCastBar(button)
 
     W:CreateNameText(button)
     W:CreateHealthText(button)

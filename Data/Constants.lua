@@ -108,6 +108,13 @@ const.OPTION_KIND = {
     OFFSET_X = "offsetX",
     OFFSET_Y = "offsetY",
     TYPE = "type",
+    REVERSE = "reverse",
+    SPARK = "spark",
+    INTERRUPTIBLE = "interruptible",
+    NON_INTERRUPTIBLE = "nonInterruptible",
+    BACKGROUND = "background",
+    USE_CLASS_COLOR = "useClassColor",
+    TEXTURE = "texture",
 }
 
 ---@enum AURA_OPTION_KIND

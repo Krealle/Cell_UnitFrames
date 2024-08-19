@@ -33,6 +33,15 @@ L.CastByPlayersTooltip = "Show auras cast by players"
 L.CastByNPCTooltip = "Show auras cast by NPCs"
 L.HideNoDurationTooltip = "Hide auras with no duration"
 
+-- Cast Bar
+L.Reverse = "Reverse"
+L.Spark = "Spark"
+L.Interruptible = "Interruptible"
+L.NonInterruptible = "Non-Interruptible"
+L.Background = "Background"
+L.Reverse = "Reverse"
+L.UseClassColor = "Use Class Color"
+
 -- Widgets
 L.Widgets = "Widgets"
 L.nameText = "Name Text"
@@ -54,6 +63,7 @@ L.castBar = "Cast Bar"
 L.Frame = "Frame"
 L.UnitFrames = "Unit Frames"
 L.RelativeTo = "Relative To"
+L.Texture = "Texture"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

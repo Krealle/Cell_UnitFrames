@@ -43,6 +43,7 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
     CastBarGeneral = 21,
+    CastBarColor = 22,
 }
 
 -------------------------------------------------
@@ -162,6 +163,10 @@ end
 ---@param prevOptions Frame
 function Builder:AnchorBelowCB(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, 0, -30)
+end
+
+function Builder:AnchorRightOfColorPicker(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.spacingX + prevOptions.label:GetWidth(), 0)
 end
 
 -------------------------------------------------
@@ -362,11 +367,12 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param title string?
 ---@param path string?
 ---@return CUFColorPicker
-function Builder:CreateColorPickerOptions(parent, widgetName, path)
+function Builder:CreateColorPickerOptions(parent, widgetName, title, path)
     ---@class CUFColorPicker: CellColorPicker, OptionsFrame
-    local colorPicker = Cell:CreateColorPicker(parent, L["Color"], true)
+    local colorPicker = Cell:CreateColorPicker(parent, title or L["Color"], true)
     colorPicker.id = "ColorPicker"
     colorPicker.optionHeight = 25
 
@@ -934,6 +940,66 @@ function Builder:CreateFrameLevelOptions(parent, widgetName)
     return f
 end
 
+-----------------------------------------------
+-- MARK: Texture Dropdown
+-----------------------------------------------
+
+local LSM = LibStub("LibSharedMedia-3.0", true)
+local textures
+local textureToName = {}
+
+---@class TextureDropdownItem
+---@field [1] string
+---@field [2] Texture
+
+---@return TextureDropdownItem[]
+local function GetTextures()
+    if textures then return textures end
+
+    textures = F:Copy(LSM:HashTable("statusbar"))
+    for name, texture in pairs(textures) do
+        textureToName[texture] = name
+    end
+
+    return textures
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param path string
+---@return TextureDropdown
+function Builder:CreateTextureDropdown(parent, widgetName, path)
+    ---@class TextureDropdown: CUFDropdown
+    local textureDropdown = Cell:CreateDropdown(parent, 160, "texture")
+
+    textureDropdown.optionHeight = 20
+    textureDropdown.id = "TextureDropdown"
+    textureDropdown:SetLabel(L["Texture"])
+
+    textureDropdown.Set_DB = HandleWidgetOption
+    textureDropdown.Get_DB = HandleWidgetOption
+
+    local textureDropdownItems = {}
+    for name, tex in pairs(GetTextures()) do
+        tinsert(textureDropdownItems, {
+            ["text"] = name,
+            ["texture"] = tex,
+            ["onClick"] = function()
+                HandleWidgetOption(widgetName, path, tex)
+            end,
+        })
+    end
+    textureDropdown:SetItems(textureDropdownItems)
+
+    local function LoadPageDB()
+        local tex = textureDropdown.Get_DB(widgetName, path)
+        textureDropdown:SetSelected(textureToName[tex], tex)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "TextureDropdown_" .. path)
+
+    return textureDropdown
+end
+
 -------------------------------------------------
 -- MARK: Aura Icon
 -------------------------------------------------
@@ -1192,6 +1258,44 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarColorOptions
+function Builder:CreateCastBarColorOptions(parent, widgetName)
+    ---@class CastBarColorOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarColorOptions"
+    f.optionHeight = 110
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Colors")
+    local path = const.OPTION_KIND.COLOR .. "."
+
+    -- First Row
+    f.texture = self:CreateTextureDropdown(f, widgetName, path .. const.OPTION_KIND.TEXTURE)
+    self:AnchorBelow(f.texture, f.title)
+
+    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor,
+        path .. const.OPTION_KIND.USE_CLASS_COLOR)
+    self:AnchorRight(f.classColorCB, f.texture)
+
+    -- Second Row
+    f.interruptible = self:CreateColorPickerOptions(f, widgetName, L.Interruptible,
+        path .. const.OPTION_KIND.INTERRUPTIBLE)
+    self:AnchorBelow(f.interruptible, f.texture)
+
+    f.nonInterruptible = self:CreateColorPickerOptions(f, widgetName, L.NonInterruptible,
+        path .. const.OPTION_KIND.NON_INTERRUPTIBLE)
+    self:AnchorRightOfColorPicker(f.nonInterruptible, f.interruptible)
+
+    -- Fourth Row
+    f.background = self:CreateColorPickerOptions(f, widgetName, L.Background,
+        path .. const.OPTION_KIND.BACKGROUND)
+    self:AnchorRightOfColorPicker(f.background, f.nonInterruptible)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1219,4 +1323,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
     [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
+    [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
 }

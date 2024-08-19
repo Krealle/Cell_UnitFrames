@@ -178,6 +178,7 @@ local function HandleWidgetOption(widgetName, optionPath, newValue)
             tbl = tbl[pathParts[i]]
             if not tbl then
                 CUF:Warn("Invalid path: " .. widgetName .. table.concat(pathParts, "."))
+                return {} -- TODO: this should be handled better
             end
         end
 

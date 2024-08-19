@@ -42,6 +42,7 @@
 ---@field SetLabel function
 ---@field SetSelected function
 ---@field SetFont function
+---@field button button
 
 ---@class CellColorPicker: Frame, BackdropTemplate
 ---@field SetColor function

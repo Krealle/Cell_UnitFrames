@@ -371,9 +371,9 @@ Defaults.Widgets = {
         color = {
             texture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
             useClassColor = true,
-            interruptible = { 1, 1, 0, 0.25 },
-            nonInterruptible = { 1, 1, 0, 0.25 },
-            background = { 1, 1, 0, 0.25 },
+            interruptible = { 0.2, 0.57, 0.5, 1 },
+            nonInterruptible = { 0.43, 0.43, 0.43, 1 },
+            background = { 0, 0, 0, 0.8 },
         },
         reverse = false,
         timer = {

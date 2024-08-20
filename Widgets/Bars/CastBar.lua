@@ -72,15 +72,15 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SPARK then
         castBar.spark.enabled = styleTable.spark.enabled
         castBar.spark:UpdateColor(styleTable.spark)
-        castBar:UpdateSpark(styleTable.spark.width)
+        castBar:SetSparkWidth(styleTable.spark.width)
     end
 
     if not setting or setting == const.OPTION_KIND.EMPOWER then
-        castBar:UpdateEmpowerPips(styleTable.empower)
+        castBar:SetEmpowerStyle(styleTable.empower)
     end
 
     if not setting or setting == const.OPTION_KIND.BORDER then
-        castBar:UpdateBorder(styleTable.border)
+        castBar:SetBorderStyle(styleTable.border)
     end
 
     if not setting or setting == const.OPTION_KIND.ICON then
@@ -143,7 +143,7 @@ end
 
 ---@param self CastBarWidget
 local function UpdateElements(self)
-    self:UpdateColor()
+    self:SetCastBarColor()
 
     if self.icon then self.icon:SetTexture(self.spellTexture --[[ or FALLBACK_ICON ]]) end
     if self.spark then self.spark:Show() end
@@ -166,7 +166,7 @@ end
 
 -- Repoint Icon and StatusBar
 ---@param self CastBarWidget
-local function Repoint(self)
+local function RepointCastBar(self)
     local bar = self.statusBar
     local icon = self.icon
 
@@ -206,7 +206,7 @@ local function SetFillStyle(self, reversed)
     else
         self.statusBar:SetFillStyle("STANDARD")
     end
-    self:UpdateSpark()
+    self:SetSparkWidth()
 end
 
 ---@param button CUFUnitButton
@@ -330,7 +330,7 @@ function U:CastBar_CastUpdate(button, event, unit, castID, spellID)
 
     castBar:SetMinMaxValues(0, castBar.max)
     castBar:SetValue(castBar.duration)
-    castBar:UpdateColor()
+    castBar:SetCastBarColor()
 end
 
 ---@param button CUFUnitButton
@@ -670,7 +670,7 @@ end
 -------------------------------------------------
 
 ---@param self CastBarWidget
-local function UpdateColor(self)
+local function SetCastBarColor(self)
     if self.useClassColor then
         local r, g, b = CUF.Util:GetUnitClassColor(self.parent.states.unit)
         self.statusBar:SetStatusBarColor(r, g, b, 1)
@@ -719,7 +719,7 @@ end
 
 ---@param self CastBarWidget
 ---@param width number?
-local function UpdateSpark(self, width)
+local function SetSparkWidth(self, width)
     local spark = self.spark
     if spark.enabled then
         self.statusBar:GetReverseFill()
@@ -737,13 +737,13 @@ end
 
 ---@param self SparkTexture
 ---@param styleTable CastBarSparkOpt
-local function UpdateSparkColor(self, styleTable)
+local function SetSparkColor(self, styleTable)
     self:SetVertexColor(unpack(styleTable.color))
 end
 
 ---@param self CastBarWidget
 ---@param styleTable EmpowerOpt
-local function UpdateEmpower(self, styleTable)
+local function SetEmpowerStyle(self, styleTable)
     self.useFullyCharged = styleTable.useFullyCharged
     self.showEmpowerSpellName = styleTable.showEmpowerName
 
@@ -760,7 +760,7 @@ end
 
 ---@param self CastBarWidget
 ---@param styleTable BorderOpt
-local function UpdateBorder(self, styleTable)
+local function SetBorderStyle(self, styleTable)
     local border = self.border
     if styleTable.showBorder then
         border:Show()
@@ -778,17 +778,13 @@ local function UpdateBorder(self, styleTable)
     border:SetBackdropBorderColor(unpack(styleTable.color))
 
     border:ClearAllPoints()
-    if self.icon then
-        border:SetPoint("TOPLEFT", self.icon, "TOPLEFT", -styleTable.offset, styleTable.offset)
-    else
-        border:SetPoint("TOPLEFT", self, "TOPLEFT", -styleTable.offset, styleTable.offset)
-    end
+    border:SetPoint("TOPLEFT", self, "TOPLEFT", -styleTable.offset, styleTable.offset)
     border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", styleTable.offset, -styleTable.offset)
 end
 
 ---@param self CastBarWidget
 ---@param styleTable CastBarIconOpt
-local function SetIconOptions(self, styleTable)
+local function SetIconStyle(self, styleTable)
     local icon = self.icon
     icon.enabled = styleTable.enabled
     icon.position = styleTable.position
@@ -797,7 +793,7 @@ local function SetIconOptions(self, styleTable)
         icon:SetIconZoom(styleTable.zoom)
     end
 
-    self:Repoint()
+    self:RepointCastBar()
 end
 
 -------------------------------------------------
@@ -848,7 +844,7 @@ function W:CreateCastBar(button)
         [2] = { 0.4, 0.4, 0.4, 1 }, ---@type RGBAOpt
         [3] = { 0.54, 0.3, 0.3, 1 }, ---@type RGBAOpt
         [4] = { 0.65, 0.2, 0.3, 1 }, ---@type RGBAOpt
-        [5] = { 0.77, 0.1, 0.2, 1 }, ---@type RGBAOpt -- Final stage
+        [5] = { 0.77, 0.1, 0.2, 1 }, ---@type RGBAOpt -- Fully charged
     }
     -- Use fully charged color for the final stage
     castBar.useFullyCharged = true
@@ -877,7 +873,7 @@ function W:CreateCastBar(button)
     spark:SetWidth(2)
     spark:SetBlendMode("BLEND")
     spark:SetTexture("Interface\\Buttons\\WHITE8X8")
-    spark.UpdateColor = UpdateSparkColor
+    spark.UpdateColor = SetSparkColor
     spark.enabled = false
 
     ---@class TimerText: FontString
@@ -901,6 +897,7 @@ function W:CreateCastBar(button)
     icon.SetIconZoom = CUF.Util.SetIconZoom
 
     local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
+    border:SetFrameLevel(statusBar:GetFrameLevel() + 1)
 
     castBar.background = background
     castBar.spark = spark
@@ -929,23 +926,21 @@ function W:CreateCastBar(button)
     end
 
     castBar.ResetAttributes = ResetAttributes
-    castBar.UpdateColor = UpdateColor
-    castBar.UpdateSpark = UpdateSpark
-    castBar.UpdateEmpowerPips = UpdateEmpower
-    castBar.UpdateBorder = UpdateBorder
-    castBar.SetFillStyle = SetFillStyle
-
     castBar.UpdateElements = UpdateElements
-    castBar.Repoint = Repoint
-
-    castBar.SetEnabled = W.SetEnabled
-    castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
-    castBar.SetPosition = W.SetPosition
+    castBar.RepointCastBar = RepointCastBar
 
     castBar.SetWidgetSize = function(...)
         W.SetWidgetSize(...)
-        castBar:Repoint()
+        castBar:RepointCastBar()
     end
+    castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+    castBar.SetPosition = W.SetPosition
+    castBar.SetEnabled = W.SetEnabled
 
-    castBar.SetIconOptions = SetIconOptions
+    castBar.SetCastBarColor = SetCastBarColor
+    castBar.SetEmpowerStyle = SetEmpowerStyle
+    castBar.SetBorderStyle = SetBorderStyle
+    castBar.SetIconOptions = SetIconStyle
+    castBar.SetSparkWidth = SetSparkWidth
+    castBar.SetFillStyle = SetFillStyle
 end

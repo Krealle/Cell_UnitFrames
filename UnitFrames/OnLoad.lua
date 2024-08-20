@@ -305,15 +305,18 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
         elseif event == "READY_CHECK_CONFIRM" then
             U:UnitFrame_UpdateReadyCheckIcon(self)
         elseif event == "UNIT_SPELLCAST_START"
-            or event == "UNIT_SPELLCAST_CHANNEL_START" then
+            or event == "UNIT_SPELLCAST_CHANNEL_START"
+            or event == "UNIT_SPELLCAST_EMPOWER_START" then
             ---@diagnostic disable-next-line: param-type-mismatch
             U:CastBar_CastStart(self, event, unit, ...)
         elseif event == "UNIT_SPELLCAST_STOP"
-            or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+            or event == "UNIT_SPELLCAST_CHANNEL_STOP"
+            or event == "UNIT_SPELLCAST_EMPOWER_STOP" then
             ---@diagnostic disable-next-line: param-type-mismatch
             U:CastBar_CastStop(self, event, unit, ...)
         elseif event == "UNIT_SPELLCAST_DELAYED"
-            or event == "UNIT_SPELLCAST_CHANNEL_UPDATE" then
+            or event == "UNIT_SPELLCAST_CHANNEL_UPDATE"
+            or event == "UNIT_SPELLCAST_EMPOWER_UPDATE" then
             ---@diagnostic disable-next-line: param-type-mismatch
             U:CastBar_CastUpdate(self, event, unit, ...)
         elseif event == "UNIT_SPELLCAST_FAILED"

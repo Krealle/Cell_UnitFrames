@@ -73,6 +73,9 @@
 ---@field ResetScroll fun(self: CellScrollFrame)
 ---@field SetContentHeight fun(self: CellScrollFrame, height: number)
 
+---@class CellCheckButton: CheckButton
+---@field label FontString
+
 -------------------------------------------------
 -- MARK: CUF Frames
 -------------------------------------------------

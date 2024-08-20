@@ -21,6 +21,7 @@ local Handler = CUF.Handler
 menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarGeneral,
     Builder.MenuOptions.CastBarColor,
+    Builder.MenuOptions.CastBarEmpower,
     Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.CastBarSpell,
     Builder.MenuOptions.CastBarSpark,
@@ -72,6 +73,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         castBar:UpdateSpark(styleTable.spark)
     end
 
+    if not setting or setting == const.OPTION_KIND.EMPOWER then
+        castBar:UpdateEmpowerPips(styleTable.empower)
+    end
+
     if not setting or setting == const.OPTION_KIND.ENABLED then
         U:ToggleCastEvents(button, styleTable.enabled)
     end
@@ -95,6 +100,11 @@ function U:UnitFrame_UpdateCastBar(button)
         return
     end
 
+    if castBar.casting or castBar.channeling or castBar.empowering then
+        castBar:UpdateElements()
+        return
+    end
+
     U:CastBar_CastStart(button, nil, button.states.unit)
 end
 
@@ -111,8 +121,33 @@ local function ResetAttributes(self)
     self.notInterruptible = nil
     self.spellID = nil
     self.spellName = nil
+    self.displayName = nil
+    self.spellTexture = nil
 
     self:ClearStages()
+end
+
+---@param self CastBarWidget
+local function UpdateElements(self)
+    self:UpdateColor()
+
+    if self.icon then self.icon:SetTexture(self.spellTexture --[[ or FALLBACK_ICON ]]) end
+    if self.spark then self.spark:Show() end
+
+    if self.spellText and self.spellText.enabled then
+        if self.empowering and not self.showEmpowerSpellName then
+            self.spellText:SetText("")
+        else
+            self.spellText:SetText(self.displayName ~= "" and self.displayName
+                or self.spellName)
+        end
+    end
+
+    if self.timerText then self.timerText:SetText() end
+
+    if self.empowering and self:IsShown() then
+        self:UpdatePips()
+    end
 end
 
 ---@param button CUFUnitButton
@@ -170,6 +205,8 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
     castBar.castID = castID
     castBar.spellID = spellID
     castBar.spellName = name
+    castBar.displayName = displayName
+    castBar.spellTexture = texture
 
     if castBar.channeling then
         castBar.duration = endTime - GetTime()
@@ -179,15 +216,8 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
 
     castBar:SetMinMaxValues(0, castBar.max)
     castBar:SetValue(castBar.duration)
-    castBar:UpdateColor()
 
-    if (castBar.icon) then castBar.icon:SetTexture(texture --[[ or FALLBACK_ICON ]]) end
-    if (castBar.spark) then castBar.spark:Show() end
-    if (castBar.spellText and castBar.spellText.enabled) then
-        castBar.spellText:SetText(displayName ~= "" and displayName or
-            name)
-    end
-    if (castBar.timerText) then castBar.timerText:SetText() end
+    castBar:UpdateElements()
 
     castBar:Show()
 
@@ -414,7 +444,7 @@ local function CreatePip(self, stage)
     return pip
 end
 
--- Get color of a stage, final stage will return fully charged color
+-- Get the color for a stage
 ---@param self CastBarWidget
 ---@param stage number
 ---@return number r
@@ -422,8 +452,7 @@ end
 ---@return number b
 ---@return number a
 local function GetStageColor(self, stage)
-    -- Normalize final stage
-    if stage == self.NumStages then
+    if self.useFullyCharged and stage == self.NumStages then
         stage = #self.PipColorMap
     end
 
@@ -614,6 +643,23 @@ local function UpdateSparkColor(self, styleTable)
     self:SetVertexColor(unpack(styleTable.color))
 end
 
+---@param self CastBarWidget
+---@param styleTable EmpowerOpt
+local function UpdateEmpower(self, styleTable)
+    self.useFullyCharged = styleTable.useFullyCharged
+    self.showEmpowerSpellName = styleTable.showEmpowerName
+
+    local colors = styleTable.pipColors
+    self.PipColorMap = {
+        [0] = colors.stageZero,
+        [1] = colors.stageOne,
+        [2] = colors.stageTwo,
+        [3] = colors.stageThree,
+        [4] = colors.stageFour,
+        [5] = colors.fullyCharged,
+    }
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -636,11 +682,13 @@ function W:CreateCastBar(button)
 
     castBar.castID = nil ---@type string?
     castBar.spellName = nil ---@type string?
+    castBar.displayName = nil ---@type string?
     castBar.casting = false ---@type boolean?
     castBar.channeling = false ---@type boolean?
     castBar.empowering = false ---@type boolean?
     castBar.notInterruptible = false ---@type boolean?
     castBar.spellID = 0 ---@type number?
+    castBar.spellTexture = nil ---@type integer?
 
     castBar.interruptibleColor = { 1, 1, 0, 0.25 }
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
@@ -660,8 +708,13 @@ function W:CreateCastBar(button)
         [1] = { 0.3, 0.47, 0.45, 1 }, ---@type RGBAOpt
         [2] = { 0.4, 0.4, 0.4, 1 }, ---@type RGBAOpt
         [3] = { 0.54, 0.3, 0.3, 1 }, ---@type RGBAOpt
-        [4] = { 0.77, 0.1, 0.2, 1 }, ---@type RGBAOpt -- Final stage
+        [4] = { 0.65, 0.2, 0.3, 1 }, ---@type RGBAOpt
+        [5] = { 0.77, 0.1, 0.2, 1 }, ---@type RGBAOpt -- Final stage
     }
+    -- Use fully charged color for the final stage
+    castBar.useFullyCharged = true
+    castBar.showEmpowerSpellName = false
+
     castBar.AddStages = AddStages
     castBar.CreatePip = CreatePip
     castBar.UpdatePips = UpdatePips
@@ -715,6 +768,8 @@ function W:CreateCastBar(button)
     castBar.ResetAttributes = ResetAttributes
     castBar.UpdateColor = UpdateColor
     castBar.UpdateSpark = UpdateSpark
+    castBar.UpdateEmpowerPips = UpdateEmpower
+    castBar.UpdateElements = UpdateElements
 
     castBar.SetEnabled = W.SetEnabled
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel

@@ -112,11 +112,7 @@ local function ResetAttributes(self)
     self.spellID = nil
     self.spellName = nil
 
-    wipe(self.stagePoints)
-
-    --[[ for _, pip in next, castBar.Pips do
-        pip:Hide()
-    end ]]
+    self:ClearStages()
 end
 
 ---@param button CUFUnitButton
@@ -144,8 +140,7 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
     if not name then
         name, displayName, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages =
             UnitChannelInfo(unit)
-        event = "UNIT_SPELLCAST_CHANNEL_START"
-        --event = (numStages and numStages > 0) and "UNIT_SPELLCAST_EMPOWER_START" or "UNIT_SPELLCAST_CHANNEL_START"
+        event = (numStages and numStages > 0) and "UNIT_SPELLCAST_EMPOWER_START" or "UNIT_SPELLCAST_CHANNEL_START"
     end
 
     if not name then
@@ -157,6 +152,13 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
 
     castBar.casting = event == "UNIT_SPELLCAST_START"
     castBar.channeling = event == "UNIT_SPELLCAST_CHANNEL_START"
+    castBar.empowering = event == "UNIT_SPELLCAST_EMPOWER_START"
+
+    if castBar.empowering then
+        endTime = endTime + GetUnitEmpowerHoldAtMaxTime(unit)
+    end
+
+    castBar:ClearStages()
 
     endTime = endTime / 1000
     startTime = startTime / 1000
@@ -188,6 +190,10 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
     if (castBar.timerText) then castBar.timerText:SetText() end
 
     castBar:Show()
+
+    if castBar.empowering then
+        castBar:AddStages(numStages)
+    end
 end
 
 ---@param button CUFUnitButton
@@ -216,6 +222,10 @@ function U:CastBar_CastUpdate(button, event, unit, castID, spellID)
     end
 
     if (not name) then return end
+
+    if castBar.empowering then
+        endTime = endTime + GetUnitEmpowerHoldAtMaxTime(unit)
+    end
 
     endTime = endTime / 1000
     startTime = startTime / 1000
@@ -278,10 +288,6 @@ function U:CastBar_CastFail(button, event, unit, castID, spellID)
 end
 
 ---@param self CastBarWidget
-local function OnUpdateStage(self)
-end
-
----@param self CastBarWidget
 ---@param elapsed number
 local function onUpdate(self, elapsed)
     self.elapsed = (self.elapsed or 0) + elapsed
@@ -308,7 +314,9 @@ local function onUpdate(self, elapsed)
 
         if (self.timerText) and (self.elapsed >= .01) then
             local timerFormat = self.timerText.format
-            if timerFormat == const.CastBarTimerFormat.DURATION then
+            if self.empowering then
+                self.timerText:SetFormattedText("%d", self.CurStage)
+            elseif timerFormat == const.CastBarTimerFormat.DURATION then
                 self.timerText:SetFormattedText("%.1f", self.duration)
             elseif timerFormat == const.CastBarTimerFormat.REMAINING then
                 self.timerText:SetFormattedText("%.1f", (self.max - self.duration))
@@ -325,7 +333,7 @@ local function onUpdate(self, elapsed)
             end
 
             if (self.empowering) then
-                OnUpdateStage(self)
+                self:OnUpdateStage()
             end
 
             self.elapsed = 0
@@ -356,6 +364,12 @@ function U:ToggleCastEvents(button, show)
         button:RegisterEvent("UNIT_SPELLCAST_FAILED")
         button:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 
+        if CUF.vars.isRetail then
+            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_START")
+            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_STOP")
+            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_UPDATE")
+        end
+
         castBar:SetScript("OnUpdate", onUpdate)
     else
         button:UnregisterEvent("UNIT_SPELLCAST_START")
@@ -367,9 +381,170 @@ function U:ToggleCastEvents(button, show)
         button:UnregisterEvent("UNIT_SPELLCAST_FAILED")
         button:UnregisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 
+        if CUF.vars.isRetail then
+            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_START")
+            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_STOP")
+            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_UPDATE")
+        end
+
         castBar:SetScript("OnUpdate", nil)
     end
 end
+
+-------------------------------------------------
+-- MARK: Stages
+-------------------------------------------------
+
+-- NOTE: these constants are defined in the CastingBarFrame.lua file
+local CASTBAR_STAGE_INVALID = -1
+local CASTBAR_STAGE_DURATION_INVALID = -1
+
+-- Create a pip with overlay texture and hidden art line
+---@param self CastBarWidget
+---@param stage number
+local function CreatePip(self, stage)
+    local pip = CreateFrame("Frame", "Pip" .. stage, self, "CastingBarFrameStagePipTemplate")
+
+    -- Hide the art line
+    pip.BasePip:SetAlpha(0)
+
+    pip.texture = pip:CreateTexture("Pip" .. stage .. "Tex", "OVERLAY")
+    pip.texture:SetAllPoints()
+
+    return pip
+end
+
+-- Get color of a stage, final stage will return fully charged color
+---@param self CastBarWidget
+---@param stage number
+---@return number r
+---@return number g
+---@return number b
+---@return number a
+local function GetStageColor(self, stage)
+    -- Normalize final stage
+    if stage == self.NumStages then
+        stage = #self.PipColorMap
+    end
+
+    return unpack(self.PipColorMap[stage])
+end
+
+-- Update textures of all pips
+---@param self CastBarWidget
+local function UpdatePips(self)
+    for stage = 0, self.NumStages do
+        local pip = self.StagePips[stage]
+        pip.texture:SetTexture(self:GetStatusBarTexture():GetTexture())
+
+        local r, g, b, a = self:GetStageColor(stage)
+
+        if stage < self.NumStages then
+            local anchor = self.StagePips[stage + 1]
+            pip.texture:Point("LEFT", self, "RIGHT", 0, 0)
+            pip.texture:Point("RIGHT", anchor, 0, 0)
+            pip.texture:SetVertexColor(r, g, b, a)
+        else
+            pip.texture:Point("LEFT", self, "RIGHT", 0, 0)
+            pip.texture:Point("RIGHT", self, 0, 0)
+            -- Set the last stage to completed color
+            pip.texture:SetVertexColor(r, g, b, a)
+        end
+    end
+end
+
+-- Add stages to the castbar
+---@param self CastBarWidget
+local function AddStages(self, numStages)
+    local stageTotalDuration = 0
+    local stageMaxValue = self.max * 1000
+    local castBarWidth = self:GetWidth()
+    self.NumStages = numStages
+    self.CurStage = CASTBAR_STAGE_INVALID
+
+    for stage = 1, numStages do
+        local duration
+        if (stage > numStages) then
+            duration = GetUnitEmpowerHoldAtMaxTime(self.parent.states.unit)
+        else
+            duration = GetUnitEmpowerStageDuration(self.parent.states.unit, stage - 1)
+        end
+
+        if (duration > CASTBAR_STAGE_DURATION_INVALID) then
+            stageTotalDuration = stageTotalDuration + duration
+            self.StagePoints[stage] = stageTotalDuration
+
+            local portion = stageTotalDuration / stageMaxValue
+            local offset = castBarWidth * portion
+
+            local pip = self.StagePips[stage]
+            if not pip then
+                pip = self:CreatePip(stage)
+                self.StagePips[stage] = pip
+            end
+
+            pip:ClearAllPoints()
+            pip:Show()
+
+            pip:SetPoint("TOP", self, "TOPLEFT", offset, 0)
+            pip:SetPoint("BOTTOM", self, "BOTTOMLEFT", offset, 0)
+
+            -- Create a dummy pip for "stage 0"
+            if stage == 1 then
+                local dummyPip = self.StagePips[stage - 1]
+                if not dummyPip then
+                    dummyPip = CreatePip(self, stage - 1)
+                    self.StagePips[stage - 1] = dummyPip
+                end
+
+                dummyPip:ClearAllPoints()
+                dummyPip:Show()
+
+                dummyPip:SetPoint("TOP", self, "TOPLEFT", 0, 0)
+                dummyPip:SetPoint("BOTTOM", pip, "BOTTOMRIGHT", 0, 0)
+            end
+        end
+    end
+
+    self:UpdatePips()
+end
+
+-- Hide all stages and reset stage counter
+---@param self CastBarWidget
+local function ClearStages(self)
+    for _, pip in pairs(self.StagePips) do
+        pip:Hide()
+    end
+
+    self.NumStages = 0
+    table.wipe(self.StagePoints)
+end
+
+-- Update current stage
+---@param self CastBarWidget
+local function OnUpdateStage(self)
+    local maxStage = 0
+    local stageValue = self.duration * 1000
+    for i = 1, self.NumStages do
+        local step = self.StagePoints[i]
+        if not step or stageValue < step then
+            break
+        else
+            maxStage = i
+        end
+    end
+
+    if maxStage ~= self.CurStage then
+        self.CurStage = maxStage
+    end
+
+    -- TODO: Add logic for hitting different stages
+    -- eg. glow when fully charged
+end
+
+-------------------------------------------------
+-- MARK: Options
+-------------------------------------------------
 
 ---@param self CastBarWidget
 local function UpdateColor(self)
@@ -466,17 +641,33 @@ function W:CreateCastBar(button)
     castBar.empowering = false ---@type boolean?
     castBar.notInterruptible = false ---@type boolean?
     castBar.spellID = 0 ---@type number?
-    castBar.numStages = nil ---@type number?
-    castBar.curStage = nil ---@type number?
-    castBar.stagePoints = {}
 
     castBar.interruptibleColor = { 1, 1, 0, 0.25 }
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
     castBar.useClassColor = false
 
-    castBar:SetSize(200, 30)
-    castBar:SetPoint("TOPLEFT", button, "BOTTOMLEFT", 0, -20)
-    castBar:Hide()
+    -- Number of stages in current empower
+    castBar.NumStages = 0
+    -- Current stage defaults to CASTBAR_STAGE_INVALID (-1)
+    castBar.CurStage = CASTBAR_STAGE_INVALID
+    -- Map stages to duration
+    castBar.StagePoints = {} ---@type number[]
+    -- Table of all stage pips
+    castBar.StagePips = {}
+    -- Color map for each stage
+    castBar.PipColorMap = {
+        [0] = { 0.2, 0.57, 0.5, 1 }, ---@type RGBAOpt -- Dummy stage
+        [1] = { 0.3, 0.47, 0.45, 1 }, ---@type RGBAOpt
+        [2] = { 0.4, 0.4, 0.4, 1 }, ---@type RGBAOpt
+        [3] = { 0.54, 0.3, 0.3, 1 }, ---@type RGBAOpt
+        [4] = { 0.77, 0.1, 0.2, 1 }, ---@type RGBAOpt -- Final stage
+    }
+    castBar.AddStages = AddStages
+    castBar.CreatePip = CreatePip
+    castBar.UpdatePips = UpdatePips
+    castBar.ClearStages = ClearStages
+    castBar.GetStageColor = GetStageColor
+    castBar.OnUpdateStage = OnUpdateStage
 
     local background = castBar:CreateTexture(nil, "BACKGROUND")
     background:SetAllPoints(castBar)

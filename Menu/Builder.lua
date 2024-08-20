@@ -49,6 +49,7 @@ Builder.MenuOptions = {
     CastBarSpark = 25,
     CastBarEmpower = 26,
     CastBarBorder = 27,
+    CastBarIcon = 28,
 }
 
 -------------------------------------------------
@@ -1514,6 +1515,35 @@ function Builder:CreatCastBarBorderOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarIconOptions
+function Builder:CreateCastBarIconOptions(parent, widgetName)
+    ---@class CastBarIconOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarIconOptions"
+    f.optionHeight = 65
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Icon")
+
+    local iconPath = const.OPTION_KIND.ICON .. "."
+    -- First Row
+    f.showIcon = self:CreateCheckBox(f, widgetName, L.ShowIcon,
+        iconPath .. const.OPTION_KIND.ENABLED)
+    self:AnchorBelow(f.showIcon, f.title)
+
+    f.zoom = self:CreateSlider(f, widgetName, L.Zoom, nil, 0, 100,
+        iconPath .. const.OPTION_KIND.ZOOM)
+    self:AnchorRightOfCB(f.zoom, f.showIcon)
+
+    f.position = self:CreateDropdown(f, widgetName, L["Position"], nil,
+        { "left", "right" }, iconPath .. const.OPTION_KIND.POSITION)
+    self:AnchorRight(f.position, f.zoom)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1547,4 +1577,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
     [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
     [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
+    [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
 }

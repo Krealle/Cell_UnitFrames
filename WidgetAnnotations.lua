@@ -200,6 +200,7 @@
 ---@field spark CastBarSparkOpt
 ---@field empower EmpowerOpt
 ---@field border BorderOpt
+---@field icon CastBarIconOpt
 
 ---@class CastBarColorsOpt
 ---@field texture string
@@ -211,6 +212,13 @@
 ---@class CastBarSparkOpt
 ---@field enabled boolean
 ---@field width number
+---@field color RGBAOpt
+
+---@class CastBarIconOpt
+---@field enabled boolean
+---@field position "left"|"right"
+---@field zoom number
+
 ---@field color RGBAOpt
 
 ---@class EmpowerOpt

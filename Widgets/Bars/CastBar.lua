@@ -26,6 +26,7 @@ menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarSpell,
     Builder.MenuOptions.CastBarSpark,
     Builder.MenuOptions.CastBarBorder,
+    Builder.MenuOptions.CastBarIcon,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -80,6 +81,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
 
     if not setting or setting == const.OPTION_KIND.BORDER then
         castBar:UpdateBorder(styleTable.border)
+    end
+
+    if not setting or setting == const.OPTION_KIND.ICON then
+        castBar:SetIconOptions(styleTable.icon)
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then
@@ -693,6 +698,15 @@ local function UpdateBorder(self, styleTable)
     border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", styleTable.offset, -styleTable.offset)
 end
 
+---@param self CastBarWidget
+---@param styleTable CastBarIconOpt
+local function SetIconOptions(self, styleTable)
+    local icon = self.icon
+    icon.enabled = styleTable.enabled
+    icon.position = styleTable.position
+    icon.zoom = styleTable.zoom
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -781,9 +795,13 @@ function W:CreateCastBar(button)
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
 
+    ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")
     icon:SetSize(30, 30)
     icon:SetPoint("RIGHT", castBar, "LEFT")
+    icon.enabled = true
+    icon.position = "left"
+    icon.zoom = 30
 
     local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
 
@@ -813,4 +831,5 @@ function W:CreateCastBar(button)
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
     castBar.SetWidgetSize = W.SetWidgetSize
     castBar.SetPosition = W.SetPosition
+    castBar.SetIconOptions = SetIconOptions
 end

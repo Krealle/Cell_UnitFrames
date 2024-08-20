@@ -422,6 +422,11 @@ Defaults.Widgets = {
             offset = 0,
             size = 1,
             color = { 0, 0, 0, 1 }
+        },
+        icon = {
+            enabled = true,
+            position = "left",
+            zoom = 30,
         }
     }
 }

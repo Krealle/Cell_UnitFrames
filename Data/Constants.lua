@@ -132,6 +132,8 @@ const.OPTION_KIND = {
     BORDER = "border",
     OFFSET = "offset",
     SHOW_BORDER = "showBorder",
+    ICON = "icon",
+    ZOOM = "zoom",
 }
 
 ---@enum AURA_OPTION_KIND

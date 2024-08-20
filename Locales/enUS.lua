@@ -53,6 +53,8 @@ L.FullyCharged = "Fully Charged"
 L.UseFullyCharged = "Use Fully Charged"
 L.ShowEmpowerName = "Show Empower Name"
 L.ShowBorder = "Show Border"
+L.ShowIcon = "Show Icon"
+L.Zoom = "Zoom"
 
 L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
 L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"
@@ -79,6 +81,8 @@ L.Frame = "Frame"
 L.UnitFrames = "Unit Frames"
 L.RelativeTo = "Relative To"
 L.Texture = "Texture"
+L["left"] = "Left"
+L["right"] = "Right"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

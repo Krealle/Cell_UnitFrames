@@ -490,8 +490,13 @@ local CASTBAR_STAGE_DURATION_INVALID = -1
 
 -- Create a pip with overlay texture and hidden art line
 ---@param self CastBarWidget
-local function CreatePip(self)
+---@param stage number
+---@return Pip
+local function CreatePip(self, stage)
+    ---@class Pip: Frame
+    ---@field BasePip Frame
     local pip = CreateFrame("Frame", nil, self.statusBar, "CastingBarFrameStagePipTemplate")
+    pip.stage = stage
 
     -- Hide the art line
     pip.BasePip:SetAlpha(0)
@@ -504,10 +509,11 @@ end
 
 ---@param self CastBarWidget
 ---@param stage number
+---@return Pip
 local function GetPip(self, stage)
     local pip = self.StagePips[stage]
     if not pip then
-        pip = self:CreatePip()
+        pip = self:CreatePip(stage)
         self.StagePips[stage] = pip
     end
 
@@ -531,15 +537,15 @@ end
 
 -- Point pip to the next pip or the castbar
 ---@param self CastBarWidget
----@param pip any
----@param stage number
----@param reversed boolean
-local function RepointPip(self, pip, stage, reversed)
+---@param pip Pip
+local function RepointPip(self, pip)
+    local reversed = self.statusBar:GetReverseFill()
+
     local point = reversed and "LEFT" or "RIGHT"
     local relativePoint = reversed and "RIGHT" or "LEFT"
 
-    if stage < self.NumStages then
-        pip:SetPoint(point, self:GetPip(stage + 1), relativePoint, 0, 0)
+    if pip.stage < self.NumStages then
+        pip:SetPoint(point, self:GetPip(pip.stage + 1), relativePoint, 0, 0)
     else
         pip:SetPoint(point, self.statusBar, point, 0, 0)
     end
@@ -547,22 +553,19 @@ end
 
 -- Update pip texture/color
 ---@param self CastBarWidget
----@param stage number
-local function UpdatePipTexture(self, stage)
-    local pip = self:GetPip(stage)
-
+---@param pip Pip
+local function UpdatePipTexture(self, pip)
     pip.texture:SetTexture(self.statusBar:GetStatusBarTexture():GetTexture())
-    pip.texture:SetVertexColor(self:GetStageColor(stage))
+    pip.texture:SetVertexColor(self:GetStageColor(pip.stage))
 end
 
 -- Repoint and update pip textures of all pips
 ---@param self CastBarWidget
 local function UpdatePips(self)
-    local reversed = self.statusBar:GetReverseFill()
-
     for stage = 0, self.NumStages do
-        self:UpdatePipTexture(stage)
-        self:RepointPip(self:GetPip(stage), stage, reversed)
+        local pip = self:GetPip(stage)
+        self:UpdatePipTexture(pip)
+        self:RepointPip(pip)
     end
 end
 
@@ -607,8 +610,8 @@ local function AddStages(self, numStages)
                 pip:SetPoint("BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
             end
 
-            self:RepointPip(pip, stage, reversed)
-            self:UpdatePipTexture(stage)
+            self:RepointPip(pip)
+            self:UpdatePipTexture(pip)
 
             -- Create a dummy pip for "stage 0"
             if stage == 1 then
@@ -623,7 +626,7 @@ local function AddStages(self, numStages)
                     dummyPip:SetPoint("TOPLEFT", castBar, "TOPLEFT", 0, 0)
                     dummyPip:SetPoint("BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
                 end
-                self:UpdatePipTexture(0)
+                self:UpdatePipTexture(dummyPip)
             end
         end
     end

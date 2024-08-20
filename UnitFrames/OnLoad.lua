@@ -550,8 +550,6 @@ function CUFUnitButton_OnLoad(button)
     -- Widgets
     W:CreateHealthBar(button)
     W:CreatePowerBar(button)
-    W:CreateShieldBar(button)
-    W:CreateCastBar(button)
 
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)

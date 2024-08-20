@@ -945,3 +945,5 @@ function W:CreateCastBar(button)
     castBar.SetSparkWidth = SetSparkWidth
     castBar.SetFillStyle = SetFillStyle
 end
+
+W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CAST_BAR, W.CreateCastBar)

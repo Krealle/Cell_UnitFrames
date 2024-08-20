@@ -378,25 +378,25 @@ Defaults.Widgets = {
         reverse = false,
         timer = {
             enabled = true,
-            size = 12,
+            size = 16,
             outline = "Outline",
-            shadow = false,
+            shadow = true,
             style = "Cell Default",
             point = "RIGHT",
-            offsetY = 0,
+            offsetY = -3,
             offsetX = 0,
             rgb = { 1, 1, 1 },
         },
         timerFormat = "normal",
         spell = {
             enabled = true,
-            size = 12,
+            size = 16,
             outline = "Outline",
-            shadow = false,
+            shadow = true,
             style = "Cell Default",
             point = "LEFT",
             offsetY = 0,
-            offsetX = 0,
+            offsetX = 4,
             rgb = { 1, 1, 1 },
         },
         showSpell = true,
@@ -426,7 +426,7 @@ Defaults.Widgets = {
         icon = {
             enabled = true,
             position = "left",
-            zoom = 30,
+            zoom = 0,
         }
     }
 }

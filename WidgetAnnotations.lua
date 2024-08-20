@@ -219,8 +219,6 @@
 ---@field position "left"|"right"
 ---@field zoom number
 
----@field color RGBAOpt
-
 ---@class EmpowerOpt
 ---@field pipColors EmpowerColorOpt
 ---@field useFullyCharged boolean

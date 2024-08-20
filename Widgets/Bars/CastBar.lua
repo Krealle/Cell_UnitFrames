@@ -71,7 +71,7 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
 
     if not setting or setting == const.OPTION_KIND.SPARK then
         castBar.spark.enabled = styleTable.spark.enabled
-        castBar.spark:UpdateColor(styleTable.spark)
+        castBar:SetSparkColor(styleTable.spark)
         castBar:SetSparkWidth(styleTable.spark.width)
     end
 
@@ -176,7 +176,7 @@ local function RepointCastBar(self)
         bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
         bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
 
-        UpdateElements(self)
+        self:UpdateElements()
         return
     end
 
@@ -238,7 +238,7 @@ function U:CastBar_CastStart(button, event, unit, castGUID)
     end
 
     if not name then
-        ResetAttributes(castBar)
+        castBar:ResetAttributes()
         castBar:Hide()
 
         return
@@ -352,7 +352,7 @@ function U:CastBar_CastStop(button, event, unit, castID, spellID, complete)
         return
     end
 
-    ResetAttributes(castBar)
+    castBar:ResetAttributes()
 end
 
 ---@param button CUFUnitButton
@@ -373,8 +373,12 @@ function U:CastBar_CastFail(button, event, unit, castID, spellID)
         return
     end
 
-    ResetAttributes(castBar)
+    castBar:ResetAttributes()
 end
+
+-------------------------------------------------
+-- MARK: OnUpdate
+-------------------------------------------------
 
 ---@param self CastBarWidget
 ---@param elapsed number
@@ -735,10 +739,10 @@ local function SetSparkWidth(self, width)
     end
 end
 
----@param self SparkTexture
+---@param self CastBarWidget
 ---@param styleTable CastBarSparkOpt
 local function SetSparkColor(self, styleTable)
-    self:SetVertexColor(unpack(styleTable.color))
+    self.spark:SetVertexColor(unpack(styleTable.color))
 end
 
 ---@param self CastBarWidget
@@ -873,19 +877,16 @@ function W:CreateCastBar(button)
     spark:SetWidth(2)
     spark:SetBlendMode("BLEND")
     spark:SetTexture("Interface\\Buttons\\WHITE8X8")
-    spark.UpdateColor = SetSparkColor
     spark.enabled = false
 
     ---@class TimerText: FontString
     local timerText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
-    timerText:SetPoint("RIGHT", statusBar)
     timerText.SetFontStyle = SetFontStyle
     timerText.SetPosition = SetFontPosition
     timerText.format = const.CastBarTimerFormat.REMAINING
 
     ---@class SpellText: FontString
     local spellText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
-    spellText:SetPoint("LEFT", statusBar, 30, 0)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
@@ -941,6 +942,7 @@ function W:CreateCastBar(button)
     castBar.SetEmpowerStyle = SetEmpowerStyle
     castBar.SetBorderStyle = SetBorderStyle
     castBar.SetIconOptions = SetIconStyle
+    castBar.SetSparkColor = SetSparkColor
     castBar.SetSparkWidth = SetSparkWidth
     castBar.SetFillStyle = SetFillStyle
 end

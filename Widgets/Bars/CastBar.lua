@@ -40,7 +40,7 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
 
     if not setting or setting == const.OPTION_KIND.COLOR then
         if not subSetting or subSetting == const.OPTION_KIND.TEXTURE then
-            castBar:SetStatusBarTexture(styleTable.color.texture)
+            castBar.statusBar:SetStatusBarTexture(styleTable.color.texture)
         end
         if not subSetting or subSetting == const.OPTION_KIND.USE_CLASS_COLOR then
             castBar.useClassColor = styleTable.color.useClassColor
@@ -157,6 +157,40 @@ local function UpdateElements(self)
 
     if self.empowering and self:IsShown() then
         self:UpdatePips()
+    end
+end
+
+-- Repoint Icon and StatusBar
+---@param self CastBarWidget
+local function Repoint(self)
+    local bar = self.statusBar
+    local icon = self.icon
+
+    bar:ClearAllPoints()
+    if not icon.enabled then
+        icon:Hide()
+        bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+        bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+
+        UpdateElements(self)
+        return
+    end
+
+    local barHeight = self:GetHeight()
+    icon:SetSize(barHeight, barHeight)
+    icon:Show()
+
+    icon:ClearAllPoints()
+    if icon.position == "left" then
+        icon:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+
+        bar:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 0)
+        bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+    else
+        icon:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
+
+        bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+        bar:SetPoint("BOTTOMRIGHT", icon, "BOTTOMLEFT", 0, 0)
     end
 end
 
@@ -443,7 +477,7 @@ local CASTBAR_STAGE_DURATION_INVALID = -1
 ---@param self CastBarWidget
 ---@param stage number
 local function CreatePip(self, stage)
-    local pip = CreateFrame("Frame", "Pip" .. stage, self, "CastingBarFrameStagePipTemplate")
+    local pip = CreateFrame("Frame", "Pip" .. stage, self.statusBar, "CastingBarFrameStagePipTemplate")
 
     -- Hide the art line
     pip.BasePip:SetAlpha(0)
@@ -472,20 +506,21 @@ end
 -- Update textures of all pips
 ---@param self CastBarWidget
 local function UpdatePips(self)
+    local castBar = self.statusBar
     for stage = 0, self.NumStages do
         local pip = self.StagePips[stage]
-        pip.texture:SetTexture(self:GetStatusBarTexture():GetTexture())
+        pip.texture:SetTexture(castBar:GetStatusBarTexture():GetTexture())
 
         local r, g, b, a = self:GetStageColor(stage)
 
         if stage < self.NumStages then
             local anchor = self.StagePips[stage + 1]
-            pip.texture:Point("LEFT", self, "RIGHT", 0, 0)
+            pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
             pip.texture:Point("RIGHT", anchor, 0, 0)
             pip.texture:SetVertexColor(r, g, b, a)
         else
-            pip.texture:Point("LEFT", self, "RIGHT", 0, 0)
-            pip.texture:Point("RIGHT", self, 0, 0)
+            pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
+            pip.texture:Point("RIGHT", castBar, 0, 0)
             -- Set the last stage to completed color
             pip.texture:SetVertexColor(r, g, b, a)
         end
@@ -539,7 +574,7 @@ local function AddStages(self, numStages)
                 dummyPip:ClearAllPoints()
                 dummyPip:Show()
 
-                dummyPip:SetPoint("TOP", self, "TOPLEFT", 0, 0)
+                dummyPip:SetPoint("TOP", self.statusBar, "TOPLEFT", 0, 0)
                 dummyPip:SetPoint("BOTTOM", pip, "BOTTOMRIGHT", 0, 0)
             end
         end
@@ -589,11 +624,11 @@ end
 local function UpdateColor(self)
     if self.useClassColor then
         local r, g, b = CUF.Util:GetUnitClassColor(self.parent.states.unit)
-        self:SetStatusBarColor(r, g, b, 1)
+        self.statusBar:SetStatusBarColor(r, g, b, 1)
     elseif self.notInterruptible then
-        self:SetStatusBarColor(unpack(self.nonInterruptibleColor))
+        self.statusBar:SetStatusBarColor(unpack(self.nonInterruptibleColor))
     else
-        self:SetStatusBarColor(unpack(self.interruptibleColor))
+        self.statusBar:SetStatusBarColor(unpack(self.interruptibleColor))
     end
 end
 
@@ -639,7 +674,7 @@ local function UpdateSpark(self, styleTable)
     local spark = self.spark
     if spark.enabled then
         spark:ClearAllPoints()
-        spark:SetPoint("CENTER", self:GetStatusBarTexture(), "RIGHT")
+        spark:SetPoint("CENTER", self.statusBar:GetStatusBarTexture(), "RIGHT")
         spark:SetHeight(self:GetHeight())
         spark:SetWidth(styleTable.width)
     else
@@ -704,7 +739,12 @@ local function SetIconOptions(self, styleTable)
     local icon = self.icon
     icon.enabled = styleTable.enabled
     icon.position = styleTable.position
-    icon.zoom = styleTable.zoom
+
+    if styleTable.enabled then
+        icon:SetIconZoom(styleTable.zoom)
+    end
+
+    self:Repoint()
 end
 
 -------------------------------------------------
@@ -713,14 +753,13 @@ end
 
 ---@param button CUFUnitButton
 function W:CreateCastBar(button)
-    ---@class CastBarWidget: StatusBar, BaseWidget, BackdropTemplate
+    ---@class CastBarWidget: Frame, BaseWidget
     ---@field max number
     ---@field startTime number
     ---@field duration number
     ---@field elapsed number
-    local castBar = CreateFrame("StatusBar", button:GetName() .. "_CastBar", button, "BackdropTemplate")
+    local castBar = CreateFrame("Frame", button:GetName() .. "_CastBar", button)
     button.widgets.castBar = castBar
-    castBar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 
     castBar.id = const.WIDGET_KIND.CAST_BAR
     castBar.enabled = true
@@ -769,12 +808,16 @@ function W:CreateCastBar(button)
     castBar.GetStageColor = GetStageColor
     castBar.OnUpdateStage = OnUpdateStage
 
-    local background = castBar:CreateTexture(nil, "BACKGROUND")
-    background:SetAllPoints(castBar)
+    ---@class CastBar: StatusBar, BackdropTemplate
+    local statusBar = CreateFrame("StatusBar", nil, castBar, "BackdropTemplate")
+    statusBar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
+
+    local background = statusBar:CreateTexture(nil, "BACKGROUND")
+    background:SetAllPoints(statusBar)
     background:SetColorTexture(1, 1, 1, .5)
 
     ---@class SparkTexture: Texture
-    local spark = castBar:CreateTexture(nil, "OVERLAY")
+    local spark = statusBar:CreateTexture(nil, "OVERLAY")
     spark:SetWidth(2)
     spark:SetBlendMode("BLEND")
     spark:SetTexture("Interface\\Buttons\\WHITE8X8")
@@ -782,26 +825,24 @@ function W:CreateCastBar(button)
     spark.enabled = false
 
     ---@class TimerText: FontString
-    local timerText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
-    timerText:SetPoint("RIGHT", castBar)
+    local timerText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    timerText:SetPoint("RIGHT", statusBar)
     timerText.SetFontStyle = SetFontStyle
     timerText.SetPosition = SetFontPosition
     timerText.format = const.CastBarTimerFormat.REMAINING
 
     ---@class SpellText: FontString
-    local spellText = castBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
-    spellText:SetPoint("LEFT", castBar, 30, 0)
+    local spellText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    spellText:SetPoint("LEFT", statusBar, 30, 0)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
 
     ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")
-    icon:SetSize(30, 30)
-    icon:SetPoint("RIGHT", castBar, "LEFT")
     icon.enabled = true
     icon.position = "left"
-    icon.zoom = 30
+    icon.SetIconZoom = CUF.Util.SetIconZoom
 
     local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
 
@@ -811,12 +852,24 @@ function W:CreateCastBar(button)
     castBar.spellText = spellText
     castBar.icon = icon
     castBar.border = border
+    castBar.statusBar = statusBar
 
     ---@param bar CastBarWidget
     ---@param val boolean
     castBar._SetIsSelected = function(bar, val)
         bar._isSelected = val
         --U:UnitFrame_UpdateCastBar(button)
+    end
+
+    ---@param val number
+    function castBar:SetValue(val)
+        self.statusBar:SetValue(val)
+    end
+
+    ---@param min number
+    ---@param max number
+    function castBar:SetMinMaxValues(min, max)
+        self.statusBar:SetMinMaxValues(min, max)
     end
 
     castBar.ResetAttributes = ResetAttributes
@@ -826,10 +879,16 @@ function W:CreateCastBar(button)
     castBar.UpdateBorder = UpdateBorder
 
     castBar.UpdateElements = UpdateElements
+    castBar.Repoint = Repoint
 
     castBar.SetEnabled = W.SetEnabled
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
-    castBar.SetWidgetSize = W.SetWidgetSize
     castBar.SetPosition = W.SetPosition
+
+    castBar.SetWidgetSize = function(...)
+        W.SetWidgetSize(...)
+        castBar:Repoint()
+    end
+
     castBar.SetIconOptions = SetIconOptions
 end

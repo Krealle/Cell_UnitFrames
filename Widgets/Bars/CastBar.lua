@@ -752,11 +752,22 @@ function W:CreateCastBar(button)
     icon:SetSize(30, 30)
     icon:SetPoint("RIGHT", castBar, "LEFT")
 
+    local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
+    border:SetPoint("TOPLEFT", icon, "TOPLEFT")
+    border:SetPoint("BOTTOMRIGHT")
+    border:SetBackdrop({
+        bgFile = nil,
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = 1,
+    })
+    border:SetBackdropBorderColor(0, 0, 0, 1)
+
     castBar.background = background
     castBar.spark = spark
     castBar.timerText = timerText
     castBar.spellText = spellText
     castBar.icon = icon
+    castBar.border = border
 
     ---@param bar CastBarWidget
     ---@param val boolean

@@ -477,12 +477,12 @@ local CASTBAR_STAGE_DURATION_INVALID = -1
 ---@param self CastBarWidget
 ---@param stage number
 local function CreatePip(self, stage)
-    local pip = CreateFrame("Frame", "Pip" .. stage, self.statusBar, "CastingBarFrameStagePipTemplate")
+    local pip = CreateFrame("Frame", nil, self.statusBar, "CastingBarFrameStagePipTemplate")
 
     -- Hide the art line
     pip.BasePip:SetAlpha(0)
 
-    pip.texture = pip:CreateTexture("Pip" .. stage .. "Tex", "OVERLAY")
+    pip.texture = pip:CreateTexture(nil, "OVERLAY")
     pip.texture:SetAllPoints()
 
     return pip
@@ -507,22 +507,20 @@ end
 ---@param self CastBarWidget
 local function UpdatePips(self)
     local castBar = self.statusBar
+
     for stage = 0, self.NumStages do
         local pip = self.StagePips[stage]
         pip.texture:SetTexture(castBar:GetStatusBarTexture():GetTexture())
 
         local r, g, b, a = self:GetStageColor(stage)
+        pip.texture:SetVertexColor(r, g, b, a)
+        pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
 
         if stage < self.NumStages then
             local anchor = self.StagePips[stage + 1]
-            pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
             pip.texture:Point("RIGHT", anchor, 0, 0)
-            pip.texture:SetVertexColor(r, g, b, a)
         else
-            pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
             pip.texture:Point("RIGHT", castBar, 0, 0)
-            -- Set the last stage to completed color
-            pip.texture:SetVertexColor(r, g, b, a)
         end
     end
 end
@@ -530,9 +528,11 @@ end
 -- Add stages to the castbar
 ---@param self CastBarWidget
 local function AddStages(self, numStages)
+    local castBar = self.statusBar
+
     local stageTotalDuration = 0
     local stageMaxValue = self.max * 1000
-    local castBarWidth = self:GetWidth()
+    local castBarWidth = castBar:GetWidth()
     self.NumStages = numStages
     self.CurStage = CASTBAR_STAGE_INVALID
 
@@ -560,22 +560,22 @@ local function AddStages(self, numStages)
             pip:ClearAllPoints()
             pip:Show()
 
-            pip:SetPoint("TOP", self, "TOPLEFT", offset, 0)
-            pip:SetPoint("BOTTOM", self, "BOTTOMLEFT", offset, 0)
+            pip:SetPoint("TOPLEFT", castBar, "TOPLEFT", offset, 0)
+            pip:SetPoint("BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
 
             -- Create a dummy pip for "stage 0"
             if stage == 1 then
                 local dummyPip = self.StagePips[stage - 1]
                 if not dummyPip then
-                    dummyPip = CreatePip(self, stage - 1)
+                    dummyPip = self:CreatePip(stage - 1)
                     self.StagePips[stage - 1] = dummyPip
                 end
 
                 dummyPip:ClearAllPoints()
                 dummyPip:Show()
 
-                dummyPip:SetPoint("TOP", self.statusBar, "TOPLEFT", 0, 0)
-                dummyPip:SetPoint("BOTTOM", pip, "BOTTOMRIGHT", 0, 0)
+                dummyPip:SetPoint("TOPLEFT", castBar, "TOPLEFT", 0, 0)
+                dummyPip:SetPoint("BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
             end
         end
     end

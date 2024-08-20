@@ -553,13 +553,6 @@ function CUFUnitButton_OnLoad(button)
     W:CreateShieldBar(button)
     W:CreateCastBar(button)
 
-    W:CreateRaidIcon(button)
-    W:CreateRoleIcon(button)
-    W:CreateLeaderIcon(button)
-    W:CreateCombatIcon(button)
-    W:CreateReadyCheckIcon(button)
-    W:CreateRestingIcon(button)
-
     button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
     button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
 

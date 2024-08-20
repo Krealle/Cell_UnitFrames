@@ -106,3 +106,5 @@ function W:CreateRoleIcon(button)
     roleIcon.SetWidgetSize = W.SetWidgetSize
     roleIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.ROLE_ICON, W.CreateRoleIcon)

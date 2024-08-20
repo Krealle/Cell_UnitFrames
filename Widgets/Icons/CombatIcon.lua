@@ -84,3 +84,5 @@ function W:CreateCombatIcon(button)
     combatIcon.SetWidgetSize = W.SetWidgetSize
     combatIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.COMBAT_ICON, W.CreateCombatIcon)

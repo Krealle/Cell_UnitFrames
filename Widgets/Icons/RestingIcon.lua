@@ -87,3 +87,5 @@ function W:CreateRestingIcon(button)
     restingIcon.SetWidgetSize = W.SetWidgetSize
     restingIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.RESTING_ICON, W.CreateRestingIcon)

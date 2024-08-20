@@ -97,3 +97,5 @@ function W:CreateReadyCheckIcon(button)
     readyCheckIcon.SetWidgetSize = W.SetWidgetSize
     readyCheckIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.READY_CHECK_ICON, W.CreateReadyCheckIcon)

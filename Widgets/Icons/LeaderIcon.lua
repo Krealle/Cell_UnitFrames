@@ -108,3 +108,5 @@ function W:CreateLeaderIcon(button)
     leaderIcon.SetWidgetSize = W.SetWidgetSize
     leaderIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.LEADER_ICON, W.CreateLeaderIcon)

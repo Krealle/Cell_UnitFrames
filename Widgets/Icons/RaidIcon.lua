@@ -92,3 +92,5 @@ function W:CreateRaidIcon(button)
     raidIcon.SetWidgetSize = W.SetWidgetSize
     raidIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.RAID_ICON, W.CreateRaidIcon)

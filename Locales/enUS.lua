@@ -47,6 +47,14 @@ L["remaining"] = "Remaining"
 L["duration"] = "Duration"
 L["duration-and-max"] = "Duration & Max"
 L.ShowSpell = "Show Spell"
+L.Empower = "Empower"
+L.Stage = "Stage"
+L.FullyCharged = "Fully Charged"
+L.UseFullyCharged = "Use Fully Charged"
+L.ShowEmpowerName = "Show Empower Name"
+
+L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
+L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"
 
 -- Widgets
 L.Widgets = "Widgets"

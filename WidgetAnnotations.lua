@@ -198,6 +198,7 @@
 ---@field spell BigFontOpt
 ---@field showSpell boolean
 ---@field spark CastBarSparkOpt
+---@field empower EmpowerOpt
 
 ---@class CastBarColorsOpt
 ---@field texture string
@@ -210,6 +211,19 @@
 ---@field enabled boolean
 ---@field width number
 ---@field color RGBAOpt
+
+---@class EmpowerOpt
+---@field pipColors EmpowerColorOpt
+---@field useFullyCharged boolean
+---@field showEmpowerName boolean
+
+---@class EmpowerColorOpt
+---@field stageZero RGBAOpt
+---@field stageOne RGBAOpt
+---@field stageTwo RGBAOpt
+---@field stageThree RGBAOpt
+---@field stageFour RGBAOpt
+---@field fullyCharged RGBAOpt
 
 -------------------------------------------------
 -- MARK: Generic Options

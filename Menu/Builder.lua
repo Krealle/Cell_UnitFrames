@@ -47,6 +47,7 @@ Builder.MenuOptions = {
     CastBarTimer = 23,
     CastBarSpell = 24,
     CastBarSpark = 25,
+    CastBarEmpower = 26,
 }
 
 -------------------------------------------------
@@ -1346,7 +1347,6 @@ function Builder:CreateCastBarColorOptions(parent, widgetName)
         path .. const.OPTION_KIND.NON_INTERRUPTIBLE)
     self:AnchorRightOfColorPicker(f.nonInterruptible, f.interruptible)
 
-    -- Fourth Row
     f.background = self:CreateColorPickerOptions(f, widgetName, L.Background,
         path .. const.OPTION_KIND.BACKGROUND)
     self:AnchorRightOfColorPicker(f.background, f.nonInterruptible)
@@ -1415,6 +1415,69 @@ function Builder:CreateCastBarSparkOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarEmpowerOptions
+function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
+    ---@class CastBarEmpowerOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarEmpowerOptions"
+    f.optionHeight = 170
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Empower")
+
+    -- First Row
+    f.useFullyCharged = self:CreateCheckBox(f, widgetName, L.UseFullyCharged,
+        const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.USE_FULLY_CHARGED,
+        L.UseFullyChargedTooltip)
+    self:AnchorBelow(f.useFullyCharged, f.title)
+    CUF:DevAdd(f.useFullyCharged, "UseFullyCharged")
+
+    f.showEmpowerName = self:CreateCheckBox(f, widgetName, L.ShowEmpowerName,
+        const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.SHOW_EMPOWER_NAME,
+        L.ShowEmpowerNameTooltip)
+    f.showEmpowerName:SetPoint("TOPLEFT", f.useFullyCharged, "TOPLEFT",
+        (self.spacingX * 1.5) + f.useFullyCharged.label:GetWidth(), 0)
+
+    -- Second Row
+    local colorPath = const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.PIP_COLORS .. "."
+
+    f.stageZero = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 0 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_ZERO)
+    self:AnchorBelow(f.stageZero, f.useFullyCharged)
+
+    f.stageOne = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 1 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_ONE)
+    self:AnchorRightOfColorPicker(f.stageOne, f.stageZero)
+
+    f.stageTwo = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 2 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_TWO)
+    self:AnchorRightOfColorPicker(f.stageTwo, f.stageOne)
+
+    -- Third Row
+    f.stageThree = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 3 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_THREE)
+    self:AnchorBelowCB(f.stageThree, f.stageZero)
+
+    f.stageFour = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 4 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_FOUR)
+    self:AnchorRightOfColorPicker(f.stageFour, f.stageThree)
+
+    -- Fourth Row
+    f.fullyCharged = self:CreateColorPickerOptions(f, widgetName,
+        L.FullyCharged .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.FULLY_CHARGED)
+    self:AnchorBelowCB(f.fullyCharged, f.stageThree)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1446,4 +1509,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
+    [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
 }

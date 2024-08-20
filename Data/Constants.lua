@@ -119,6 +119,16 @@ const.OPTION_KIND = {
     TIMER_FORMAT = "timerFormat",
     SPELL = "spell",
     SHOW_SPELL = "showSpell",
+    EMPOWER = "empower",
+    PIP_COLORS = "pipColors",
+    USE_FULLY_CHARGED = "useFullyCharged",
+    STAGE_ZERO = "stageZero",
+    STAGE_ONE = "stageOne",
+    STAGE_TWO = "stageTwo",
+    STAGE_THREE = "stageThree",
+    STAGE_FOUR = "stageFour",
+    FULLY_CHARGED = "fullyCharged",
+    SHOW_EMPOWER_NAME = "showEmpowerName",
 }
 
 ---@enum AURA_OPTION_KIND

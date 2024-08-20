@@ -405,6 +405,18 @@ Defaults.Widgets = {
             width = 2,
             color = { 1, 1, 1, 1 },
         },
+        empower = {
+            useFullyCharged = true,
+            showEmpowerName = false,
+            pipColors = {
+                stageZero = { 0.2, 0.57, 0.5, 1 },
+                stageOne = { 0.3, 0.47, 0.45, 1 },
+                stageTwo = { 0.4, 0.4, 0.4, 1 },
+                stageThree = { 0.54, 0.3, 0.3, 1 },
+                stageFour = { 0.65, 0.2, 0.3, 1 },
+                fullyCharged = { 0.77, 0.1, 0.2, 1 },
+            }
+        }
     }
 }
 

@@ -298,3 +298,5 @@ function W:CreateHealthText(button)
         end
     end
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.HEALTH_TEXT, W.CreateHealthText)

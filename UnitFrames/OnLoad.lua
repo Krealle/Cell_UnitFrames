@@ -510,6 +510,7 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
             self.states.unit = value
             self.states.displayedUnit = value
 
+            W:AssignWidgets(self, value)
             ResetAuraTables(self)
         end
     end
@@ -551,11 +552,6 @@ function CUFUnitButton_OnLoad(button)
     W:CreatePowerBar(button)
     W:CreateShieldBar(button)
     W:CreateCastBar(button)
-
-    W:CreateNameText(button)
-    W:CreateHealthText(button)
-    W:CreatePowerText(button)
-    W:CreateLevelText(button)
 
     W:CreateRaidIcon(button)
     W:CreateRoleIcon(button)

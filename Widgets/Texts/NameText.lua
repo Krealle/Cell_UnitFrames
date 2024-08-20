@@ -92,3 +92,5 @@ function W:CreateNameText(button)
         Util:UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.NAME_TEXT, W.CreateNameText)

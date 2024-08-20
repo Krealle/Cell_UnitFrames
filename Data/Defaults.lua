@@ -354,6 +354,81 @@ Defaults.Widgets = {
             relativePoint = "BOTTOMRIGHT",
         },
     },
+    ---@type CastBarWidgetTable
+    castBar = {
+        enabled = false,
+        frameLevel = 10,
+        position = {
+            point = "TOPLEFT",
+            offsetY = -30,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+        size = {
+            width = 200,
+            height = 30,
+        },
+        color = {
+            texture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+            useClassColor = true,
+            interruptible = { 0.2, 0.57, 0.5, 1 },
+            nonInterruptible = { 0.43, 0.43, 0.43, 1 },
+            background = { 0, 0, 0, 0.8 },
+        },
+        reverse = false,
+        timer = {
+            enabled = true,
+            size = 16,
+            outline = "Outline",
+            shadow = true,
+            style = "Cell Default",
+            point = "RIGHT",
+            offsetY = -3,
+            offsetX = 0,
+            rgb = { 1, 1, 1 },
+        },
+        timerFormat = "normal",
+        spell = {
+            enabled = true,
+            size = 16,
+            outline = "Outline",
+            shadow = true,
+            style = "Cell Default",
+            point = "LEFT",
+            offsetY = 0,
+            offsetX = 4,
+            rgb = { 1, 1, 1 },
+        },
+        showSpell = true,
+        spark = {
+            enabled = true,
+            width = 2,
+            color = { 1, 1, 1, 1 },
+        },
+        empower = {
+            useFullyCharged = true,
+            showEmpowerName = false,
+            pipColors = {
+                stageZero = { 0.2, 0.57, 0.5, 1 },
+                stageOne = { 0.3, 0.47, 0.45, 1 },
+                stageTwo = { 0.4, 0.4, 0.4, 1 },
+                stageThree = { 0.54, 0.3, 0.3, 1 },
+                stageFour = { 0.65, 0.2, 0.3, 1 },
+                fullyCharged = { 0.77, 0.1, 0.2, 1 },
+            }
+        },
+        border = {
+            showBorder = true,
+            offset = 0,
+            size = 1,
+            color = { 0, 0, 0, 1 }
+        },
+        icon = {
+            enabled = true,
+            position = "left",
+            zoom = 0,
+        }
+    }
 }
 
 ---@class Size

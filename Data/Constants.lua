@@ -79,6 +79,7 @@ const.WIDGET_KIND = {
     SHIELD_BAR = "shieldBar",
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
+    CAST_BAR = "castBar",
 }
 
 ---@enum OPTION_KIND
@@ -107,6 +108,32 @@ const.OPTION_KIND = {
     OFFSET_X = "offsetX",
     OFFSET_Y = "offsetY",
     TYPE = "type",
+    REVERSE = "reverse",
+    SPARK = "spark",
+    INTERRUPTIBLE = "interruptible",
+    NON_INTERRUPTIBLE = "nonInterruptible",
+    BACKGROUND = "background",
+    USE_CLASS_COLOR = "useClassColor",
+    TEXTURE = "texture",
+    TIMER = "timer",
+    TIMER_FORMAT = "timerFormat",
+    SPELL = "spell",
+    SHOW_SPELL = "showSpell",
+    EMPOWER = "empower",
+    PIP_COLORS = "pipColors",
+    USE_FULLY_CHARGED = "useFullyCharged",
+    STAGE_ZERO = "stageZero",
+    STAGE_ONE = "stageOne",
+    STAGE_TWO = "stageTwo",
+    STAGE_THREE = "stageThree",
+    STAGE_FOUR = "stageFour",
+    FULLY_CHARGED = "fullyCharged",
+    SHOW_EMPOWER_NAME = "showEmpowerName",
+    BORDER = "border",
+    OFFSET = "offset",
+    SHOW_BORDER = "showBorder",
+    ICON = "icon",
+    ZOOM = "zoom",
 }
 
 ---@enum AURA_OPTION_KIND
@@ -174,4 +201,12 @@ const.COLORS = {
     FRIENDLY = { 0.29, 0.69, 0.3, },
     NEUTRAL = { 0.85, 0.77, 0.36 },
     PET = { 0.5, 0.5, 1 },
+}
+
+---@enum CastBarTimerFormat
+const.CastBarTimerFormat = {
+    NORMAL = "normal",
+    REMAINING = "remaining",
+    DURATION = "duration",
+    DURATION_AND_MAX = "duration-and-max",
 }

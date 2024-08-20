@@ -13,6 +13,7 @@
 ---| LevelTextWidgetTable
 ---| ReadyCheckIconWidgetTable
 ---| RestingIconWidgetTable
+---| CastBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -27,6 +28,7 @@
 ---| LevelTextWidget
 ---| ReadyCheckIconWidget
 ---| RestingIconWidget
+---| CastBarWidget
 
 ---@class CUFUnitButtonWidgets
 ---@field healthBar HealthBarWidget
@@ -49,6 +51,7 @@
 ---@field levelText LevelTextWidget
 ---@field readyCheckIcon ReadyCheckIconWidget
 ---@field restingIcon RestingIconWidget
+---@field castBar CastBarWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -183,6 +186,52 @@
 ---@field position PositionOpt
 ---@field rgba RGBAOpt
 
+---@class CastBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field position PositionOpt
+---@field size SizeOpt
+---@field color CastBarColorsOpt
+---@field reverse boolean
+---@field timer BigFontOpt
+---@field timerFormat CastBarTimerFormat
+---@field spell BigFontOpt
+---@field showSpell boolean
+---@field spark CastBarSparkOpt
+---@field empower EmpowerOpt
+---@field border BorderOpt
+---@field icon CastBarIconOpt
+
+---@class CastBarColorsOpt
+---@field texture string
+---@field useClassColor boolean
+---@field interruptible RGBAOpt
+---@field nonInterruptible RGBAOpt
+---@field background RGBAOpt
+
+---@class CastBarSparkOpt
+---@field enabled boolean
+---@field width number
+---@field color RGBAOpt
+
+---@class CastBarIconOpt
+---@field enabled boolean
+---@field position "left"|"right"
+---@field zoom number
+
+---@class EmpowerOpt
+---@field pipColors EmpowerColorOpt
+---@field useFullyCharged boolean
+---@field showEmpowerName boolean
+
+---@class EmpowerColorOpt
+---@field stageZero RGBAOpt
+---@field stageOne RGBAOpt
+---@field stageTwo RGBAOpt
+---@field stageThree RGBAOpt
+---@field stageFour RGBAOpt
+---@field fullyCharged RGBAOpt
+
 -------------------------------------------------
 -- MARK: Generic Options
 -------------------------------------------------
@@ -236,3 +285,9 @@
 ---@class SpacingOpt
 ---@field vertical number
 ---@field horizontal number
+
+---@class BorderOpt
+---@field showBorder boolean
+---@field offset number
+---@field size number
+---@field color RGBAOpt

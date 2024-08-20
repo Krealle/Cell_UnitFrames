@@ -42,6 +42,14 @@ Builder.MenuOptions = {
     FrameLevel = 18,
     FullAnchor = 19,
     ColorPicker = 20,
+    CastBarGeneral = 21,
+    CastBarColor = 22,
+    CastBarTimer = 23,
+    CastBarSpell = 24,
+    CastBarSpark = 25,
+    CastBarEmpower = 26,
+    CastBarBorder = 27,
+    CastBarIcon = 28,
 }
 
 -------------------------------------------------
@@ -152,15 +160,20 @@ function Builder:AnchorRight(option, prevOptions)
 end
 
 ---@param option Frame
----@param prevOptions Frame
+---@param prevOptions CUFCheckBox
 function Builder:AnchorRightOfCB(option, prevOptions)
-    option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + 117, 0)
+    local spacing = math.max(prevOptions.label:GetWidth() + 5, 117)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + spacing, 0)
 end
 
 ---@param option Frame
 ---@param prevOptions Frame
 function Builder:AnchorBelowCB(option, prevOptions)
     option:SetPoint("TOPLEFT", prevOptions, 0, -30)
+end
+
+function Builder:AnchorRightOfColorPicker(option, prevOptions)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPRIGHT", self.spacingX + prevOptions.label:GetWidth(), 0)
 end
 
 -------------------------------------------------
@@ -177,7 +190,7 @@ local function HandleWidgetOption(widgetName, optionPath, newValue)
         for i = 1, #pathParts - 1 do
             tbl = tbl[pathParts[i]]
             if not tbl then
-                CUF:Warn("Invalid path: " .. widgetName .. table.concat(pathParts, "."))
+                CUF:Warn("Invalid path: " .. widgetName, table.concat(pathParts, "."))
                 return {} -- TODO: this should be handled better
             end
         end
@@ -206,7 +219,7 @@ end
 ---@param tooltip? string
 ---@return CUFCheckBox
 function Builder:CreateCheckBox(parent, widgetName, title, path, tooltip)
-    ---@class CUFCheckBox: CheckButton
+    ---@class CUFCheckBox: CellCheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
         cb.Set_DB(widgetName, path, checked)
     end, tooltip)
@@ -361,11 +374,12 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param title string?
 ---@param path string?
 ---@return CUFColorPicker
-function Builder:CreateColorPickerOptions(parent, widgetName, path)
+function Builder:CreateColorPickerOptions(parent, widgetName, title, path)
     ---@class CUFColorPicker: CellColorPicker, OptionsFrame
-    local colorPicker = Cell:CreateColorPicker(parent, L["Color"], true)
+    local colorPicker = Cell:CreateColorPicker(parent, title or L["Color"], true)
     colorPicker.id = "ColorPicker"
     colorPicker.optionHeight = 25
 
@@ -639,24 +653,28 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param path string?
+---@param minVal number?
+---@param maxVal number?
 ---@return AnchorOptions
-function Builder:CreateAnchorOptions(parent, widgetName, path)
+function Builder:CreateAnchorOptions(parent, widgetName, path, minVal, maxVal)
     ---@class AnchorOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.optionHeight = 20
     f.id = "Anchor"
 
     path = path or const.OPTION_KIND.POSITION
+    minVal = minVal or -100
+    maxVal = maxVal or 100
 
     f.anchorDropdown = self:CreateDropdown(parent, widgetName, L["Anchor Point"], nil, const.ANCHOR_POINTS,
         path .. "." .. const.OPTION_KIND.ANCHOR_POINT)
     f.anchorDropdown:SetPoint("TOPLEFT", f)
 
-    f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, -100, 100,
+    f.sliderX = self:CreateSlider(f, widgetName, L["X Offset"], nil, minVal, maxVal,
         path .. "." .. "offsetX")
     self:AnchorRight(f.sliderX, f.anchorDropdown)
 
-    f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, -100, 100,
+    f.sliderY = self:CreateSlider(f, widgetName, L["Y Offset"], nil, minVal, maxVal,
         path .. "." .. "offsetY")
     self:AnchorRight(f.sliderY, f.sliderX)
 
@@ -676,10 +694,12 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param path string?
+---@param minVal number?
+---@param maxVal number?
 ---@return FullAnchorOptions
-function Builder:CreateFullAnchorOptions(parent, widgetName, path)
+function Builder:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVal)
     ---@class FullAnchorOptions: AnchorOptions
-    local anchorOpt = self:CreateAnchorOptions(parent, widgetName, path)
+    local anchorOpt = self:CreateAnchorOptions(parent, widgetName, path, minVal, maxVal)
     anchorOpt.optionHeight = 70
     anchorOpt.id = "FullAnchor"
 
@@ -734,8 +754,44 @@ function Builder:CreateFontOptions(parent, widgetName, path)
         path .. ".size")
     self:AnchorRight(f.sizeSlider, f.outlineDropdown)
 
-    f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], const.OPTION_KIND.FONT .. ".shadow")
+    f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], path .. ".shadow")
     f.shadowCB:SetPoint("TOPLEFT", f.styleDropdown, "BOTTOMLEFT", 0, -10)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param title string?
+---@param path string
+---@return BigFontOptions
+function Builder:CreateBigFontOptions(parent, widgetName, title, path)
+    ---@class BigFontOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "BigFontOptions"
+    f.optionHeight = 160
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, title .. " Font")
+
+    --- Top Options
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, path)
+    self:AnchorBelow(f.anchorOptions, f.title)
+
+    f.fontOptions = self:CreateFontOptions(f, widgetName, path)
+    self:AnchorBelow(f.fontOptions, f.anchorOptions)
+    self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
+
+    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+        HandleWidgetOption(widgetName, path .. ".rgb", { r, g, b })
+    end)
+    self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
+
+    local function LoadPageDB()
+        local r, g, b = unpack(HandleWidgetOption(widgetName, path .. ".rgb"))
+        f.colorPicker:SetColor(r, g, b)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "FontOptions_" .. path)
 
     return f
 end
@@ -869,17 +925,22 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param minVal number?
+---@param maxVal number?
+---@param path string?
 ---@return SizeOptions
-function Builder:CreateSizeOptions(parent, widgetName)
+function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal, path)
     ---@class SizeOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    minVal = minVal or 0
+    maxVal = maxVal or 100
 
-    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, 0, 100,
-        const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.WIDTH)
+    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, minVal, maxVal,
+        (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.WIDTH)
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
-    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, 0, 100,
-        const.AURA_OPTION_KIND.SIZE .. "." .. const.OPTION_KIND.HEIGHT)
+    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, minVal, maxVal,
+        (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.HEIGHT)
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
 
     return f
@@ -904,6 +965,24 @@ function Builder:CreateSingleSizeOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param minVal number?
+---@param maxVal number?
+---@param path string?
+---@return WidthOptions
+function Builder:CreateWidthOptions(parent, widgetName, minVal, maxVal, path)
+    ---@class WidthOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+
+    f.sizeSlider = self:CreateSlider(f, widgetName, L["Width"], nil, (minVal or 0), (maxVal or 100),
+        (path or const.OPTION_KIND.WIDTH))
+    f.sizeSlider:SetPoint("TOPLEFT", f)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: FrameLevel
 -------------------------------------------------
@@ -921,6 +1000,66 @@ function Builder:CreateFrameLevelOptions(parent, widgetName)
     f.frameLevelSlider:SetPoint("TOPLEFT", f)
 
     return f
+end
+
+-----------------------------------------------
+-- MARK: Texture Dropdown
+-----------------------------------------------
+
+local LSM = LibStub("LibSharedMedia-3.0", true)
+local textures
+local textureToName = {}
+
+---@class TextureDropdownItem
+---@field [1] string
+---@field [2] Texture
+
+---@return TextureDropdownItem[]
+local function GetTextures()
+    if textures then return textures end
+
+    textures = F:Copy(LSM:HashTable("statusbar"))
+    for name, texture in pairs(textures) do
+        textureToName[texture] = name
+    end
+
+    return textures
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param path string
+---@return TextureDropdown
+function Builder:CreateTextureDropdown(parent, widgetName, path)
+    ---@class TextureDropdown: CUFDropdown
+    local textureDropdown = Cell:CreateDropdown(parent, 160, "texture")
+
+    textureDropdown.optionHeight = 20
+    textureDropdown.id = "TextureDropdown"
+    textureDropdown:SetLabel(L["Texture"])
+
+    textureDropdown.Set_DB = HandleWidgetOption
+    textureDropdown.Get_DB = HandleWidgetOption
+
+    local textureDropdownItems = {}
+    for name, tex in pairs(GetTextures()) do
+        tinsert(textureDropdownItems, {
+            ["text"] = name,
+            ["texture"] = tex,
+            ["onClick"] = function()
+                HandleWidgetOption(widgetName, path, tex)
+            end,
+        })
+    end
+    textureDropdown:SetItems(textureDropdownItems)
+
+    local function LoadPageDB()
+        local tex = textureDropdown.Get_DB(widgetName, path)
+        textureDropdown:SetSelected(textureToName[tex], tex)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "TextureDropdown_" .. path)
+
+    return textureDropdown
 end
 
 -------------------------------------------------
@@ -1151,6 +1290,261 @@ function Builder:CreateAuraWhitelistOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Cast Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarOptions
+function Builder:CreateCastBarGeneralOptions(parent, widgetName)
+    ---@class CastBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarOptions"
+    f.optionHeight = 165
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "General")
+
+    -- First Row
+    f.anchorOptions = self:CreateFullAnchorOptions(f, widgetName, nil, -1000, 1000)
+    self:AnchorBelow(f.anchorOptions, f.title)
+
+    -- Second Row
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
+    self:AnchorBelow(f.sizeOptions, f.anchorOptions.sliderX)
+
+    -- Third Row
+    f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
+    self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarColorOptions
+function Builder:CreateCastBarColorOptions(parent, widgetName)
+    ---@class CastBarColorOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarColorOptions"
+    f.optionHeight = 110
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Colors")
+    local path = const.OPTION_KIND.COLOR .. "."
+
+    -- First Row
+    f.texture = self:CreateTextureDropdown(f, widgetName, path .. const.OPTION_KIND.TEXTURE)
+    self:AnchorBelow(f.texture, f.title)
+
+    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor,
+        path .. const.OPTION_KIND.USE_CLASS_COLOR)
+    self:AnchorRight(f.classColorCB, f.texture)
+
+    -- Second Row
+    f.interruptible = self:CreateColorPickerOptions(f, widgetName, L.Interruptible,
+        path .. const.OPTION_KIND.INTERRUPTIBLE)
+    self:AnchorBelow(f.interruptible, f.texture)
+
+    f.nonInterruptible = self:CreateColorPickerOptions(f, widgetName, L.NonInterruptible,
+        path .. const.OPTION_KIND.NON_INTERRUPTIBLE)
+    self:AnchorRightOfColorPicker(f.nonInterruptible, f.interruptible)
+
+    f.background = self:CreateColorPickerOptions(f, widgetName, L.Background,
+        path .. const.OPTION_KIND.BACKGROUND)
+    self:AnchorRightOfColorPicker(f.background, f.nonInterruptible)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarTimerFontOptions
+function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
+    ---@class CastBarTimerFontOptions: BigFontOptions
+    local f = Builder:CreateBigFontOptions(parent, widgetName, "Timer", const.OPTION_KIND.TIMER)
+
+    local items = {
+        const.CastBarTimerFormat.NORMAL,
+        const.CastBarTimerFormat.REMAINING,
+        const.CastBarTimerFormat.DURATION,
+        const.CastBarTimerFormat.DURATION_AND_MAX,
+    }
+    f.timerFormat = self:CreateDropdown(f, widgetName, L.TimerFormat, nil,
+        items, const.OPTION_KIND.TIMER_FORMAT)
+    self:AnchorBelow(f.timerFormat, f.fontOptions.styleDropdown)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarSpellFontOptions
+function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
+    ---@class CastBarSpellFontOptions: BigFontOptions
+    local f = Builder:CreateBigFontOptions(parent, widgetName, "Spell", const.OPTION_KIND.SPELL)
+
+    f.spellCB = self:CreateCheckBox(f, widgetName, L.ShowSpell, const.OPTION_KIND.SHOW_SPELL)
+    self:AnchorBelow(f.spellCB, f.fontOptions.styleDropdown)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarSparkOptions
+function Builder:CreateCastBarSparkOptions(parent, widgetName)
+    ---@class CastBarSparkOptions: BigFontOptions
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarSparkOptions"
+    f.optionHeight = 60
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Spark")
+
+    -- First Row
+    f.enabled = self:CreateCheckBox(f, widgetName, L["Enabled"],
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.ENABLED)
+    self:AnchorBelow(f.enabled, f.title)
+
+    f.color = self:CreateColorPickerOptions(f, widgetName, nil,
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.COLOR)
+    self:AnchorRightOfCB(f.color, f.enabled)
+
+    f.sizeOptions = self:CreateWidthOptions(f, widgetName, nil, nil,
+        const.OPTION_KIND.SPARK .. "." .. const.OPTION_KIND.WIDTH)
+    self:AnchorRightOfColorPicker(f.sizeOptions, f.color)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarEmpowerOptions
+function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
+    ---@class CastBarEmpowerOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarEmpowerOptions"
+    f.optionHeight = 170
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Empower")
+
+    -- First Row
+    f.useFullyCharged = self:CreateCheckBox(f, widgetName, L.UseFullyCharged,
+        const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.USE_FULLY_CHARGED,
+        L.UseFullyChargedTooltip)
+    self:AnchorBelow(f.useFullyCharged, f.title)
+    CUF:DevAdd(f.useFullyCharged, "UseFullyCharged")
+
+    f.showEmpowerName = self:CreateCheckBox(f, widgetName, L.ShowEmpowerName,
+        const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.SHOW_EMPOWER_NAME,
+        L.ShowEmpowerNameTooltip)
+    f.showEmpowerName:SetPoint("TOPLEFT", f.useFullyCharged, "TOPLEFT",
+        (self.spacingX * 1.5) + f.useFullyCharged.label:GetWidth(), 0)
+
+    -- Second Row
+    local colorPath = const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.PIP_COLORS .. "."
+
+    f.stageZero = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 0 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_ZERO)
+    self:AnchorBelow(f.stageZero, f.useFullyCharged)
+
+    f.stageOne = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 1 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_ONE)
+    self:AnchorRightOfColorPicker(f.stageOne, f.stageZero)
+
+    f.stageTwo = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 2 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_TWO)
+    self:AnchorRightOfColorPicker(f.stageTwo, f.stageOne)
+
+    -- Third Row
+    f.stageThree = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 3 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_THREE)
+    self:AnchorBelowCB(f.stageThree, f.stageZero)
+
+    f.stageFour = self:CreateColorPickerOptions(f, widgetName,
+        L.Stage .. " " .. 4 .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.STAGE_FOUR)
+    self:AnchorRightOfColorPicker(f.stageFour, f.stageThree)
+
+    -- Fourth Row
+    f.fullyCharged = self:CreateColorPickerOptions(f, widgetName,
+        L.FullyCharged .. " " .. L["Color"],
+        colorPath .. const.OPTION_KIND.FULLY_CHARGED)
+    self:AnchorBelowCB(f.fullyCharged, f.stageThree)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarBorderOptions
+function Builder:CreatCastBarBorderOptions(parent, widgetName)
+    ---@class CastBarBorderOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarBorderOptions"
+    f.optionHeight = 120
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Border")
+
+    local borderPath = const.OPTION_KIND.BORDER .. "."
+    -- First Row
+    f.showBorder = self:CreateCheckBox(f, widgetName, L.ShowBorder,
+        borderPath .. const.OPTION_KIND.SHOW_BORDER)
+    self:AnchorBelow(f.showBorder, f.title)
+
+    f.color = self:CreateColorPickerOptions(f, widgetName, nil,
+        borderPath .. const.OPTION_KIND.COLOR)
+    self:AnchorRightOfCB(f.color, f.showBorder)
+
+    -- Second Row
+    f.size = self:CreateSlider(f, widgetName, L["Size"], nil, 0, 64,
+        borderPath .. const.OPTION_KIND.SIZE)
+    self:AnchorBelow(f.size, f.showBorder)
+
+    f.offset = self:CreateSlider(f, widgetName, L["Offset"], nil, 0, 32,
+        borderPath .. const.OPTION_KIND.OFFSET)
+    self:AnchorRight(f.offset, f.size)
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarIconOptions
+function Builder:CreateCastBarIconOptions(parent, widgetName)
+    ---@class CastBarIconOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarIconOptions"
+    f.optionHeight = 65
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Icon")
+
+    local iconPath = const.OPTION_KIND.ICON .. "."
+    -- First Row
+    f.showIcon = self:CreateCheckBox(f, widgetName, L.ShowIcon,
+        iconPath .. const.OPTION_KIND.ENABLED)
+    self:AnchorBelow(f.showIcon, f.title)
+
+    f.zoom = self:CreateSlider(f, widgetName, L.Zoom, nil, 0, 100,
+        iconPath .. const.OPTION_KIND.ZOOM)
+    self:AnchorRightOfCB(f.zoom, f.showIcon)
+
+    f.position = self:CreateDropdown(f, widgetName, L["Position"], nil,
+        { "left", "right" }, iconPath .. const.OPTION_KIND.POSITION)
+    self:AnchorRight(f.position, f.zoom)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1176,4 +1570,12 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.SingleSize] = Builder.CreateSingleSizeOptions,
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
+    [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
+    [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
+    [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
+    [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
+    [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
+    [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
+    [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
+    [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
 }

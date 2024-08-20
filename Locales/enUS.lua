@@ -33,6 +33,32 @@ L.CastByPlayersTooltip = "Show auras cast by players"
 L.CastByNPCTooltip = "Show auras cast by NPCs"
 L.HideNoDurationTooltip = "Hide auras with no duration"
 
+-- Cast Bar
+L.Reverse = "Reverse"
+L.Spark = "Spark"
+L.Interruptible = "Interruptible"
+L.NonInterruptible = "Non-Interruptible"
+L.Background = "Background"
+L.Reverse = "Reverse"
+L.UseClassColor = "Use Class Color"
+L.TimerFormat = "Timer Format"
+L["normal"] = "Normal"
+L["remaining"] = "Remaining"
+L["duration"] = "Duration"
+L["duration-and-max"] = "Duration & Max"
+L.ShowSpell = "Show Spell"
+L.Empower = "Empower"
+L.Stage = "Stage"
+L.FullyCharged = "Fully Charged"
+L.UseFullyCharged = "Use Fully Charged"
+L.ShowEmpowerName = "Show Empower Name"
+L.ShowBorder = "Show Border"
+L.ShowIcon = "Show Icon"
+L.Zoom = "Zoom"
+
+L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
+L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"
+
 -- Widgets
 L.Widgets = "Widgets"
 L.nameText = "Name Text"
@@ -48,11 +74,15 @@ L.shieldBar = "Shield Bar"
 L.levelText = "Level Text"
 L.readyCheckIcon = "Ready Check Icon"
 L.restingIcon = "Resting Icon"
+L.castBar = "Cast Bar"
 
 -- Misc
 L.Frame = "Frame"
 L.UnitFrames = "Unit Frames"
 L.RelativeTo = "Relative To"
+L.Texture = "Texture"
+L["left"] = "Left"
+L["right"] = "Right"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

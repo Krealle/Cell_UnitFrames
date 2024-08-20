@@ -29,5 +29,6 @@ CUF.Builder = {}
 ---@field selectedWidget WIDGET_KIND
 ---@field testMode boolean
 ---@field isMenuOpen boolean
+---@field isRetail boolean
 CUF.vars = {}
 CUF.unitButtons = {}

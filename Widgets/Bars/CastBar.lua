@@ -72,7 +72,7 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SPARK then
         castBar.spark.enabled = styleTable.spark.enabled
         castBar.spark:UpdateColor(styleTable.spark)
-        castBar:UpdateSpark(styleTable.spark)
+        castBar:UpdateSpark(styleTable.spark.width)
     end
 
     if not setting or setting == const.OPTION_KIND.EMPOWER then
@@ -85,6 +85,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
 
     if not setting or setting == const.OPTION_KIND.ICON then
         castBar:SetIconOptions(styleTable.icon)
+    end
+
+    if not setting or setting == const.OPTION_KIND.REVERSE then
+        castBar:SetFillStyle(styleTable.reverse)
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then
@@ -192,6 +196,17 @@ local function Repoint(self)
         bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
         bar:SetPoint("BOTTOMRIGHT", icon, "BOTTOMLEFT", 0, 0)
     end
+end
+
+---@param self CastBarWidget
+---@param reversed boolean
+local function SetFillStyle(self, reversed)
+    if reversed then
+        self.statusBar:SetFillStyle("REVERSE")
+    else
+        self.statusBar:SetFillStyle("STANDARD")
+    end
+    self:UpdateSpark()
 end
 
 ---@param button CUFUnitButton
@@ -475,8 +490,7 @@ local CASTBAR_STAGE_DURATION_INVALID = -1
 
 -- Create a pip with overlay texture and hidden art line
 ---@param self CastBarWidget
----@param stage number
-local function CreatePip(self, stage)
+local function CreatePip(self)
     local pip = CreateFrame("Frame", nil, self.statusBar, "CastingBarFrameStagePipTemplate")
 
     -- Hide the art line
@@ -484,6 +498,18 @@ local function CreatePip(self, stage)
 
     pip.texture = pip:CreateTexture(nil, "OVERLAY")
     pip.texture:SetAllPoints()
+
+    return pip
+end
+
+---@param self CastBarWidget
+---@param stage number
+local function GetPip(self, stage)
+    local pip = self.StagePips[stage]
+    if not pip then
+        pip = self:CreatePip()
+        self.StagePips[stage] = pip
+    end
 
     return pip
 end
@@ -503,25 +529,40 @@ local function GetStageColor(self, stage)
     return unpack(self.PipColorMap[stage])
 end
 
--- Update textures of all pips
+-- Point pip to the next pip or the castbar
+---@param self CastBarWidget
+---@param pip any
+---@param stage number
+---@param reversed boolean
+local function RepointPip(self, pip, stage, reversed)
+    local point = reversed and "LEFT" or "RIGHT"
+    local relativePoint = reversed and "RIGHT" or "LEFT"
+
+    if stage < self.NumStages then
+        pip:SetPoint(point, self:GetPip(stage + 1), relativePoint, 0, 0)
+    else
+        pip:SetPoint(point, self.statusBar, point, 0, 0)
+    end
+end
+
+-- Update pip texture/color
+---@param self CastBarWidget
+---@param stage number
+local function UpdatePipTexture(self, stage)
+    local pip = self:GetPip(stage)
+
+    pip.texture:SetTexture(self.statusBar:GetStatusBarTexture():GetTexture())
+    pip.texture:SetVertexColor(self:GetStageColor(stage))
+end
+
+-- Repoint and update pip textures of all pips
 ---@param self CastBarWidget
 local function UpdatePips(self)
-    local castBar = self.statusBar
+    local reversed = self.statusBar:GetReverseFill()
 
     for stage = 0, self.NumStages do
-        local pip = self.StagePips[stage]
-        pip.texture:SetTexture(castBar:GetStatusBarTexture():GetTexture())
-
-        local r, g, b, a = self:GetStageColor(stage)
-        pip.texture:SetVertexColor(r, g, b, a)
-        pip.texture:Point("LEFT", castBar, "RIGHT", 0, 0)
-
-        if stage < self.NumStages then
-            local anchor = self.StagePips[stage + 1]
-            pip.texture:Point("RIGHT", anchor, 0, 0)
-        else
-            pip.texture:Point("RIGHT", castBar, 0, 0)
-        end
+        self:UpdatePipTexture(stage)
+        self:RepointPip(self:GetPip(stage), stage, reversed)
     end
 end
 
@@ -529,6 +570,7 @@ end
 ---@param self CastBarWidget
 local function AddStages(self, numStages)
     local castBar = self.statusBar
+    local reversed = castBar:GetReverseFill()
 
     local stageTotalDuration = 0
     local stageMaxValue = self.max * 1000
@@ -551,36 +593,40 @@ local function AddStages(self, numStages)
             local portion = stageTotalDuration / stageMaxValue
             local offset = castBarWidth * portion
 
-            local pip = self.StagePips[stage]
-            if not pip then
-                pip = self:CreatePip(stage)
-                self.StagePips[stage] = pip
-            end
-
+            local pip = self:GetPip(stage)
             pip:ClearAllPoints()
             pip:Show()
 
-            pip:SetPoint("TOPLEFT", castBar, "TOPLEFT", offset, 0)
-            pip:SetPoint("BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
+            if reversed then
+                -- Left to right
+                pip:SetPoint("TOPRIGHT", castBar, "TOPRIGHT", -offset, 0)
+                pip:SetPoint("BOTTOMRIGHT", castBar, "BOTTOMRIGHT", -offset, 0)
+            else
+                -- Right to left
+                pip:SetPoint("TOPLEFT", castBar, "TOPLEFT", offset, 0)
+                pip:SetPoint("BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
+            end
+
+            self:RepointPip(pip, stage, reversed)
+            self:UpdatePipTexture(stage)
 
             -- Create a dummy pip for "stage 0"
             if stage == 1 then
-                local dummyPip = self.StagePips[stage - 1]
-                if not dummyPip then
-                    dummyPip = self:CreatePip(stage - 1)
-                    self.StagePips[stage - 1] = dummyPip
-                end
-
+                local dummyPip = self:GetPip(0)
                 dummyPip:ClearAllPoints()
                 dummyPip:Show()
 
-                dummyPip:SetPoint("TOPLEFT", castBar, "TOPLEFT", 0, 0)
-                dummyPip:SetPoint("BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
+                if reversed then
+                    dummyPip:SetPoint("TOPRIGHT", castBar, "TOPRIGHT", 0, 0)
+                    dummyPip:SetPoint("BOTTOMLEFT", pip, "BOTTOMLEFT", 0, 0)
+                else
+                    dummyPip:SetPoint("TOPLEFT", castBar, "TOPLEFT", 0, 0)
+                    dummyPip:SetPoint("BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
+                end
+                self:UpdatePipTexture(0)
             end
         end
     end
-
-    self:UpdatePips()
 end
 
 -- Hide all stages and reset stage counter
@@ -669,14 +715,18 @@ local function SetFontPosition(self, styleTable)
 end
 
 ---@param self CastBarWidget
----@param styleTable CastBarSparkOpt
-local function UpdateSpark(self, styleTable)
+---@param width number?
+local function UpdateSpark(self, width)
     local spark = self.spark
     if spark.enabled then
+        self.statusBar:GetReverseFill()
         spark:ClearAllPoints()
-        spark:SetPoint("CENTER", self.statusBar:GetStatusBarTexture(), "RIGHT")
+        spark:SetPoint("CENTER", self.statusBar:GetStatusBarTexture(),
+            self.statusBar:GetReverseFill() and "LEFT" or "RIGHT")
         spark:SetHeight(self:GetHeight())
-        spark:SetWidth(styleTable.width)
+        if width then
+            spark:SetWidth(width)
+        end
     else
         spark:Hide()
     end
@@ -801,12 +851,15 @@ function W:CreateCastBar(button)
     castBar.useFullyCharged = true
     castBar.showEmpowerSpellName = false
 
+    castBar.GetPip = GetPip
     castBar.AddStages = AddStages
     castBar.CreatePip = CreatePip
+    castBar.RepointPip = RepointPip
     castBar.UpdatePips = UpdatePips
     castBar.ClearStages = ClearStages
     castBar.GetStageColor = GetStageColor
     castBar.OnUpdateStage = OnUpdateStage
+    castBar.UpdatePipTexture = UpdatePipTexture
 
     ---@class CastBar: StatusBar, BackdropTemplate
     local statusBar = CreateFrame("StatusBar", nil, castBar, "BackdropTemplate")
@@ -877,6 +930,7 @@ function W:CreateCastBar(button)
     castBar.UpdateSpark = UpdateSpark
     castBar.UpdateEmpowerPips = UpdateEmpower
     castBar.UpdateBorder = UpdateBorder
+    castBar.SetFillStyle = SetFillStyle
 
     castBar.UpdateElements = UpdateElements
     castBar.Repoint = Repoint

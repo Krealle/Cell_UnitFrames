@@ -262,6 +262,18 @@ function CUF:ClearTooltips(frame)
     Cell:ClearTooltips(frame)
 end
 
+---@param icon Texture
+---@param zoomLevel number
+function Util.SetIconZoom(icon, zoomLevel)
+    zoomLevel = math.max(0, math.min(zoomLevel, 100))
+
+    local scale = 1 - (zoomLevel / 100) -- scale ranges from 1 (no zoom) to 0 (full zoom)
+    -- Calculate offset to center the zoomed portion
+    local offset = (1 - scale) / 2
+
+    icon:SetTexCoord(offset, offset + scale, offset, offset + scale)
+end
+
 -------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------

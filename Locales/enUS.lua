@@ -52,6 +52,7 @@ L.Stage = "Stage"
 L.FullyCharged = "Fully Charged"
 L.UseFullyCharged = "Use Fully Charged"
 L.ShowEmpowerName = "Show Empower Name"
+L.ShowBorder = "Show Border"
 
 L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
 L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"

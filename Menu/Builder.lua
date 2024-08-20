@@ -48,6 +48,7 @@ Builder.MenuOptions = {
     CastBarSpell = 24,
     CastBarSpark = 25,
     CastBarEmpower = 26,
+    CastBarBorder = 27,
 }
 
 -------------------------------------------------
@@ -158,9 +159,10 @@ function Builder:AnchorRight(option, prevOptions)
 end
 
 ---@param option Frame
----@param prevOptions Frame
+---@param prevOptions CUFCheckBox
 function Builder:AnchorRightOfCB(option, prevOptions)
-    option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + 117, 0)
+    local spacing = math.max(prevOptions.label:GetWidth() + 5, 117)
+    option:SetPoint("TOPLEFT", prevOptions, "TOPLEFT", self.spacingX + spacing, 0)
 end
 
 ---@param option Frame
@@ -216,7 +218,7 @@ end
 ---@param tooltip? string
 ---@return CUFCheckBox
 function Builder:CreateCheckBox(parent, widgetName, title, path, tooltip)
-    ---@class CUFCheckBox: CheckButton
+    ---@class CUFCheckBox: CellCheckButton
     local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
         cb.Set_DB(widgetName, path, checked)
     end, tooltip)
@@ -1478,6 +1480,40 @@ function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
     return f
 end
 
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CastBarBorderOptions
+function Builder:CreatCastBarBorderOptions(parent, widgetName)
+    ---@class CastBarBorderOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "CastBarBorderOptions"
+    f.optionHeight = 120
+
+    -- Title
+    f.title = self:CreateOptionTitle(f, "Border")
+
+    local borderPath = const.OPTION_KIND.BORDER .. "."
+    -- First Row
+    f.showBorder = self:CreateCheckBox(f, widgetName, L.ShowBorder,
+        borderPath .. const.OPTION_KIND.SHOW_BORDER)
+    self:AnchorBelow(f.showBorder, f.title)
+
+    f.color = self:CreateColorPickerOptions(f, widgetName, nil,
+        borderPath .. const.OPTION_KIND.COLOR)
+    self:AnchorRightOfCB(f.color, f.showBorder)
+
+    -- Second Row
+    f.size = self:CreateSlider(f, widgetName, L["Size"], nil, 0, 64,
+        borderPath .. const.OPTION_KIND.SIZE)
+    self:AnchorBelow(f.size, f.showBorder)
+
+    f.offset = self:CreateSlider(f, widgetName, L["Offset"], nil, 0, 32,
+        borderPath .. const.OPTION_KIND.OFFSET)
+    self:AnchorRight(f.offset, f.size)
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
@@ -1510,4 +1546,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
     [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
+    [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
 }

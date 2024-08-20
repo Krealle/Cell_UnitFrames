@@ -199,6 +199,7 @@
 ---@field showSpell boolean
 ---@field spark CastBarSparkOpt
 ---@field empower EmpowerOpt
+---@field border BorderOpt
 
 ---@class CastBarColorsOpt
 ---@field texture string
@@ -278,3 +279,9 @@
 ---@class SpacingOpt
 ---@field vertical number
 ---@field horizontal number
+
+---@class BorderOpt
+---@field showBorder boolean
+---@field offset number
+---@field size number
+---@field color RGBAOpt

@@ -416,6 +416,12 @@ Defaults.Widgets = {
                 stageFour = { 0.65, 0.2, 0.3, 1 },
                 fullyCharged = { 0.77, 0.1, 0.2, 1 },
             }
+        },
+        border = {
+            showBorder = true,
+            offset = 0,
+            size = 1,
+            color = { 0, 0, 0, 1 }
         }
     }
 }

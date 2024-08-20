@@ -129,6 +129,9 @@ const.OPTION_KIND = {
     STAGE_FOUR = "stageFour",
     FULLY_CHARGED = "fullyCharged",
     SHOW_EMPOWER_NAME = "showEmpowerName",
+    BORDER = "border",
+    OFFSET = "offset",
+    SHOW_BORDER = "showBorder",
 }
 
 ---@enum AURA_OPTION_KIND

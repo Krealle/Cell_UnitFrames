@@ -25,6 +25,7 @@ menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.CastBarSpell,
     Builder.MenuOptions.CastBarSpark,
+    Builder.MenuOptions.CastBarBorder,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -75,6 +76,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
 
     if not setting or setting == const.OPTION_KIND.EMPOWER then
         castBar:UpdateEmpowerPips(styleTable.empower)
+    end
+
+    if not setting or setting == const.OPTION_KIND.BORDER then
+        castBar:UpdateBorder(styleTable.border)
     end
 
     if not setting or setting == const.OPTION_KIND.ENABLED then
@@ -660,6 +665,34 @@ local function UpdateEmpower(self, styleTable)
     }
 end
 
+---@param self CastBarWidget
+---@param styleTable BorderOpt
+local function UpdateBorder(self, styleTable)
+    local border = self.border
+    if styleTable.showBorder then
+        border:Show()
+    else
+        border:Hide()
+        return
+    end
+
+    border:SetBackdrop({
+        bgFile = nil,
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = styleTable.size,
+    })
+
+    border:SetBackdropBorderColor(unpack(styleTable.color))
+
+    border:ClearAllPoints()
+    if self.icon then
+        border:SetPoint("TOPLEFT", self.icon, "TOPLEFT", -styleTable.offset, styleTable.offset)
+    else
+        border:SetPoint("TOPLEFT", self, "TOPLEFT", -styleTable.offset, styleTable.offset)
+    end
+    border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", styleTable.offset, -styleTable.offset)
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -753,14 +786,6 @@ function W:CreateCastBar(button)
     icon:SetPoint("RIGHT", castBar, "LEFT")
 
     local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
-    border:SetPoint("TOPLEFT", icon, "TOPLEFT")
-    border:SetPoint("BOTTOMRIGHT")
-    border:SetBackdrop({
-        bgFile = nil,
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    border:SetBackdropBorderColor(0, 0, 0, 1)
 
     castBar.background = background
     castBar.spark = spark
@@ -780,6 +805,8 @@ function W:CreateCastBar(button)
     castBar.UpdateColor = UpdateColor
     castBar.UpdateSpark = UpdateSpark
     castBar.UpdateEmpowerPips = UpdateEmpower
+    castBar.UpdateBorder = UpdateBorder
+
     castBar.UpdateElements = UpdateElements
 
     castBar.SetEnabled = W.SetEnabled

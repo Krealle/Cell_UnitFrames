@@ -27,7 +27,6 @@ CUF.Handler = Handler
 ---@param subSetting string
 local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
     local widget = button.widgets[widgetName] ---@type Widget
-    if not widget then return end
 
     local styleTable = DB.GetWidgetTable(widgetName, unit)
 
@@ -76,7 +75,11 @@ CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidge
 ---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
     --CUF:Log("|cffff7777RegisterWidget:|r", widgetName)
-    self.widgets[widgetName] = func
+    self.widgets[widgetName] = (function(...)
+        local button = select(1, ...) ---@type CUFUnitButton
+        if not button.widgets[widgetName] then return end
+        func(...)
+    end)
 end
 
 -------------------------------------------------

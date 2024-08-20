@@ -729,8 +729,8 @@ function W:CreateCastBar(button)
     ---@class SparkTexture: Texture
     local spark = castBar:CreateTexture(nil, "OVERLAY")
     spark:SetWidth(2)
-    spark:SetBlendMode("ADD")
-    spark:SetTexture([[Interface\CastingBar\UI-CastingBar-Spark]]) -- Interface\AddOns\WeakAuras\Media\Textures\Square_AlphaGradient.tga
+    spark:SetBlendMode("BLEND")
+    spark:SetTexture("Interface\\Buttons\\WHITE8X8")
     spark.UpdateColor = UpdateSparkColor
     spark.enabled = false
 

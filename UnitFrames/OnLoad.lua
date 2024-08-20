@@ -551,9 +551,6 @@ function CUFUnitButton_OnLoad(button)
     W:CreateHealthBar(button)
     W:CreatePowerBar(button)
 
-    button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
-    button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
-
     -- targetHighlight
     ---@class HighlightWidget: BackdropTemplate, Frame
     local targetHighlight = CreateFrame("Frame", nil, button, "BackdropTemplate")

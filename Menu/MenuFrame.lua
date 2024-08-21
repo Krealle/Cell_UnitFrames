@@ -19,6 +19,7 @@ menuWindow.unitPages = {}
 menuWindow.unitPageButtons = {}
 menuWindow.widgetPages = {}
 menuWindow.listButtons = {}
+menuWindow.firstWidgetInList = nil
 
 CUF.MenuWindow = menuWindow
 
@@ -66,6 +67,7 @@ function menuWindow:LoadWidgetList(unit)
     local optionCount = 0
     local widgetTable = CUF.DB.GetAllWidgetTables(unit)
     local prevButton
+    self.firstWidgetInList = nil
 
     -- The list is ordered by load order from .toc
     for _, widgetPage in pairs(CUF.Menu.widgetsToAdd) do
@@ -104,6 +106,9 @@ function menuWindow:LoadWidgetList(unit)
             button:Show()
 
             prevButton = button
+            if not self.firstWidgetInList then
+                self.firstWidgetInList = widgetName
+            end
         end
     end
 
@@ -139,7 +144,7 @@ function menuWindow:ShowMenu()
         self.window:Show()
 
         self.unitPageButtons[1]:Click()
-        self.listButtons["nameText"]:Click()
+        self.listButtons[self.firstWidgetInList]:Click()
 
         self.init = true
         CUF.vars.isMenuOpen = true

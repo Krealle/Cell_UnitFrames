@@ -77,6 +77,9 @@
 ---@class CellCheckButton: CheckButton
 ---@field label FontString
 
+---@class CellButton: Button
+---@field SetTextColor fun(self: CellButton, r: number, g: number, b: number, a: number)
+
 -------------------------------------------------
 -- MARK: CUF Frames
 -------------------------------------------------

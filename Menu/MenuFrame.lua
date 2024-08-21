@@ -13,6 +13,7 @@ local Handler = CUF.Handler
 ---@field unitPages table<Unit, UnitsMenuPage>
 ---@field unitPageButtons UnitMenuPageButton[]
 ---@field widgetPages table<WIDGET_KIND, WidgetMenuPage>
+---@field listButtons table<WIDGET_KIND, CellButton>
 local menuWindow = {}
 menuWindow.unitPages = {}
 menuWindow.unitPageButtons = {}
@@ -83,7 +84,6 @@ function menuWindow:LoadWidgetList(unit)
             button:GetFontString():SetPoint("LEFT", 5, 0)
             button:GetFontString():SetPoint("RIGHT", -5, 0)
 
-            button.id = widgetName
             optionCount = optionCount + 1
 
             if widget.enabled then

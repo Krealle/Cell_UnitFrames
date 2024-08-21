@@ -65,6 +65,7 @@ end
 ---@param layout string
 local function LoadLayoutDB(layout)
     CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF.DB.VerifyDB()
 
     CUF.vars.selectedLayout = layout
 

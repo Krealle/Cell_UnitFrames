@@ -109,6 +109,23 @@ function menuWindow:LoadWidgetList(unit)
     end)
 end
 
+---@param layout string?
+---@param unit Unit?
+---@param widgetName WIDGET_KIND?
+function menuWindow.UpdateWidgetListEnabled(layout, unit, widgetName, setting)
+    if not widgetName then return end
+    if not setting == CUF.constants.OPTION_KIND.ENABLED then return end
+    if not menuWindow.listButtons[widgetName] then return end
+
+    if CUF.DB.GetWidgetTable(widgetName, unit, layout).enabled then
+        menuWindow.listButtons[widgetName]:SetTextColor(1, 1, 1, 1)
+    else
+        menuWindow.listButtons[widgetName]:SetTextColor(0.466, 0.466, 0.466, 1)
+    end
+end
+
+CUF:RegisterCallback("UpdateWidget", "UpdateWidgetListEnabled", menuWindow.UpdateWidgetListEnabled)
+
 function menuWindow:ShowMenu()
     CUF:Log("|cff00ccffShow Menu|r")
     if not self.window then

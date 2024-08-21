@@ -1,5 +1,7 @@
 # Cell - Unit Frames
 
+[![Discord](https://img.shields.io/discord/1275860708734668871?label=Discord&color=5865F2)](https://discord.gg/eynRyR2ZKJ)
+
 Plugin for the amazing AddOn [Cell](https://www.curseforge.com/wow/addons/cell) that adds various unit frames.
 
 ## Units currently available
@@ -59,4 +61,8 @@ These can be combined in any order to create the desired format.
 
 ## Issues / Feature Requests
 
-Please report any issues or feature requests over [here](https://github.com/Krealle/Cell_UnitFrames/issues).
+Please report any issues or feature requests over on [GitHub](https://github.com/Krealle/Cell_UnitFrames/issues).
+
+## Localization
+
+Want to help translate the AddOn? Head over to [CurseForge](https://legacy.curseforge.com/wow/addons/cell-unit-frames/localization).

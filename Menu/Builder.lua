@@ -68,7 +68,6 @@ Builder.MenuOptions = {
 ---@return WidgetMenuPage
 function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
     ---@class WidgetMenuPage
-    ---@field pageButton WidgetMenuPage.pageButton
     ---@field height number
     ---@field _originalHeight number
     ---@field id WIDGET_KIND

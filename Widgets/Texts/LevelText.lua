@@ -63,3 +63,5 @@ function W:CreateLevelText(button)
     local levelText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.LEVEL_TEXT)
     button.widgets.levelText = levelText
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.LEVEL_TEXT, W.CreateLevelText)

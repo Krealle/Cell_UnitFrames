@@ -175,3 +175,5 @@ function W:CreatePowerText(button)
         end
     end
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.POWER_TEXT, W.CreatePowerText)

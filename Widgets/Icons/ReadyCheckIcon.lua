@@ -42,6 +42,7 @@ Handler:RegisterWidget(W.UpdateReadyCheckIconWidget, const.WIDGET_KIND.READY_CHE
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateReadyCheckIcon(button)
+    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -97,3 +98,5 @@ function W:CreateReadyCheckIcon(button)
     readyCheckIcon.SetWidgetSize = W.SetWidgetSize
     readyCheckIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.READY_CHECK_ICON, W.CreateReadyCheckIcon)

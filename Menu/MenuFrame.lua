@@ -13,12 +13,13 @@ local Handler = CUF.Handler
 ---@field unitPages table<Unit, UnitsMenuPage>
 ---@field unitPageButtons UnitMenuPageButton[]
 ---@field widgetPages table<WIDGET_KIND, WidgetMenuPage>
----@field widgetPageButtons WidgetMenuPage.pageButton[]
+---@field listButtons table<WIDGET_KIND, CellButton>
 local menuWindow = {}
 menuWindow.unitPages = {}
 menuWindow.unitPageButtons = {}
 menuWindow.widgetPages = {}
-menuWindow.widgetPageButtons = {}
+menuWindow.listButtons = {}
+menuWindow.firstWidgetInList = nil
 
 CUF.MenuWindow = menuWindow
 
@@ -32,6 +33,7 @@ function menuWindow:SetUnitPage(unit)
     self.selectedUnitPage = self.unitPages[unit]
     self.selectedUnitPage.frame:Show()
 
+    self:LoadWidgetList(unit)
     CUF.Menu:UpdateSelectedPages(unit)
 end
 
@@ -58,6 +60,89 @@ function menuWindow:SetWidget(widget)
     CUF.Menu:UpdateSelectedPages(nil, widget)
 end
 
+---@param unit Unit
+function menuWindow:LoadWidgetList(unit)
+    self.widgetListFrame.scrollFrame:Reset()
+
+    local optionCount = 0
+    local widgetTable = CUF.DB.GetAllWidgetTables(unit)
+    local prevButton
+    self.firstWidgetInList = nil
+
+    -- The list is ordered by load order from .toc
+    for _, widgetPage in pairs(CUF.Menu.widgetsToAdd) do
+        local widgetName = widgetPage.widgetName
+        local widget = widgetTable[widgetName]
+
+        if widget then
+            if not self.listButtons[widgetName] then
+                self.listButtons[widgetName] = CUF:CreateButton(self.widgetListFrame.scrollFrame.content, " ",
+                    { 20, 20 }, nil, "transparent-accent")
+            end
+
+            ---@class WidgetMenuPageButton: CellButton
+            local button = self.listButtons[widgetName]
+            button:SetText(L[widgetName])
+            button:GetFontString():ClearAllPoints()
+            button:GetFontString():SetPoint("LEFT", 5, 0)
+            button:GetFontString():SetPoint("RIGHT", -5, 0)
+
+            button.id = widgetName
+            optionCount = optionCount + 1
+
+            if widget.enabled then
+                button:SetTextColor(1, 1, 1, 1)
+            else
+                button:SetTextColor(0.466, 0.466, 0.466, 1)
+            end
+
+            button:SetParent(self.widgetListFrame.scrollFrame.content)
+            button:SetPoint("RIGHT")
+            if not prevButton then
+                button:SetPoint("TOPLEFT")
+            else
+                button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, 1)
+            end
+            button:Show()
+
+            prevButton = button
+            if not self.firstWidgetInList then
+                self.firstWidgetInList = widgetName
+            end
+        end
+    end
+
+    self.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
+
+    Cell:CreateButtonGroup(self.listButtons, function(widget, b)
+        self:SetWidget(widget)
+    end)
+
+    -- Make sure that the currently selected widget is valid
+    if self.selectedWidget then
+        if not widgetTable[self.selectedWidget.id] then
+            self.listButtons[self.firstWidgetInList]:Click()
+        end
+    end
+end
+
+---@param layout string?
+---@param unit Unit?
+---@param widgetName WIDGET_KIND?
+function menuWindow.UpdateWidgetListEnabled(layout, unit, widgetName, setting)
+    if not widgetName then return end
+    if not setting == CUF.constants.OPTION_KIND.ENABLED then return end
+    if not menuWindow.listButtons[widgetName] then return end
+
+    if CUF.DB.GetWidgetTable(widgetName, unit, layout).enabled then
+        menuWindow.listButtons[widgetName]:SetTextColor(1, 1, 1, 1)
+    else
+        menuWindow.listButtons[widgetName]:SetTextColor(0.466, 0.466, 0.466, 1)
+    end
+end
+
+CUF:RegisterCallback("UpdateWidget", "UpdateWidgetListEnabled", menuWindow.UpdateWidgetListEnabled)
+
 function menuWindow:ShowMenu()
     CUF:Log("|cff00ccffShow Menu|r")
     if not self.window then
@@ -66,7 +151,7 @@ function menuWindow:ShowMenu()
         self.window:Show()
 
         self.unitPageButtons[1]:Click()
-        self.widgetPageButtons[1]:Click()
+        self.listButtons[self.firstWidgetInList]:Click()
 
         self.init = true
         CUF.vars.isMenuOpen = true
@@ -128,40 +213,12 @@ end
 
 function menuWindow:InitWidgets()
     --CUF:Log("menuWindow - InitWidgets")
-    local prevButton
-    local prevAnchor
-    local idx = 1
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetMenuPage
         local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, unpack(widget.options))
 
         self.widgetPages[widgetPage.id] = widgetPage
-
-        ---@class WidgetMenuPage.pageButton: Button
-        widgetPage.pageButton = Cell:CreateButton(self.widgetPane, L[widget.widgetName], "accent-hover", { 95, 17 })
-        widgetPage.pageButton.id = widget.widgetName
-
-        if prevButton then
-            -- Max 4 buttons per row
-            if idx % 4 == 0 then
-                widgetPage.pageButton:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
-                idx = 1
-                prevAnchor = widgetPage.pageButton
-
-                self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
-                self.widgetPane:SetHeight(self.widgetPane:GetHeight() + self.paneHeight)
-            else
-                widgetPage.pageButton:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1, 0)
-                idx = idx + 1
-            end
-        else
-            widgetPage.pageButton:SetPoint("BOTTOMRIGHT", self.widgetPane, "BOTTOMRIGHT", 0, 1)
-            prevAnchor = widgetPage.pageButton
-        end
-        prevButton = widgetPage.pageButton
-
-        table.insert(self.widgetPageButtons, widgetPage.pageButton)
     end
 end
 
@@ -174,7 +231,7 @@ function menuWindow:Create()
     local optionsFrame = Cell.frames.optionsFrame
 
     self.unitHeight = 180
-    self.widgetHeight = 310
+    self.widgetHeight = 400
     self.baseWidth = 450
     self.paneHeight = 17
 
@@ -234,12 +291,24 @@ function menuWindow:Create()
     self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -buffer)
 
     Cell:CreateScrollFrame(self.settingsFrame)
-    self.settingsFrame.scrollFrame:SetScrollStep(25)
+    self.settingsFrame.scrollFrame:SetScrollStep(50)
 
     self:InitWidgets()
-    Cell:CreateButtonGroup(self.widgetPageButtons, function(widget, b)
-        self:SetWidget(widget)
-    end)
+
+    local widgetListWindow = CUF:CreateFrame("CUF_Menu_WidgetList", self.window,
+        sectionWidth / 3,
+        self.settingsFrame:GetHeight(), false, true)
+    widgetListWindow:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", 1, 0)
+
+    ---@class MenuFrame.widgetListFrame: Frame
+    ---@field scrollFrame CellScrollFrame
+    self.widgetListFrame = CUF:CreateFrame("CUF_Menu_WidgetListFrame", widgetListWindow,
+        widgetListWindow:GetWidth(),
+        widgetListWindow:GetHeight(), false, true)
+    self.widgetListFrame:SetPoint("TOPLEFT", widgetListWindow, "TOPLEFT", 0, 0)
+
+    Cell:CreateScrollFrame(self.widgetListFrame)
+    self.widgetListFrame.scrollFrame:SetScrollStep(25)
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

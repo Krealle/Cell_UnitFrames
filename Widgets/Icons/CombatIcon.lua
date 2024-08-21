@@ -39,6 +39,7 @@ Handler:RegisterWidget(W.UpdateCombatIconWidget, const.WIDGET_KIND.COMBAT_ICON)
 ---@param button CUFUnitButton
 ---@param event? WowEvent
 function U:UnitFrame_UpdateCombatIcon(button, event)
+    if not button:HasWidget(const.WIDGET_KIND.COMBAT_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -84,3 +85,5 @@ function W:CreateCombatIcon(button)
     combatIcon.SetWidgetSize = W.SetWidgetSize
     combatIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.COMBAT_ICON, W.CreateCombatIcon)

@@ -211,7 +211,7 @@ end
 ---@param fontDisable? string
 ---@param template? Template
 ---@param ... any
----@return Button
+---@return CellButton
 function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, noBackground, fontNormal, fontDisable,
                           template, ...)
     local b = Cell:CreateButton(parent, text, (buttonColor or "accent-hover"), size or 16, noBorder, noBackground,

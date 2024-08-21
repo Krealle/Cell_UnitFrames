@@ -21,6 +21,7 @@ local UnitGUID = UnitGUID
 
 ---@param self CUFUnitButton
 local function ResetAuraTables(self)
+    if not self:HasWidget(const.WIDGET_KIND.BUFFS) then return end
     wipe(self.widgets.buffs._auraCache)
     wipe(self.widgets.debuffs._auraCache)
 end
@@ -109,6 +110,7 @@ U.UpdateAll = UnitFrame_UpdateAll
 
 ---@param button CUFUnitButton
 local function UnitFrame_ShouldShowAuras(button)
+    if not button:HasWidget(const.WIDGET_KIND.BUFFS) then return end
     return button.widgets.buffs.enabled or button.widgets.debuffs.enabled
 end
 
@@ -128,6 +130,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleRaidTargetEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.raidIcon.enabled or show then
         button:RegisterEvent("RAID_TARGET_UPDATE")
@@ -159,6 +162,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleAbsorbEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
     if not button:IsShown() then return end
     if button.widgets.shieldBar.enabled
         or (button.widgets.healthText._showingAbsorbs and button.widgets.healthText.enabled)
@@ -173,6 +177,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleReadyCheckEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.readyCheckIcon.enabled or show then
         button:RegisterEvent("READY_CHECK")
@@ -189,6 +194,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleRestingEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.restingIcon.enabled or show then
         button:RegisterEvent("PLAYER_UPDATE_RESTING")
@@ -510,6 +516,7 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
             self.states.unit = value
             self.states.displayedUnit = value
 
+            W:AssignWidgets(self, value)
             ResetAuraTables(self)
         end
     end
@@ -536,6 +543,11 @@ function CUFUnitButton_OnLoad(button)
         return button.__unitGuid
     end
 
+    ---@param widget WIDGET_KIND
+    function button:HasWidget(widget)
+        return button.widgets[widget] ~= nil
+    end
+
     -- backdrop
     button:SetBackdrop({
         bgFile = Cell.vars.whiteTexture,
@@ -549,23 +561,6 @@ function CUFUnitButton_OnLoad(button)
     -- Widgets
     W:CreateHealthBar(button)
     W:CreatePowerBar(button)
-    W:CreateShieldBar(button)
-    W:CreateCastBar(button)
-
-    W:CreateNameText(button)
-    W:CreateHealthText(button)
-    W:CreatePowerText(button)
-    W:CreateLevelText(button)
-
-    W:CreateRaidIcon(button)
-    W:CreateRoleIcon(button)
-    W:CreateLeaderIcon(button)
-    W:CreateCombatIcon(button)
-    W:CreateReadyCheckIcon(button)
-    W:CreateRestingIcon(button)
-
-    button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
-    button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
 
     -- targetHighlight
     ---@class HighlightWidget: BackdropTemplate, Frame

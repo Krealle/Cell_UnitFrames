@@ -26,8 +26,8 @@ CUF.Handler = Handler
 ---@param setting OPTION_KIND
 ---@param subSetting string
 local function IterateGenericSetters(button, unit, widgetName, setting, subSetting)
+    if not button:HasWidget(widgetName) then return end
     local widget = button.widgets[widgetName] ---@type Widget
-    if not widget then return end
 
     local styleTable = DB.GetWidgetTable(widgetName, unit)
 
@@ -76,7 +76,11 @@ CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidge
 ---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
     --CUF:Log("|cffff7777RegisterWidget:|r", widgetName)
-    self.widgets[widgetName] = func
+    self.widgets[widgetName] = (function(...)
+        local button = select(1, ...) ---@type CUFUnitButton
+        if not button:HasWidget(widgetName) then return end
+        func(...)
+    end)
 end
 
 -------------------------------------------------
@@ -95,8 +99,10 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
         function(button)
             button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
             for _, widget in pairs(const.WIDGET_KIND) do
-                local isSelected = widget == selectedWidget and button._isSelected
-                button.widgets[widget]:_SetIsSelected(isSelected)
+                if button:HasWidget(widget) then
+                    local isSelected = widget == selectedWidget and button._isSelected
+                    button.widgets[widget]:_SetIsSelected(isSelected)
+                end
             end
         end)
 end

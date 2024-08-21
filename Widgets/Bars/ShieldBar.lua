@@ -47,11 +47,13 @@ Handler:RegisterWidget(W.UpdateShieldBarWidget, const.WIDGET_KIND.SHIELD_BAR)
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateShieldBarHeight(button)
+    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
     button.widgets.shieldBar:UpdateSize()
 end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateShieldBar(button)
+    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -149,3 +151,5 @@ function W:CreateShieldBar(button)
     shieldBar.SetEnabled = W.SetEnabled
     shieldBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.SHIELD_BAR, W.CreateShieldBar)

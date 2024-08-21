@@ -197,6 +197,7 @@ end
 ---@param button CUFUnitButton
 ---@param updateInfo UnitAuraUpdateInfo?
 function U:UnitFrame_UpdateAuras(button, updateInfo)
+    if not button:HasWidget(CUF.constants.WIDGET_KIND.BUFFS) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 

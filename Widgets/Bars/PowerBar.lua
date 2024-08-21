@@ -33,7 +33,9 @@ function W:SetPowerSize(button, size)
     end
 
     -- Ensure shield bar doesnt ascend to heaven
-    button.widgets.shieldBar:UpdateSize()
+    if button:HasWidget(CUF.constants.WIDGET_KIND.SHIELD_BAR) then
+        button.widgets.shieldBar:UpdateSize()
+    end
 end
 
 -------------------------------------------------

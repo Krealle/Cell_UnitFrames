@@ -289,6 +289,19 @@ function W:CreateAuraIcons(button, type)
     return auraIcons
 end
 
+---@param button CUFUnitButton
+function W:CreateBuffs(button)
+    button.widgets.buffs = W:CreateAuraIcons(button, const.WIDGET_KIND.BUFFS)
+end
+
+---@param button CUFUnitButton
+function W:CreateDebuffs(button)
+    button.widgets.debuffs = W:CreateAuraIcons(button, const.WIDGET_KIND.DEBUFFS)
+end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.BUFFS, W.CreateBuffs)
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
+
 -------------------------------------------------
 -- MARK: Cell typing
 -------------------------------------------------

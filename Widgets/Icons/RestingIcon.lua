@@ -42,6 +42,7 @@ Handler:RegisterWidget(W.UpdateRestingIconWidget, const.WIDGET_KIND.RESTING_ICON
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateRestingIcon(button)
+    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -87,3 +88,5 @@ function W:CreateRestingIcon(button)
     restingIcon.SetWidgetSize = W.SetWidgetSize
     restingIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.RESTING_ICON, W.CreateRestingIcon)

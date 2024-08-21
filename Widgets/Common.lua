@@ -2,7 +2,9 @@
 local CUF = select(2, ...)
 
 ---@class CUF.widgets
+---@field WidgetsCreateFuncs table<WIDGET_KIND, fun(self: CUF.widgets, button: CUFUnitButton)>
 local W = CUF.widgets
+W.WidgetsCreateFuncs = {}
 
 -------------------------------------------------
 -- MARK: Widget Setters
@@ -51,4 +53,30 @@ end
 ---@param styleTable WidgetTable
 function W.SetWidgetFrameLevel(widget, styleTable)
     widget:SetFrameLevel(styleTable.frameLevel)
+end
+
+-------------------------------------------------
+-- MARK: Assign Widgets to Buttons
+-------------------------------------------------
+
+---@param widgetName WIDGET_KIND
+---@param func fun(self: CUF.widgets, button: CUFUnitButton)
+function W:RegisterCreateWidgetFunc(widgetName, func)
+    self.WidgetsCreateFuncs[widgetName] = func
+end
+
+---@param button CUFUnitButton
+---@param widgetName WIDGET_KIND
+function W:CreateWidget(button, widgetName)
+    if not self.WidgetsCreateFuncs[widgetName] then return end
+
+    self.WidgetsCreateFuncs[widgetName](self, button)
+end
+
+---@param button CUFUnitButton
+---@param unit Unit
+function W:AssignWidgets(button, unit)
+    for widgetName, _ in pairs(CUF.Defaults.Layouts[unit].widgets) do
+        W:CreateWidget(button, widgetName)
+    end
 end

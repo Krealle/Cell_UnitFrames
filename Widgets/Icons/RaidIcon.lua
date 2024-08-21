@@ -42,6 +42,7 @@ Handler:RegisterWidget(W.UpdateRaidIconWidget, const.WIDGET_KIND.RAID_ICON)
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateRaidIcon(button)
+    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -92,3 +93,5 @@ function W:CreateRaidIcon(button)
     raidIcon.SetWidgetSize = W.SetWidgetSize
     raidIcon.SetWidgetFrameLevel = W.SetWidgetFrameLevel
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.RAID_ICON, W.CreateRaidIcon)

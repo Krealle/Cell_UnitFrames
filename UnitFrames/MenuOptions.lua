@@ -72,7 +72,7 @@ local function AddUnitsToMenu()
                 unitPage.frame:SetPoint("TOPLEFT")
                 unitPage.id = unit ---@type Unit
 
-                ---@class UnitMenuPageButton: Button
+                ---@class UnitMenuPageButton: CellButton
                 unitPage.pageButton = CUF:CreateButton(parent.unitSection, L[unit], { 85, 17 })
                 unitPage.pageButton.id = unit ---@type Unit
 

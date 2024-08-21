@@ -4,8 +4,6 @@ local CUF = select(2, ...)
 ---@class CUF.database
 local DB = CUF.DB
 
-local dbDebug = function(...) if CUF.IsInDebugMode() and 2 == 1 then CUF:Log(...) end end
-
 -----------------------------------------
 -- Getters
 -----------------------------------------
@@ -46,7 +44,6 @@ end
 ---@param layout string?
 ---@return WidgetTables
 function DB.GetAllWidgetTables(unit, layout)
-    dbDebug("|cffff7777DB:GetWidgetTable:|r", unit, layout)
     return DB.GetUnit(layout or CUF.vars.selectedLayout, unit or CUF.vars.selectedUnit).widgets
 end
 
@@ -55,7 +52,6 @@ end
 ---@param layout string?
 ---@return WidgetTable
 function DB.GetWidgetTable(which, unit, layout)
-    dbDebug("|cffff7777DB:GetWidget:|r", which, unit, layout)
     return DB.GetAllWidgetTables(unit, layout)[which]
 end
 

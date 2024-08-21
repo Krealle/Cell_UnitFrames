@@ -11,3 +11,4 @@ ignore:
   - Annotations.lua
   - WidgetAnnotations.lua
   - README.md
+  - generate_changelog.sh

@@ -219,8 +219,6 @@ end
 ---@param unit UnitToken
 ---@param castGUID WOWGUID?
 function U:CastBar_CastStart(button, event, unit, castGUID)
-    CUF:DevAdd({ event, unit, castGUID, ShouldShow(button, unit) }, "CastBar_CastStart")
-    CUF:Log(event, unit, ShouldShow(button, unit))
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -290,8 +288,6 @@ end
 ---@param castID WOWGUID
 ---@param spellID number
 function U:CastBar_CastUpdate(button, event, unit, castID, spellID)
-    CUF:DevAdd({ event, unit, castID, spellID, ShouldShow(button, unit) }, "CastBar_CastUpdate")
-    CUF:Log(event, unit, spellID, ShouldShow(button, unit))
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -339,8 +335,6 @@ end
 ---@param spellID number
 ---@param complete boolean?
 function U:CastBar_CastStop(button, event, unit, castID, spellID, complete)
-    CUF:DevAdd({ event, unit, castID, spellID, ShouldShow(button, unit) }, "CastBar_CastStop")
-    CUF:Log(event, unit, spellID, complete)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -360,8 +354,6 @@ end
 ---@param castID WOWGUID
 ---@param spellID number
 function U:CastBar_CastFail(button, event, unit, castID, spellID)
-    CUF:DevAdd({ event, unit, castID, spellID, ShouldShow(button, unit) }, "CastBar_CastFail")
-    CUF:Log(event, unit, castID, spellID)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar

@@ -1434,7 +1434,6 @@ function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
         const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.USE_FULLY_CHARGED,
         L.UseFullyChargedTooltip)
     self:AnchorBelow(f.useFullyCharged, f.title)
-    CUF:DevAdd(f.useFullyCharged, "UseFullyCharged")
 
     f.showEmpowerName = self:CreateCheckBox(f, widgetName, L.ShowEmpowerName,
         const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.SHOW_EMPOWER_NAME,

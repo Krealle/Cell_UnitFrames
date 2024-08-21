@@ -30,7 +30,7 @@ function DB.VerifyDB()
 
                 -- Remove any widgets that shouldn't be there
                 for widgetName, _ in pairs(layoutTable.CUFUnits[unit].widgets) do
-                    if not unitLayout.widgets[widgetName] then
+                    if type(widgetName) == "string" and not unitLayout.widgets[widgetName] then
                         CUF:Warn("Found widget in DB that doesn't exist for", unit .. ": " .. widgetName)
                         layoutTable.CUFUnits[unit].widgets[widgetName] = nil
                     end

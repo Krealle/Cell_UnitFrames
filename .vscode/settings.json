@@ -36,5 +36,6 @@
     "GAME_LOCALE",
     "SetRaidTargetIconTexture",
     "PlayerCastingBarFrame",
+    "CellLayoutsPreviewButton",
   ],
 }

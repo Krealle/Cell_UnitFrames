@@ -244,7 +244,7 @@ function menuWindow:Create()
     self.window = CUF:CreateFrame("CUF_Menu", optionsFrame,
         self.baseWidth,
         windowHeight)
-    self.window:SetPoint("TOPLEFT", optionsFrame, "TOPLEFT", -self.baseWidth, -105)
+    self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -buffer)
 
     -- mask
     F:ApplyCombatProtectionToFrame(self.window)

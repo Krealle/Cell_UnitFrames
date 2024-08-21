@@ -21,6 +21,7 @@ local UnitGUID = UnitGUID
 
 ---@param self CUFUnitButton
 local function ResetAuraTables(self)
+    if not self:HasWidget(const.WIDGET_KIND.BUFFS) then return end
     wipe(self.widgets.buffs._auraCache)
     wipe(self.widgets.debuffs._auraCache)
 end
@@ -109,6 +110,7 @@ U.UpdateAll = UnitFrame_UpdateAll
 
 ---@param button CUFUnitButton
 local function UnitFrame_ShouldShowAuras(button)
+    if not button:HasWidget(const.WIDGET_KIND.BUFFS) then return end
     return button.widgets.buffs.enabled or button.widgets.debuffs.enabled
 end
 

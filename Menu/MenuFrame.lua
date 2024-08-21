@@ -33,6 +33,7 @@ function menuWindow:SetUnitPage(unit)
     self.selectedUnitPage.frame:Show()
 
     CUF.Menu:UpdateSelectedPages(unit)
+    self:LoadWidgetList(unit)
 end
 
 -- Update the selected widge
@@ -56,6 +57,57 @@ function menuWindow:SetWidget(widget)
     end)
 
     CUF.Menu:UpdateSelectedPages(nil, widget)
+end
+
+---@param unit Unit
+function menuWindow:LoadWidgetList(unit)
+    self.widgetListFrame.scrollFrame:Reset()
+
+    local optionCount = 0
+    local widgetTable = CUF.DB.GetAllWidgetTables(unit)
+
+    local prevButton
+    for widgetName, widget in pairs(widgetTable) do
+        ---@cast widgetName WIDGET_KIND
+        ---@cast widget WidgetTable
+
+        if not self.listButtons[widgetName] then
+            self.listButtons[widgetName] = CUF:CreateButton(self.widgetListFrame.scrollFrame.content, " ",
+                { 20, 20 }, nil, "transparent-accent")
+        end
+
+        local button = self.listButtons[widgetName]
+        button:SetText(L[widgetName])
+        button:GetFontString():ClearAllPoints()
+        button:GetFontString():SetPoint("LEFT", 5, 0)
+        button:GetFontString():SetPoint("RIGHT", -5, 0)
+
+        button.id = widgetName
+        optionCount = optionCount + 1
+
+        if widget.enabled then
+            button:SetTextColor(1, 1, 1, 1)
+        else
+            button:SetTextColor(0.466, 0.466, 0.466, 1)
+        end
+
+        button:SetParent(self.widgetListFrame.scrollFrame.content)
+        button:SetPoint("RIGHT")
+        if not prevButton then
+            button:SetPoint("TOPLEFT")
+        else
+            button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, 1)
+        end
+        button:Show()
+
+        prevButton = button
+    end
+
+    self.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
+
+    Cell:CreateButtonGroup(self.listButtons, function(widget, b)
+        self:SetWidget(widget)
+    end)
 end
 
 function menuWindow:ShowMenu()
@@ -240,6 +292,15 @@ function menuWindow:Create()
     Cell:CreateButtonGroup(self.widgetPageButtons, function(widget, b)
         self:SetWidget(widget)
     end)
+
+    ---@class MenuFrame.widgetListFrame: Frame
+    ---@field scrollFrame CellScrollFrame
+    self.widgetListFrame = CUF:CreateFrame("CUF_Menu_WidgetListFrame", self.window,
+        sectionWidth / 3,
+        self.settingsFrame:GetHeight(), false, true)
+    self.widgetListFrame:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", 1, 0)
+    Cell:CreateScrollFrame(self.widgetListFrame)
+    self.widgetListFrame.scrollFrame:SetScrollStep(25)
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

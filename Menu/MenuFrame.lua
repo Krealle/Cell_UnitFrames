@@ -197,7 +197,7 @@ function menuWindow:Create()
     local optionsFrame = Cell.frames.optionsFrame
 
     self.unitHeight = 180
-    self.widgetHeight = 310
+    self.widgetHeight = 400
     self.baseWidth = 450
     self.paneHeight = 17
 

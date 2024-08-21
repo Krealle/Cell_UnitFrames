@@ -13,12 +13,11 @@ local Handler = CUF.Handler
 ---@field unitPages table<Unit, UnitsMenuPage>
 ---@field unitPageButtons UnitMenuPageButton[]
 ---@field widgetPages table<WIDGET_KIND, WidgetMenuPage>
----@field widgetPageButtons WidgetMenuPage.pageButton[]
 local menuWindow = {}
 menuWindow.unitPages = {}
 menuWindow.unitPageButtons = {}
 menuWindow.widgetPages = {}
-menuWindow.widgetPageButtons = {}
+menuWindow.listButtons = {}
 
 CUF.MenuWindow = menuWindow
 
@@ -118,7 +117,7 @@ function menuWindow:ShowMenu()
         self.window:Show()
 
         self.unitPageButtons[1]:Click()
-        self.widgetPageButtons[1]:Click()
+        self.listButtons["nameText"]:Click()
 
         self.init = true
         CUF.vars.isMenuOpen = true
@@ -180,40 +179,12 @@ end
 
 function menuWindow:InitWidgets()
     --CUF:Log("menuWindow - InitWidgets")
-    local prevButton
-    local prevAnchor
-    local idx = 1
 
     for _, widget in pairs(CUF.Menu.widgetsToAdd) do
         ---@type WidgetMenuPage
         local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, unpack(widget.options))
 
         self.widgetPages[widgetPage.id] = widgetPage
-
-        ---@class WidgetMenuPage.pageButton: Button
-        widgetPage.pageButton = Cell:CreateButton(self.widgetPane, L[widget.widgetName], "accent-hover", { 95, 17 })
-        widgetPage.pageButton.id = widget.widgetName
-
-        if prevButton then
-            -- Max 4 buttons per row
-            if idx % 4 == 0 then
-                widgetPage.pageButton:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
-                idx = 1
-                prevAnchor = widgetPage.pageButton
-
-                self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
-                self.widgetPane:SetHeight(self.widgetPane:GetHeight() + self.paneHeight)
-            else
-                widgetPage.pageButton:SetPoint("TOPRIGHT", prevButton, "TOPLEFT", 1, 0)
-                idx = idx + 1
-            end
-        else
-            widgetPage.pageButton:SetPoint("BOTTOMRIGHT", self.widgetPane, "BOTTOMRIGHT", 0, 1)
-            prevAnchor = widgetPage.pageButton
-        end
-        prevButton = widgetPage.pageButton
-
-        table.insert(self.widgetPageButtons, widgetPage.pageButton)
     end
 end
 
@@ -289,9 +260,6 @@ function menuWindow:Create()
     self.settingsFrame.scrollFrame:SetScrollStep(25)
 
     self:InitWidgets()
-    Cell:CreateButtonGroup(self.widgetPageButtons, function(widget, b)
-        self:SetWidget(widget)
-    end)
 
     ---@class MenuFrame.widgetListFrame: Frame
     ---@field scrollFrame CellScrollFrame

@@ -71,7 +71,8 @@
 ---@field content Frame
 ---@field SetScrollStep fun(self: CellScrollFrame, step: number)
 ---@field ResetScroll fun(self: CellScrollFrame)
----@field SetContentHeight fun(self: CellScrollFrame, height: number)
+---@field SetContentHeight fun(self: CellScrollFrame, height: number, num: number?, spacing: number?)
+---@field Reset fun(self: CellScrollFrame)
 
 ---@class CellCheckButton: CheckButton
 ---@field label FontString

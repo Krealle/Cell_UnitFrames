@@ -1,4 +1,4 @@
-## Interface: 110000,110002
+## Interface: 110002
 ## SavedVariables: CUF_DB
 ## IconTexture: Interface\ICONS\spell_progenitor_buff
 
@@ -7,8 +7,7 @@
 ## Version: @project-version@
 ## X-Date: @project-date-iso@
 ## X-License: MIT
-## X-Curse-Project-ID:
-## X-Wago-ID:
+## X-Curse-Project-ID: 1085605
 
 ## Dependencies: Cell
 

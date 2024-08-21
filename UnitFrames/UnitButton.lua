@@ -276,6 +276,7 @@ function U:UpdateUnitFrameVisibility(which, unit, button, frame)
         else
             UnregisterUnitWatch(button)
             frame:Hide()
+            button:Hide()
         end
     end
 end

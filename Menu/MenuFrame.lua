@@ -291,7 +291,7 @@ function menuWindow:Create()
     self.settingsFrame:SetPoint("TOPLEFT", self.widgetPane, "BOTTOMLEFT", 0, -buffer)
 
     Cell:CreateScrollFrame(self.settingsFrame)
-    self.settingsFrame.scrollFrame:SetScrollStep(25)
+    self.settingsFrame.scrollFrame:SetScrollStep(50)
 
     self:InitWidgets()
 

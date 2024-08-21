@@ -18,7 +18,7 @@ function Debug:InitDebugWindow()
     self.window:AddVar(
         "selectedLayoutTable", function() CUF:DevAdd(CUF.DB.SelectedLayoutTable(), "selectedLayoutTable") end)
     self.window:AddVar("selectedWidgetTable",
-        function() CUF:DevAdd(CUF.DB.SelectedWidgetTables(), "selectedWidgetTable") end)
+        function() CUF:DevAdd(CUF.DB.GetAllWidgetTables(), "selectedWidgetTable") end)
     self.window:AddVar("CUF.vars", function() CUF:DevAdd(CUF.vars, "CUF.vars") end)
     self.window:AddVar("CUF_DB", function() CUF:DevAdd(CUF_DB, "CUF_DB") end)
     self.window:AddVar("Buttons", function() CUF:DevAdd(CUF.unitButtons, "unitButtons") end)

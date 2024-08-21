@@ -36,12 +36,6 @@ function DB.SelectedLayoutTable()
     return DB.GetLayoutTable(CUF.vars.selectedLayout)
 end
 
--- Returns selected widget tables
----@return WidgetTables
-function DB.SelectedWidgetTables()
-    return DB.SelectedLayoutTable().widgets
-end
-
 -- Returns active layout table
 ---@return UnitLayoutTable
 function DB.CurrentLayoutTable()
@@ -65,34 +59,6 @@ function DB.GetWidgetTable(which, unit, layout)
     return DB.GetAllWidgetTables(unit, layout)[which]
 end
 
----@param which WIDGET_KIND
----@param property OPTION_KIND | AURA_OPTION_KIND
----@param unit Unit?
----@param layout string?
----@return any
-function DB.GetWidgetProperty(which, property, unit, layout)
-    dbDebug("|cffff7777DB:GetWidgetProperty:|r", which, property, unit, layout)
-    return DB.GetWidgetTable(which, unit, layout)[property]
-end
-
----@param which WIDGET_KIND
----@param unit Unit?
----@param layout string?
----@return boolean
-function DB.IsWidgetEnabled(which, unit, layout)
-    dbDebug("|cffff7777DB:IsWidgetEnabled:|r", which, unit, layout)
-    return DB.GetWidgetTable(which, unit, layout).enabled
-end
-
----@param which WIDGET_KIND
----@param unit Unit?
----@param layout string?
----@return PositionOpt
-function DB.GetWidgetPosition(which, unit, layout)
-    dbDebug("|cffff7777DB:GetWidgetPosition:|r", which, unit, layout)
-    return DB.GetAllWidgetTables(unit, layout)[which].position
-end
-
 ---@param which "buffs"|"debuffs"
 ---@param kind "blacklist"|"whitelist"
 ---@param unit Unit?
@@ -105,25 +71,6 @@ end
 -----------------------------------------
 -- Setters
 -----------------------------------------
-
----@param which WIDGET_KIND
----@param enabled boolean
----@param unit Unit?
----@param layout string?
-function DB.SetWidgetEnabled(which, enabled, unit, layout)
-    dbDebug("|cffff7777DB:SetWidgetEnabled:|r", which, enabled, unit, layout)
-    DB.GetWidgetTable(which, unit, layout).enabled = enabled
-end
-
----@param which WIDGET_KIND
----@param property OPTION_KIND | AURA_OPTION_KIND
----@param value any
----@param unit Unit?
----@param layout string?
-function DB.SetWidgetProperty(which, property, value, unit, layout)
-    dbDebug("|cffff7777DB:SetWidgetProperty:|r", which, property, value, unit, layout)
-    DB.GetWidgetTable(which, unit, layout)[property] = value
-end
 
 ---@param which "buffs"|"debuffs"
 ---@param kind "blacklist"|"whitelist"

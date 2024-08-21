@@ -117,6 +117,13 @@ function menuWindow:LoadWidgetList(unit)
     Cell:CreateButtonGroup(self.listButtons, function(widget, b)
         self:SetWidget(widget)
     end)
+
+    -- Make sure that the currently selected widget is valid
+    if self.selectedWidget then
+        if not self.listButtons[self.selectedWidget.id] then
+            self.listButtons[self.firstWidgetInList]:Click()
+        end
+    end
 end
 
 ---@param layout string?

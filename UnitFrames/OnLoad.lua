@@ -130,6 +130,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleRaidTargetEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.raidIcon.enabled or show then
         button:RegisterEvent("RAID_TARGET_UPDATE")
@@ -161,6 +162,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleAbsorbEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
     if not button:IsShown() then return end
     if button.widgets.shieldBar.enabled
         or (button.widgets.healthText._showingAbsorbs and button.widgets.healthText.enabled)
@@ -175,6 +177,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleReadyCheckEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.readyCheckIcon.enabled or show then
         button:RegisterEvent("READY_CHECK")
@@ -191,6 +194,7 @@ end
 ---@param button CUFUnitButton
 ---@param show? boolean
 function U:ToggleRestingEvents(button, show)
+    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
     if not button:IsShown() then return end
     if button.widgets.restingIcon.enabled or show then
         button:RegisterEvent("PLAYER_UPDATE_RESTING")

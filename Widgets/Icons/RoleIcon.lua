@@ -38,6 +38,7 @@ Handler:RegisterWidget(W.UpdateRoleIconWidget, const.WIDGET_KIND.ROLE_ICON)
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateRoleIcon(button)
+    if not button:HasWidget(const.WIDGET_KIND.ROLE_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 

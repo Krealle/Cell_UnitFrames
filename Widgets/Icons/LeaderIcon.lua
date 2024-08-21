@@ -38,6 +38,7 @@ Handler:RegisterWidget(W.UpdateLeaderIconWidget, const.WIDGET_KIND.LEADER_ICON)
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateLeaderIcon(button)
+    if not button:HasWidget(const.WIDGET_KIND.LEADER_ICON) then return end
     local unit = button.states.displayedUnit
     if not unit then return end
 

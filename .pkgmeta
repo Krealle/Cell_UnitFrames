@@ -1,0 +1,13 @@
+package-as: Cell_UnitFrames
+
+required-dependencies:
+  - cell
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - Annotations.lua
+  - WidgetAnnotations.lua
+  - README.md

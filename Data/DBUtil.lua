@@ -27,6 +27,14 @@ function DB.VerifyDB()
             else
                 CUF.Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
                 --CUF.Util:RenameProp(layoutTable.CUFUnits[unit], "pointTo", "relativePoint")
+
+                -- Remove any widgets that shouldn't be there
+                for widgetName, _ in pairs(layoutTable.CUFUnits[unit].widgets) do
+                    if not unitLayout.widgets[widgetName] then
+                        CUF:Warn("Found widget in DB that doesn't exist for", unit .. ": " .. widgetName)
+                        layoutTable.CUFUnits[unit].widgets[widgetName] = nil
+                    end
+                end
             end
         end
     end

@@ -142,3 +142,4 @@
 ---@field _timers table
 ---@field _isSelected boolean
 ---@field name string
+---@field HasWidget fun(self: CUFUnitButton, widget: WIDGET_KIND): boolean

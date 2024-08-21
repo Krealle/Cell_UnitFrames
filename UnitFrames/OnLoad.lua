@@ -537,6 +537,11 @@ function CUFUnitButton_OnLoad(button)
         return button.__unitGuid
     end
 
+    ---@param widget WIDGET_KIND
+    function button:HasWidget(widget)
+        return button.widgets[widget] ~= nil
+    end
+
     -- backdrop
     button:SetBackdrop({
         bgFile = Cell.vars.whiteTexture,

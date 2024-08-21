@@ -295,12 +295,18 @@ function menuWindow:Create()
 
     self:InitWidgets()
 
-    ---@class MenuFrame.widgetListFrame: Frame
-    ---@field scrollFrame CellScrollFrame
-    self.widgetListFrame = CUF:CreateFrame("CUF_Menu_WidgetListFrame", self.window,
+    local widgetListWindow = CUF:CreateFrame("CUF_Menu_WidgetList", self.window,
         sectionWidth / 3,
         self.settingsFrame:GetHeight(), false, true)
-    self.widgetListFrame:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", 1, 0)
+    widgetListWindow:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", 1, 0)
+
+    ---@class MenuFrame.widgetListFrame: Frame
+    ---@field scrollFrame CellScrollFrame
+    self.widgetListFrame = CUF:CreateFrame("CUF_Menu_WidgetListFrame", widgetListWindow,
+        widgetListWindow:GetWidth(),
+        widgetListWindow:GetHeight(), false, true)
+    self.widgetListFrame:SetPoint("TOPLEFT", widgetListWindow, "TOPLEFT", 0, 0)
+
     Cell:CreateScrollFrame(self.widgetListFrame)
     self.widgetListFrame.scrollFrame:SetScrollStep(25)
 

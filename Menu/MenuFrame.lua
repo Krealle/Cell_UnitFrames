@@ -64,42 +64,45 @@ function menuWindow:LoadWidgetList(unit)
 
     local optionCount = 0
     local widgetTable = CUF.DB.GetAllWidgetTables(unit)
-
     local prevButton
-    for widgetName, widget in pairs(widgetTable) do
-        ---@cast widgetName WIDGET_KIND
-        ---@cast widget WidgetTable
 
-        if not self.listButtons[widgetName] then
-            self.listButtons[widgetName] = CUF:CreateButton(self.widgetListFrame.scrollFrame.content, " ",
-                { 20, 20 }, nil, "transparent-accent")
+    -- The list is ordered by load order from .toc
+    for _, widgetPage in pairs(CUF.Menu.widgetsToAdd) do
+        local widgetName = widgetPage.widgetName
+        local widget = widgetTable[widgetName]
+
+        if widget then
+            if not self.listButtons[widgetName] then
+                self.listButtons[widgetName] = CUF:CreateButton(self.widgetListFrame.scrollFrame.content, " ",
+                    { 20, 20 }, nil, "transparent-accent")
+            end
+
+            local button = self.listButtons[widgetName]
+            button:SetText(L[widgetName])
+            button:GetFontString():ClearAllPoints()
+            button:GetFontString():SetPoint("LEFT", 5, 0)
+            button:GetFontString():SetPoint("RIGHT", -5, 0)
+
+            button.id = widgetName
+            optionCount = optionCount + 1
+
+            if widget.enabled then
+                button:SetTextColor(1, 1, 1, 1)
+            else
+                button:SetTextColor(0.466, 0.466, 0.466, 1)
+            end
+
+            button:SetParent(self.widgetListFrame.scrollFrame.content)
+            button:SetPoint("RIGHT")
+            if not prevButton then
+                button:SetPoint("TOPLEFT")
+            else
+                button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, 1)
+            end
+            button:Show()
+
+            prevButton = button
         end
-
-        local button = self.listButtons[widgetName]
-        button:SetText(L[widgetName])
-        button:GetFontString():ClearAllPoints()
-        button:GetFontString():SetPoint("LEFT", 5, 0)
-        button:GetFontString():SetPoint("RIGHT", -5, 0)
-
-        button.id = widgetName
-        optionCount = optionCount + 1
-
-        if widget.enabled then
-            button:SetTextColor(1, 1, 1, 1)
-        else
-            button:SetTextColor(0.466, 0.466, 0.466, 1)
-        end
-
-        button:SetParent(self.widgetListFrame.scrollFrame.content)
-        button:SetPoint("RIGHT")
-        if not prevButton then
-            button:SetPoint("TOPLEFT")
-        else
-            button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, 1)
-        end
-        button:Show()
-
-        prevButton = button
     end
 
     self.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)

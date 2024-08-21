@@ -78,12 +78,14 @@ function menuWindow:LoadWidgetList(unit)
                     { 20, 20 }, nil, "transparent-accent")
             end
 
+            ---@class WidgetMenuPageButton: CellButton
             local button = self.listButtons[widgetName]
             button:SetText(L[widgetName])
             button:GetFontString():ClearAllPoints()
             button:GetFontString():SetPoint("LEFT", 5, 0)
             button:GetFontString():SetPoint("RIGHT", -5, 0)
 
+            button.id = widgetName
             optionCount = optionCount + 1
 
             if widget.enabled then

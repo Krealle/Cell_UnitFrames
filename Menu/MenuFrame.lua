@@ -33,8 +33,8 @@ function menuWindow:SetUnitPage(unit)
     self.selectedUnitPage = self.unitPages[unit]
     self.selectedUnitPage.frame:Show()
 
-    CUF.Menu:UpdateSelectedPages(unit)
     self:LoadWidgetList(unit)
+    CUF.Menu:UpdateSelectedPages(unit)
 end
 
 -- Update the selected widge
@@ -120,7 +120,7 @@ function menuWindow:LoadWidgetList(unit)
 
     -- Make sure that the currently selected widget is valid
     if self.selectedWidget then
-        if not self.listButtons[self.selectedWidget.id] then
+        if not widgetTable[self.selectedWidget.id] then
             self.listButtons[self.firstWidgetInList]:Click()
         end
     end

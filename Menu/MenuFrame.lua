@@ -65,7 +65,7 @@ function menuWindow:LoadWidgetList(unit)
     self.widgetListFrame.scrollFrame:Reset()
 
     local optionCount = 0
-    local widgetTable = CUF.Defaults.Layouts[unit].widgets
+    local widgetTable = CUF.DB.GetAllWidgetTables(unit)
     local prevButton
     self.firstWidgetInList = nil
 

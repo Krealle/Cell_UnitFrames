@@ -227,10 +227,10 @@ function Builder:CreateCheckBox(parent, widgetName, title, path, tooltip)
     checkbox.Get_DB = HandleWidgetOption
 
     checkbox:SetPoint("TOPLEFT")
-    checkbox:SetChecked(checkbox.Get_DB(widgetName, path))
+    checkbox:SetChecked(Util:ToBool(checkbox.Get_DB(widgetName, path)))
 
     local function LoadPageDB()
-        checkbox:SetChecked(checkbox.Get_DB(widgetName, path))
+        checkbox:SetChecked(Util:ToBool(checkbox.Get_DB(widgetName, path)))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox_" .. path)
 
@@ -278,7 +278,7 @@ function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, 
     end
 
     local function LoadPageDB()
-        slider:SetValue(slider.Get_DB(widgetName, path))
+        slider:SetValue(Util:ToNumber(slider.Get_DB(widgetName, path)))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "Slider_" .. path)
 
@@ -360,7 +360,7 @@ function Builder:CreateEditBox(parent, widgetName, title, width, path)
     end)
 
     local function LoadPageDB()
-        editBox:SetText(editBox.Get_DB(widgetName, path))
+        editBox:SetText(Util:ToString(editBox.Get_DB(widgetName, path)))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "EditBox_" .. path)
 

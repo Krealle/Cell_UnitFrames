@@ -143,3 +143,16 @@
 ---@field _isSelected boolean
 ---@field name string
 ---@field HasWidget fun(self: CUFUnitButton, widget: WIDGET_KIND): boolean
+
+-------------------------------------------------
+-- MARK: Misc
+-------------------------------------------------
+
+---@class stringlib
+---@field utf8charbytes fun(text: string, index: number): number
+---@field utf8len fun(text: string): number
+---@field utf8sub fun(text: string, start: number, end_: number): string
+---@field utf8replace fun(text: string, mapping: table): string
+---@field utf8upper fun(text: string): string
+---@field utf8lower fun(text: string): string
+---@field utf8reverse fun(text: string): string

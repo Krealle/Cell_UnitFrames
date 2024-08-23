@@ -133,6 +133,34 @@ function Util:GetFontItems()
     return newItems
 end
 
+-- Convert a value to a boolean
+---@param value any
+---@return boolean
+function Util:ToBool(value)
+    if value == nil or type(value) ~= "boolean" then return false end
+    return value
+end
+
+-- Convert a value to a number
+---@param value any
+---@return number
+function Util:ToNumber(value)
+    if value == nil or type(value) ~= "number" then return 0 end
+    return value
+end
+
+-- Convert a value to a string
+---@param value any
+---@return string
+function Util:ToString(value)
+    if value == nil or type(value) ~= "string" then
+        if type(value) == "number" then return tostring(value) end
+        return ""
+    end
+
+    return value
+end
+
 -- Returns rgb values for a unit's power color
 --
 -- Doesn't return type prop from F:GetPowerColor

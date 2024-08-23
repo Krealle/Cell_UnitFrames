@@ -1,0 +1,12 @@
+name: CI - LUA
+
+on: [push, pull_request]
+
+jobs:
+  LUA:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check LUA
+        uses: Krealle/luals-check-action@v1
+        with:
+          config-path: .vscode/settings.json

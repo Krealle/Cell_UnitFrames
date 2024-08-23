@@ -178,7 +178,7 @@ local function UpdateAuraIcons(icons)
         icons[icons._auraCount]:SetCooldown(
             (auraData.expirationTime or 0) - auraData.duration,
             auraData.duration,
-            nil,
+            auraData.dispelName,
             auraData.icon,
             auraData.applications,
             auraData.refreshing

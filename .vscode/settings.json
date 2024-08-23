@@ -3,7 +3,7 @@
   "Lua.format.enable": true,
   "Lua.runtime.version": "Lua 5.1",
   "Lua.workspace.ignoreDir": [
-    ".vscode",
+    ".vscode"
   ],
   "Lua.runtime.builtin": {
     "basic": "disable",
@@ -36,6 +36,6 @@
     "GAME_LOCALE",
     "SetRaidTargetIconTexture",
     "PlayerCastingBarFrame",
-    "CellLayoutsPreviewButton",
-  ],
+    "CellLayoutsPreviewButton"
+  ]
 }

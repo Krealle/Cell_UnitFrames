@@ -173,12 +173,13 @@ local function UpdateAuraIcons(icons)
         if not auraInstanceID then break end
 
         local auraData = icons._auraCache[auraInstanceID]
+        local dispelType = auraData.isHarmful and (auraData.dispelName or "") or nil
 
         icons._auraCount = icons._auraCount + 1
         icons[icons._auraCount]:SetCooldown(
             (auraData.expirationTime or 0) - auraData.duration,
             auraData.duration,
-            auraData.dispelName,
+            dispelType,
             auraData.icon,
             auraData.applications,
             auraData.refreshing

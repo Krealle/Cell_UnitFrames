@@ -42,8 +42,7 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
         widget:SetFormat(styleTable.format)
     end
 
-    U:UnitFrame_UpdateHealthText(button)
-    U:ToggleAbsorbEvents(button)
+    widget.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
@@ -52,14 +51,27 @@ Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 -- MARK: UpdateHealthText
 -------------------------------------------------
 
+-- Called on full updates
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateHealthText(button)
-    if button.states.displayedUnit then
-        U:UpdateUnitHealthState(button)
+local function Update(button)
+    if not button.states.displayedUnit then return end
 
-        button.widgets.healthText:UpdateTextColor()
-        button.widgets.healthText:UpdateValue()
-    end
+    local healthText = button.widgets.healthText
+    if not healthText.enabled then return end
+
+    healthText:UpdateTextColor()
+    healthText:UpdateValue()
+end
+
+---@param self HealthTextWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+    self:Show()
+end
+
+---@param self HealthTextWidget
+local function Disable(self)
+    self:Hide()
 end
 
 -------------------------------------------------
@@ -266,6 +278,20 @@ local function HealthText_SetFormat(self, format)
     elseif format == const.HealthTextFormat.CUSTOM then
         self.SetValue = SetHealth_Custom
     end
+
+    -- TODO: Revist this
+    local button = self._owner
+    if self._showingAbsorbs then
+        button:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", function()
+            U:UnitFrame_UpdateHealth(button)
+        end)
+    else
+        button:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", function()
+            U:UnitFrame_UpdateHealth(button)
+        end)
+    end
+
+    self.Update(button)
 end
 
 ---@class HealthTextWidget
@@ -297,6 +323,10 @@ function W:CreateHealthText(button)
             button.widgets.healthText:SetValue(button.states.health, button.states.healthMax, button.states.totalAbsorbs)
         end
     end
+
+    healthText.Update = Update
+    healthText.Enable = Enable
+    healthText.Disable = Disable
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.HEALTH_TEXT, W.CreateHealthText)

@@ -80,7 +80,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
-    U:UnitFrame_UpdateCombatIcon(button)
     U:UnitFrame_UpdateShieldBar(button)
     U:UnitFrame_UpdateShieldBarHeight(button)
     U:UnitFrame_UpdateLevel(button)
@@ -183,9 +182,6 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
     self:RegisterEvent("UNIT_NAME_UPDATE") -- unknown target
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
-
-    self:RegisterEvent("PLAYER_REGEN_ENABLED")
-    self:RegisterEvent("PLAYER_REGEN_DISABLED")
 
     if self.states.unit == const.UNIT.TARGET then
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
@@ -292,8 +288,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             UnitFrame_UpdateAll(self)
         elseif event == "UNIT_PET" and unit == const.UNIT.PLAYER then
             UnitFrame_UpdateAll(self)
-        elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
-            U:UnitFrame_UpdateCombatIcon(self, event)
         end
     end
 end

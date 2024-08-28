@@ -80,7 +80,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
-    U:UnitFrame_UpdateRaidIcon(button)
     U:UnitFrame_UpdateRoleIcon(button)
     U:UnitFrame_UpdateLeaderIcon(button)
     U:UnitFrame_UpdateCombatIcon(button)
@@ -124,19 +123,6 @@ function U:ToggleAuras(button, show)
         button:RegisterEvent("UNIT_AURA")
     else
         button:UnregisterEvent("UNIT_AURA")
-    end
-end
-
--- Register/Unregister UNIT_AURA event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleRaidTargetEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.raidIcon.enabled or show then
-        button:RegisterEvent("RAID_TARGET_UPDATE")
-    else
-        button:UnregisterEvent("RAID_TARGET_UPDATE")
     end
 end
 
@@ -229,7 +215,6 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.PET then
         self:RegisterEvent("UNIT_PET")
     end
-    U:ToggleRaidTargetEvents(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
     U:ToggleAbsorbEvents(self)
@@ -329,8 +314,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             UnitFrame_UpdateAll(self)
         elseif event == "UNIT_PET" and unit == const.UNIT.PLAYER then
             UnitFrame_UpdateAll(self)
-        elseif event == "RAID_TARGET_UPDATE" then
-            U:UnitFrame_UpdateRaidIcon(self)
         elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
             U:UnitFrame_UpdateCombatIcon(self, event)
         elseif event == "READY_CHECK" or event == "READY_CHECK_FINISHED" then

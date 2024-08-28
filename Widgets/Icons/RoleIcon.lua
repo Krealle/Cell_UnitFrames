@@ -27,7 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.ROLE_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateRoleIconWidget(button, unit, setting, subSetting)
-    U:UnitFrame_UpdateRoleIcon(button)
+    button.widgets.roleIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateRoleIconWidget, const.WIDGET_KIND.ROLE_ICON)
@@ -37,8 +37,7 @@ Handler:RegisterWidget(W.UpdateRoleIconWidget, const.WIDGET_KIND.ROLE_ICON)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateRoleIcon(button)
-    if not button:HasWidget(const.WIDGET_KIND.ROLE_ICON) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -52,6 +51,18 @@ function U:UnitFrame_UpdateRoleIcon(button)
     else
         roleIcon:Hide()
     end
+end
+
+---@param self RoleIconWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+    self._owner:AddEventListener("GROUP_ROSTER_UPDATE", Update)
+end
+
+---@param self RoleIconWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("GROUP_ROSTER_UPDATE", Update)
+    self:Hide()
 end
 
 -------------------------------------------------
@@ -90,6 +101,7 @@ function W:CreateRoleIcon(button)
     roleIcon.enabled = false
     roleIcon.id = const.WIDGET_KIND.ROLE_ICON
     roleIcon._isSelected = false
+    roleIcon._owner = button
 
     roleIcon.tex = roleIcon:CreateTexture(nil, "ARTWORK")
     roleIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
@@ -98,8 +110,12 @@ function W:CreateRoleIcon(button)
     roleIcon.SetRole = RoleIcon_SetRole
 
     function roleIcon:_OnIsSelected()
-        U:UnitFrame_UpdateRoleIcon(button)
+        self.Update(self._owner)
     end
+
+    roleIcon.Enable = Enable
+    roleIcon.Disable = Disable
+    roleIcon.Update = Update
 
     roleIcon.SetEnabled = W.SetEnabled
     roleIcon.SetPosition = W.SetPosition

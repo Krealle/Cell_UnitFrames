@@ -67,7 +67,6 @@ end
 local function UnitFrame_UpdateAll(button)
     if not button:IsVisible() then return end
 
-    U:UnitFrame_UpdateName(button)
     U:UnitFrame_UpdateHealthMax(button)
     U:UnitFrame_UpdateHealth(button)
     U:UnitFrame_UpdateHealthColor(button)
@@ -250,8 +249,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             U:UnitFrame_UpdatePowerTextColor(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
-        elseif event == "UNIT_NAME_UPDATE" then
-            U:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, ...)
         elseif event == "UNIT_SPELLCAST_START"

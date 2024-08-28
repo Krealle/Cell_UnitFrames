@@ -87,7 +87,6 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateShieldBar(button)
     U:UnitFrame_UpdateShieldBarHeight(button)
     U:UnitFrame_UpdateLevel(button)
-    U:UnitFrame_UpdateRestingIcon(button)
     U:UnitFrame_UpdateCastBar(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
@@ -192,19 +191,6 @@ function U:ToggleReadyCheckEvents(button, show)
     end
 end
 
--- Register/Unregister UNIT_RESTING event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleRestingEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.restingIcon.enabled or show then
-        button:RegisterEvent("PLAYER_UPDATE_RESTING")
-    else
-        button:UnregisterEvent("PLAYER_UPDATE_RESTING")
-    end
-end
-
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -248,7 +234,6 @@ local function UnitFrame_RegisterEvents(self)
     U:ToggleAuras(self)
     U:ToggleAbsorbEvents(self)
     U:ToggleReadyCheckEvents(self)
-    U:ToggleRestingEvents(self)
     U:ToggleCastEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
@@ -350,8 +335,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             U:UnitFrame_UpdateCombatIcon(self, event)
         elseif event == "READY_CHECK" or event == "READY_CHECK_FINISHED" then
             U:UnitFrame_UpdateReadyCheckIcon(self)
-        elseif event == "PLAYER_UPDATE_RESTING" then
-            U:UnitFrame_UpdateRestingIcon(self)
         end
     end
 end

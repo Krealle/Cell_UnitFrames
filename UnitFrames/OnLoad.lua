@@ -101,6 +101,8 @@ local function UnitFrame_UpdateAll(button)
         U:UnitFrame_UpdatePowerMax(button)
         U:UnitFrame_UpdatePower(button)
     end
+
+    button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
 
@@ -275,6 +277,7 @@ end
 ---@param unit string
 ---@param ... any
 local function UnitFrame_OnEvent(self, event, unit, ...)
+    self:_OnEvent(event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
             U:UnitFrame_UpdateAuras(self, ...)
@@ -363,6 +366,8 @@ local function UnitFrame_OnShow(self)
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
     self._powerBarUpdateRequired = true
     UnitFrame_RegisterEvents(self)
+
+    self:EnableWidgets()
 end
 
 -------------------------------------------------
@@ -387,6 +392,8 @@ local function UnitFrame_OnHide(self)
     end
     self.__displayedGuid = nil
     F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
+
+    self:DisableWidgets()
 end
 
 -------------------------------------------------
@@ -530,10 +537,14 @@ end
 function CUFUnitButton_OnLoad(button)
     --CUF:Log(buttonName, "OnLoad")
 
+    ---@class CUFUnitButton
+    button = button
+
     ---@diagnostic disable-next-line: missing-fields
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
+    button.eventHandlers = {}
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)
@@ -576,6 +587,73 @@ function CUFUnitButton_OnLoad(button)
     mouseoverHighlight:SetIgnoreParentAlpha(true)
     mouseoverHighlight:SetFrameLevel(button:GetFrameLevel() + 3)
     mouseoverHighlight:Hide()
+
+    -- Event Handler
+
+    ---@param event WowEvent
+    ---@param unit string
+    ---@param ... any
+    function button:_OnEvent(event, unit, ...)
+        if self.eventHandlers[event] then
+            for _, cb in ipairs(self.eventHandlers[event]) do
+                cb(self, event, unit, ...)
+            end
+        end
+    end
+
+    ---@param event WowEvent
+    ---@param callback function
+    function button:AddEventListener(event, callback)
+        if not self.eventHandlers[event] then
+            self.eventHandlers[event] = {}
+            self:RegisterEvent(event)
+        end
+
+        tinsert(self.eventHandlers[event], callback)
+    end
+
+    ---@param event WowEvent
+    ---@param callback function
+    function button:RemoveEventListener(event, callback)
+        if not self.eventHandlers[event] then return end
+
+        for i, cb in ipairs(self.eventHandlers[event]) do
+            if cb == callback then
+                tremove(self.eventHandlers[event], i)
+                break
+            end
+        end
+
+        -- unregister event if no more callbacks
+        if #self.eventHandlers[event] == 0 then
+            self:UnregisterEvent(event)
+            self.eventHandlers[event] = nil
+        end
+    end
+
+    function button:EnableWidgets()
+        for _, widget in pairs(self.widgets) do
+            if widget.Enable then
+                widget:Enable()
+            end
+        end
+    end
+
+    function button:DisableWidgets()
+        for _, widget in pairs(self.widgets) do
+            if widget.Disable then
+                widget:Disable()
+            end
+        end
+    end
+
+    function button:UpdateWidgets()
+        for _, widget in pairs(self.widgets) do
+            if widget.Update then
+                widget.Update(self)
+            end
+        end
+    end
 
     -- script
     button:SetScript("OnAttributeChanged", UnitFrame_OnAttributeChanged) -- init

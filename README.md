@@ -1,6 +1,6 @@
 # Cell - Unit Frames
 
-[![Discord](https://img.shields.io/discord/1275860708734668871?label=Discord&color=5865F2)](https://discord.gg/eynRyR2ZKJ)
+[![Discord](https://img.shields.io/discord/1275860708734668871?label=Discord&color=5865F2)](https://discord.gg/C5STjYRsCD)
 
 Plugin for the amazing AddOn [Cell](https://www.curseforge.com/wow/addons/cell) that adds various unit frames.
 

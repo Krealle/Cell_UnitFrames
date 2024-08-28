@@ -254,8 +254,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             U:UnitFrame_UpdateName(self)
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, ...)
-        elseif event == "UNIT_NAME_UPDATE" then
-            U:UnitFrame_UpdatePowerTextColor(self)
         elseif event == "UNIT_SPELLCAST_START"
             or event == "UNIT_SPELLCAST_CHANNEL_START"
             or event == "UNIT_SPELLCAST_EMPOWER_START" then

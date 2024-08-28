@@ -46,8 +46,7 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
         widget:SetFormat(styleTable.format)
     end
 
-    U:UnitFrame_UpdatePowerText(button)
-    U:UnitFrame_UpdatePowerTextColor(button)
+    widget.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdatePowerTextWidget, const.WIDGET_KIND.POWER_TEXT)
@@ -57,18 +56,33 @@ Handler:RegisterWidget(W.UpdatePowerTextWidget, const.WIDGET_KIND.POWER_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdatePowerText(button)
+local function UpdateFrequent(button)
     if button.states.displayedUnit then
         button.widgets.powerText:UpdateValue()
     end
 end
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdatePowerTextColor(button)
-    local unit = button.states.displayedUnit
-    if not unit then return end
+local function Update(button)
+    if not button.states.displayedUnit then return end
 
     button.widgets.powerText:UpdateTextColor()
+    button.widgets.powerText:UpdateValue()
+end
+
+---@param self PowerTextWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
+    self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update)
+    self:Show()
+end
+
+---@param self PowerTextWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
+    self:Hide()
 end
 
 -------------------------------------------------
@@ -174,6 +188,11 @@ function W:CreatePowerText(button)
             self:SetTextColor(unpack(self.rgb))
         end
     end
+
+    powerText.Update = Update
+    powerText.UpdateFrequent = UpdateFrequent
+    powerText.Enable = Enable
+    powerText.Disable = Disable
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.POWER_TEXT, W.CreatePowerText)

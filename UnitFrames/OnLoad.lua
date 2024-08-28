@@ -74,8 +74,6 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdatePowerMax(button)
     U:UnitFrame_UpdatePower(button)
     U:UnitFrame_UpdatePowerType(button)
-    U:UnitFrame_UpdatePowerText(button)
-    U:UnitFrame_UpdatePowerTextColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
@@ -240,13 +238,10 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             U:UnitFrame_UpdatePower(self)
         elseif event == "UNIT_POWER_FREQUENT" then
             U:UnitFrame_UpdatePower(self)
-            U:UnitFrame_UpdatePowerText(self)
         elseif event == "UNIT_DISPLAYPOWER" then
             U:UnitFrame_UpdatePowerMax(self)
             U:UnitFrame_UpdatePower(self)
-            U:UnitFrame_UpdatePowerText(self)
             U:UnitFrame_UpdatePowerType(self)
-            U:UnitFrame_UpdatePowerTextColor(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_IN_RANGE_UPDATE" then

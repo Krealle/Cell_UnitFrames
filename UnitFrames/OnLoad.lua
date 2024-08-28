@@ -82,7 +82,6 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateAuras(button)
     U:UnitFrame_UpdateShieldBar(button)
     U:UnitFrame_UpdateShieldBarHeight(button)
-    U:UnitFrame_UpdateLevel(button)
     U:UnitFrame_UpdateCastBar(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then

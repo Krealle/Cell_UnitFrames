@@ -55,13 +55,10 @@ end
 
 ---@param self RoleIconWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
-    self._owner:AddEventListener("GROUP_ROSTER_UPDATE", Update)
 end
 
 ---@param self RoleIconWidget
 local function Disable(self)
-    self._owner:RemoveEventListener("GROUP_ROSTER_UPDATE", Update)
     self:Hide()
 end
 

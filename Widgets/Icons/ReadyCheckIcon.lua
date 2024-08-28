@@ -27,11 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.READY_CHECK_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateReadyCheckIconWidget(button, unit, setting, subSetting)
-    if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleReadyCheckEvents(button)
-    end
-
-    U:UnitFrame_UpdateReadyCheckIcon(button)
+    button.widgets.readyCheckIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateReadyCheckIconWidget, const.WIDGET_KIND.READY_CHECK_ICON)
@@ -41,8 +37,7 @@ Handler:RegisterWidget(W.UpdateReadyCheckIconWidget, const.WIDGET_KIND.READY_CHE
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateReadyCheckIcon(button)
-    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -56,6 +51,24 @@ function U:UnitFrame_UpdateReadyCheckIcon(button)
     else
         readyCheckIcon:Hide()
     end
+end
+
+---@param self ReadyCheckIconWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+
+    self._owner:AddEventListener("READY_CHECK", Update)
+    self._owner:AddEventListener("READY_CHECK_FINISHED", Update)
+    self._owner:AddEventListener("READY_CHECK_CONFIRM", Update)
+end
+
+---@param self ReadyCheckIconWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("READY_CHECK", Update)
+    self._owner:RemoveEventListener("READY_CHECK_FINISHED", Update)
+    self._owner:RemoveEventListener("READY_CHECK_CONFIRM", Update)
+
+    self:Hide()
 end
 
 -------------------------------------------------
@@ -78,19 +91,24 @@ function W:CreateReadyCheckIcon(button)
     readyCheckIcon.enabled = false
     readyCheckIcon.id = const.WIDGET_KIND.READY_CHECK_ICON
     readyCheckIcon._isSelected = false
+    readyCheckIcon._owner = button
 
     readyCheckIcon.tex = readyCheckIcon:CreateTexture(nil, "ARTWORK")
     readyCheckIcon.tex:SetAllPoints(readyCheckIcon)
 
     function readyCheckIcon:_OnIsSelected()
-        U:UnitFrame_UpdateReadyCheckIcon(button)
+        self.Update(self._owner)
     end
 
     function readyCheckIcon:SetStatus(status)
-        local status = status or "waiting" -- Preview
+        status = status or "waiting" -- Preview
         readyCheckIcon.tex:SetTexture(READY_CHECK_STATUS[status].t)
         readyCheckIcon:Show()
     end
+
+    readyCheckIcon.Enable = Enable
+    readyCheckIcon.Disable = Disable
+    readyCheckIcon.Update = Update
 
     readyCheckIcon.SetEnabled = W.SetEnabled
     readyCheckIcon.SetPosition = W.SetPosition

@@ -159,23 +159,6 @@ function U:ToggleAbsorbEvents(button, show)
     end
 end
 
--- Register/Unregister UNIT_READY_CHECK
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleReadyCheckEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.readyCheckIcon.enabled or show then
-        button:RegisterEvent("READY_CHECK")
-        button:RegisterEvent("READY_CHECK_FINISHED")
-        button:RegisterEvent("READY_CHECK_CONFIRM")
-    else
-        button:UnregisterEvent("READY_CHECK")
-        button:UnregisterEvent("READY_CHECK_FINISHED")
-        button:UnregisterEvent("READY_CHECK_CONFIRM")
-    end
-end
-
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -217,7 +200,6 @@ local function UnitFrame_RegisterEvents(self)
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
     U:ToggleAbsorbEvents(self)
-    U:ToggleReadyCheckEvents(self)
     U:ToggleCastEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
@@ -280,8 +262,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             UnitFrame_UpdateInRange(self, ...)
         elseif event == "UNIT_NAME_UPDATE" then
             U:UnitFrame_UpdatePowerTextColor(self)
-        elseif event == "READY_CHECK_CONFIRM" then
-            U:UnitFrame_UpdateReadyCheckIcon(self)
         elseif event == "UNIT_SPELLCAST_START"
             or event == "UNIT_SPELLCAST_CHANNEL_START"
             or event == "UNIT_SPELLCAST_EMPOWER_START" then
@@ -315,8 +295,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             UnitFrame_UpdateAll(self)
         elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
             U:UnitFrame_UpdateCombatIcon(self, event)
-        elseif event == "READY_CHECK" or event == "READY_CHECK_FINISHED" then
-            U:UnitFrame_UpdateReadyCheckIcon(self)
         end
     end
 end

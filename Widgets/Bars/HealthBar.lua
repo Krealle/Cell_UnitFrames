@@ -39,7 +39,7 @@ function U:UnitFrame_UpdateHealthColor(button)
     if not UnitIsConnected(unit) then
         barR, barG, barB = 0.4, 0.4, 0.4
         lossR, lossG, lossB = 0.4, 0.4, 0.4
-    elseif UnitIsCharmed(unit) then
+    elseif UnitIsCharmed(unit) and UnitIsEnemy("player", unit) then
         barR, barG, barB, barA = 0.5, 0, 1, 1
         lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
     elseif button.states.inVehicle then

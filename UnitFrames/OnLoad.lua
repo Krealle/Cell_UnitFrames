@@ -598,7 +598,7 @@ function CUFUnitButton_OnLoad(button)
 
     function button:EnableWidgets()
         for _, widget in pairs(self.widgets) do
-            if widget.Enable then
+            if widget.Enable and widget.enabled then
                 widget:Enable()
             end
         end

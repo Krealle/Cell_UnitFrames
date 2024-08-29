@@ -481,7 +481,7 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
         { "25%",  0.25 },
     }
     percentDropdown = self:CreateDropdown(f, widgetName, "", 75, percentItems,
-        path or const.OPTION_KIND.WIDTH .. ".value")
+        (path or const.OPTION_KIND.WIDTH) .. ".value")
     percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
     Cell:SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
 
@@ -505,7 +505,7 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
         lengthEB.confirmBtn:Hide()
         lengthEB.value = length
 
-        HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH .. ".value", length)
+        HandleWidgetOption(widgetName, (path or const.OPTION_KIND.WIDTH) .. ".value", length)
     end)
 
     lengthEB:SetScript("OnTextChanged", function(txt, userChanged)
@@ -539,7 +539,7 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
         lengthEB2.confirmBtn:Hide()
         lengthEB2.value = length
 
-        HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH .. ".auxValue", length)
+        HandleWidgetOption(widgetName, (path or const.OPTION_KIND.WIDTH) .. ".auxValue", length)
     end)
 
     lengthEB2:SetScript("OnTextChanged", function(txt, userChanged)

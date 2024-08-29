@@ -16,6 +16,9 @@ local const = CUF.constants
 local DB = CUF.DB
 local Util = CUF.Util
 
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -35,9 +38,6 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.powerText
     local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.POWER_TEXT, unit) --[[@as PowerTextWidgetTable]]
 
-    if not setting or setting == "enabled" then
-        U:TogglePowerEvents(button)
-    end
     if not setting or setting == const.OPTION_KIND.FORMAT then
         widget:SetFormat(styleTable.format)
     end
@@ -46,7 +46,9 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
         widget:SetFormat(styleTable.format)
     end
 
-    widget.Update(button)
+    if widget.enabled and button:IsVisible() then
+        widget.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdatePowerTextWidget, const.WIDGET_KIND.POWER_TEXT)
@@ -64,8 +66,6 @@ end
 
 ---@param button CUFUnitButton
 local function Update(button)
-    if not button.states.displayedUnit then return end
-
     button.widgets.powerText:UpdateTextColor()
     button.widgets.powerText:UpdateValue()
 end
@@ -168,8 +168,11 @@ function W:CreatePowerText(button)
     powerText.SetValue = SetPower_Percentage
 
     function powerText:UpdateValue()
-        if button.widgets.powerText.enabled and button.states.powerMax ~= 0 and button.states.power then
-            button.widgets.powerText:SetValue(button.states.power, button.states.powerMax)
+        local powerMax = UnitPowerMax(button.states.unit)
+        local power = UnitPower(button.states.unit)
+
+        if powerMax > 0 and power then
+            button.widgets.powerText:SetValue(power, powerMax)
             button.widgets.powerText:Show()
         else
             button.widgets.powerText:Hide()

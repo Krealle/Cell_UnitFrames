@@ -77,7 +77,7 @@ local function Icons_ShowTooltip(icons, show)
                 if (CellDB["general"]["hideTooltipsInCombat"] and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-                GameTooltip:SetUnitAura(icons.parent.states.displayedUnit, self.index, icons.auraFilter)
+                GameTooltip:SetUnitAura(icons._owner.states.displayedUnit, self.index, icons.auraFilter)
             end)
 
             icons[i]:SetScript("OnLeave", function()
@@ -215,6 +215,23 @@ local function Icons_HidePreview(icons)
 end
 
 -------------------------------------------------
+-- MARK: Update
+-------------------------------------------------
+
+---@param self CellAuraIcons
+function EnableAuras(self) -- Has unique name because of some obscure referncing bug?
+    self._owner:AddEventListener("UNIT_AURA", self.Update)
+
+    self:Show()
+    return true
+end
+
+---@param self CellAuraIcons
+function Disable(self)
+    self._owner:RemoveEventListener("UNIT_AURA", self.Update)
+end
+
+-------------------------------------------------
 -- MARK: Create Aura Icons
 -------------------------------------------------
 
@@ -227,7 +244,7 @@ function W:CreateAuraIcons(button, type)
 
     auraIcons.enabled = false
     auraIcons.id = type
-    auraIcons.parent = button
+    auraIcons._owner = button
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
     auraIcons._maxNum = 10
     auraIcons._isSelected = false
@@ -279,12 +296,16 @@ function W:CreateAuraIcons(button, type)
         end
         icons._isSelected = val
 
-        U:UnitFrame_UpdateAuras(button)
+        icons.Update(button)
     end
 
     auraIcons:ShowDuration(true)
     auraIcons:ShowAnimation(true)
     auraIcons:ShowStack(true)
+
+    auraIcons.Enable = EnableAuras
+    auraIcons.Disable = Disable
+    auraIcons.Update = U.UnitFrame_UpdateAuras
 
     return auraIcons
 end

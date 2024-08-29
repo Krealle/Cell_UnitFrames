@@ -91,9 +91,5 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         end
     end
 
-    if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleAuras(button)
-    end
-
-    U:UnitFrame_UpdateAuras(button)
+    auras.Update(button)
 end

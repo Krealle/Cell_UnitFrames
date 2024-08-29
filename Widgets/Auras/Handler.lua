@@ -18,7 +18,7 @@ local function ForEachAuraHelper(icons, func, _continuationToken, ...)
     for i = 1, n do
         local slot = select(i, ...)
         ---@class AuraData
-        local auraData = GetAuraDataBySlot(icons.parent.states.unit, slot)
+        local auraData = GetAuraDataBySlot(icons._owner.states.unit, slot)
         auraData.index = i
         auraData.refreshing = false
 
@@ -29,7 +29,7 @@ end
 ---@param icons CellAuraIcons
 ---@param filter string
 local function ForEachAura(icons, filter, func)
-    ForEachAuraHelper(icons, func, GetAuraSlots(icons.parent.states.unit, filter))
+    ForEachAuraHelper(icons, func, GetAuraSlots(icons._owner.states.unit, filter))
 end
 
 -------------------------------------------------
@@ -196,12 +196,10 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
+---@param event "UNIT_AURA"?
+---@param unit UnitToken?
 ---@param updateInfo UnitAuraUpdateInfo?
-function U:UnitFrame_UpdateAuras(button, updateInfo)
-    if not button:HasWidget(CUF.constants.WIDGET_KIND.BUFFS) then return end
-    local unit = button.states.displayedUnit
-    if not unit then return end
-
+function U.UnitFrame_UpdateAuras(button, event, unit, updateInfo)
     local buffChanged, debuffChanged = ShouldUpdateAuras(button, updateInfo)
     local previewMode = CUF.vars.testMode and button._isSelected
 

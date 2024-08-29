@@ -70,33 +70,10 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateHealthColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
-    U:UnitFrame_UpdateAuras(button)
 
     button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
-
--------------------------------------------------
--- MARK: Helpers
--------------------------------------------------
-
----@param button CUFUnitButton
-local function UnitFrame_ShouldShowAuras(button)
-    if not button:HasWidget(const.WIDGET_KIND.BUFFS) then return end
-    return button.widgets.buffs.enabled or button.widgets.debuffs.enabled
-end
-
--- Register/Unregister UNIT_AURA event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleAuras(button, show)
-    if not button:IsShown() then return end
-    if UnitFrame_ShouldShowAuras(button) or show then
-        button:RegisterEvent("UNIT_AURA")
-    else
-        button:UnregisterEvent("UNIT_AURA")
-    end
-end
 
 -------------------------------------------------
 -- MARK: RegisterEvents
@@ -129,7 +106,6 @@ local function UnitFrame_RegisterEvents(self)
             UnitFrame_UpdateAll(button)
         end, true)
     end
-    U:ToggleAuras(self)
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
     if not success then
@@ -157,10 +133,7 @@ end
 ---@param ... any
 local function UnitFrame_OnEvent(self, event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
-        if event == "UNIT_AURA" then
-            U:UnitFrame_UpdateAuras(self, ...)
-            return
-        elseif event == "UNIT_CONNECTION" then
+        if event == "UNIT_CONNECTION" then
             self._updateRequired = true
             return
         end

@@ -22,15 +22,8 @@ function W:SetPowerSize(button, size)
     --print(GetTime(), "SetPowerSize", button:GetName(), button:IsShown(), button:IsVisible(), size)
     button.powerSize = size
 
-    if size == 0 then
-        button:HidePowerBar()
-    else
-        if button:ShouldShowPowerBar() then
-            button:ShowPowerBar()
-        else
-            button:HidePowerBar()
-        end
-    end
+    ---@diagnostic disable-next-line: param-type-mismatch
+    button.widgets.powerBar:Enable()
 end
 
 -------------------------------------------------
@@ -52,7 +45,6 @@ end
 ---@field ShouldShowPowerBar function
 ---@param self CUFUnitButton
 local function ShouldShowPowerBar(self)
-    if not self:IsVisible() then return end
     if not self.powerSize or self.powerSize == 0 then return end
 
     if not self.states.guid then
@@ -97,33 +89,32 @@ end
 ---@field ShowPowerBar function
 ---@param self CUFUnitButton
 local function ShowPowerBar(self)
-    self.widgets.powerBar:Show()
+    local powerBar = self.widgets.powerBar
+    local healthBar = self.widgets.healthBar
+
+    powerBar:Show()
     self.widgets.powerBarLoss:Show()
 
-    U:TogglePowerEvents(self)
-
-    P:ClearPoints(self.widgets.healthBar)
-    P:ClearPoints(self.widgets.powerBar)
+    P:ClearPoints(healthBar)
+    P:ClearPoints(powerBar)
     if self.orientation == "horizontal" or self.orientation == "vertical_health" then
-        P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        P:Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
+        P:Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P:Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
             self.powerSize + CELL_BORDER_SIZE * 2)
-        P:Point(self.widgets.powerBar, "TOPLEFT", self.widgets.healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
-        P:Point(self.widgets.powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+        P:Point(powerBar, "TOPLEFT", healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
+        P:Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
     else
-        P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        P:Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT",
+        P:Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P:Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT",
             -(self.powerSize + CELL_BORDER_SIZE * 2),
             CELL_BORDER_SIZE)
-        P:Point(self.widgets.powerBar, "TOPLEFT", self.widgets.healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
-        P:Point(self.widgets.powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+        P:Point(powerBar, "TOPLEFT", healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
+        P:Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
     end
 
     if self:IsVisible() then
         -- update now
-        U:UnitFrame_UpdatePowerMax(self)
-        U:UnitFrame_UpdatePower(self)
-        U:UnitFrame_UpdatePowerType(self)
+        powerBar.UpdatePowerType(self)
     end
 end
 
@@ -133,8 +124,6 @@ end
 local function HidePowerBar(self)
     self.widgets.powerBar:Hide()
     self.widgets.powerBarLoss:Hide()
-
-    U:TogglePowerEvents(self)
 
     P:ClearPoints(self.widgets.healthBar)
     P:Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
@@ -146,9 +135,18 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdatePowerMax(button)
+local function UpdatePower(button)
     local unit = button.states.displayedUnit
-    if not unit then return end
+
+    button.states.power = UnitPower(unit)
+
+    button.widgets.powerBar:SetBarValue(button.states.power)
+end
+
+-- Calls UpdatePower
+---@param button CUFUnitButton
+local function UpdatePowerMax(button)
+    local unit = button.states.displayedUnit
 
     button.states.powerMax = UnitPowerMax(unit)
     if button.states.powerMax < 0 then button.states.powerMax = 0 end
@@ -158,22 +156,16 @@ function U:UnitFrame_UpdatePowerMax(button)
     else
         button.widgets.powerBar:SetMinMaxValues(0, button.states.powerMax)
     end
+
+    UpdatePower(button)
 end
 
+-- Calls UpdatePowerMax
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdatePower(button)
+local function UpdatePowerType(button)
+    UpdatePowerMax(button)
+
     local unit = button.states.displayedUnit
-    if not unit then return end
-
-    button.states.power = UnitPower(unit)
-
-    button.widgets.powerBar:SetBarValue(button.states.power)
-end
-
----@param button CUFUnitButton
-function U:UnitFrame_UpdatePowerType(button)
-    local unit = button.states.displayedUnit
-    if not unit then return end
 
     local r, g, b, lossR, lossG, lossB
     local a = Cell.loaded and CellDB["appearance"]["lossAlpha"] or 1
@@ -195,6 +187,39 @@ function U:UnitFrame_UpdatePowerTexture(button)
     button.widgets.powerBarLoss:SetTexture(F:GetBarTexture())
 end
 
+---@param button CUFUnitButton
+local function Update(button)
+    UpdatePowerType(button)
+end
+
+---@param self PowerBarWidget
+local function Enable(self)
+    if not ShouldShowPowerBar(self._owner) then
+        if self:IsVisible() then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            self._owner:DisableWidget(self)
+        end
+        return false
+    end
+
+    self._owner:AddEventListener("UNIT_DISPLAYPOWER", UpdatePowerType)
+    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdatePower)
+    self._owner:AddEventListener("UNIT_MAXPOWER", UpdatePowerMax)
+
+    self._owner:ShowPowerBar()
+
+    return true
+end
+
+---@param self PowerBarWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", UpdatePowerType)
+    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdatePower)
+    self._owner:RemoveEventListener("UNIT_MAXPOWER", UpdatePowerMax)
+
+    self._owner:HidePowerBar()
+end
+
 -------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------
@@ -204,6 +229,8 @@ function W:CreatePowerBar(button)
     ---@class PowerBarWidget: SmoothStatusBar
     local powerBar = CreateFrame("StatusBar", button:GetName() .. "_PowerBar", button)
     button.widgets.powerBar = powerBar
+    powerBar._owner = button
+    powerBar.enabled = true
 
     P:Point(powerBar, "TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
     P:Point(powerBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
@@ -224,4 +251,12 @@ function W:CreatePowerBar(button)
     button.ShowPowerBar = ShowPowerBar
     button.HidePowerBar = HidePowerBar
     button.ShouldShowPowerBar = ShouldShowPowerBar
+
+    powerBar.Update = Update
+    powerBar.Enable = Enable
+    powerBar.Disable = Disable
+
+    powerBar.UpdatePower = UpdatePower
+    powerBar.UpdatePowerMax = UpdatePowerMax
+    powerBar.UpdatePowerType = UpdatePowerType
 end

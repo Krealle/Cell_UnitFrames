@@ -70,25 +70,10 @@ local function UnitFrame_UpdateAll(button)
     U:UnitFrame_UpdateHealthMax(button)
     U:UnitFrame_UpdateHealth(button)
     U:UnitFrame_UpdateHealthColor(button)
-    U:UnitFrame_UpdatePowerMax(button)
-    U:UnitFrame_UpdatePower(button)
-    U:UnitFrame_UpdatePowerType(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
     U:UnitFrame_UpdateCastBar(button)
-
-    if Cell.loaded and button._powerBarUpdateRequired then
-        button._powerBarUpdateRequired = nil
-        if button:ShouldShowPowerBar() then
-            button:ShowPowerBar()
-        else
-            button:HidePowerBar()
-        end
-    else
-        U:UnitFrame_UpdatePowerMax(button)
-        U:UnitFrame_UpdatePower(button)
-    end
 
     button:UpdateWidgets()
 end
@@ -113,25 +98,6 @@ function U:ToggleAuras(button, show)
         button:RegisterEvent("UNIT_AURA")
     else
         button:UnregisterEvent("UNIT_AURA")
-    end
-end
-
--- Register/Unregister UNIT_POWER_FREQUENT, UNIT_MAXPOWER, UNIT_DISPLAYPOWER
----@param button CUFUnitButton
----@param show? boolean
-function U:TogglePowerEvents(button, show)
-    if not button:IsShown() then return end
-    if button.widgets.powerBar:IsVisible()
-        or button.widgets.powerText.enabled
-        or show
-    then
-        button:RegisterEvent("UNIT_POWER_FREQUENT")
-        button:RegisterEvent("UNIT_MAXPOWER")
-        button:RegisterEvent("UNIT_DISPLAYPOWER")
-    else
-        button:UnregisterEvent("UNIT_POWER_FREQUENT")
-        button:UnregisterEvent("UNIT_MAXPOWER")
-        button:UnregisterEvent("UNIT_DISPLAYPOWER")
     end
 end
 
@@ -170,7 +136,6 @@ local function UnitFrame_RegisterEvents(self)
     if self.states.unit == const.UNIT.PET then
         self:RegisterEvent("UNIT_PET")
     end
-    U:TogglePowerEvents(self)
     U:ToggleAuras(self)
     U:ToggleCastEvents(self)
 
@@ -209,15 +174,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
         elseif event == "UNIT_MAXHEALTH" then
             U:UnitFrame_UpdateHealthMax(self)
             U:UnitFrame_UpdateHealth(self)
-        elseif event == "UNIT_MAXPOWER" then
-            U:UnitFrame_UpdatePowerMax(self)
-            U:UnitFrame_UpdatePower(self)
-        elseif event == "UNIT_POWER_FREQUENT" then
-            U:UnitFrame_UpdatePower(self)
-        elseif event == "UNIT_DISPLAYPOWER" then
-            U:UnitFrame_UpdatePowerMax(self)
-            U:UnitFrame_UpdatePower(self)
-            U:UnitFrame_UpdatePowerType(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_IN_RANGE_UPDATE" then

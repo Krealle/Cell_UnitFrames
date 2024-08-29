@@ -30,6 +30,10 @@ end
 -- MARK: Update InRange
 -------------------------------------------------
 
+local DEFAULT_HARM_SPELLS = {
+    ["WARLOCK"] = 234153, -- Drain Life
+}
+
 ---@param self CUFUnitButton
 ---@param ir boolean?
 local function UnitFrame_UpdateInRange(self, ir)
@@ -37,6 +41,14 @@ local function UnitFrame_UpdateInRange(self, ir)
     if not unit then return end
 
     local inRange = F:IsInRange(unit)
+
+    -- Hack to circumvent override issue with C_Spell.IsSpellInRange and override spells
+    if not inRange and UnitCanAttack("player", unit) then
+        local overrideSpell = DEFAULT_HARM_SPELLS[UnitClassBase("player")]
+        if overrideSpell then
+            inRange = C_Spell.IsSpellInRange(overrideSpell, unit) or false
+        end
+    end
 
     self.states.inRange = inRange
     if Cell.loaded then

@@ -56,7 +56,7 @@ end
 ---@param self RestingIconWidget
 local function Enable(self)
     if not self._owner:IsVisible() then return end
-    self._owner:AddEventListener("PLAYER_UPDATE_RESTING", Update)
+    self._owner:AddEventListener("PLAYER_UPDATE_RESTING", Update, true)
 end
 
 ---@param self RestingIconWidget

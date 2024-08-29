@@ -57,8 +57,8 @@ end
 local function Enable(self)
     if not self._owner:IsVisible() then return end
 
-    self._owner:AddEventListener("READY_CHECK", Update)
-    self._owner:AddEventListener("READY_CHECK_FINISHED", Update)
+    self._owner:AddEventListener("READY_CHECK", Update, true)
+    self._owner:AddEventListener("READY_CHECK_FINISHED", Update, true)
     self._owner:AddEventListener("READY_CHECK_CONFIRM", Update)
 end
 

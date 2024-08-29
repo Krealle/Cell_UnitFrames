@@ -62,7 +62,7 @@ end
 ---@param self RaidIconWidget
 local function Enable(self)
     if not self._owner:IsVisible() then return end
-    self._owner:AddEventListener("RAID_TARGET_UPDATE", Update)
+    self._owner:AddEventListener("RAID_TARGET_UPDATE", Update, true)
 end
 
 ---@param self RaidIconWidget

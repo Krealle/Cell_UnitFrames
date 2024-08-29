@@ -320,6 +320,7 @@ local function HealthText_SetFormat(self, format)
         self.SetValue = SetHealth_Custom
     end
 
+    if not self.enabled then return end
     self:Enable()
 end
 

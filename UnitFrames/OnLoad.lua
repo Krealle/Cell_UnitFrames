@@ -445,7 +445,6 @@ function CUFUnitButton_OnLoad(button)
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
-    button.eventHandlers = {}
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)
@@ -489,44 +488,81 @@ function CUFUnitButton_OnLoad(button)
     mouseoverHighlight:SetFrameLevel(button:GetFrameLevel() + 3)
     mouseoverHighlight:Hide()
 
-    -- Event Handler
+    -- Event Handlers
 
+    ---@type table<WowEvent, CUFUnitButton.EventHandler[]>
+    button.eventHandlers = {}
+
+    --- Handles the event dispatching for a button with registered event listeners.
+    --- Filters events based on whether they are unit-specific or unit-less.
     ---@param event WowEvent
-    ---@param unit string
+    ---@param unit UnitToken
     ---@param ... any
     function button:_OnEvent(event, unit, ...)
-        if self.eventHandlers[event] then
-            for _, cb in ipairs(self.eventHandlers[event]) do
-                cb(self, event, unit, ...)
+        local handlers = self.eventHandlers[event]
+
+        if not handlers then
+            if event ~= "UNIT_AURA" then
+                CUF:Warn("No event handlers registered for event", event, "in", self:GetName())
+            end
+            return
+        end
+
+        -- Using a numeric `for` loop instead of `ipairs` for performance reasons:
+        -- 1. `ipairs` has a slight overhead due to its function call in each iteration.
+        -- 2. A numeric `for` loop directly accesses elements by their index, which is faster.
+        for i = 1, #handlers do
+            local handler = handlers[i]
+
+            -- Perform unit filtering before calling the callback:
+            -- Centralizing this logic here is more efficient than repeating it in every callback.
+            -- This avoids redundant evaluations and unnecessary function calls.
+            if handler.unitLess or unit == self.states.unit then
+                handler.callback(self, event, unit, ...)
             end
         end
     end
 
+    --- Register an event listener for the button.
     ---@param event WowEvent
-    ---@param callback function
-    function button:AddEventListener(event, callback)
+    ---@param callback EventCallbackFn
+    ---@param unitLess boolean? Indicates if the callback should ignore unit filtering
+    function button:AddEventListener(event, callback, unitLess)
         if not self.eventHandlers[event] then
             self.eventHandlers[event] = {}
             self:RegisterEvent(event)
+        else
+            -- Check if the callback is already registered to prevent duplicates
+            for i = 1, #self.eventHandlers[event] do
+                local handler = self.eventHandlers[event][i]
+                if handler.callback == callback then
+                    --CUF:Warn("Callback is already registered for event", event, "in", self:GetName())
+                    return
+                end
+            end
         end
 
-        tinsert(self.eventHandlers[event], callback)
+        tinsert(self.eventHandlers[event], { callback = callback, unitLess = unitLess })
     end
 
+    --- Remove an event listener for the button.
+    --- Unregisters the event if no listeners remain.
     ---@param event WowEvent
-    ---@param callback function
+    ---@param callback EventCallbackFn
     function button:RemoveEventListener(event, callback)
-        if not self.eventHandlers[event] then return end
+        local handlers = self.eventHandlers[event]
+        if not handlers then return end
 
-        for i, cb in ipairs(self.eventHandlers[event]) do
-            if cb == callback then
-                tremove(self.eventHandlers[event], i)
+        for i = 1, #handlers do
+            local handler = handlers[i]
+            if handler.callback == callback then
+                tremove(handlers, i)
                 break
             end
         end
 
-        -- unregister event if no more callbacks
-        if #self.eventHandlers[event] == 0 then
+        -- Unregister the event if there are no more handlers left.
+        if #handlers == 0 then
             self:UnregisterEvent(event)
             self.eventHandlers[event] = nil
         end
@@ -618,3 +654,9 @@ end
 ---@field isAssistant boolean
 ---@field readyCheckStatus ("ready" | "waiting" | "notready")?
 ---@field isResting boolean
+
+---@class CUFUnitButton.EventHandler
+---@field callback EventCallbackFn
+---@field unitLess boolean
+
+---@alias EventCallbackFn fun(self: CUFUnitButton, event: WowEvent, unit: UnitToken, ...: any)

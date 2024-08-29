@@ -719,15 +719,20 @@ end
 local function SetSparkWidth(self, width)
     local spark = self.spark
     if spark.enabled then
-        self.statusBar:GetReverseFill()
+        -- Repoint
+        local relativeSide = self.statusBar:GetReverseFill() and "LEFT" or "RIGHT"
         spark:ClearAllPoints()
-        spark:SetPoint("CENTER", self.statusBar:GetStatusBarTexture(),
-            self.statusBar:GetReverseFill() and "LEFT" or "RIGHT")
-        spark:SetHeight(self:GetHeight())
+        spark:SetPoint("TOP", self.statusBar:GetStatusBarTexture(), "TOP" .. relativeSide)
+        spark:SetPoint("BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOM" .. relativeSide)
+
+        -- Resize
         if width then
             spark:SetWidth(width)
         end
+
+        spark:Show()
     else
+        spark:ClearAllPoints()
         spark:Hide()
     end
 end

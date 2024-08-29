@@ -77,11 +77,16 @@ end
 
 ---@param self HealthTextWidget
 local function Enable(self)
-    self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent)
-    self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent)
+    local unitLess
+    if self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET then
+        unitLess = true
+    end
+
+    self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent, unitLess)
+    self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent, unitLess)
 
     if self._showingAbsorbs then
-        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
     else
         self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
     end

@@ -72,8 +72,13 @@ end
 
 ---@param self PowerTextWidget
 local function Enable(self)
-    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
-    self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update)
+    local unitLess
+    if self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET then
+        unitLess = true
+    end
+
+    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent, unitLess)
+    self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update, unitLess)
     self:Show()
 
     return true

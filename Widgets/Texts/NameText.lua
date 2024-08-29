@@ -102,7 +102,7 @@ function W:CreateNameText(button)
         end
         name = name or F:GetNickname(button.states.name, button.states.fullName)
 
-        Util:UpdateTextWidth(nameText.text, name, nameText.width, button)
+        Util.UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
 
     nameText.Update = Update

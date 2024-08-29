@@ -45,6 +45,9 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
         widget:SetTextFormat(styleTable.textFormat)
         widget:SetFormat(styleTable.format)
     end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL then
+        widget.hideIfEmptyOrFull = styleTable.hideIfEmptyOrFull
+    end
 
     if widget.enabled and button:IsVisible() then
         widget.Update(button)
@@ -167,6 +170,7 @@ function W:CreatePowerText(button)
     button.widgets.powerText = powerText
 
     powerText.textFormat = ""
+    powerText.hideIfEmptyOrFull = false
 
     powerText.SetFormat = PowerText_SetFormat
     powerText.SetTextFormat = PowerText_SetTextFormat
@@ -175,6 +179,11 @@ function W:CreatePowerText(button)
     function powerText:UpdateValue()
         local powerMax = UnitPowerMax(button.states.unit)
         local power = UnitPower(button.states.unit)
+
+        if self.hideIfEmptyOrFull and (power == 0 or power == powerMax) then
+            self:Hide()
+            return
+        end
 
         if powerMax > 0 and power then
             button.widgets.powerText:SetValue(power, powerMax)

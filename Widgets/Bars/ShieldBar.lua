@@ -14,6 +14,9 @@ local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
 
+local UnitHealthMax = UnitHealthMax
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -35,8 +38,9 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
         widget:SetColor(unpack(styleTable.rgba))
     end
 
-    U:ToggleAbsorbEvents(button)
-    U:UnitFrame_UpdateShieldBar(button)
+    if widget.enabled and button:IsVisible() then
+        widget.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdateShieldBarWidget, const.WIDGET_KIND.SHIELD_BAR)
@@ -46,20 +50,11 @@ Handler:RegisterWidget(W.UpdateShieldBarWidget, const.WIDGET_KIND.SHIELD_BAR)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateShieldBarHeight(button)
-    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
-    button.widgets.shieldBar:UpdateSize()
-end
-
----@param button CUFUnitButton
-function U:UnitFrame_UpdateShieldBar(button)
-    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
-    U:UpdateUnitHealthState(button)
     local shieldBar = button.widgets.shieldBar
-
     if not shieldBar.enabled then
         shieldBar:Hide()
         return
@@ -72,14 +67,31 @@ function U:UnitFrame_UpdateShieldBar(button)
         return
     end
 
-    if button.states.totalAbsorbs > 0 then
-        local shieldPercent = button.states.totalAbsorbs / button.states.healthMax
+    local totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    if totalAbsorbs > 0 then
+        local shieldPercent = totalAbsorbs / UnitHealthMax(unit)
         shieldBar:Show()
         shieldBar:SetValue(shieldPercent)
         return
     end
 
     shieldBar:Hide()
+end
+
+---@param self ShieldBarWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+    self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
+    self._owner:AddEventListener("UNIT_MAXHEALTH", Update)
+
+    self.Update(self._owner)
+end
+
+---@param self ShieldBarWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
+    self._owner:RemoveEventListener("UNIT_MAXHEALTH", Update)
+    self:Hide()
 end
 
 -------------------------------------------------
@@ -113,9 +125,7 @@ function W:CreateShieldBar(button)
     shieldBar.enabled = false
     shieldBar._isSelected = false
     shieldBar.parentHealthBar = button.widgets.healthBar
-
-    -- Used to size the shield bar, 0 means use the health bar height
-    shieldBar._height = 0
+    shieldBar._owner = button
 
     shieldBar:Hide()
     shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 0.1 })
@@ -141,12 +151,16 @@ function W:CreateShieldBar(button)
     ---@param val boolean
     shieldBar._SetIsSelected = function(bar, val)
         bar._isSelected = val
-        U:UnitFrame_UpdateShieldBar(button)
+        bar.Update(bar._owner)
     end
 
     shieldBar.SetValue = ShieldBar_SetValue
     shieldBar.SetEnabled = W.SetEnabled
     shieldBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+
+    shieldBar.Update = Update
+    shieldBar.Enable = Enable
+    shieldBar.Disable = Disable
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.SHIELD_BAR, W.CreateShieldBar)

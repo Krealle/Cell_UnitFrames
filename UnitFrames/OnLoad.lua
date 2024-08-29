@@ -76,8 +76,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
-    U:UnitFrame_UpdateShieldBar(button)
-    U:UnitFrame_UpdateShieldBarHeight(button)
     U:UnitFrame_UpdateCastBar(button)
 
     if Cell.loaded and button._powerBarUpdateRequired then
@@ -137,21 +135,6 @@ function U:TogglePowerEvents(button, show)
     end
 end
 
--- Register/Unregister UNIT_ABSORB_AMOUNT_CHANGED event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleAbsorbEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
-    if not button:IsShown() then return end
-    if button.widgets.shieldBar.enabled
-        or (button.widgets.healthText._showingAbsorbs and button.widgets.healthText.enabled)
-        or show then
-        button:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-    else
-        button:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-    end
-end
-
 -------------------------------------------------
 -- MARK: RegisterEvents
 -------------------------------------------------
@@ -189,7 +172,6 @@ local function UnitFrame_RegisterEvents(self)
     end
     U:TogglePowerEvents(self)
     U:ToggleAuras(self)
-    U:ToggleAbsorbEvents(self)
     U:ToggleCastEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
@@ -224,13 +206,9 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             U:UnitFrame_UpdateAuras(self, ...)
         elseif event == "UNIT_HEALTH" then
             U:UnitFrame_UpdateHealth(self)
-            U:UnitFrame_UpdateShieldBar(self)
         elseif event == "UNIT_MAXHEALTH" then
             U:UnitFrame_UpdateHealthMax(self)
             U:UnitFrame_UpdateHealth(self)
-            U:UnitFrame_UpdateShieldBar(self)
-        elseif event == "UNIT_ABSORB_AMOUNT_CHANGED" then
-            U:UnitFrame_UpdateShieldBar(self)
         elseif event == "UNIT_MAXPOWER" then
             U:UnitFrame_UpdatePowerMax(self)
             U:UnitFrame_UpdatePower(self)

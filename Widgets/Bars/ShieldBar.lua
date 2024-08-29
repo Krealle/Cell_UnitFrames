@@ -132,12 +132,9 @@ function W:CreateShieldBar(button)
     function shieldBar:SetPosition(styleTable)
         local pos = styleTable.position
         self:ClearAllPoints()
+        self:SetPoint("TOP", self.parentHealthBar, "TOP", 0, 0)
+        self:SetPoint("BOTTOM", self.parentHealthBar, "BOTTOM", 0, 0)
         self:SetPoint(pos.point, self.parentHealthBar, pos.relativePoint, pos.offsetX, pos.offsetY)
-        shieldBar:UpdateSize()
-    end
-
-    function shieldBar:UpdateSize()
-        self:SetHeight(self.parentHealthBar:GetHeight())
     end
 
     ---@param bar ShieldBarWidget

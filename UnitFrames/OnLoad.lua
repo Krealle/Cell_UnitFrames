@@ -587,7 +587,7 @@ function CUFUnitButton_OnLoad(button)
 
     function button:UpdateWidgets()
         for _, widget in pairs(self.widgets) do
-            if widget.Update then
+            if widget.Update and widget.enabled then
                 widget.Update(self)
             end
         end

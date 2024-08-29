@@ -94,7 +94,7 @@ end
 -------------------------------------------------
 
 ---@param fs FontString
----@param text string
+---@param text string?
 ---@param widthTable FontWidthOpt
 ---@param relativeTo Frame
 function Util.UpdateTextWidth(fs, text, widthTable, relativeTo)

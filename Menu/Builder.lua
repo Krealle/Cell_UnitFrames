@@ -148,8 +148,9 @@ end
 
 ---@param option Frame
 ---@param prevOptions Frame
-function Builder:AnchorBelow(option, prevOptions)
-    option:SetPoint("TOPLEFT", prevOptions, 0, -self.spacingY)
+---@param spacingY number?
+function Builder:AnchorBelow(option, prevOptions, spacingY)
+    option:SetPoint("TOPLEFT", prevOptions, 0, -(spacingY or self.spacingY))
 end
 
 ---@param option Frame

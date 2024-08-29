@@ -90,6 +90,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         castBar:SetFillStyle(styleTable.reverse)
     end
 
+    if not setting or setting == const.OPTION_KIND.SPELL_WIDTH then
+        castBar.spellText.width = styleTable.spellWidth
+    end
+
     castBar.Update(button)
 end
 
@@ -879,6 +883,7 @@ function W:CreateCastBar(button)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
+    spellText.width = CUF.Defaults.Options.fontWidth
 
     ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")

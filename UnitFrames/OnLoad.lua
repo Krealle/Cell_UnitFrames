@@ -105,10 +105,8 @@ end
 ---@param self CUFUnitButton
 local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
+    self:RegisterEvent("UNIT_CONNECTION") -- offline
 
-    --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-
-    --self:RegisterEvent("UNIT_HEAL_PREDICTION")
     --self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 
     --self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
@@ -116,9 +114,7 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("UNIT_ENTERED_VEHICLE")
     --self:RegisterEvent("UNIT_EXITED_VEHICLE")
 
-    self:RegisterEvent("UNIT_CONNECTION")  -- offline
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
-    self:RegisterEvent("UNIT_NAME_UPDATE") -- unknown target
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
     if self.states.unit == const.UNIT.TARGET then
@@ -134,8 +130,6 @@ local function UnitFrame_RegisterEvents(self)
         end, true)
     end
     U:ToggleAuras(self)
-
-    self:RegisterEvent("UNIT_NAME_UPDATE")
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
     if not success then
@@ -162,20 +156,22 @@ end
 ---@param unit string
 ---@param ... any
 local function UnitFrame_OnEvent(self, event, unit, ...)
-    self:_OnEvent(event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
             U:UnitFrame_UpdateAuras(self, ...)
+            return
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
-        elseif event == "UNIT_IN_RANGE_UPDATE" then
-            UnitFrame_UpdateInRange(self, ...)
+            return
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
             self._updateRequired = true
+            return
         end
     end
+
+    self:_OnEvent(event, unit, ...)
 end
 
 -------------------------------------------------

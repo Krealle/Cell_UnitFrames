@@ -54,5 +54,7 @@ function CUF:HideBlizzardUnitFrame(unit)
         HideFrame(_G.TargetFrame)
     elseif unit == "focus" and _G.FocusFrame then
         HideFrame(_G.FocusFrame)
+    elseif unit == "pet" and _G.PetFrame then
+        HideFrame(_G.PetFrame)
     end
 end

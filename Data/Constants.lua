@@ -135,6 +135,7 @@ const.OPTION_KIND = {
     ICON = "icon",
     ZOOM = "zoom",
     SPELL_WIDTH = "spellWidth",
+    HIDE_IF_EMPTY_OR_FULL = "hideIfEmptyOrFull",
 }
 
 ---@enum AURA_OPTION_KIND

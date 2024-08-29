@@ -393,9 +393,6 @@ function CUFUnitButton_OnLoad(button)
         --CUF:Print(event, self:GetName(), unit, handlers and #handlers)
 
         if not handlers then
-            if event ~= "UNIT_AURA" then
-                CUF:Warn("No event handlers registered for event", event, "in", self:GetName())
-            end
             return
         end
 

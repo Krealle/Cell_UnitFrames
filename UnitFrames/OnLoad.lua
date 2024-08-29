@@ -71,7 +71,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
     U:UnitFrame_UpdateAuras(button)
-    U:UnitFrame_UpdateCastBar(button)
 
     button:UpdateWidgets()
 end
@@ -132,7 +131,6 @@ local function UnitFrame_RegisterEvents(self)
         self:RegisterEvent("UNIT_PET")
     end
     U:ToggleAuras(self)
-    U:ToggleCastEvents(self)
 
     self:RegisterEvent("UNIT_NAME_UPDATE")
 
@@ -168,25 +166,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
             self._updateRequired = true
         elseif event == "UNIT_IN_RANGE_UPDATE" then
             UnitFrame_UpdateInRange(self, ...)
-        elseif event == "UNIT_SPELLCAST_START"
-            or event == "UNIT_SPELLCAST_CHANNEL_START"
-            or event == "UNIT_SPELLCAST_EMPOWER_START" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastStart(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_STOP"
-            or event == "UNIT_SPELLCAST_CHANNEL_STOP"
-            or event == "UNIT_SPELLCAST_EMPOWER_STOP" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastStop(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_DELAYED"
-            or event == "UNIT_SPELLCAST_CHANNEL_UPDATE"
-            or event == "UNIT_SPELLCAST_EMPOWER_UPDATE" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastUpdate(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_FAILED"
-            or event == "UNIT_SPELLCAST_INTERRUPTED" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastFail(self, event, unit, ...)
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then

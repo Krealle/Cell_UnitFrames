@@ -43,7 +43,7 @@ function W.UpdateNameTextWidget(button, unit, setting, subSetting)
         widget.width = DB.GetWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit).width
     end
 
-    U:UnitFrame_UpdateName(button)
+    widget.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateNameTextWidget, const.WIDGET_KIND.NAME_TEXT)
@@ -53,7 +53,7 @@ Handler:RegisterWidget(W.UpdateNameTextWidget, const.WIDGET_KIND.NAME_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateName(button)
+local function Update(button)
     local unit = button.states.unit
     if not unit then return end
 
@@ -67,6 +67,19 @@ function U:UnitFrame_UpdateName(button)
 
     button.widgets.nameText:UpdateName()
     button.widgets.nameText:UpdateTextColor()
+end
+
+---@param self NameTextWidget
+local function Enable(self)
+    self._owner:AddEventListener("UNIT_NAME_UPDATE", Update)
+    self:Show()
+
+    return true
+end
+
+---@param self NameTextWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_NAME_UPDATE", Update)
 end
 
 -------------------------------------------------
@@ -91,6 +104,10 @@ function W:CreateNameText(button)
 
         Util:UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
+
+    nameText.Update = Update
+    nameText.Enable = Enable
+    nameText.Disable = Disable
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.NAME_TEXT, W.CreateNameText)

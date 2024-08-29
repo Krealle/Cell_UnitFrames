@@ -15,6 +15,10 @@ local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
 
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -42,8 +46,9 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
         widget:SetFormat(styleTable.format)
     end
 
-    U:UnitFrame_UpdateHealthText(button)
-    U:ToggleAbsorbEvents(button)
+    if widget.enabled and button:IsVisible() then
+        widget.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
@@ -53,20 +58,68 @@ Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateHealthText(button)
-    if button.states.displayedUnit then
-        U:UpdateUnitHealthState(button)
+local function UpdateFrequent(button)
+    if not button.states.displayedUnit then return end
+    button.widgets.healthText:UpdateValue()
+end
 
-        button.widgets.healthText:UpdateTextColor()
-        button.widgets.healthText:UpdateValue()
+-- Called on full updates
+---@param button CUFUnitButton
+local function Update(button)
+    if not button.states.displayedUnit then return end
+
+    local healthText = button.widgets.healthText
+    if not healthText.enabled then return end
+
+    healthText:UpdateTextColor()
+    healthText:UpdateValue()
+end
+
+---@param self HealthTextWidget
+local function Enable(self)
+    local unitLess
+    if self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET then
+        unitLess = true
     end
+
+    self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent, unitLess)
+    self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent, unitLess)
+
+    if self._showingAbsorbs then
+        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
+    else
+        self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    end
+
+    -- Full update
+    self.Update(self._owner)
+    self:Show()
+
+    return true
+end
+
+---@param self HealthTextWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
 end
 
 -------------------------------------------------
 -- MARK: Format
 -------------------------------------------------
 
--- TODO: make generic
+---@param unit Unit
+---@param absorbs boolean
+---@return number health
+---@return number healthMax
+---@return number totalAbsorbs
+local function GetHealthInfo(unit, absorbs)
+    local health = UnitHealth(unit)
+    local healthMax = UnitHealthMax(unit)
+    local totalAbsorbs = absorbs and UnitGetTotalAbsorbs(unit) or 0
+    return health, healthMax, totalAbsorbs
+end
 
 ---@param self HealthTextWidget
 ---@param current number
@@ -266,6 +319,8 @@ local function HealthText_SetFormat(self, format)
     elseif format == const.HealthTextFormat.CUSTOM then
         self.SetValue = SetHealth_Custom
     end
+
+    self:Enable()
 end
 
 ---@class HealthTextWidget
@@ -293,10 +348,15 @@ function W:CreateHealthText(button)
     healthText.SetValue = SetHealth_Percentage
 
     function healthText:UpdateValue()
-        if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then
-            button.widgets.healthText:SetValue(button.states.health, button.states.healthMax, button.states.totalAbsorbs)
+        local health, healthMax, totalAbsorbs = GetHealthInfo(self._owner.states.displayedUnit, self._showingAbsorbs)
+        if self.enabled and healthMax ~= 0 then
+            self:SetValue(health, healthMax, totalAbsorbs)
         end
     end
+
+    healthText.Update = Update
+    healthText.Enable = Enable
+    healthText.Disable = Disable
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.HEALTH_TEXT, W.CreateHealthText)

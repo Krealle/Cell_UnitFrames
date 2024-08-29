@@ -67,141 +67,13 @@ end
 local function UnitFrame_UpdateAll(button)
     if not button:IsVisible() then return end
 
-    U:UnitFrame_UpdateName(button)
-    U:UnitFrame_UpdateHealthMax(button)
-    U:UnitFrame_UpdateHealth(button)
     U:UnitFrame_UpdateHealthColor(button)
-    U:UnitFrame_UpdateHealthText(button)
-    U:UnitFrame_UpdatePowerMax(button)
-    U:UnitFrame_UpdatePower(button)
-    U:UnitFrame_UpdatePowerType(button)
-    U:UnitFrame_UpdatePowerText(button)
-    U:UnitFrame_UpdatePowerTextColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
-    U:UnitFrame_UpdateAuras(button)
-    U:UnitFrame_UpdateRaidIcon(button)
-    U:UnitFrame_UpdateRoleIcon(button)
-    U:UnitFrame_UpdateLeaderIcon(button)
-    U:UnitFrame_UpdateCombatIcon(button)
-    U:UnitFrame_UpdateShieldBar(button)
-    U:UnitFrame_UpdateShieldBarHeight(button)
-    U:UnitFrame_UpdateLevel(button)
-    U:UnitFrame_UpdateRestingIcon(button)
-    U:UnitFrame_UpdateCastBar(button)
 
-    if Cell.loaded and button._powerBarUpdateRequired then
-        button._powerBarUpdateRequired = nil
-        if button:ShouldShowPowerBar() then
-            button:ShowPowerBar()
-        else
-            button:HidePowerBar()
-        end
-    else
-        U:UnitFrame_UpdatePowerMax(button)
-        U:UnitFrame_UpdatePower(button)
-    end
+    button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
-
--------------------------------------------------
--- MARK: Helpers
--------------------------------------------------
-
----@param button CUFUnitButton
-local function UnitFrame_ShouldShowAuras(button)
-    if not button:HasWidget(const.WIDGET_KIND.BUFFS) then return end
-    return button.widgets.buffs.enabled or button.widgets.debuffs.enabled
-end
-
--- Register/Unregister UNIT_AURA event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleAuras(button, show)
-    if not button:IsShown() then return end
-    if UnitFrame_ShouldShowAuras(button) or show then
-        button:RegisterEvent("UNIT_AURA")
-    else
-        button:UnregisterEvent("UNIT_AURA")
-    end
-end
-
--- Register/Unregister UNIT_AURA event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleRaidTargetEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.raidIcon.enabled or show then
-        button:RegisterEvent("RAID_TARGET_UPDATE")
-    else
-        button:UnregisterEvent("RAID_TARGET_UPDATE")
-    end
-end
-
--- Register/Unregister UNIT_POWER_FREQUENT, UNIT_MAXPOWER, UNIT_DISPLAYPOWER
----@param button CUFUnitButton
----@param show? boolean
-function U:TogglePowerEvents(button, show)
-    if not button:IsShown() then return end
-    if button.widgets.powerBar:IsVisible()
-        or button.widgets.powerText.enabled
-        or show
-    then
-        button:RegisterEvent("UNIT_POWER_FREQUENT")
-        button:RegisterEvent("UNIT_MAXPOWER")
-        button:RegisterEvent("UNIT_DISPLAYPOWER")
-    else
-        button:UnregisterEvent("UNIT_POWER_FREQUENT")
-        button:UnregisterEvent("UNIT_MAXPOWER")
-        button:UnregisterEvent("UNIT_DISPLAYPOWER")
-    end
-end
-
--- Register/Unregister UNIT_ABSORB_AMOUNT_CHANGED event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleAbsorbEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then return end
-    if not button:IsShown() then return end
-    if button.widgets.shieldBar.enabled
-        or (button.widgets.healthText._showingAbsorbs and button.widgets.healthText.enabled)
-        or show then
-        button:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-    else
-        button:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-    end
-end
-
--- Register/Unregister UNIT_READY_CHECK
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleReadyCheckEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.READY_CHECK_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.readyCheckIcon.enabled or show then
-        button:RegisterEvent("READY_CHECK")
-        button:RegisterEvent("READY_CHECK_FINISHED")
-        button:RegisterEvent("READY_CHECK_CONFIRM")
-    else
-        button:UnregisterEvent("READY_CHECK")
-        button:UnregisterEvent("READY_CHECK_FINISHED")
-        button:UnregisterEvent("READY_CHECK_CONFIRM")
-    end
-end
-
--- Register/Unregister UNIT_RESTING event
----@param button CUFUnitButton
----@param show? boolean
-function U:ToggleRestingEvents(button, show)
-    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
-    if not button:IsShown() then return end
-    if button.widgets.restingIcon.enabled or show then
-        button:RegisterEvent("PLAYER_UPDATE_RESTING")
-    else
-        button:UnregisterEvent("PLAYER_UPDATE_RESTING")
-    end
-end
 
 -------------------------------------------------
 -- MARK: RegisterEvents
@@ -210,13 +82,8 @@ end
 ---@param self CUFUnitButton
 local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
+    self:RegisterEvent("UNIT_CONNECTION") -- offline
 
-    self:RegisterEvent("UNIT_HEALTH")
-    self:RegisterEvent("UNIT_MAXHEALTH")
-
-    --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-
-    --self:RegisterEvent("UNIT_HEAL_PREDICTION")
     --self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 
     --self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
@@ -224,32 +91,21 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("UNIT_ENTERED_VEHICLE")
     --self:RegisterEvent("UNIT_EXITED_VEHICLE")
 
-    self:RegisterEvent("UNIT_CONNECTION")  -- offline
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
-    self:RegisterEvent("UNIT_NAME_UPDATE") -- unknown target
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
-    self:RegisterEvent("PLAYER_REGEN_ENABLED")
-    self:RegisterEvent("PLAYER_REGEN_DISABLED")
-
     if self.states.unit == const.UNIT.TARGET then
-        self:RegisterEvent("PLAYER_TARGET_CHANGED")
+        self:AddEventListener("PLAYER_TARGET_CHANGED", UnitFrame_UpdateAll, true)
     end
     if self.states.unit == const.UNIT.FOCUS then
-        self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+        self:AddEventListener("PLAYER_FOCUS_CHANGED", UnitFrame_UpdateAll, true)
     end
     if self.states.unit == const.UNIT.PET then
-        self:RegisterEvent("UNIT_PET")
+        self:AddEventListener("UNIT_PET", function(button, event, unit)
+            if unit ~= const.UNIT.PLAYER then return end
+            UnitFrame_UpdateAll(button)
+        end, true)
     end
-    U:ToggleRaidTargetEvents(self)
-    U:TogglePowerEvents(self)
-    U:ToggleAuras(self)
-    U:ToggleAbsorbEvents(self)
-    U:ToggleReadyCheckEvents(self)
-    U:ToggleRestingEvents(self)
-    U:ToggleCastEvents(self)
-
-    self:RegisterEvent("UNIT_NAME_UPDATE")
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
     if not success then
@@ -264,6 +120,7 @@ end
 ---@param self CUFUnitButton
 local function UnitFrame_UnregisterEvents(self)
     self:UnregisterAllEvents()
+    wipe(self.eventHandlers)
 end
 
 -------------------------------------------------
@@ -276,81 +133,18 @@ end
 ---@param ... any
 local function UnitFrame_OnEvent(self, event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
-        if event == "UNIT_AURA" then
-            U:UnitFrame_UpdateAuras(self, ...)
-        elseif event == "UNIT_HEALTH" then
-            U:UnitFrame_UpdateHealth(self)
-            U:UnitFrame_UpdateShieldBar(self)
-        elseif event == "UNIT_MAXHEALTH" then
-            U:UnitFrame_UpdateHealthMax(self)
-            U:UnitFrame_UpdateHealth(self)
-            U:UnitFrame_UpdateShieldBar(self)
-        elseif event == "UNIT_ABSORB_AMOUNT_CHANGED" then
-            U:UnitFrame_UpdateHealth(self)
-            U:UnitFrame_UpdateShieldBar(self)
-        elseif event == "UNIT_MAXPOWER" then
-            U:UnitFrame_UpdatePowerMax(self)
-            U:UnitFrame_UpdatePower(self)
-        elseif event == "UNIT_POWER_FREQUENT" then
-            U:UnitFrame_UpdatePower(self)
-            U:UnitFrame_UpdatePowerText(self)
-        elseif event == "UNIT_DISPLAYPOWER" then
-            U:UnitFrame_UpdatePowerMax(self)
-            U:UnitFrame_UpdatePower(self)
-            U:UnitFrame_UpdatePowerText(self)
-            U:UnitFrame_UpdatePowerType(self)
-            U:UnitFrame_UpdatePowerTextColor(self)
-        elseif event == "UNIT_CONNECTION" then
+        if event == "UNIT_CONNECTION" then
             self._updateRequired = true
-        elseif event == "UNIT_NAME_UPDATE" then
-            U:UnitFrame_UpdateName(self)
-        elseif event == "UNIT_IN_RANGE_UPDATE" then
-            UnitFrame_UpdateInRange(self, ...)
-        elseif event == "UNIT_NAME_UPDATE" then
-            U:UnitFrame_UpdatePowerTextColor(self)
-        elseif event == "READY_CHECK_CONFIRM" then
-            U:UnitFrame_UpdateReadyCheckIcon(self)
-        elseif event == "UNIT_SPELLCAST_START"
-            or event == "UNIT_SPELLCAST_CHANNEL_START"
-            or event == "UNIT_SPELLCAST_EMPOWER_START" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastStart(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_STOP"
-            or event == "UNIT_SPELLCAST_CHANNEL_STOP"
-            or event == "UNIT_SPELLCAST_EMPOWER_STOP" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastStop(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_DELAYED"
-            or event == "UNIT_SPELLCAST_CHANNEL_UPDATE"
-            or event == "UNIT_SPELLCAST_EMPOWER_UPDATE" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastUpdate(self, event, unit, ...)
-        elseif event == "UNIT_SPELLCAST_FAILED"
-            or event == "UNIT_SPELLCAST_INTERRUPTED" then
-            ---@diagnostic disable-next-line: param-type-mismatch
-            U:CastBar_CastFail(self, event, unit, ...)
+            return
         end
     else
         if event == "GROUP_ROSTER_UPDATE" then
             self._updateRequired = true
-        elseif event == "PLAYER_TARGET_CHANGED" then
-            --[[  UnitButton_UpdateTarget(self)
-            UnitButton_UpdateThreatBar(self) ]]
-            UnitFrame_UpdateAll(self)
-        elseif event == "PLAYER_FOCUS_CHANGED" then
-            UnitFrame_UpdateAll(self)
-        elseif event == "UNIT_PET" and unit == const.UNIT.PLAYER then
-            UnitFrame_UpdateAll(self)
-        elseif event == "RAID_TARGET_UPDATE" then
-            U:UnitFrame_UpdateRaidIcon(self)
-        elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" then
-            U:UnitFrame_UpdateCombatIcon(self, event)
-        elseif event == "READY_CHECK" or event == "READY_CHECK_FINISHED" then
-            U:UnitFrame_UpdateReadyCheckIcon(self)
-        elseif event == "PLAYER_UPDATE_RESTING" then
-            U:UnitFrame_UpdateRestingIcon(self)
+            return
         end
     end
+
+    self:_OnEvent(event, unit, ...)
 end
 
 -------------------------------------------------
@@ -363,6 +157,8 @@ local function UnitFrame_OnShow(self)
     self._updateRequired = nil -- prevent UnitFrame_UpdateAll twice. when convert party <-> raid, GROUP_ROSTER_UPDATE fired.
     self._powerBarUpdateRequired = true
     UnitFrame_RegisterEvents(self)
+
+    self:EnableWidgets()
 end
 
 -------------------------------------------------
@@ -387,6 +183,8 @@ local function UnitFrame_OnHide(self)
     end
     self.__displayedGuid = nil
     F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
+
+    self:DisableWidgets()
 end
 
 -------------------------------------------------
@@ -530,6 +328,9 @@ end
 function CUFUnitButton_OnLoad(button)
     --CUF:Log(buttonName, "OnLoad")
 
+    ---@class CUFUnitButton
+    button = button
+
     ---@diagnostic disable-next-line: missing-fields
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
@@ -577,6 +378,133 @@ function CUFUnitButton_OnLoad(button)
     mouseoverHighlight:SetFrameLevel(button:GetFrameLevel() + 3)
     mouseoverHighlight:Hide()
 
+    -- Event Handlers
+
+    ---@type table<WowEvent, CUFUnitButton.EventHandler[]>
+    button.eventHandlers = {}
+
+    --- Handles the event dispatching for a button with registered event listeners.
+    --- Filters events based on whether they are unit-specific or unit-less.
+    ---@param event WowEvent
+    ---@param unit UnitToken
+    ---@param ... any
+    function button:_OnEvent(event, unit, ...)
+        local handlers = self.eventHandlers[event]
+        --CUF:Print(event, self:GetName(), unit, handlers and #handlers)
+
+        if not handlers then
+            return
+        end
+
+        -- Using a numeric `for` loop instead of `ipairs` for performance reasons:
+        -- 1. `ipairs` has a slight overhead due to its function call in each iteration.
+        -- 2. A numeric `for` loop directly accesses elements by their index, which is faster.
+        for i = 1, #handlers do
+            local handler = handlers[i]
+
+            -- Perform unit filtering before calling the callback:
+            -- Centralizing this logic here is more efficient than repeating it in every callback.
+            -- This avoids redundant evaluations and unnecessary function calls.
+            if handler.unitLess or unit == self.states.unit then
+                handler.callback(self, event, unit, ...)
+            end
+        end
+    end
+
+    --- Register an event listener for the button.
+    ---@param event WowEvent
+    ---@param callback EventCallbackFn
+    ---@param unitLess boolean? Indicates if the callback should ignore unit filtering
+    function button:AddEventListener(event, callback, unitLess)
+        if not self.eventHandlers[event] then
+            self.eventHandlers[event] = {}
+            self:RegisterEvent(event)
+        else
+            -- Check if the callback is already registered to prevent duplicates
+            for i = 1, #self.eventHandlers[event] do
+                local handler = self.eventHandlers[event][i]
+                if handler.callback == callback then
+                    --CUF:Warn("Callback is already registered for event", event, "in", self:GetName())
+                    return
+                end
+            end
+        end
+
+        tinsert(self.eventHandlers[event], { callback = callback, unitLess = unitLess })
+    end
+
+    --- Remove an event listener for the button.
+    --- Unregisters the event if no listeners remain.
+    ---@param event WowEvent
+    ---@param callback EventCallbackFn
+    function button:RemoveEventListener(event, callback)
+        local handlers = self.eventHandlers[event]
+        if not handlers then return end
+
+        for i = 1, #handlers do
+            local handler = handlers[i]
+            if handler.callback == callback then
+                tremove(handlers, i)
+                break
+            end
+        end
+
+        -- Unregister the event if there are no more handlers left.
+        if #handlers == 0 then
+            self:UnregisterEvent(event)
+            self.eventHandlers[event] = nil
+        end
+    end
+
+    function button:EnableWidgets()
+        for id, widget in pairs(self.widgets) do
+            --CUF:Print(id, widget.enabled, self:GetName())
+            if widget.Enable and widget.enabled then
+                self:EnableWidget(widget)
+            end
+        end
+    end
+
+    function button:DisableWidgets()
+        for _, widget in pairs(self.widgets) do
+            if widget.Disable then
+                self:DisableWidget(widget)
+            end
+        end
+    end
+
+    function button:UpdateWidgets()
+        for _, widget in pairs(self.widgets) do
+            if widget.Update and widget.enabled then
+                widget.Update(self)
+            end
+        end
+    end
+
+    ---@param widget Widget
+    function button:EnableWidget(widget)
+        if not self:ShouldEnableWidget(widget) then return end
+        if widget:Enable() then
+            widget._isEnabled = true
+        end
+    end
+
+    ---@param widget Widget
+    function button:DisableWidget(widget)
+        widget._isEnabled = false
+        if not widget:Disable() then
+            widget:Hide()
+        end
+    end
+
+    ---@param widget Widget
+    function button:ShouldEnableWidget(widget)
+        return self:IsVisible()
+            and self.states.unit
+            and widget.enabled
+            and not widget._isEnabled
+    end
+
     -- script
     button:SetScript("OnAttributeChanged", UnitFrame_OnAttributeChanged) -- init
     button:HookScript("OnShow", UnitFrame_OnShow)
@@ -589,3 +517,59 @@ function CUFUnitButton_OnLoad(button)
     button:RegisterForClicks("AnyDown")
     --CUF:Log(button:GetName(), "OnLoad end")
 end
+
+---@class CUFUnitButton: Button, BackdropTemplate
+---@field widgets CUFUnitButton.Widgets
+---@field states CUFUnitButton.States
+---@field GetTargetPingGUID function
+---@field __unitGuid string
+---@field class string
+---@field powerSize number
+---@field _powerBarUpdateRequired boolean
+---@field _updateRequired boolean
+---@field __tickCount number
+---@field __updateElapsed number
+---@field __displayedGuid string?
+---@field __unitName string
+---@field __nameRetries number
+---@field orientation "horizontal" | "vertical_health" | "vertical"
+---@field _casts table
+---@field _timers table
+---@field _isSelected boolean
+---@field name string
+
+---@class CUFUnitButton.States
+---@field unit Unit
+---@field displayedUnit Unit
+---@field name string
+---@field fullName string
+---@field class string
+---@field guid string?
+---@field isPlayer boolean
+---@field health number
+---@field healthMax number
+---@field healthPercent number
+---@field healthPercentOld number
+---@field totalAbsorbs number
+---@field wasDead boolean
+---@field isDead boolean
+---@field wasDeadOrGhost boolean
+---@field isDeadOrGhost boolean
+---@field hasSoulstone boolean
+---@field inVehicle boolean
+---@field role string
+---@field powerType number
+---@field powerMax number
+---@field power number
+---@field inRange boolean
+---@field wasInRange boolean
+---@field isLeader boolean
+---@field isAssistant boolean
+---@field readyCheckStatus ("ready" | "waiting" | "notready")?
+---@field isResting boolean
+
+---@class CUFUnitButton.EventHandler
+---@field callback EventCallbackFn
+---@field unitLess boolean
+
+---@alias EventCallbackFn fun(self: CUFUnitButton, event: WowEvent, unit: UnitToken, ...: any)

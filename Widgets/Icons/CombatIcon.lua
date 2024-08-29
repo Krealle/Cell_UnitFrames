@@ -27,7 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.COMBAT_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateCombatIconWidget(button, unit, setting, subSetting)
-    U:UnitFrame_UpdateCombatIcon(button)
+    button.widgets.combatIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateCombatIconWidget, const.WIDGET_KIND.COMBAT_ICON)
@@ -37,9 +37,8 @@ Handler:RegisterWidget(W.UpdateCombatIconWidget, const.WIDGET_KIND.COMBAT_ICON)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event? WowEvent
-function U:UnitFrame_UpdateCombatIcon(button, event)
-    if not button:HasWidget(const.WIDGET_KIND.COMBAT_ICON) then return end
+---@param event? "PLAYER_REGEN_DISABLED" | "PLAYER_REGEN_ENABLED"
+local function Update(button, event)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -53,6 +52,20 @@ function U:UnitFrame_UpdateCombatIcon(button, event)
     else
         combatIcon:Hide()
     end
+end
+
+---@param self CombatIconWidget
+local function Enable(self)
+    self._owner:AddEventListener("PLAYER_REGEN_DISABLED", Update, true)
+    self._owner:AddEventListener("PLAYER_REGEN_ENABLED", Update, true)
+
+    return true
+end
+
+---@param self CombatIconWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", Update)
+    self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", Update)
 end
 
 -------------------------------------------------
@@ -69,6 +82,7 @@ function W:CreateCombatIcon(button)
     combatIcon.enabled = false
     combatIcon.id = const.WIDGET_KIND.COMBAT_ICON
     combatIcon._isSelected = false
+    combatIcon._owner = button
 
     combatIcon.tex = combatIcon:CreateTexture(nil, "ARTWORK")
     combatIcon.tex:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
@@ -76,8 +90,12 @@ function W:CreateCombatIcon(button)
     combatIcon.tex:SetTexCoord(.5, 1, 0, .49)
 
     function combatIcon:_OnIsSelected()
-        U:UnitFrame_UpdateCombatIcon(button)
+        self.Update(self._owner)
     end
+
+    combatIcon.Enable = Enable
+    combatIcon.Disable = Disable
+    combatIcon.Update = Update
 
     combatIcon.SetEnabled = W.SetEnabled
     combatIcon.SetPosition = W.SetPosition

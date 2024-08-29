@@ -15,11 +15,10 @@ W.WidgetsCreateFuncs = {}
 function W.SetEnabled(widget, styleTable)
     widget.enabled = styleTable.enabled
     if not styleTable.enabled then
-        widget:Hide()
+        widget._owner:DisableWidget(widget)
         return
-    else
-        widget:Show()
     end
+    widget._owner:EnableWidget(widget)
 end
 
 ---@param widget Widget

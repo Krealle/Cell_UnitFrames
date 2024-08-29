@@ -27,11 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.RESTING_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateRestingIconWidget(button, unit, setting, subSetting)
-    if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleRestingEvents(button)
-    end
-
-    U:UnitFrame_UpdateRestingIcon(button)
+    button.widgets.restingIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateRestingIconWidget, const.WIDGET_KIND.RESTING_ICON)
@@ -41,8 +37,7 @@ Handler:RegisterWidget(W.UpdateRestingIconWidget, const.WIDGET_KIND.RESTING_ICON
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateRestingIcon(button)
-    if not button:HasWidget(const.WIDGET_KIND.RESTING_ICON) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -56,6 +51,18 @@ function U:UnitFrame_UpdateRestingIcon(button)
     else
         restingIcon:Hide()
     end
+end
+
+---@param self RestingIconWidget
+local function Enable(self)
+    self._owner:AddEventListener("PLAYER_UPDATE_RESTING", Update, true)
+
+    return true
+end
+
+---@param self RestingIconWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("PLAYER_UPDATE_RESTING", Update)
 end
 
 -------------------------------------------------
@@ -72,6 +79,7 @@ function W:CreateRestingIcon(button)
     restingIcon.enabled = false
     restingIcon.id = const.WIDGET_KIND.RESTING_ICON
     restingIcon._isSelected = false
+    restingIcon._owner = button
 
     restingIcon.tex = restingIcon:CreateTexture(nil, "ARTWORK")
     restingIcon.tex:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
@@ -79,8 +87,12 @@ function W:CreateRestingIcon(button)
     restingIcon.tex:SetTexCoord(0, .5, 0, .421875)
 
     function restingIcon:_OnIsSelected()
-        U:UnitFrame_UpdateRestingIcon(button)
+        self.Update(self._owner)
     end
+
+    restingIcon.Enable = Enable
+    restingIcon.Disable = Disable
+    restingIcon.Update = Update
 
     restingIcon.SetEnabled = W.SetEnabled
     restingIcon.SetPosition = W.SetPosition

@@ -29,6 +29,7 @@ function W.CreateBaseTextWidget(button, kind)
     textWidget._isSelected = false
     textWidget.colorType = const.ColorType.CLASS_COLOR ---@type ColorType
     textWidget.rgb = { 1, 1, 1 }
+    textWidget._owner = button
 
     ---@param styleTable WidgetTable
     function textWidget:SetFontStyle(styleTable)

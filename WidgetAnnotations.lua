@@ -30,7 +30,7 @@
 ---| RestingIconWidget
 ---| CastBarWidget
 
----@class CUFUnitButtonWidgets
+---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
 ---@field healthBarLoss Texture
 ---@field deadTex Texture
@@ -59,6 +59,7 @@
 ---@field _isSelected boolean
 ---@field _SetIsSelected function
 ---@field _OnIsSelected function?
+---@field _isEnabled boolean
 
 -------------------------------------------------
 -- MARK: Text Widgets

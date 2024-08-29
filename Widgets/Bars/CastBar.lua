@@ -90,36 +90,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         castBar:SetFillStyle(styleTable.reverse)
     end
 
-    if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleCastEvents(button, styleTable.enabled)
-    end
-
-    U:UnitFrame_UpdateCastBar(button)
+    castBar.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateCastBarWidget, const.WIDGET_KIND.CAST_BAR)
-
--------------------------------------------------
--- MARK: UpdateCastBar
--------------------------------------------------
-
----@param button CUFUnitButton
-function U:UnitFrame_UpdateCastBar(button)
-    local castBar = button.widgets.castBar
-    if not castBar then return end
-
-    if not castBar.enabled then
-        castBar:ResetAttributes()
-        return
-    end
-
-    if castBar.casting or castBar.channeling or castBar.empowering then
-        castBar:UpdateElements()
-        return
-    end
-
-    U:CastBar_CastStart(button, nil, button.states.unit)
-end
 
 -------------------------------------------------
 -- MARK: Functions
@@ -218,7 +192,7 @@ end
 ---@param event ("UNIT_SPELLCAST_START" | "UNIT_SPELLCAST_CHANNEL_START" | "UNIT_SPELLCAST_EMPOWER_START")?
 ---@param unit UnitToken
 ---@param castGUID WOWGUID?
-function U:CastBar_CastStart(button, event, unit, castGUID)
+function CastStart(button, event, unit, castGUID)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -287,7 +261,7 @@ end
 ---@param unit UnitToken
 ---@param castID WOWGUID
 ---@param spellID number
-function U:CastBar_CastUpdate(button, event, unit, castID, spellID)
+function CastUpdate(button, event, unit, castID, spellID)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -334,7 +308,7 @@ end
 ---@param castID WOWGUID
 ---@param spellID number
 ---@param complete boolean?
-function U:CastBar_CastStop(button, event, unit, castID, spellID, complete)
+function CastStop(button, event, unit, castID, spellID, complete)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -353,7 +327,7 @@ end
 ---@param unit UnitToken
 ---@param castID WOWGUID
 ---@param spellID number
-function U:CastBar_CastFail(button, event, unit, castID, spellID)
+function CastFail(button, event, unit, castID, spellID)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -430,49 +404,73 @@ local function onUpdate(self, elapsed)
     end
 end
 
--- Register/Unregister events for CastBar
+-------------------------------------------------
+-- MARK: UpdateCastBar
+-------------------------------------------------
+
 ---@param button CUFUnitButton
----@param show? boolean
-function U:ToggleCastEvents(button, show)
-    if not button:IsShown() then return end
+function Update(button)
     local castBar = button.widgets.castBar
     if not castBar then return end
 
-    if castBar.enabled or show then
-        button:RegisterEvent("UNIT_SPELLCAST_START")
-        button:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
-        button:RegisterEvent("UNIT_SPELLCAST_STOP")
-        button:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
-        button:RegisterEvent("UNIT_SPELLCAST_DELAYED")
-        button:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
-        button:RegisterEvent("UNIT_SPELLCAST_FAILED")
-        button:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-
-        if CUF.vars.isRetail then
-            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_START")
-            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_STOP")
-            button:RegisterEvent("UNIT_SPELLCAST_EMPOWER_UPDATE")
-        end
-
-        castBar:SetScript("OnUpdate", onUpdate)
-    else
-        button:UnregisterEvent("UNIT_SPELLCAST_START")
-        button:UnregisterEvent("UNIT_SPELLCAST_CHANNEL_START")
-        button:UnregisterEvent("UNIT_SPELLCAST_STOP")
-        button:UnregisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
-        button:UnregisterEvent("UNIT_SPELLCAST_DELAYED")
-        button:UnregisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
-        button:UnregisterEvent("UNIT_SPELLCAST_FAILED")
-        button:UnregisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-
-        if CUF.vars.isRetail then
-            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_START")
-            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_STOP")
-            button:UnregisterEvent("UNIT_SPELLCAST_EMPOWER_UPDATE")
-        end
-
-        castBar:SetScript("OnUpdate", nil)
+    if not castBar.enabled then
+        castBar:ResetAttributes()
+        return
     end
+
+    if castBar.casting or castBar.channeling or castBar.empowering then
+        castBar:UpdateElements()
+        return
+    end
+
+    CastStart(button, nil, button.states.unit)
+end
+
+-- Register/Unregister events for CastBar
+---@param self CastBarWidget
+function Enable(self)
+    local button = self._owner
+
+    button:AddEventListener("UNIT_SPELLCAST_START", CastStart)
+    button:AddEventListener("UNIT_SPELLCAST_CHANNEL_START", CastStart)
+    button:AddEventListener("UNIT_SPELLCAST_STOP", CastStop)
+    button:AddEventListener("UNIT_SPELLCAST_CHANNEL_STOP", CastStop)
+    button:AddEventListener("UNIT_SPELLCAST_DELAYED", CastUpdate)
+    button:AddEventListener("UNIT_SPELLCAST_CHANNEL_UPDATE", CastUpdate)
+    button:AddEventListener("UNIT_SPELLCAST_FAILED", CastFail)
+    button:AddEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
+
+    if CUF.vars.isRetail and button.states.class == "EVOKER" then
+        button:AddEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
+        button:AddEventListener("UNIT_SPELLCAST_EMPOWER_STOP", CastStop)
+        button:AddEventListener("UNIT_SPELLCAST_EMPOWER_UPDATE", CastUpdate)
+    end
+
+    self:SetScript("OnUpdate", onUpdate)
+
+    return true
+end
+
+---@param self CastBarWidget
+local function Disable(self)
+    local button = self._owner
+
+    button:RemoveEventListener("UNIT_SPELLCAST_START", CastStart)
+    button:RemoveEventListener("UNIT_SPELLCAST_CHANNEL_START", CastStart)
+    button:RemoveEventListener("UNIT_SPELLCAST_STOP", CastStop)
+    button:RemoveEventListener("UNIT_SPELLCAST_CHANNEL_STOP", CastStop)
+    button:RemoveEventListener("UNIT_SPELLCAST_DELAYED", CastUpdate)
+    button:RemoveEventListener("UNIT_SPELLCAST_CHANNEL_UPDATE", CastUpdate)
+    button:RemoveEventListener("UNIT_SPELLCAST_FAILED", CastFail)
+    button:RemoveEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
+
+    if CUF.vars.isRetail then
+        button:RemoveEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
+        button:RemoveEventListener("UNIT_SPELLCAST_EMPOWER_STOP", CastStop)
+        button:RemoveEventListener("UNIT_SPELLCAST_EMPOWER_UPDATE", CastUpdate)
+    end
+
+    self:SetScript("OnUpdate", nil)
 end
 
 -------------------------------------------------
@@ -579,9 +577,9 @@ local function AddStages(self, numStages)
     for stage = 1, numStages do
         local duration
         if (stage > numStages) then
-            duration = GetUnitEmpowerHoldAtMaxTime(self.parent.states.unit)
+            duration = GetUnitEmpowerHoldAtMaxTime(self._owner.states.unit)
         else
-            duration = GetUnitEmpowerStageDuration(self.parent.states.unit, stage - 1)
+            duration = GetUnitEmpowerStageDuration(self._owner.states.unit, stage - 1)
         end
 
         if (duration > CASTBAR_STAGE_DURATION_INVALID) then
@@ -667,7 +665,7 @@ end
 ---@param self CastBarWidget
 local function SetCastBarColor(self)
     if self.useClassColor then
-        local r, g, b = CUF.Util:GetUnitClassColor(self.parent.states.unit)
+        local r, g, b = CUF.Util:GetUnitClassColor(self._owner.states.unit)
         self.statusBar:SetStatusBarColor(r, g, b, 1)
     elseif self.notInterruptible then
         self.statusBar:SetStatusBarColor(unpack(self.nonInterruptibleColor))
@@ -808,7 +806,7 @@ function W:CreateCastBar(button)
     castBar.id = const.WIDGET_KIND.CAST_BAR
     castBar.enabled = true
     castBar._isSelected = false
-    castBar.parent = button
+    castBar._owner = button
 
     castBar.castID = nil ---@type string?
     castBar.spellName = nil ---@type string?
@@ -928,6 +926,10 @@ function W:CreateCastBar(button)
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
     castBar.SetPosition = W.SetPosition
     castBar.SetEnabled = W.SetEnabled
+
+    castBar.Enable = Enable
+    castBar.Disable = Disable
+    castBar.Update = Update
 
     castBar.SetCastBarColor = SetCastBarColor
     castBar.SetEmpowerStyle = SetEmpowerStyle

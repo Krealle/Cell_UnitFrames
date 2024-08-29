@@ -27,7 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.LEADER_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateLeaderIconWidget(button, unit, setting, subSetting)
-    U:UnitFrame_UpdateLeaderIcon(button)
+    button.widgets.leaderIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateLeaderIconWidget, const.WIDGET_KIND.LEADER_ICON)
@@ -37,8 +37,7 @@ Handler:RegisterWidget(W.UpdateLeaderIconWidget, const.WIDGET_KIND.LEADER_ICON)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateLeaderIcon(button)
-    if not button:HasWidget(const.WIDGET_KIND.LEADER_ICON) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -54,6 +53,15 @@ function U:UnitFrame_UpdateLeaderIcon(button)
     else
         leaderIcon:Hide()
     end
+end
+
+---@param self LeaderIconWidget
+local function Enable(self)
+    return true
+end
+
+---@param self LeaderIconWidget
+local function Disable(self)
 end
 
 -------------------------------------------------
@@ -92,6 +100,7 @@ function W:CreateLeaderIcon(button)
     leaderIcon.enabled = false
     leaderIcon.id = const.WIDGET_KIND.LEADER_ICON
     leaderIcon._isSelected = false
+    leaderIcon._owner = button
 
     leaderIcon.tex = leaderIcon:CreateTexture(nil, "ARTWORK")
     leaderIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
@@ -102,6 +111,10 @@ function W:CreateLeaderIcon(button)
     function leaderIcon:_OnIsSelected()
         leaderIcon:SetIcon()
     end
+
+    leaderIcon.Enable = Enable
+    leaderIcon.Disable = Disable
+    leaderIcon.Update = Update
 
     leaderIcon.SetEnabled = W.SetEnabled
     leaderIcon.SetPosition = W.SetPosition

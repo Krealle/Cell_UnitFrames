@@ -27,11 +27,7 @@ menu:AddWidget(const.WIDGET_KIND.RAID_ICON,
 ---@param setting OPTION_KIND
 ---@param subSetting string
 function W.UpdateRaidIconWidget(button, unit, setting, subSetting)
-    if not setting or setting == const.OPTION_KIND.ENABLED then
-        U:ToggleRaidTargetEvents(button)
-    end
-
-    U:UnitFrame_UpdateRaidIcon(button)
+    button.widgets.raidIcon.Update(button)
 end
 
 Handler:RegisterWidget(W.UpdateRaidIconWidget, const.WIDGET_KIND.RAID_ICON)
@@ -41,8 +37,7 @@ Handler:RegisterWidget(W.UpdateRaidIconWidget, const.WIDGET_KIND.RAID_ICON)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateRaidIcon(button)
-    if not button:HasWidget(const.WIDGET_KIND.RAID_ICON) then return end
+local function Update(button)
     local unit = button.states.displayedUnit
     if not unit then return end
 
@@ -64,6 +59,19 @@ function U:UnitFrame_UpdateRaidIcon(button)
     end
 end
 
+---@param self RaidIconWidget
+local function Enable(self)
+    if not self._owner:IsVisible() then return end
+    self._owner:AddEventListener("RAID_TARGET_UPDATE", Update, true)
+
+    return true
+end
+
+---@param self RaidIconWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("RAID_TARGET_UPDATE", Update)
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -78,14 +86,19 @@ function W:CreateRaidIcon(button)
     raidIcon.enabled = false
     raidIcon.id = const.WIDGET_KIND.RAID_ICON
     raidIcon._isSelected = false
+    raidIcon._owner = button
 
     raidIcon.tex = raidIcon:CreateTexture(nil, "ARTWORK")
     raidIcon.tex:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     raidIcon.tex:SetAllPoints(raidIcon)
 
     function raidIcon:_OnIsSelected()
-        U:UnitFrame_UpdateRaidIcon(button)
+        self.Update(self._owner)
     end
+
+    raidIcon.Enable = Enable
+    raidIcon.Disable = Disable
+    raidIcon.Update = Update
 
     raidIcon.SetEnabled = W.SetEnabled
     raidIcon.SetPosition = W.SetPosition

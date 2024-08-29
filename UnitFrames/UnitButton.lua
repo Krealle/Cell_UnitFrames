@@ -367,18 +367,20 @@ local function UpdateAppearance(kind)
         end)
     end
     if not kind or kind == "color" or kind == "deathColor" or kind == "alpha" then
+        ---@param button CUFUnitButton
         Util:IterateAllUnitButtons(function(button)
             U:UnitFrame_UpdateHealthColor(button)
-            U:UnitFrame_UpdatePowerType(button)
+            button.widgets.powerBar.UpdatePowerType(button)
         end)
     end
     if not kind or kind == "fullColor" then
         -- Most likely a better way to do this
         -- But it resolves a race condition so yea...
         C_Timer.After(0.01, function()
+            ---@param button CUFUnitButton
             Util:IterateAllUnitButtons(function(button)
                 U:UnitFrame_UpdateHealthColor(button)
-                U:UnitFrame_UpdatePowerType(button)
+                button.widgets.powerBar.UpdatePowerType(button)
             end)
         end)
     end

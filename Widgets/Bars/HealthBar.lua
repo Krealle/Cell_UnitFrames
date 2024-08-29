@@ -101,17 +101,7 @@ local function UpdateHealth(button)
     UpdateUnitHealthState(button)
     local healthPercent = button.states.healthPercent
 
-    if CellDB["appearance"]["barAnimation"] == "Flash" then
-        button.widgets.healthBar:SetValue(button.states.health)
-        local diff = healthPercent - (button.states.healthPercentOld or healthPercent)
-        if diff >= 0 or button.states.healthMax == 0 then
-            B:HideFlash(button)
-        elseif diff <= -0.05 and diff >= -1 then --! player (just joined) UnitHealthMax(unit) may be 1 ====> diff == -maxHealth
-            B:ShowFlash(button, abs(diff))
-        end
-    else
-        button.widgets.healthBar:SetValue(button.states.health)
-    end
+    button.widgets.healthBar:SetValue(button.states.health)
 
     if Cell.vars.useGradientColor or Cell.vars.useFullColor then
         U:UnitFrame_UpdateHealthColor(button)

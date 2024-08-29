@@ -67,8 +67,6 @@ end
 local function UnitFrame_UpdateAll(button)
     if not button:IsVisible() then return end
 
-    U:UnitFrame_UpdateHealthMax(button)
-    U:UnitFrame_UpdateHealth(button)
     U:UnitFrame_UpdateHealthColor(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
@@ -108,9 +106,6 @@ end
 ---@param self CUFUnitButton
 local function UnitFrame_RegisterEvents(self)
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-    self:RegisterEvent("UNIT_HEALTH")
-    self:RegisterEvent("UNIT_MAXHEALTH")
 
     --self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
@@ -169,11 +164,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
     if unit and (self.states.displayedUnit == unit or self.states.unit == unit) then
         if event == "UNIT_AURA" then
             U:UnitFrame_UpdateAuras(self, ...)
-        elseif event == "UNIT_HEALTH" then
-            U:UnitFrame_UpdateHealth(self)
-        elseif event == "UNIT_MAXHEALTH" then
-            U:UnitFrame_UpdateHealthMax(self)
-            U:UnitFrame_UpdateHealth(self)
         elseif event == "UNIT_CONNECTION" then
             self._updateRequired = true
         elseif event == "UNIT_IN_RANGE_UPDATE" then
@@ -559,9 +549,10 @@ function CUFUnitButton_OnLoad(button)
 
     ---@param widget Widget
     function button:DisableWidget(widget)
-        widget:Disable()
         widget._isEnabled = false
-        widget:Hide()
+        if not widget:Disable() then
+            widget:Hide()
+        end
     end
 
     ---@param widget Widget

@@ -61,11 +61,10 @@ function U:UnitFrame_UpdateHealthColor(button)
 end
 
 ---@param button CUFUnitButton
----@param diff number?
-function U:UpdateUnitHealthState(button, diff)
+local function UpdateUnitHealthState(button)
     local unit = button.states.displayedUnit
 
-    local health = UnitHealth(unit) + (diff or 0)
+    local health = UnitHealth(unit)
     local healthMax = UnitHealthMax(unit)
     health = min(health, healthMax) --! diff
 
@@ -98,17 +97,13 @@ function U:UpdateUnitHealthState(button, diff)
 end
 
 ---@param button CUFUnitButton
----@param diff number?
-function U:UnitFrame_UpdateHealth(button, diff)
-    local unit = button.states.displayedUnit
-    if not unit then return end
-
-    U:UpdateUnitHealthState(button, diff)
+local function UpdateHealth(button)
+    UpdateUnitHealthState(button)
     local healthPercent = button.states.healthPercent
 
     if CellDB["appearance"]["barAnimation"] == "Flash" then
         button.widgets.healthBar:SetValue(button.states.health)
-        diff = healthPercent - (button.states.healthPercentOld or healthPercent)
+        local diff = healthPercent - (button.states.healthPercentOld or healthPercent)
         if diff >= 0 or button.states.healthMax == 0 then
             B:HideFlash(button)
         elseif diff <= -0.05 and diff >= -1 then --! player (just joined) UnitHealthMax(unit) may be 1 ====> diff == -maxHealth
@@ -132,11 +127,8 @@ function U:UnitFrame_UpdateHealth(button, diff)
 end
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateHealthMax(button)
-    local unit = button.states.displayedUnit
-    if not unit then return end
-
-    U:UpdateUnitHealthState(button)
+local function UpdateHealthMax(button)
+    UpdateUnitHealthState(button)
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then
         button.widgets.healthBar:SetMinMaxSmoothedValue(0, button.states.healthMax)
@@ -155,6 +147,35 @@ function U:UnitFrame_UpdateHealthTexture(button)
     button.widgets.healthBarLoss:SetTexture(F:GetBarTexture())
 end
 
+---@param button CUFUnitButton
+local function Update(button)
+    UpdateHealthMax(button)
+    UpdateHealth(button)
+end
+
+---@param self HealthBarWidget
+local function Enable(self)
+    local unitLess
+    if self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET then
+        unitLess = true
+    end
+
+    self._owner:AddEventListener("UNIT_HEALTH", UpdateHealth, unitLess)
+    self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateHealthMax, unitLess)
+
+    self:Show()
+
+    return true
+end
+
+---@param self HealthBarWidget
+local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_HEALTH", UpdateHealth)
+    self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateHealthMax)
+
+    return true
+end
+
 -------------------------------------------------
 -- MARK: CreateHealthBar
 -------------------------------------------------
@@ -164,6 +185,8 @@ function W:CreateHealthBar(button)
     ---@class HealthBarWidget: StatusBar, SmoothStatusBar
     local healthBar = CreateFrame("StatusBar", button:GetName() .. "_HealthBar", button)
     button.widgets.healthBar = healthBar
+    healthBar._owner = button
+    healthBar.enabled = true
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
     healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
@@ -178,6 +201,10 @@ function W:CreateHealthBar(button)
     healthBarLoss:SetPoint("TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
     healthBarLoss:SetPoint("BOTTOMRIGHT")
     healthBarLoss:SetTexture(Cell.vars.texture)
+
+    healthBar.Update = Update
+    healthBar.Enable = Enable
+    healthBar.Disable = Disable
 
     --[[ -- dead texture
     local deadTex = healthBar:CreateTexture(nil, "OVERLAY")

@@ -71,15 +71,15 @@ end
 
 ---@param self NameTextWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
     self._owner:AddEventListener("UNIT_NAME_UPDATE", Update)
     self:Show()
+
+    return true
 end
 
 ---@param self NameTextWidget
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_NAME_UPDATE", Update)
-    self:Hide()
 end
 
 -------------------------------------------------

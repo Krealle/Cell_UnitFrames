@@ -80,18 +80,18 @@ end
 
 ---@param self ShieldBarWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
     self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
     self._owner:AddEventListener("UNIT_MAXHEALTH", Update)
 
     self.Update(self._owner)
+
+    return true
 end
 
 ---@param self ShieldBarWidget
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", Update)
-    self:Hide()
 end
 
 -------------------------------------------------

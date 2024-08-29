@@ -55,11 +55,11 @@ end
 
 ---@param self ReadyCheckIconWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
-
     self._owner:AddEventListener("READY_CHECK", Update, true)
     self._owner:AddEventListener("READY_CHECK_FINISHED", Update, true)
     self._owner:AddEventListener("READY_CHECK_CONFIRM", Update)
+
+    return true
 end
 
 ---@param self ReadyCheckIconWidget
@@ -67,8 +67,6 @@ local function Disable(self)
     self._owner:RemoveEventListener("READY_CHECK", Update)
     self._owner:RemoveEventListener("READY_CHECK_FINISHED", Update)
     self._owner:RemoveEventListener("READY_CHECK_CONFIRM", Update)
-
-    self:Hide()
 end
 
 -------------------------------------------------

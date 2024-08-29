@@ -77,7 +77,6 @@ end
 
 ---@param self HealthTextWidget
 local function Enable(self)
-    if not self._owner:IsVisible() or not self.enabled then return end
     self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent)
     self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent)
 
@@ -90,6 +89,8 @@ local function Enable(self)
     -- Full update
     self.Update(self._owner)
     self:Show()
+
+    return true
 end
 
 ---@param self HealthTextWidget
@@ -97,7 +98,6 @@ local function Disable(self)
     self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
-    self:Hide()
 end
 
 -------------------------------------------------

@@ -56,11 +56,12 @@ end
 ---@param self LevelTextWidget
 local function Enable(self)
     self:Show()
+
+    return true
 end
 
 ---@param self LevelTextWidget
 local function Disable(self)
-    self:Hide()
 end
 
 -------------------------------------------------

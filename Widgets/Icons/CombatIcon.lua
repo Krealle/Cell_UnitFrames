@@ -56,16 +56,16 @@ end
 
 ---@param self CombatIconWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
     self._owner:AddEventListener("PLAYER_REGEN_DISABLED", Update, true)
     self._owner:AddEventListener("PLAYER_REGEN_ENABLED", Update, true)
+
+    return true
 end
 
 ---@param self CombatIconWidget
 local function Disable(self)
     self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", Update)
     self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", Update)
-    self:Hide()
 end
 
 -------------------------------------------------

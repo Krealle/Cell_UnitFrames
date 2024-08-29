@@ -57,11 +57,11 @@ end
 
 ---@param self LeaderIconWidget
 local function Enable(self)
+    return true
 end
 
 ---@param self LeaderIconWidget
 local function Disable(self)
-    self:Hide()
 end
 
 -------------------------------------------------

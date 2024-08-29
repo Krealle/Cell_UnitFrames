@@ -55,11 +55,11 @@ end
 
 ---@param self RoleIconWidget
 local function Enable(self)
+    return true
 end
 
 ---@param self RoleIconWidget
 local function Disable(self)
-    self:Hide()
 end
 
 -------------------------------------------------

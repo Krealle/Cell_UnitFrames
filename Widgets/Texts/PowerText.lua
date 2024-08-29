@@ -72,17 +72,17 @@ end
 
 ---@param self PowerTextWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
     self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update)
     self:Show()
+
+    return true
 end
 
 ---@param self PowerTextWidget
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
-    self:Hide()
 end
 
 -------------------------------------------------

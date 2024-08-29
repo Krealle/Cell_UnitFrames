@@ -90,6 +90,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         castBar:SetFillStyle(styleTable.reverse)
     end
 
+    if not setting or setting == const.OPTION_KIND.SPELL_WIDTH then
+        castBar.spellText.width = styleTable.spellWidth
+    end
+
     castBar.Update(button)
 end
 
@@ -125,8 +129,8 @@ local function UpdateElements(self)
         if self.empowering and not self.showEmpowerSpellName then
             self.spellText:SetText("")
         else
-            self.spellText:SetText(self.displayName ~= "" and self.displayName
-                or self.spellName)
+            local name = self.displayName ~= "" and self.displayName or self.spellName
+            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
         end
     end
 
@@ -879,6 +883,7 @@ function W:CreateCastBar(button)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
+    spellText.width = CUF.Defaults.Options.fontWidth
 
     ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")
@@ -938,6 +943,7 @@ function W:CreateCastBar(button)
     castBar.SetSparkColor = SetSparkColor
     castBar.SetSparkWidth = SetSparkWidth
     castBar.SetFillStyle = SetFillStyle
+    castBar.SetSpellWidth = CUF.Util.UpdateTextWidth
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CAST_BAR, W.CreateCastBar)

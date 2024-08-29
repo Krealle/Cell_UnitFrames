@@ -197,6 +197,7 @@
 ---@field timer BigFontOpt
 ---@field timerFormat CastBarTimerFormat
 ---@field spell BigFontOpt
+---@field spellWidth FontWidthOpt
 ---@field showSpell boolean
 ---@field spark CastBarSparkOpt
 ---@field empower EmpowerOpt

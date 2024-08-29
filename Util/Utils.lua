@@ -94,10 +94,10 @@ end
 -------------------------------------------------
 
 ---@param fs FontString
----@param text string
+---@param text string?
 ---@param widthTable FontWidthOpt
 ---@param relativeTo Frame
-function Util:UpdateTextWidth(fs, text, widthTable, relativeTo)
+function Util.UpdateTextWidth(fs, text, widthTable, relativeTo)
     if not text or not widthTable then return end
 
     if widthTable.type == "unlimited" then

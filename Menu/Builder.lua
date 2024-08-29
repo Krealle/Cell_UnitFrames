@@ -421,8 +421,9 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@param path string?
 ---@return TextWidthOption
-function Builder:CreateTextWidthOption(parent, widgetName)
+function Builder:CreateTextWidthOption(parent, widgetName, path)
     ---@class TextWidthOption: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.optionHeight = 20
@@ -437,7 +438,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         {
             ["text"] = L["Unlimited"],
             ["onClick"] = function()
-                HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH, { type = "unlimited" })
+                HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH, { type = "unlimited" })
                 percentDropdown:Hide()
                 lengthEB:Hide()
                 lengthEB2:Hide()
@@ -448,7 +449,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         {
             ["text"] = L["Percentage"],
             ["onClick"] = function()
-                HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH, { type = "percentage", value = 0.75 })
+                HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH, { type = "percentage", value = 0.75 })
                 percentDropdown:SetSelectedValue(0.75)
                 percentDropdown:Show()
                 lengthEB:Hide()
@@ -460,7 +461,8 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         {
             ["text"] = L["Length"],
             ["onClick"] = function()
-                HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH, { type = "length", value = 5, auxValue = 3 })
+                HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH,
+                    { type = "length", value = 5, auxValue = 3 })
                 percentDropdown:Hide()
                 lengthEB:SetText(5)
                 lengthEB:Show()
@@ -479,7 +481,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         { "25%",  0.25 },
     }
     percentDropdown = self:CreateDropdown(f, widgetName, "", 75, percentItems,
-        const.OPTION_KIND.WIDTH .. ".value")
+        (path or const.OPTION_KIND.WIDTH) .. ".value")
     percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
     Cell:SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
 
@@ -503,7 +505,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB.confirmBtn:Hide()
         lengthEB.value = length
 
-        HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH .. ".value", length)
+        HandleWidgetOption(widgetName, (path or const.OPTION_KIND.WIDTH) .. ".value", length)
     end)
 
     lengthEB:SetScript("OnTextChanged", function(txt, userChanged)
@@ -537,7 +539,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
         lengthEB2.confirmBtn:Hide()
         lengthEB2.value = length
 
-        HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH .. ".auxValue", length)
+        HandleWidgetOption(widgetName, (path or const.OPTION_KIND.WIDTH) .. ".auxValue", length)
     end)
 
     lengthEB2:SetScript("OnTextChanged", function(txt, userChanged)
@@ -577,7 +579,7 @@ function Builder:CreateTextWidthOption(parent, widgetName)
     end
 
     local function LoadPageDB()
-        f:SetNameWidth(HandleWidgetOption(widgetName, const.OPTION_KIND.WIDTH))
+        f:SetNameWidth(HandleWidgetOption(widgetName, path or const.OPTION_KIND.WIDTH))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "NameWidth")
 
@@ -1385,6 +1387,11 @@ function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
 
     f.spellCB = self:CreateCheckBox(f, widgetName, L.ShowSpell, const.OPTION_KIND.SHOW_SPELL)
     self:AnchorBelow(f.spellCB, f.fontOptions.styleDropdown)
+
+    f.spellWidth = self:CreateTextWidthOption(f, widgetName, const.OPTION_KIND.SPELL_WIDTH)
+    self:AnchorBelow(f.spellWidth, f.spellCB)
+
+    f.optionHeight = f.optionHeight + 50
 
     return f
 end

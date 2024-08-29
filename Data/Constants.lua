@@ -134,6 +134,7 @@ const.OPTION_KIND = {
     SHOW_BORDER = "showBorder",
     ICON = "icon",
     ZOOM = "zoom",
+    SPELL_WIDTH = "spellWidth",
 }
 
 ---@enum AURA_OPTION_KIND

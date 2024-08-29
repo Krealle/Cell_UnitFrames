@@ -16,14 +16,14 @@ function W.SetEnabled(widget, styleTable)
     widget.enabled = styleTable.enabled
     if not styleTable.enabled then
         if widget.Disable then
-            widget:Disable()
+            widget._owner:DisableWidget(widget)
         else
             widget:Hide()
         end
         return
     else
         if widget.Enable then
-            widget:Enable()
+            widget._owner:EnableWidget(widget)
         else
             widget:Show()
         end

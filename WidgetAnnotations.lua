@@ -59,6 +59,7 @@
 ---@field _isSelected boolean
 ---@field _SetIsSelected function
 ---@field _OnIsSelected function?
+---@field _isEnabled boolean
 
 -------------------------------------------------
 -- MARK: Text Widgets

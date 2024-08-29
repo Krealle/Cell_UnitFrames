@@ -569,9 +569,10 @@ function CUFUnitButton_OnLoad(button)
     end
 
     function button:EnableWidgets()
-        for _, widget in pairs(self.widgets) do
+        for id, widget in pairs(self.widgets) do
+            --CUF:Print(id, widget.enabled, self:GetName())
             if widget.Enable and widget.enabled then
-                widget:Enable()
+                self:EnableWidget(widget)
             end
         end
     end
@@ -579,7 +580,7 @@ function CUFUnitButton_OnLoad(button)
     function button:DisableWidgets()
         for _, widget in pairs(self.widgets) do
             if widget.Disable then
-                widget:Disable()
+                self:DisableWidget(widget)
             end
         end
     end
@@ -590,6 +591,29 @@ function CUFUnitButton_OnLoad(button)
                 widget.Update(self)
             end
         end
+    end
+
+    ---@param widget Widget
+    function button:EnableWidget(widget)
+        if not self:ShouldEnableWidget(widget) then return end
+        if widget:Enable() then
+            widget._isEnabled = true
+        end
+    end
+
+    ---@param widget Widget
+    function button:DisableWidget(widget)
+        widget:Disable()
+        widget._isEnabled = false
+        widget:Hide()
+    end
+
+    ---@param widget Widget
+    function button:ShouldEnableWidget(widget)
+        return self:IsVisible()
+            and self.states.unit
+            and widget.enabled
+            and not widget._isEnabled
     end
 
     -- script

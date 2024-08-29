@@ -399,6 +399,7 @@ Defaults.Widgets = {
             offsetX = 4,
             rgb = { 1, 1, 1 },
         },
+        spellWidth = Defaults.Options.fontWidth,
         showSpell = true,
         spark = {
             enabled = true,

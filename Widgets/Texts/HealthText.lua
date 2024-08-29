@@ -15,6 +15,10 @@ local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
 
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -42,7 +46,9 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
         widget:SetFormat(styleTable.format)
     end
 
-    widget.Update(button)
+    if widget.enabled and button:IsVisible() then
+        widget.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
@@ -50,6 +56,12 @@ Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 -------------------------------------------------
 -- MARK: UpdateHealthText
 -------------------------------------------------
+
+---@param button CUFUnitButton
+local function UpdateFrequent(button)
+    if not button.states.displayedUnit then return end
+    button.widgets.healthText:UpdateValue()
+end
 
 -- Called on full updates
 ---@param button CUFUnitButton
@@ -65,12 +77,26 @@ end
 
 ---@param self HealthTextWidget
 local function Enable(self)
-    if not self._owner:IsVisible() then return end
+    if not self._owner:IsVisible() or not self.enabled then return end
+    self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent)
+    self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent)
+
+    if self._showingAbsorbs then
+        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    else
+        self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    end
+
+    -- Full update
+    self.Update(self._owner)
     self:Show()
 end
 
 ---@param self HealthTextWidget
 local function Disable(self)
+    self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
     self:Hide()
 end
 
@@ -78,7 +104,17 @@ end
 -- MARK: Format
 -------------------------------------------------
 
--- TODO: make generic
+---@param unit Unit
+---@param absorbs boolean
+---@return number health
+---@return number healthMax
+---@return number totalAbsorbs
+local function GetHealthInfo(unit, absorbs)
+    local health = UnitHealth(unit)
+    local healthMax = UnitHealthMax(unit)
+    local totalAbsorbs = absorbs and UnitGetTotalAbsorbs(unit) or 0
+    return health, healthMax, totalAbsorbs
+end
 
 ---@param self HealthTextWidget
 ---@param current number
@@ -279,19 +315,7 @@ local function HealthText_SetFormat(self, format)
         self.SetValue = SetHealth_Custom
     end
 
-    -- TODO: Revist this
-    local button = self._owner
-    if self._showingAbsorbs then
-        button:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", function()
-            U:UnitFrame_UpdateHealth(button)
-        end)
-    else
-        button:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", function()
-            U:UnitFrame_UpdateHealth(button)
-        end)
-    end
-
-    self.Update(button)
+    self:Enable()
 end
 
 ---@class HealthTextWidget
@@ -319,8 +343,9 @@ function W:CreateHealthText(button)
     healthText.SetValue = SetHealth_Percentage
 
     function healthText:UpdateValue()
-        if button.widgets.healthText.enabled and button.states.healthMax ~= 0 then
-            button.widgets.healthText:SetValue(button.states.health, button.states.healthMax, button.states.totalAbsorbs)
+        local health, healthMax, totalAbsorbs = GetHealthInfo(self._owner.states.displayedUnit, self._showingAbsorbs)
+        if self.enabled and healthMax ~= 0 then
+            self:SetValue(health, healthMax, totalAbsorbs)
         end
     end
 

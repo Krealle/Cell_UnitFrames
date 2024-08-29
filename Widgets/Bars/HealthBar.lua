@@ -95,8 +95,6 @@ function U:UpdateUnitHealthState(button, diff)
     if button.states.wasDeadOrGhost ~= button.states.isDeadOrGhost then
         --I.UpdateStatusIcon_Resurrection(self        U:UnitFrame_UpdateHealthColor(self)
     end
-
-    button.widgets.healthText:UpdateValue()
 end
 
 ---@param button CUFUnitButton

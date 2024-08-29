@@ -893,7 +893,7 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
 
     ---@class PowerFormatOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 70
+    f.optionHeight = 100
     f.id = "PowerFormatOptions"
 
     f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
@@ -916,6 +916,10 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
     hooksecurefunc(f.formatDropdown, "SetSelected", function(_, text)
         SetEnabled(text == L["Custom"])
     end)
+
+    f.hideIfEmptyOrFull = self:CreateCheckBox(f, widgetName, L["hideIfEmptyOrFull"],
+        const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL)
+    self:AnchorBelow(f.hideIfEmptyOrFull, f.formatEditBox, 35)
 
     local function LoadPageDB()
         SetEnabled(HandleWidgetOption(widgetName, const.OPTION_KIND.FORMAT) == const.PowerTextFormat.CUSTOM)

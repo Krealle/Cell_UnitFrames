@@ -45,6 +45,9 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
         widget:SetTextFormat(styleTable.textFormat)
         widget:SetFormat(styleTable.format)
     end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL then
+        widget.hideIfEmptyOrFull = styleTable.hideIfEmptyOrFull
+    end
 
     if widget.enabled and button:IsVisible() then
         widget.Update(button)
@@ -343,6 +346,7 @@ function W:CreateHealthText(button)
 
     healthText.textFormat = ""
     healthText._showingAbsorbs = false
+    healthText.hideIfEmptyOrFull = false
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
@@ -351,7 +355,12 @@ function W:CreateHealthText(button)
     function healthText:UpdateValue()
         local health, healthMax, totalAbsorbs = GetHealthInfo(self._owner.states.displayedUnit, self._showingAbsorbs)
         if self.enabled and healthMax ~= 0 then
-            self:SetValue(health, healthMax, totalAbsorbs)
+            if self.hideIfEmptyOrFull and (health == 0 or health == healthMax) then
+                self:Hide()
+            else
+                self:SetValue(health, healthMax, totalAbsorbs)
+                self:Show()
+            end
         end
     end
 

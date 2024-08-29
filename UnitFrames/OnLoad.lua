@@ -122,13 +122,16 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
     if self.states.unit == const.UNIT.TARGET then
-        self:RegisterEvent("PLAYER_TARGET_CHANGED")
+        self:AddEventListener("PLAYER_TARGET_CHANGED", UnitFrame_UpdateAll, true)
     end
     if self.states.unit == const.UNIT.FOCUS then
-        self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+        self:AddEventListener("PLAYER_FOCUS_CHANGED", UnitFrame_UpdateAll, true)
     end
     if self.states.unit == const.UNIT.PET then
-        self:RegisterEvent("UNIT_PET")
+        self:AddEventListener("UNIT_PET", function(button, event, unit)
+            if unit ~= const.UNIT.PLAYER then return end
+            UnitFrame_UpdateAll(button)
+        end, true)
     end
     U:ToggleAuras(self)
 
@@ -147,6 +150,7 @@ end
 ---@param self CUFUnitButton
 local function UnitFrame_UnregisterEvents(self)
     self:UnregisterAllEvents()
+    wipe(self.eventHandlers)
 end
 
 -------------------------------------------------
@@ -170,14 +174,6 @@ local function UnitFrame_OnEvent(self, event, unit, ...)
     else
         if event == "GROUP_ROSTER_UPDATE" then
             self._updateRequired = true
-        elseif event == "PLAYER_TARGET_CHANGED" then
-            --[[  UnitButton_UpdateTarget(self)
-            UnitButton_UpdateThreatBar(self) ]]
-            UnitFrame_UpdateAll(self)
-        elseif event == "PLAYER_FOCUS_CHANGED" then
-            UnitFrame_UpdateAll(self)
-        elseif event == "UNIT_PET" and unit == const.UNIT.PLAYER then
-            UnitFrame_UpdateAll(self)
         end
     end
 end
@@ -425,6 +421,7 @@ function CUFUnitButton_OnLoad(button)
     ---@param ... any
     function button:_OnEvent(event, unit, ...)
         local handlers = self.eventHandlers[event]
+        --CUF:Print(event, self:GetName(), unit, handlers and #handlers)
 
         if not handlers then
             if event ~= "UNIT_AURA" then

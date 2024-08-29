@@ -129,8 +129,8 @@ local function UpdateElements(self)
         if self.empowering and not self.showEmpowerSpellName then
             self.spellText:SetText("")
         else
-            self.spellText:SetText(self.displayName ~= "" and self.displayName
-                or self.spellName)
+            local name = self.displayName ~= "" and self.displayName or self.spellName
+            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
         end
     end
 
@@ -943,6 +943,7 @@ function W:CreateCastBar(button)
     castBar.SetSparkColor = SetSparkColor
     castBar.SetSparkWidth = SetSparkWidth
     castBar.SetFillStyle = SetFillStyle
+    castBar.SetSpellWidth = CUF.Util.UpdateTextWidth
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CAST_BAR, W.CreateCastBar)

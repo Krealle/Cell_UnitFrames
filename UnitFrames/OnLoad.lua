@@ -568,3 +568,53 @@ function CUFUnitButton_OnLoad(button)
     button:RegisterForClicks("AnyDown")
     --CUF:Log(button:GetName(), "OnLoad end")
 end
+
+---@class CUFUnitButton: Button, BackdropTemplate
+---@field widgets CUFUnitButton.Widgets
+---@field states CUFUnitButton.States
+---@field GetTargetPingGUID function
+---@field __unitGuid string
+---@field class string
+---@field powerSize number
+---@field _powerBarUpdateRequired boolean
+---@field _updateRequired boolean
+---@field __tickCount number
+---@field __updateElapsed number
+---@field __displayedGuid string?
+---@field __unitName string
+---@field __nameRetries number
+---@field orientation "horizontal" | "vertical_health" | "vertical"
+---@field _casts table
+---@field _timers table
+---@field _isSelected boolean
+---@field name string
+
+---@class CUFUnitButton.States
+---@field unit Unit
+---@field displayedUnit Unit
+---@field name string
+---@field fullName string
+---@field class string
+---@field guid string?
+---@field isPlayer boolean
+---@field health number
+---@field healthMax number
+---@field healthPercent number
+---@field healthPercentOld number
+---@field totalAbsorbs number
+---@field wasDead boolean
+---@field isDead boolean
+---@field wasDeadOrGhost boolean
+---@field isDeadOrGhost boolean
+---@field hasSoulstone boolean
+---@field inVehicle boolean
+---@field role string
+---@field powerType number
+---@field powerMax number
+---@field power number
+---@field inRange boolean
+---@field wasInRange boolean
+---@field isLeader boolean
+---@field isAssistant boolean
+---@field readyCheckStatus ("ready" | "waiting" | "notready")?
+---@field isResting boolean

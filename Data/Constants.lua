@@ -90,6 +90,7 @@ const.WIDGET_KIND = {
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
+    CLASS_BAR = "classBar"
 }
 
 ---@enum OPTION_KIND

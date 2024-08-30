@@ -217,7 +217,7 @@ end
 --- becomes { "value", "value2" }
 ---@param dictionary table
 ---@return table array
-function Util:DictionaryToArray(dictionary)
+function Util.DictionaryToArray(dictionary)
     local array = {}
     for _, value in pairs(dictionary) do
         table.insert(array, value)

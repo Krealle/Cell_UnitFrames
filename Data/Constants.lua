@@ -4,10 +4,13 @@ local CUF = select(2, ...)
 ---@class CUF.constants
 local const = CUF.constants
 
+local Util = CUF.Util
+
 --- Called when the addon is loaded
 ---
 --- Used for initializing constants that require Util functions
 local function OnAddonLoaded()
+    const.NameFormatArray = Util.DictionaryToArray(const.NameFormat)
 end
 
 CUF:RegisterCallback("AddonLoaded", "CUF_Constants_OnAddonLoaded", OnAddonLoaded)
@@ -20,7 +23,6 @@ const.UNIT = {
     PET = "pet",
     TARGET_TARGET = "targettarget",
 }
-
 
 ---@enum TitleCasedUnits
 -- Used for frame titles

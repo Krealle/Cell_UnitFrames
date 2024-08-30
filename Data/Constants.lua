@@ -4,6 +4,14 @@ local CUF = select(2, ...)
 ---@class CUF.constants
 local const = CUF.constants
 
+--- Called when the addon is loaded
+---
+--- Used for initializing constants that require Util functions
+local function OnAddonLoaded()
+end
+
+CUF:RegisterCallback("AddonLoaded", "CUF_Constants_OnAddonLoaded", OnAddonLoaded)
+
 ---@enum Unit
 const.UNIT = {
     PLAYER = "player",

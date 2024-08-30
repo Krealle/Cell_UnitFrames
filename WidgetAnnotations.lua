@@ -72,6 +72,7 @@
 ---@field color ColorOpt
 ---@field width FontWidthOpt
 ---@field position PositionOpt
+---@field format NameFormat
 
 ---@class HealthTextWidgetTable
 ---@field enabled boolean

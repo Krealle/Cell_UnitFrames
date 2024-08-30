@@ -109,15 +109,18 @@ function W:CreateNameText(button)
         name = name or F:GetNickname(button.states.name, button.states.fullName)
 
         if self.format ~= CUF.constants.NameFormat.FULL_NAME then
-            name = Util.FormatName(name, self.format)
+            name = self.FormatName(name, self.format)
         end
 
-        Util.UpdateTextWidth(nameText.text, name, nameText.width, button)
+        self.UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
 
     nameText.Update = Update
     nameText.Enable = Enable
     nameText.Disable = Disable
+
+    nameText.FormatName = Util.FormatName
+    nameText.UpdateTextWidth = Util.UpdateTextWidth
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.NAME_TEXT, W.CreateNameText)

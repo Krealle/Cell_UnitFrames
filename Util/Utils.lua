@@ -210,6 +210,21 @@ function Util:GetUnitClassColor(unit, class, guid)
     return unpack(CUF.constants.COLORS.NEUTRAL)
 end
 
+--- Converts a dictionary table to an array eg.
+---
+--- { ["key"] = "value", ["key2"] = "value2" }
+---
+--- becomes { "value", "value2" }
+---@param dictionary table
+---@return table array
+function Util:DictionaryToArray(dictionary)
+    local array = {}
+    for _, value in pairs(dictionary) do
+        table.insert(array, value)
+    end
+    return array
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

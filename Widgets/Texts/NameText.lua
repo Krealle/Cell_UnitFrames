@@ -27,6 +27,7 @@ end
 menu:AddWidget(const.WIDGET_KIND.NAME_TEXT,
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.TextWidth,
+    Builder.MenuOptions.NameFormat,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
@@ -38,9 +39,13 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT,
 ---@param subSetting string
 function W.UpdateNameTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.nameText
+    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit) --[[@as NameTextWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.WIDTH then
-        widget.width = DB.GetWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit).width
+        widget.width = styleTable.width
+    end
+    if not setting or setting == const.OPTION_KIND.FORMAT then
+        widget.format = styleTable.format
     end
 
     widget.Update(button)
@@ -93,6 +98,7 @@ function W:CreateNameText(button)
     button.widgets.nameText = nameText
 
     nameText.width = CUF.Defaults.Options.fontWidth
+    nameText.format = CUF.Defaults.Widgets.nameText.format
 
     function nameText:UpdateName()
         local name

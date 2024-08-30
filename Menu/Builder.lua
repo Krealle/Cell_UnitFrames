@@ -50,6 +50,7 @@ Builder.MenuOptions = {
     CastBarEmpower = 26,
     CastBarBorder = 27,
     CastBarIcon = 28,
+    NameFormat = 29,
 }
 
 -------------------------------------------------
@@ -930,6 +931,26 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Name Format
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return NameFormatOptions
+function Builder:CreateNameFormatOptions(parent, widgetName)
+    ---@class NameFormatOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+    f.id = "NameFormatOptions"
+
+    f.formatDropdown = self:CreateDropdown(f, widgetName, "Format", 200, const.NameFormatArray,
+        const.OPTION_KIND.FORMAT)
+    f.formatDropdown:SetPoint("TOPLEFT", f)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: Size
 -------------------------------------------------
 
@@ -1573,6 +1594,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
+    [Builder.MenuOptions.NameFormat] = Builder.CreateNameFormatOptions,
     [Builder.MenuOptions.AuraIconOptions] = Builder.CreateAuraIconOptions,
     [Builder.MenuOptions.Orientation] = Builder.CreateOrientationOptions,
     [Builder.MenuOptions.AuraStackFontOptions] = Builder.CreateAuraStackFontOptions,

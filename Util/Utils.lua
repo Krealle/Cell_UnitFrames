@@ -352,6 +352,37 @@ function Util:trim(string)
     return string:match '^()%s*$' and '' or string:match '^%s*(.*%S)'
 end
 
+--- Splits a full name string into the specified format.
+--- @param fullName string The full name (e.g., "Lars Erik Olsen Larsen")
+--- @param format NameFormat
+--- @return string
+function Util.FormatName(fullName, format)
+    if not fullName then return "Unknown" end
+
+    local nameParts = {}
+    for name in fullName:gmatch("%S+") do
+        table.insert(nameParts, name)
+    end
+
+    local firstName = nameParts[1] or ""
+    local lastName = nameParts[#nameParts] or ""
+    if lastName == "" then return fullName end
+
+    if format == CUF.constants.NameFormat.FULL_NAME then
+        return fullName
+    elseif format == CUF.constants.NameFormat.LAST_NAME then
+        return lastName
+    elseif format == CUF.constants.NameFormat.FIRST_NAME then
+        return firstName
+    elseif format == CUF.constants.NameFormat.FIRST_NAME_LAST_INITIAL then
+        return string.format("%s %s.", firstName, lastName:sub(1, 1))
+    elseif format == CUF.constants.NameFormat.FIRST_INITIAL_LAST_NAME then
+        return string.format("%s. %s", firstName:sub(1, 1), lastName)
+    end
+
+    return fullName
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

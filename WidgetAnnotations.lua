@@ -14,6 +14,7 @@
 ---| ReadyCheckIconWidgetTable
 ---| RestingIconWidgetTable
 ---| CastBarWidgetTable
+---| ClassBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -29,6 +30,7 @@
 ---| ReadyCheckIconWidget
 ---| RestingIconWidget
 ---| CastBarWidget
+---| ClassBarWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -52,6 +54,7 @@
 ---@field readyCheckIcon ReadyCheckIconWidget
 ---@field restingIcon RestingIconWidget
 ---@field castBar CastBarWidget
+---@field classBar ClassBarWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -234,6 +237,16 @@
 ---@field stageThree RGBAOpt
 ---@field stageFour RGBAOpt
 ---@field fullyCharged RGBAOpt
+
+---@class ClassBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+--[[ ---@field position PositionOpt
+---@field size SizeOpt ]]
+--[[ ---@field colors ClassBarColorsOpt
+
+---@class ClassBarColorsOpt
+---@field  ]]
 
 -------------------------------------------------
 -- MARK: Generic Options

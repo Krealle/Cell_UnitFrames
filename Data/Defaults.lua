@@ -120,6 +120,7 @@ Defaults.Widgets = {
             offsetX = 2,
             relativePoint = "CENTER",
         },
+        format = CUF.constants.NameFormat.FULL_NAME,
     },
     ---@type HealthTextWidgetTable
     healthText = {

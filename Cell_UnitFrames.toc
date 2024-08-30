@@ -16,6 +16,7 @@
 
 Locales/LoadLocales.xml
 Core/Init.lua
+Core/Events.lua
 
 Data/Constants.lua
 Data/Defaults.lua

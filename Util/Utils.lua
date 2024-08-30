@@ -210,6 +210,21 @@ function Util:GetUnitClassColor(unit, class, guid)
     return unpack(CUF.constants.COLORS.NEUTRAL)
 end
 
+--- Converts a dictionary table to an array eg.
+---
+--- { ["key"] = "value", ["key2"] = "value2" }
+---
+--- becomes { "value", "value2" }
+---@param dictionary table
+---@return table array
+function Util.DictionaryToArray(dictionary)
+    local array = {}
+    for _, value in pairs(dictionary) do
+        table.insert(array, value)
+    end
+    return array
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------
@@ -337,68 +352,35 @@ function Util:trim(string)
     return string:match '^()%s*$' and '' or string:match '^%s*(.*%S)'
 end
 
--------------------------------------------------
--- MARK: Callbacks
--------------------------------------------------
+--- Splits a full name string into the specified format.
+--- @param fullName string The full name (e.g., "Lars Erik Olsen Larsen")
+--- @param format NameFormat
+--- @return string
+function Util.FormatName(fullName, format)
+    if not fullName then return "Unknown" end
 
----@alias Callbacks
----| "UpdateMenu"
----| "UpdateWidget"
----| "LoadPageDB"
----| "UpdateVisibility"
----| "UpdateUnitButtons"
----| "UpdateLayout"
----| "ShowOptionsTab"
----| "UpdatePixelPerfect"
----| "UpdateAppearance"
-local callbacks = {}
-
----@param eventName Callbacks
----@param onEventFuncName string
----@param onEventFunc function
-function CUF:RegisterCallback(eventName, onEventFuncName, onEventFunc)
-    if not callbacks[eventName] then callbacks[eventName] = {} end
-    callbacks[eventName][onEventFuncName] = onEventFunc
-end
-
----@param eventName Callbacks
----@param onEventFuncName string
-function CUF:UnregisterCallback(eventName, onEventFuncName)
-    if not callbacks[eventName] then return end
-    callbacks[eventName][onEventFuncName] = nil
-end
-
----@param eventName Callbacks
-function CUF:UnregisterAllCallbacks(eventName)
-    if not callbacks[eventName] then return end
-    callbacks[eventName] = nil
-end
-
----@param eventName Callbacks
----@param ... any
-function CUF:Fire(eventName, ...)
-    if not callbacks[eventName] then return end
-
-    for onEventFuncName, onEventFunc in pairs(callbacks[eventName]) do
-        onEventFunc(...)
-    end
-end
-
--- Borrowed from XephCD
----@param event WowEvent
----@param callback fun(ownerId: number, ...: any): boolean
----@return number
-function CUF:AddEventListener(event, callback)
-    local function wrappedFn(...)
-        local unregister = callback(...)
-
-        if unregister then
-            local id = select(1, ...)
-            EventRegistry:UnregisterFrameEventAndCallback(event, id)
-        end
+    local nameParts = {}
+    for name in fullName:gmatch("%S+") do
+        table.insert(nameParts, name)
     end
 
-    return EventRegistry:RegisterFrameEventAndCallback(event, wrappedFn)
+    local firstName = nameParts[1] or ""
+    local lastName = nameParts[#nameParts] or ""
+    if lastName == "" then return fullName end
+
+    if format == CUF.constants.NameFormat.FULL_NAME then
+        return fullName
+    elseif format == CUF.constants.NameFormat.LAST_NAME then
+        return lastName
+    elseif format == CUF.constants.NameFormat.FIRST_NAME then
+        return firstName
+    elseif format == CUF.constants.NameFormat.FIRST_NAME_LAST_INITIAL then
+        return string.format("%s %s.", firstName, lastName:sub(1, 1))
+    elseif format == CUF.constants.NameFormat.FIRST_INITIAL_LAST_NAME then
+        return string.format("%s. %s", firstName:sub(1, 1), lastName)
+    end
+
+    return fullName
 end
 
 -------------------------------------------------

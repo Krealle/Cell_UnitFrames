@@ -4,6 +4,17 @@ local CUF = select(2, ...)
 ---@class CUF.constants
 local const = CUF.constants
 
+local Util = CUF.Util
+
+--- Called when the addon is loaded
+---
+--- Used for initializing constants that require Util functions
+local function OnAddonLoaded()
+    const.NameFormatArray = Util.DictionaryToArray(const.NameFormat)
+end
+
+CUF:RegisterCallback("AddonLoaded", "CUF_Constants_OnAddonLoaded", OnAddonLoaded)
+
 ---@enum Unit
 const.UNIT = {
     PLAYER = "player",
@@ -12,7 +23,6 @@ const.UNIT = {
     PET = "pet",
     TARGET_TARGET = "targettarget",
 }
-
 
 ---@enum TitleCasedUnits
 -- Used for frame titles
@@ -211,4 +221,13 @@ const.CastBarTimerFormat = {
     REMAINING = "remaining",
     DURATION = "duration",
     DURATION_AND_MAX = "duration-and-max",
+}
+
+---@enum NameFormat
+const.NameFormat = {
+    FULL_NAME = "fullName",
+    LAST_NAME = "lastName",
+    FIRST_NAME = "firstName",
+    FIRST_NAME_LAST_INITIAL = "firstNameLastInitial",
+    FIRST_INITIAL_LAST_NAME = "firstInitialLastName",
 }

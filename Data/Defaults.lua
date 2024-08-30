@@ -430,6 +430,11 @@ Defaults.Widgets = {
             position = "left",
             zoom = 0,
         }
+    },
+    ---@type ClassBarWidgetTable
+    classBar = {
+        enabled = true,
+        frameLevel = 10,
     }
 }
 

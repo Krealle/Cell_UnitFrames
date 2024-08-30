@@ -413,7 +413,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function Update(button)
+local function Update(button)
     local castBar = button.widgets.castBar
     if not castBar then return end
 
@@ -432,7 +432,7 @@ end
 
 -- Register/Unregister events for CastBar
 ---@param self CastBarWidget
-function Enable(self)
+local function Enable(self)
     local button = self._owner
 
     button:AddEventListener("UNIT_SPELLCAST_START", CastStart)

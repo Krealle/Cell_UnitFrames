@@ -219,7 +219,7 @@ end
 -------------------------------------------------
 
 ---@param self CellAuraIcons
-function EnableAuras(self) -- Has unique name because of some obscure referncing bug?
+local function Enable(self) -- Has unique name because of some obscure referncing bug?
     self._owner:AddEventListener("UNIT_AURA", self.Update)
 
     self:Show()
@@ -227,7 +227,7 @@ function EnableAuras(self) -- Has unique name because of some obscure referncing
 end
 
 ---@param self CellAuraIcons
-function Disable(self)
+local function Disable(self)
     self._owner:RemoveEventListener("UNIT_AURA", self.Update)
 end
 
@@ -303,7 +303,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons:ShowAnimation(true)
     auraIcons:ShowStack(true)
 
-    auraIcons.Enable = EnableAuras
+    auraIcons.Enable = Enable
     auraIcons.Disable = Disable
     auraIcons.Update = U.UnitFrame_UpdateAuras
 

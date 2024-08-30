@@ -943,9 +943,17 @@ function Builder:CreateNameFormatOptions(parent, widgetName)
     f.optionHeight = 20
     f.id = "NameFormatOptions"
 
+    local tooltips = {}
+    for _, format in ipairs(const.NameFormatArray) do
+        local tooltip = L[format] .. ": " .. L[format .. "_Example"]
+        table.insert(tooltips, tooltip)
+    end
+
     f.formatDropdown = self:CreateDropdown(f, widgetName, "Format", 200, const.NameFormatArray,
         const.OPTION_KIND.FORMAT)
     f.formatDropdown:SetPoint("TOPLEFT", f)
+
+    Cell:SetTooltips(f.formatDropdown, "ANCHOR_TOPLEFT", 0, 3, L.NameFormats, unpack(tooltips))
 
     return f
 end

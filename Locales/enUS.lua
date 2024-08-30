@@ -60,11 +60,19 @@ L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
 L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"
 
 -- Name Format
+L.NameFormats = "Name Formats"
+
 L.fullName = "Full Name"
 L.lastName = "Last Name"
 L.firstName = "First Name"
 L.firstNameLastInitial = "First Name Last Initial"
 L.firstInitialLastName = "First Initial Last Name"
+
+L.fullName_Example = "Cleave Training Dummy"
+L.lastName_Example = "Dummy"
+L.firstName_Example = "Cleave"
+L.firstNameLastInitial_Example = "Cleave D."
+L.firstInitialLastName_Example = "C. Dummy"
 
 -- Widgets
 L.Widgets = "Widgets"

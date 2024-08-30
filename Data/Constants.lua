@@ -212,3 +212,12 @@ const.CastBarTimerFormat = {
     DURATION = "duration",
     DURATION_AND_MAX = "duration-and-max",
 }
+
+---@enum NameFormat
+const.NameFormat = {
+    FULL_NAME = "fullName",
+    LAST_NAME = "lastName",
+    FIRST_NAME = "firstName",
+    FIRST_NAME_LAST_INITIAL = "firstNameLastInitial",
+    FIRST_INITIAL_LAST_NAME = "firstInitialLastName",
+}

@@ -81,6 +81,8 @@ local function OnAddonLoaded(owner, loadedAddonName)
 
         Cell:RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 
+        CUF:Fire("AddonLoaded")
+
         return true
     end
 

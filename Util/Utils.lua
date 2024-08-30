@@ -366,6 +366,7 @@ end
 ---| "ShowOptionsTab"
 ---| "UpdatePixelPerfect"
 ---| "UpdateAppearance"
+---| "AddonLoaded"
 local callbacks = {}
 
 ---@param eventName Callbacks

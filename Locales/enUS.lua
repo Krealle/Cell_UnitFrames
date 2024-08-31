@@ -20,8 +20,10 @@ Selecting |cffffb5c5None|r will Auto Switch to use the
 currently active layout in |cFFFFD700Cell|r.]]
 
 L.CopyLayoutFrom = "Copy Layout From"
-L.CopyFromTooltip = "Copy settings from another layout"
-L.CopyFromPopUp = ""
+L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current layout!|r
+
+Copy settings from another layout]]
+L.CopyFromPopUp = "Copy settings from |cFFFFD700%s|r to |cFFFFD700%s|r?"
 
 -- Units
 L.targettarget = "TargetTarget"

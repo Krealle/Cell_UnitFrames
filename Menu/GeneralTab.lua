@@ -20,6 +20,14 @@ function generalTab:IsShown()
     return generalTab.window and generalTab.window:IsShown()
 end
 
+--- Replaces "default" with _G.DEFAULT
+---@param layoutName string
+---@return string
+local function normalizeLayoutName(layoutName)
+    ---@diagnostic disable-next-line: undefined-field
+    return layoutName == "default" and _G.DEFAULT or layoutName
+end
+
 -------------------------------------------------
 -- MARK: Copy From
 -------------------------------------------------
@@ -36,13 +44,19 @@ function copyLayoutFrom.SetLayoutItems()
     for layoutName, _ in pairs(CellDB.layouts) do
         if layoutName ~= DB.GetMasterLayout() then
             tinsert(dropdownItems, {
-                ---@diagnostic disable-next-line: undefined-field
-                ["text"] = layoutName == "default" and _G.DEFAULT or layoutName,
+                ["text"] = normalizeLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
+                    local popup = CUF:CreateConfirmPopup(Menu.window, 300,
+                        string.format(L.CopyFromPopUp, normalizeLayoutName(layoutName),
+                            normalizeLayoutName(DB.GetMasterLayout())),
+                        function()
+                            DB.CopyFullLayout(layoutName, DB.GetMasterLayout())
+                            CUF:Fire("UpdateUnitButtons")
+                            CUF:Fire("UpdateWidget", DB.GetMasterLayout())
+                        end, nil, true)
+                    popup:SetPoint("TOP", 0, -70)
                     copyLayoutFrom.layoutDropdown:ClearSelected()
-                    CUF:Fire("UpdateUnitButtons")
-                    CUF:Fire("UpdateWidget", layoutName)
                 end,
             })
         end
@@ -66,7 +80,7 @@ function copyLayoutFrom:Create()
     ---@type CellDropdown
     self.layoutDropdown = Cell:CreateDropdown(generalTab.window, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
-    CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
+    CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyLayoutFrom, L.CopyFromTooltip)
 end
 
 -------------------------------------------------
@@ -100,6 +114,7 @@ function layoutProfile:SetLayoutItems()
                 DB.SetMasterLayout(layoutName)
                 CUF:Fire("UpdateUnitButtons")
                 CUF:Fire("UpdateWidget", layoutName)
+                copyLayoutFrom.SetLayoutItems()
             end,
         })
     end

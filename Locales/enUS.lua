@@ -13,7 +13,11 @@ L.MasterLayout = "Master Layout"
 L.CUFLayoutMasterNone = "|cffffb5c5None|r"
 L.MasterLayoutTooltip = [[The layout to use for |cFFFFD700Cell UnitFrames|r.
 
-Selecting |cffffb5c5None|r will use the currently active layout in |cFFFFD700Cell|r.]]
+Selecting a specific layout will always use that layout
+regardless of |cFFFFD700Cell|r Auto Switch settings.
+
+Selecting |cffffb5c5None|r will Auto Switch to use the
+currently active layout in |cFFFFD700Cell|r.]]
 
 -- Units
 L.targettarget = "TargetTarget"

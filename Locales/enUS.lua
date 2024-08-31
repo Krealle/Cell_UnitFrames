@@ -5,6 +5,9 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
+-- Tabs
+L.unitFramesTab = "Unit Frames"
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"

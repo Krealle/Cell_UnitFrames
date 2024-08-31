@@ -104,11 +104,11 @@ function menu:InitTabs()
                 self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
                 self.tabPane:SetHeight(self.tabPane:GetHeight() + self.paneHeight)
             else
-                tabButton:SetPoint("TOPLEFT", prevButton, "TOPRIGHT", 1)
+                tabButton:SetPoint("TOPLEFT", prevButton, "TOPRIGHT", -1, 0)
                 idx = idx + 1
             end
         else
-            tabButton:SetPoint("BOTTOMLEFT", self.tabPane, "BOTTOMLEFT", 0, 1)
+            tabButton:SetPoint("BOTTOMLEFT", self.tabPane, "BOTTOMLEFT", 0, 0)
             prevAnchor = tabButton
         end
         prevButton = tabButton

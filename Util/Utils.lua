@@ -75,6 +75,22 @@ function Util:RenameProp(table, oldKey, newKey)
     end
 end
 
+---@param table table
+---@param seen table?
+---@return table
+function Util:CopyDeep(table, seen)
+    -- Handle non-tables and previously-seen tables.
+    if type(table) ~= 'table' then return table end
+    if seen and seen[table] then return seen[table] end
+
+    -- New table; mark it as seen an copy recursively.
+    local s = seen or {}
+    local res = {}
+    s[table] = res
+    for k, v in next, table do res[self:CopyDeep(k, s)] = self:CopyDeep(v, s) end
+    return setmetatable(res, getmetatable(table))
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------
@@ -289,6 +305,18 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     end
 
     return editBox
+end
+
+---@param parent Frame
+---@param width number
+---@param text string
+---@param onAccept function?
+---@param onReject function?
+---@param mask boolean?
+---@param hasEditBox boolean?
+---@param dropdowns boolean?
+function CUF:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
+    return Cell:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
 end
 
 ---@param frame Frame

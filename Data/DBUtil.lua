@@ -13,6 +13,13 @@ DB.PropsToOnlyInit = {
     whitelist = true,
 }
 
+-- Copy ALL settings from one layout to another
+---@param from string
+---@param to string
+function DB.CopyFullLayout(from, to)
+    CellDB.layouts[to].CUFUnits = CUF.Util:CopyDeep(DB.GetLayoutTable(from))
+end
+
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()

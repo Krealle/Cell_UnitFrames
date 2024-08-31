@@ -161,6 +161,8 @@ function unitFramesTab:ShowTab()
         return
     end
 
+    Menu:LoadLayoutDB(CUF.vars.selectedLayout)
+
     self.window:Show()
 end
 

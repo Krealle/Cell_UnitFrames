@@ -30,5 +30,6 @@ CUF.Builder = {}
 ---@field testMode boolean
 ---@field isMenuOpen boolean
 ---@field isRetail boolean
+---@field selectedTab string
 CUF.vars = {}
 CUF.unitButtons = {}

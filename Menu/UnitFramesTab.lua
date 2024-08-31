@@ -6,6 +6,8 @@ local L = CUF.L
 
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+
+---@class CUF.Menu
 local Menu = CUF.Menu
 
 ---@class UnitsFramesTab: Menu.Tab
@@ -13,18 +15,27 @@ local Menu = CUF.Menu
 ---@field unitPageButtons UnitMenuPageButton[]
 ---@field widgetPages table<WIDGET_KIND, WidgetMenuPage>
 ---@field listButtons table<WIDGET_KIND, CellButton>
+---@field selectedWidgetTable WidgetTable
+---@field unitsToAdd table<number, function>
+---@field widgetsToAdd table<number, WidgetMenuPage.Args>
 local unitFramesTab = {}
+unitFramesTab.id = "unitFramesTab"
 unitFramesTab.unitPages = {}
-unitFramesTab.unitPageButtons = {}
+unitFramesTab.unitsToAdd = {}
 unitFramesTab.widgetPages = {}
 unitFramesTab.listButtons = {}
+unitFramesTab.widgetsToAdd = {}
+unitFramesTab.unitPageButtons = {}
 unitFramesTab.firstWidgetInList = nil
-unitFramesTab.id = "unitFramesTab"
 unitFramesTab.widgetHeight = 400
 unitFramesTab.unitHeight = 180
 unitFramesTab.paneHeight = 17
 
 Menu:AddTab(unitFramesTab)
+
+-------------------------------------------------
+-- MARK: Setters
+-------------------------------------------------
 
 ---@param unit Unit
 function unitFramesTab:SetUnitPage(unit)
@@ -73,7 +84,7 @@ function unitFramesTab:LoadWidgetList(unit)
     self.firstWidgetInList = nil
 
     -- The list is ordered by load order from .toc
-    for _, widgetPage in pairs(CUF.Menu.widgetsToAdd) do
+    for _, widgetPage in pairs(self.widgetsToAdd) do
         local widgetName = widgetPage.widgetName
         local widget = widgetTable[widgetName]
 
@@ -184,7 +195,7 @@ function unitFramesTab:InitUnits()
     local prevAnchor
     local idx = 1
 
-    for _, fn in pairs(CUF.Menu.unitsToAdd) do
+    for _, fn in pairs(self.unitsToAdd) do
         ---@type UnitsMenuPage
         local unit = fn(self)
 
@@ -214,14 +225,23 @@ function unitFramesTab:InitUnits()
 end
 
 function unitFramesTab:InitWidgets()
-    --CUF:Log("menuWindow - InitWidgets")
-
-    for _, widget in pairs(CUF.Menu.widgetsToAdd) do
-        ---@type WidgetMenuPage
+    for _, widget in pairs(self.widgetsToAdd) do
         local widgetPage = Builder:CreateWidgetMenuPage(self.settingsFrame, widget.widgetName, unpack(widget.options))
 
         self.widgetPages[widgetPage.id] = widgetPage
     end
+end
+
+---@param unit function
+function Menu:AddUnit(unit)
+    table.insert(unitFramesTab.unitsToAdd, unit)
+end
+
+---@param widgetName WIDGET_KIND
+---@param ... MenuOptions
+function Menu:AddWidget(widgetName, ...)
+    table.insert(unitFramesTab.widgetsToAdd,
+        { ["widgetName"] = widgetName, ["options"] = { ... } })
 end
 
 -------------------------------------------------

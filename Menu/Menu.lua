@@ -14,15 +14,10 @@ local Handler = CUF.Handler
 ---@field tabsToAdd Menu.Tab[]
 ---@field tabButtons Menu.TabButton[]
 ---@field selectedTab Menu.Tab?
----@field selectedWidgetTable WidgetTable
----@field unitsToAdd table<number, function>
----@field widgetsToAdd table<number, WidgetMenuPage.Args>
 local menu = {}
 menu.tabs = {}
 menu.tabsToAdd = {}
-menu.unitsToAdd = {}
 menu.tabButtons = {}
-menu.widgetsToAdd = {}
 menu.init = false
 menu.hookInit = false
 menu.baseWidth = 450
@@ -31,20 +26,6 @@ menu.paneBuffer = 10
 menu.inset = 5
 
 CUF.Menu = menu
-
----@param unit function
-function menu:AddUnit(unit)
-    --CUF:Log("Menu - AddUnit")
-    table.insert(self.unitsToAdd, unit)
-end
-
----@param widgetName WIDGET_KIND
----@param ... MenuOptions
-function menu:AddWidget(widgetName, ...)
-    --CUF:Log("Menu - AddWidget")
-    table.insert(self.widgetsToAdd,
-        { ["widgetName"] = widgetName, ["options"] = { ... } })
-end
 
 -------------------------------------------------
 -- MARK: Update vars

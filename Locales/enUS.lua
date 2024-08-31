@@ -10,6 +10,10 @@ L.unitFramesTab = "Unit Frames"
 L.generalTab = "General"
 
 L.MasterLayout = "Master Layout"
+L.CUFLayoutMasterNone = "|cffffb5c5None|r"
+L.MasterLayoutTooltip = [[The layout to use for |cFFFFD700Cell UnitFrames|r.
+
+Selecting |cffffb5c5None|r will use the currently active layout in |cFFFFD700Cell|r.]]
 
 -- Units
 L.targettarget = "TargetTarget"
@@ -104,7 +108,6 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
-L.CUFLayoutMasterNone = "None"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

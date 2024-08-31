@@ -44,7 +44,8 @@ function layoutProfile:SetLayoutItems()
 
     for layoutName, _ in pairs(CellDB.layouts) do
         tinsert(dropdownItems, {
-            ["text"] = L[layoutName],
+            ---@diagnostic disable-next-line: undefined-field
+            ["text"] = layoutName == "default" and _G.DEFAULT or layoutName,
             ["value"] = layoutName,
             ["onClick"] = function()
                 DB.SetMasterLayout(layoutName)
@@ -56,6 +57,7 @@ function layoutProfile:SetLayoutItems()
 
     layoutProfile.layoutDropdown:SetItems(dropdownItems)
     layoutProfile.layoutDropdown:SetSelectedValue(DB.GetMasterLayout(true))
+    Cell:SetTooltips(layoutProfile.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
 end
 
 CUF:RegisterCallback("UpdateLayout", "CUF_LayoutProfile_SetLayoutItems", layoutProfile.SetLayoutItems)

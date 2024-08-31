@@ -7,6 +7,9 @@ CUF.L = L
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"
+L.generalTab = "General"
+
+L.MasterLayout = "Master Layout"
 
 -- Units
 L.targettarget = "TargetTarget"

@@ -154,7 +154,6 @@ function menu:HideMenu()
     self.selectedTab:HideTab()
 
     CUF.vars.isMenuOpen = false
-    Handler.UpdateSelected()
 end
 
 ---@param which string

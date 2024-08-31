@@ -107,9 +107,16 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
         end)
 end
 
+--- Load the widget table for the selected unit and widget
+---
+--- This is called when we selected a unit or widget in the menu.
+--- Or when a layout is loaded.
 ---@param page Unit
 ---@param subPage WIDGET_KIND
 function Handler.LoadPageDB(page, subPage)
+    if not CUF.vars.isMenuOpen then return end
+    if CUF.vars.selectedTab ~= "unitFramesTab" then return end
+
     -- Both params are only present when LoadLayoutDB is called
     if not page or not subPage then
         if (page and page == Handler.previousPage)

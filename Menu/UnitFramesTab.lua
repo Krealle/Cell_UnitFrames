@@ -182,6 +182,7 @@ function unitFramesTab:HideTab()
     CUF:Log("|cff00ccffHide unitFramesTab|r")
     self.window:Hide()
 
+    -- Reset selected widget to hide previews
     Handler.UpdateSelected()
 end
 

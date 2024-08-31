@@ -117,23 +117,6 @@ local function AddUnitsToMenu()
                 end)
                 unitPage.widthSlider:SetPoint("TOPLEFT", unitPage.enabledCB, 0, -50)
 
-                ---@type CellSlider
-                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)
-                    CUF.DB.SelectedLayoutTable()[unit].size[2] = value
-                    UpdateSize()
-                end)
-                unitPage.heightSlider:SetPoint("TOPLEFT", unitPage.widthSlider, 0, -55)
-
-                ---@type CellSlider
-                unitPage.powerSizeSlider = Cell:CreateSlider(L["Power Size"], unitPage.frame, 0, 100, 117, 1,
-                    function(value)
-                        CUF.DB.SelectedLayoutTable()[unit].powerSize = value
-                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
-                        end
-                    end)
-                unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
-
                 ---@type CellDropdown
                 unitPage.anchorDropdown = Cell:CreateDropdown(unitPage.frame, 117)
                 unitPage.anchorDropdown:SetPoint("TOPLEFT", unitPage.widthSlider, "TOPRIGHT", 30, 0)
@@ -151,6 +134,23 @@ local function AddUnitsToMenu()
                 end
                 unitPage.anchorDropdown:SetItems(dropdownItems)
                 unitPage.anchorDropdown:SetLabel(L["Anchor Point"])
+
+                ---@type CellSlider
+                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)
+                    CUF.DB.SelectedLayoutTable()[unit].size[2] = value
+                    UpdateSize()
+                end)
+                unitPage.heightSlider:SetPoint("TOPLEFT", unitPage.widthSlider, 0, -55)
+
+                ---@type CellSlider
+                unitPage.powerSizeSlider = Cell:CreateSlider(L["Power Size"], unitPage.frame, 0, 100, 117, 1,
+                    function(value)
+                        CUF.DB.SelectedLayoutTable()[unit].powerSize = value
+                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
+                        end
+                    end)
+                unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
 
                 AddLoadPageDB(unitPage)
                 return unitPage

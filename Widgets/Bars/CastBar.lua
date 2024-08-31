@@ -35,7 +35,7 @@ menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
 ---@param subSetting string
 function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     local castBar = button.widgets.castBar
-    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.CAST_BAR, unit)
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.CAST_BAR, unit)
 
     if not setting or setting == const.OPTION_KIND.COLOR then
         if not subSetting or subSetting == const.OPTION_KIND.TEXTURE then

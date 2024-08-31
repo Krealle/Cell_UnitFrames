@@ -13,6 +13,13 @@ DB.PropsToOnlyInit = {
     whitelist = true,
 }
 
+-- Copy ALL settings from one layout to another
+---@param from string
+---@param to string
+function DB.CopyFullLayout(from, to)
+    CellDB.layouts[to].CUFUnits = CUF.Util:CopyDeep(DB.GetLayoutTable(from))
+end
+
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()
@@ -38,4 +45,28 @@ function DB.VerifyDB()
             end
         end
     end
+
+    -- Make sure that we have a valid master layout
+    DB.VerifyMasterLayout()
 end
+
+function DB.VerifyMasterLayout()
+    local masterLayout = DB.GetMasterLayout(true)
+    if masterLayout == "CUFLayoutMasterNone" then return end
+
+    local masterLayoutIsValid = false
+
+    for layoutName, _ in pairs(CellDB.layouts) do
+        if layoutName == masterLayout then
+            masterLayoutIsValid = true
+        end
+    end
+
+    if not masterLayoutIsValid then
+        CUF:Warn("Master layout is not valid, setting to default")
+        DB.SetMasterLayout("default")
+    end
+end
+
+CUF:RegisterCallback("UpdateLayout", "CUF_VerifyMasterLayout", DB.VerifyMasterLayout)
+CUF:RegisterCallback("LoadPageDB", "CUF_VerifyMasterLayout", DB.VerifyMasterLayout)

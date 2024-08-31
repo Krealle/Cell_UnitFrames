@@ -20,7 +20,7 @@ local function OnCellInitialUpdateLayout(_layout)
 
     -- Hide Blizzard Unit Frames
     for _, unit in pairs(CUF.constants.UNIT) do
-        if CUF.DB.SelectedLayoutTable()[unit].enabled then
+        if CUF.DB.CurrentLayoutTable()[unit].enabled then
             CUF:HideBlizzardUnitFrame(unit)
         end
     end
@@ -52,7 +52,7 @@ local function OnCellInitialUpdateLayout(_layout)
         function(kind) CUF:Fire("UpdateAppearance", kind) end)
 
     -- Init widgets
-    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
+    CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 
     Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end

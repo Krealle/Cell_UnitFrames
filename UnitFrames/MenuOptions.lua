@@ -5,13 +5,13 @@ local Cell = CUF.Cell
 local L = CUF.L
 
 local function UpdateSize()
-    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+    if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
         CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-size")
     end
 end
 
 local function UpdateArrangement()
-    if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+    if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
         CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-arrangement")
     end
 end
@@ -59,7 +59,7 @@ end
 local function AddUnitsToMenu()
     for _, unit in pairs(CUF.constants.UNIT) do
         CUF.Menu:AddUnit(
-        ---@param parent MenuFrame
+        ---@param parent UnitsFramesTab
         ---@return UnitsMenuPage
             function(parent)
                 ---@class UnitsMenuPage
@@ -82,7 +82,7 @@ local function AddUnitsToMenu()
                     .Frame,
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked
-                        if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
                             CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit)
                         end
                         CUF:Fire("UpdateVisibility", unit)
@@ -103,7 +103,7 @@ local function AddUnitsToMenu()
 
                             -- update size and power
                             UpdateSize()
-                            if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
                                 CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                             end
                         end)
@@ -128,7 +128,7 @@ local function AddUnitsToMenu()
                 unitPage.powerSizeSlider = Cell:CreateSlider(L["Power Size"], unitPage.frame, 0, 100, 117, 1,
                     function(value)
                         CUF.DB.SelectedLayoutTable()[unit].powerSize = value
-                        if CUF.vars.selectedLayout == Cell.vars.currentLayout then
+                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
                             CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                         end
                     end)

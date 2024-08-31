@@ -20,7 +20,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
     ---@type CellAuraIcons
     local auras = button.widgets[which]
 
-    local styleTable = DB.GetWidgetTable(which, unit) --[[@as AuraWidgetTable]]
+    local styleTable = DB.GetCurrentWidgetTable(which, unit) --[[@as AuraWidgetTable]]
 
     if not setting or setting == const.AURA_OPTION_KIND.FONT or const.AURA_OPTION_KIND.POSITION then
         auras:SetFont(styleTable.font)

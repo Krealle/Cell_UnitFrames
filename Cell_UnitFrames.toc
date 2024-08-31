@@ -34,8 +34,9 @@ Core/SlashCommands.lua
 
 Menu/Builder.lua
 Menu/AuraFilterList.lua
-Menu/MenuFrame.lua
 Menu/Menu.lua
+Menu/GeneralTab.lua
+Menu/UnitFramesTab.lua
 
 Widgets/Common.lua
 

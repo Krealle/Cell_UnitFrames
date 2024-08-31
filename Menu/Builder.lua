@@ -63,7 +63,7 @@ Builder.MenuOptions = {
 ---@field pageName string
 ---@field options table<MenuOptions>
 
----@param settingsFrame MenuFrame.settingsFrame
+---@param settingsFrame UnitsFramesTab.settingsFrame
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
 ---@return WidgetMenuPage
@@ -185,7 +185,7 @@ end
 ---@param optionPath string
 ---@param newValue any
 local function HandleWidgetOption(widgetName, optionPath, newValue)
-    local widgetTable = DB.GetWidgetTable(widgetName)
+    local widgetTable = DB.GetSelectedWidgetTable(widgetName)
 
     local function traversePath(tbl, pathParts, value)
         for i = 1, #pathParts - 1 do
@@ -617,7 +617,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
 
     f.dropdown.Set_DB = function(...)
         HandleWidgetOption(...)
-        if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
+        if DB.GetSelectedWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else
             f.colorPicker:Hide()
@@ -631,7 +631,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
 
     local function LoadPageDB()
         f.colorPicker:SetColor(unpack(HandleWidgetOption(widgetName, "color.rgb")))
-        if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
+        if DB.GetSelectedWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else
             f.colorPicker:Hide()
@@ -1186,16 +1186,16 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
-        DB.GetWidgetTable(widgetName).font[kind].rgb[1] = r
-        DB.GetWidgetTable(widgetName).font[kind].rgb[2] = g
-        DB.GetWidgetTable(widgetName).font[kind].rgb[3] = b
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[1] = r
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[2] = g
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[3] = b
     end)
     self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
 
     local function LoadPageDB()
-        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font[kind].rgb[1],
-            DB.GetWidgetTable(widgetName).font[kind].rgb[2],
-            DB.GetWidgetTable(widgetName).font[kind].rgb[3])
+        f.colorPicker:SetColor(DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[1],
+            DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[2],
+            DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[3])
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 

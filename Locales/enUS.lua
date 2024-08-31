@@ -5,6 +5,26 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
+-- Tabs
+L.unitFramesTab = "Unit Frames"
+L.generalTab = "General"
+
+L.MasterLayout = "Master Layout"
+L.CUFLayoutMasterNone = "|cffffb5c5None|r"
+L.MasterLayoutTooltip = [[The layout to use for |cFFFFD700Cell UnitFrames|r.
+
+Selecting a specific layout will always use that layout
+regardless of |cFFFFD700Cell|r Auto Switch settings.
+
+Selecting |cffffb5c5None|r will Auto Switch to use the
+currently active layout in |cFFFFD700Cell|r.]]
+
+L.CopyLayoutFrom = "Copy Layout From"
+L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current layout!|r
+
+Copy settings from another layout]]
+L.CopyFromPopUp = "Copy settings from |cFFFFD700%s|r to |cFFFFD700%s|r?"
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"

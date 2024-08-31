@@ -37,6 +37,10 @@ Menu:AddTab(unitFramesTab)
 -- MARK: Setters
 -------------------------------------------------
 
+function unitFramesTab:IsShown()
+    return unitFramesTab.window and unitFramesTab.window:IsShown()
+end
+
 ---@param unit Unit
 function unitFramesTab:SetUnitPage(unit)
     -- Hide old unit
@@ -47,7 +51,7 @@ function unitFramesTab:SetUnitPage(unit)
     self.selectedUnitPage = self.unitPages[unit]
     self.selectedUnitPage.frame:Show()
 
-    self:LoadWidgetList(unit)
+    self.LoadWidgetList(unit)
     CUF.Menu:UpdateSelectedPages(unit)
 end
 
@@ -75,27 +79,30 @@ function unitFramesTab:SetWidget(widget)
 end
 
 ---@param unit Unit
-function unitFramesTab:LoadWidgetList(unit)
-    self.widgetListFrame.scrollFrame:Reset()
+function unitFramesTab.LoadWidgetList(unit)
+    if not unitFramesTab:IsShown() then return end
+
+    unitFramesTab.widgetListFrame.scrollFrame:Reset()
 
     local optionCount = 0
     local widgetTable = CUF.DB.GetAllWidgetTables(unit)
     local prevButton
-    self.firstWidgetInList = nil
+    unitFramesTab.firstWidgetInList = nil
 
     -- The list is ordered by load order from .toc
-    for _, widgetPage in pairs(self.widgetsToAdd) do
+    for _, widgetPage in pairs(unitFramesTab.widgetsToAdd) do
         local widgetName = widgetPage.widgetName
         local widget = widgetTable[widgetName]
 
         if widget then
-            if not self.listButtons[widgetName] then
-                self.listButtons[widgetName] = CUF:CreateButton(self.widgetListFrame.scrollFrame.content, " ",
+            if not unitFramesTab.listButtons[widgetName] then
+                unitFramesTab.listButtons[widgetName] = CUF:CreateButton(
+                    unitFramesTab.widgetListFrame.scrollFrame.content, " ",
                     { 20, 20 }, nil, "transparent-accent")
             end
 
             ---@class WidgetMenuPageButton: CellButton
-            local button = self.listButtons[widgetName]
+            local button = unitFramesTab.listButtons[widgetName]
             button:SetText(L[widgetName])
             button:GetFontString():ClearAllPoints()
             button:GetFontString():SetPoint("LEFT", 5, 0)
@@ -110,7 +117,7 @@ function unitFramesTab:LoadWidgetList(unit)
                 button:SetTextColor(0.466, 0.466, 0.466, 1)
             end
 
-            button:SetParent(self.widgetListFrame.scrollFrame.content)
+            button:SetParent(unitFramesTab.widgetListFrame.scrollFrame.content)
             button:SetPoint("RIGHT")
             if not prevButton then
                 button:SetPoint("TOPLEFT")
@@ -120,30 +127,33 @@ function unitFramesTab:LoadWidgetList(unit)
             button:Show()
 
             prevButton = button
-            if not self.firstWidgetInList then
-                self.firstWidgetInList = widgetName
+            if not unitFramesTab.firstWidgetInList then
+                unitFramesTab.firstWidgetInList = widgetName
             end
         end
     end
 
-    self.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
+    unitFramesTab.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
 
-    Cell:CreateButtonGroup(self.listButtons, function(widget, b)
-        self:SetWidget(widget)
+    Cell:CreateButtonGroup(unitFramesTab.listButtons, function(widget, b)
+        unitFramesTab:SetWidget(widget)
     end)
 
     -- Make sure that the currently selected widget is valid
-    if self.selectedWidget then
-        if not widgetTable[self.selectedWidget.id] then
-            self.listButtons[self.firstWidgetInList]:Click()
+    if unitFramesTab.selectedWidget then
+        if not widgetTable[unitFramesTab.selectedWidget.id] then
+            unitFramesTab.listButtons[unitFramesTab.firstWidgetInList]:Click()
         end
     end
 end
+
+CUF:RegisterCallback("LoadPageDB", "unitFramesTab_LoadWidgetList", unitFramesTab.LoadWidgetList)
 
 ---@param layout string?
 ---@param unit Unit?
 ---@param widgetName WIDGET_KIND?
 function unitFramesTab.UpdateWidgetListEnabled(layout, unit, widgetName, setting)
+    if not unitFramesTab:IsShown() then return end
     if not widgetName then return end
     if not setting == CUF.constants.OPTION_KIND.ENABLED then return end
     if not unitFramesTab.listButtons[widgetName] then return end
@@ -155,7 +165,7 @@ function unitFramesTab.UpdateWidgetListEnabled(layout, unit, widgetName, setting
     end
 end
 
-CUF:RegisterCallback("UpdateWidget", "UpdateWidgetListEnabled", unitFramesTab.UpdateWidgetListEnabled)
+CUF:RegisterCallback("UpdateWidget", "unitFramesTab_UpdateWidgetListEnabled", unitFramesTab.UpdateWidgetListEnabled)
 
 function unitFramesTab:ShowTab()
     CUF:Log("|cff00ccffShow unitFramesTab|r")
@@ -178,7 +188,7 @@ function unitFramesTab:ShowTab()
 end
 
 function unitFramesTab:HideTab()
-    if not self.window or not self.window:IsShown() then return end
+    if not unitFramesTab:IsShown() then return end
     CUF:Log("|cff00ccffHide unitFramesTab|r")
     self.window:Hide()
 

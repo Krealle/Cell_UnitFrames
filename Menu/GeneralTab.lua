@@ -75,7 +75,6 @@ end
 
 ---@class LayoutProfile: Frame
 local layoutProfile = {}
-layoutProfile.height = 100
 
 function layoutProfile:SetLayoutItems()
     if not generalTab:IsShown() then return end
@@ -88,6 +87,7 @@ function layoutProfile:SetLayoutItems()
             DB.SetMasterLayout("CUFLayoutMasterNone")
             CUF:Fire("UpdateUnitButtons")
             CUF:Fire("UpdateWidget", Cell.vars.currentLayout)
+            copyLayoutFrom.SetLayoutItems()
         end,
     } }
 
@@ -106,16 +106,15 @@ function layoutProfile:SetLayoutItems()
 
     layoutProfile.layoutDropdown:SetItems(dropdownItems)
     layoutProfile.layoutDropdown:SetSelectedValue(DB.GetMasterLayout(true))
-    Cell:SetTooltips(layoutProfile.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
 end
 
 CUF:RegisterCallback("UpdateLayout", "CUF_LayoutProfile_SetLayoutItems", layoutProfile.SetLayoutItems)
 CUF:RegisterCallback("LoadPageDB", "CUF_LayoutProfile_SetLayoutItems", layoutProfile.SetLayoutItems)
 
-function layoutProfile:CreateLayoutProfile()
-    CUF:Log("|cff00ccffgeneralTab CreateLayoutProfile|r")
+function layoutProfile:Create()
+    --CUF:Log("|cff00ccffgeneralTab CreateLayoutProfile|r")
 
-    local sectionWidth = generalTab.window:GetWidth() / 2
+    local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
 
     local layoutPane = Cell:CreateTitledPane(generalTab.window, L.MasterLayout, sectionWidth, generalTab.paneHeight)
     layoutPane:SetPoint("TOPLEFT")
@@ -123,6 +122,7 @@ function layoutProfile:CreateLayoutProfile()
     ---@type CellDropdown
     self.layoutDropdown = Cell:CreateDropdown(generalTab.window, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -10)
+    CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
 end
 
 -------------------------------------------------
@@ -161,5 +161,6 @@ function generalTab:Create()
         self.height, true)
     self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
-    layoutProfile:CreateLayoutProfile()
+    layoutProfile:Create()
+    copyLayoutFrom:Create()
 end

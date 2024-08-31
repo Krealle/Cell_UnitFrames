@@ -32,7 +32,15 @@ function layoutProfile:SetLayoutItems()
     if not generalTab:IsShown() then return end
     --CUF:Log("|cff00ccffgeneralTab SetLayoutItems|r")
 
-    local dropdownItems = {}
+    local dropdownItems = { {
+        ["text"] = L.CUFLayoutMasterNone,
+        ["value"] = "CUFLayoutMasterNone",
+        ["onClick"] = function()
+            DB.SetMasterLayout("CUFLayoutMasterNone")
+            CUF:Fire("UpdateUnitButtons")
+            CUF:Fire("UpdateWidget", Cell.vars.currentLayout)
+        end,
+    } }
 
     for layoutName, _ in pairs(CellDB.layouts) do
         tinsert(dropdownItems, {
@@ -47,7 +55,7 @@ function layoutProfile:SetLayoutItems()
     end
 
     layoutProfile.layoutDropdown:SetItems(dropdownItems)
-    layoutProfile.layoutDropdown:SetSelectedValue(DB.GetMasterLayout())
+    layoutProfile.layoutDropdown:SetSelectedValue(DB.GetMasterLayout(true))
 end
 
 CUF:RegisterCallback("UpdateLayout", "CUF_LayoutProfile_SetLayoutItems", layoutProfile.SetLayoutItems)

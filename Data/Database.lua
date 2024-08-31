@@ -90,8 +90,14 @@ end
 -- MARK: General Getters
 -----------------------------------------
 
+---@param rawValue boolean?
 ---@return string
-function DB.GetMasterLayout()
+function DB.GetMasterLayout(rawValue)
+    local layout = CUF_DB.masterLayout
+    if layout == "CUFLayoutMasterNone" and not rawValue then
+        return Cell.vars.currentLayout
+    end
+
     return CUF_DB.masterLayout
 end
 

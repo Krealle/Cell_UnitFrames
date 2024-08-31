@@ -104,6 +104,7 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
+L.CUFLayoutMasterNone = "None"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

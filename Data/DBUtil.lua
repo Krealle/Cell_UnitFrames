@@ -44,7 +44,9 @@ function DB.VerifyDB()
 end
 
 function DB.VerifyMasterLayout()
-    local masterLayout = DB.GetMasterLayout()
+    local masterLayout = DB.GetMasterLayout(true)
+    if masterLayout == "CUFLayoutMasterNone" then return end
+
     local masterLayoutIsValid = false
 
     for layoutName, _ in pairs(CellDB.layouts) do

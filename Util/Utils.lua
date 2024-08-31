@@ -79,7 +79,7 @@ end
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------
 
----@param func function
+---@param func fun(button: CUFUnitButton, unit: string, ...)
 ---@param unitToIterate string?
 function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     for _, unit in pairs(CUF.constants.UNIT) do

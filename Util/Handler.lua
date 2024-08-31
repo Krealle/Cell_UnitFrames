@@ -95,7 +95,6 @@ end
 function Handler.UpdateSelected(selectedUnit, selectedWidget)
     CUF:Log("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
     Util:IterateAllUnitButtons(
-    ---@param button CUFUnitButton
         function(button)
             button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
             for _, widget in pairs(const.WIDGET_KIND) do

@@ -85,7 +85,7 @@ function unitFramesTab.LoadWidgetList(unit)
     unitFramesTab.widgetListFrame.scrollFrame:Reset()
 
     local optionCount = 0
-    local widgetTable = CUF.DB.GetAllWidgetTables(unit)
+    local widgetTable = CUF.DB.GetSelectedWidgetTables(unit)
     local prevButton
     unitFramesTab.firstWidgetInList = nil
 
@@ -158,7 +158,7 @@ function unitFramesTab.UpdateWidgetListEnabled(layout, unit, widgetName, setting
     if not setting == CUF.constants.OPTION_KIND.ENABLED then return end
     if not unitFramesTab.listButtons[widgetName] then return end
 
-    if CUF.DB.GetWidgetTable(widgetName, unit, layout).enabled then
+    if CUF.DB.GetSelectedWidgetTable(widgetName, unit).enabled then
         unitFramesTab.listButtons[widgetName]:SetTextColor(1, 1, 1, 1)
     else
         unitFramesTab.listButtons[widgetName]:SetTextColor(0.466, 0.466, 0.466, 1)

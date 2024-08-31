@@ -52,7 +52,7 @@ local function OnCellInitialUpdateLayout(_layout)
         function(kind) CUF:Fire("UpdateAppearance", kind) end)
 
     -- Init widgets
-    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
+    CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 
     Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end

@@ -32,7 +32,7 @@ menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
 ---@param subSetting string
 function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.shieldBar
-    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
+    local styleTable = DB.GetSelectedWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.RGBA then
         widget:SetColor(unpack(styleTable.rgba))

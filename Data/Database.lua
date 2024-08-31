@@ -34,34 +34,44 @@ function DB.SelectedLayoutTable()
     return DB.GetLayoutTable(CUF.vars.selectedLayout)
 end
 
--- Returns active layout table
----@return UnitLayoutTable
-function DB.CurrentLayoutTable()
-    return DB.GetLayoutTable(Cell.vars.currentLayout)
-end
-
 ---@param unit Unit?
----@param layout string?
 ---@return WidgetTables
-function DB.GetAllWidgetTables(unit, layout)
-    return DB.GetUnit(layout or CUF.vars.selectedLayout, unit or CUF.vars.selectedUnit).widgets
+function DB.GetSelectedWidgetTables(unit)
+    return DB.GetUnit(CUF.vars.selectedLayout, unit or CUF.vars.selectedUnit).widgets
 end
 
 ---@param which WIDGET_KIND
 ---@param unit Unit?
----@param layout string?
 ---@return WidgetTable
-function DB.GetWidgetTable(which, unit, layout)
-    return DB.GetAllWidgetTables(unit, layout)[which]
+function DB.GetSelectedWidgetTable(which, unit)
+    return DB.GetSelectedWidgetTables(unit)[which]
 end
 
 ---@param which "buffs"|"debuffs"
 ---@param kind "blacklist"|"whitelist"
 ---@param unit Unit?
----@param layout string?
 ---@return table
-function DB.GetAuraFilter(which, kind, unit, layout)
-    return DB.GetAllWidgetTables(unit, layout)[which].filter[kind]
+function DB.GetAuraFilter(which, kind, unit)
+    return DB.GetSelectedWidgetTables(unit)[which].filter[kind]
+end
+
+-- Returns active layout table
+---@return UnitLayoutTable
+function DB.CurrentLayoutTable()
+    return DB.GetLayoutTable(DB.GetMasterLayout())
+end
+
+---@param unit Unit
+---@return WidgetTables
+function DB.GetCurrentWidgetTables(unit)
+    return DB.CurrentLayoutTable()[unit].widgets
+end
+
+---@param which WIDGET_KIND
+---@param unit Unit
+---@return WidgetTable
+function DB.GetCurrentWidgetTable(which, unit)
+    return DB.GetCurrentWidgetTables(unit)[which]
 end
 
 -----------------------------------------
@@ -72,9 +82,8 @@ end
 ---@param kind "blacklist"|"whitelist"
 ---@param value table
 ---@param unit Unit?
----@param layout string?
-function DB.SetAuraFilter(which, kind, value, unit, layout)
-    DB.GetAllWidgetTables(unit, layout)[which].filter[kind] = value
+function DB.SetAuraFilter(which, kind, value, unit)
+    DB.GetSelectedWidgetTables(unit)[which].filter[kind] = value
 end
 
 -----------------------------------------

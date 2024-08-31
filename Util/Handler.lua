@@ -29,7 +29,7 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if not button:HasWidget(widgetName) then return end
     local widget = button.widgets[widgetName] ---@type Widget
 
-    local styleTable = DB.GetWidgetTable(widgetName, unit)
+    local styleTable = DB.GetCurrentWidgetTable(widgetName, unit)
 
     if (not setting or setting == "enabled") and type(widget.SetEnabled) == "function" then
         widget:SetEnabled(styleTable)
@@ -60,7 +60,7 @@ end
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     CUF:Log("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
 
-    if layout and layout ~= Cell.vars.currentLayout then return end
+    if layout and layout ~= DB.GetMasterLayout() then return end
 
     for name, func in pairs(Handler.widgets) do
         if not widgetName or name == widgetName then

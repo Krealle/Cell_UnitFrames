@@ -63,7 +63,7 @@ Builder.MenuOptions = {
 ---@field pageName string
 ---@field options table<MenuOptions>
 
----@param settingsFrame MenuFrame.settingsFrame
+---@param settingsFrame UnitsFramesTab.settingsFrame
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
 ---@return WidgetMenuPage

@@ -59,7 +59,7 @@ end
 local function AddUnitsToMenu()
     for _, unit in pairs(CUF.constants.UNIT) do
         CUF.Menu:AddUnit(
-        ---@param parent MenuFrame
+        ---@param parent UnitsFramesTab
         ---@return UnitsMenuPage
             function(parent)
                 ---@class UnitsMenuPage

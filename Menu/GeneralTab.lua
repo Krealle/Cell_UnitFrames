@@ -21,6 +21,55 @@ function generalTab:IsShown()
 end
 
 -------------------------------------------------
+-- MARK: Copy From
+-------------------------------------------------
+
+---@class CopyFrom: Frame
+local copyLayoutFrom = {}
+
+function copyLayoutFrom.SetLayoutItems()
+    if not generalTab:IsShown() then return end
+    --CUF:Log("|cff00ccffgeneralTab SetCopyFromItems|r")
+
+    local dropdownItems = {}
+
+    for layoutName, _ in pairs(CellDB.layouts) do
+        if layoutName ~= DB.GetMasterLayout() then
+            tinsert(dropdownItems, {
+                ---@diagnostic disable-next-line: undefined-field
+                ["text"] = layoutName == "default" and _G.DEFAULT or layoutName,
+                ["value"] = layoutName,
+                ["onClick"] = function()
+                    copyLayoutFrom.layoutDropdown:ClearSelected()
+                    CUF:Fire("UpdateUnitButtons")
+                    CUF:Fire("UpdateWidget", layoutName)
+                end,
+            })
+        end
+    end
+
+    copyLayoutFrom.layoutDropdown:SetItems(dropdownItems)
+    copyLayoutFrom.layoutDropdown:ClearSelected()
+end
+
+CUF:RegisterCallback("UpdateLayout", "CUF_CopyFrom_SetLayoutItems", copyLayoutFrom.SetLayoutItems)
+CUF:RegisterCallback("LoadPageDB", "CUF_CopyFrom_SetLayoutItems", copyLayoutFrom.SetLayoutItems)
+
+function copyLayoutFrom:Create()
+    --CUF:Log("|cff00ccffgeneralTab CreateCopyFrom|r")
+
+    local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
+
+    local pane = Cell:CreateTitledPane(generalTab.window, L.CopyLayoutFrom, sectionWidth, generalTab.paneHeight)
+    pane:SetPoint("TOPRIGHT")
+
+    ---@type CellDropdown
+    self.layoutDropdown = Cell:CreateDropdown(generalTab.window, sectionWidth - 10)
+    self.layoutDropdown:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
+    CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
+end
+
+-------------------------------------------------
 -- MARK: Layout Profile
 -------------------------------------------------
 
@@ -89,6 +138,7 @@ function generalTab:ShowTab()
 
     self.window:Show()
     layoutProfile:SetLayoutItems()
+    copyLayoutFrom:SetLayoutItems()
 end
 
 function generalTab:HideTab()

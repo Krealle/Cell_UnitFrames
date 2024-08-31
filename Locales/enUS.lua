@@ -19,6 +19,10 @@ regardless of |cFFFFD700Cell|r Auto Switch settings.
 Selecting |cffffb5c5None|r will Auto Switch to use the
 currently active layout in |cFFFFD700Cell|r.]]
 
+L.CopyLayoutFrom = "Copy Layout From"
+L.CopyFromTooltip = "Copy settings from another layout"
+L.CopyFromPopUp = ""
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"

@@ -43,6 +43,8 @@
 ---@field SetSelected function
 ---@field SetFont function
 ---@field button button
+---@field ClearSelected function
+---@field GetSelected function
 
 ---@class CellColorPicker: Frame, BackdropTemplate
 ---@field SetColor function

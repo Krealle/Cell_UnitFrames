@@ -223,6 +223,19 @@ function menu:CreateMenu()
 end
 
 -------------------------------------------------
+-- MARK: Util
+-------------------------------------------------
+
+--- Show a confirmation popup in the middle of the menu
+---@param text string
+---@param onAccept function?
+---@param onReject function?
+function menu:ShowPopup(text, onAccept, onReject)
+    self.popUp = CUF:CreateConfirmPopup(self.window, 300, text, onAccept, onReject, true)
+    self.popUp:SetPoint("CENTER")
+end
+
+-------------------------------------------------
 -- MARK: Callbacks - Hooks
 -------------------------------------------------
 

@@ -11,7 +11,7 @@ local Menu = CUF.Menu
 ---@class GeneralTab: Menu.Tab
 local generalTab = {}
 generalTab.id = "generalTab"
-generalTab.height = 400
+generalTab.height = 150
 generalTab.paneHeight = 17
 
 Menu:AddTab(generalTab)

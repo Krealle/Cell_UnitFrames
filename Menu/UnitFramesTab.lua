@@ -2,6 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
+local F = Cell.funcs
 local L = CUF.L
 
 local Builder = CUF.Builder
@@ -316,10 +317,23 @@ function unitFramesTab:Create()
 
     self:InitWidgets()
 
+    ---@class UnitsFramesTab.widgetListFrame: CellCombatFrame
     local widgetListWindow = CUF:CreateFrame("CUF_Menu_UnitFrame_WidgetList", self.window,
         sectionWidth / 3,
         self.settingsFrame:GetHeight(), false, true)
     widgetListWindow:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", 1 - inset, 0)
+
+    -- Give the widget list a mask and hook it to the menu's mask
+    F:ApplyCombatProtectionToFrame(widgetListWindow)
+    Cell:CreateMask(widgetListWindow, nil, { 1, -1, -1, 1 })
+    widgetListWindow.mask:Hide()
+
+    hooksecurefunc(Menu.window.mask, "Show", function()
+        widgetListWindow.mask:Show()
+    end)
+    hooksecurefunc(Menu.window.mask, "Hide", function()
+        widgetListWindow.mask:Hide()
+    end)
 
     ---@class UnitsFramesTab.widgetListFrame: Frame
     ---@field scrollFrame CellScrollFrame

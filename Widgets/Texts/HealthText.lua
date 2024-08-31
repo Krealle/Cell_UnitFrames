@@ -36,7 +36,7 @@ menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT,
 ---@param subSetting string
 function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.healthText
-    local styleTable = DB.GetSelectedWidgetTable(const.WIDGET_KIND.HEALTH_TEXT, unit) --[[@as HealthTextWidgetTable]]
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.HEALTH_TEXT, unit) --[[@as HealthTextWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.FORMAT then
         widget:SetFormat(styleTable.format)

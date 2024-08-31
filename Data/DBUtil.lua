@@ -20,6 +20,25 @@ function DB.CopyFullLayout(from, to)
     CellDB.layouts[to].CUFUnits = CUF.Util:CopyDeep(DB.GetLayoutTable(from))
 end
 
+--- Copy ALL widget settings from one unit to another
+---
+--- Only copies for widgets that are shared between the two units
+---@param from Unit
+---@param to Unit
+function DB.CopyWidgetSettings(from, to)
+    local layoutTable = DB.SelectedLayoutTable()
+    if not layoutTable then return end
+
+    local fromWidgetTables = layoutTable[from].widgets
+    local toWidgetTables = layoutTable[to].widgets
+
+    for widgetName, widgetTable in pairs(fromWidgetTables) do
+        if toWidgetTables[widgetName] then
+            toWidgetTables[widgetName] = CUF.Util:CopyDeep(widgetTable)
+        end
+    end
+end
+
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()

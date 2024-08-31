@@ -159,6 +159,8 @@ function menu:ShowMenu()
     end
 
     self.window:Show()
+    self.selectedTab:ShowTab()
+
     CUF.vars.isMenuOpen = true
 end
 
@@ -167,6 +169,7 @@ function menu:HideMenu()
     if not self.window or not self.window:IsShown() then return end
     CUF:Log("|cff00ccffHide Menu|r")
     self.window:Hide()
+    self.selectedTab:HideTab()
 
     CUF.vars.isMenuOpen = false
     Handler.UpdateSelected()

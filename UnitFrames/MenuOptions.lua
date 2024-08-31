@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = CUF.L
 
+local Menu = CUF.Menu
+
 local function UpdateSize()
     if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
         CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-size")
@@ -49,6 +51,26 @@ local function AddLoadPageDB(unitPage)
             unitPage.heightSlider:SetEnabled(not isSameSizeAsPlayer)
             unitPage.powerSizeSlider:SetEnabled(not isSameSizeAsPlayer)
             unitPage.anchorDropdown:SetEnabled(not isSameSizeAsPlayer)
+        end
+
+        -- copy from
+        unitPage.copyFromDropdown:ClearItems()
+        for _, unit in pairs(CUF.constants.UNIT) do
+            if unitPage.id ~= unit then
+                unitPage.copyFromDropdown:AddItem({
+                    ["text"] = L[unit],
+                    ["value"] = unit,
+                    ["onClick"] = function()
+                        Menu:ShowPopup(string.format(L.CopyFromPopUp, unit, unitPage.id),
+                            function()
+                                CUF.DB.CopyWidgetSettings(unit, unitPage.id)
+                                CUF:Fire("LoadPageDB", unitPage.id, CUF.vars.selectedWidget)
+                                CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
+                            end)
+                        unitPage.copyFromDropdown:ClearSelected()
+                    end,
+                })
+            end
         end
 
         unitPage.enabledCB:SetChecked(pageDB.enabled)
@@ -134,6 +156,13 @@ local function AddUnitsToMenu()
                 end
                 unitPage.anchorDropdown:SetItems(dropdownItems)
                 unitPage.anchorDropdown:SetLabel(L["Anchor Point"])
+
+                ---@type CellDropdown
+                unitPage.copyFromDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                unitPage.copyFromDropdown:SetPoint("TOPLEFT", unitPage.anchorDropdown, "TOPRIGHT", 30, 0)
+                unitPage.copyFromDropdown:SetLabel(L.CopyWidgetsFrom)
+                CUF:SetTooltips(unitPage.copyFromDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyWidgetsFrom,
+                    L.CopyWidgetsFromTooltip)
 
                 ---@type CellSlider
                 unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)

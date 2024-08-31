@@ -45,6 +45,8 @@
 ---@field button button
 ---@field ClearSelected function
 ---@field GetSelected function
+---@field AddItem function
+---@field ClearItems function
 
 ---@class CellColorPicker: Frame, BackdropTemplate
 ---@field SetColor function

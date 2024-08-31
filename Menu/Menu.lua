@@ -188,6 +188,19 @@ function menu:CreateMenu()
     Cell:CreateMask(self.window, nil, { 1, -1, -1, 1 })
     self.window.mask:Hide()
 
+    -- Title
+    local titleFrame = CUF:CreateFrame(nil, self.window, 120, 20, false, true)
+    titleFrame:SetPoint("BOTTOMLEFT", self.window, "TOPLEFT", 0, -1)
+
+    local pad = 5
+
+    local title = titleFrame:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CLASS_TITLE)
+    title:SetPoint("BOTTOMLEFT", pad, pad)
+    title:SetText("Cell UnitFrame")
+    title:SetTextScale(1.5)
+    titleFrame:SetHeight(title:GetStringHeight() + pad * 2)
+    titleFrame:SetWidth(title:GetStringWidth() + pad * 2)
+
     -- Tabs
     self.tabPane = Cell:CreateTitledPane(self.window, nil, self.baseWidth, self.paneHeight)
     self.tabPane:SetPoint("TOPLEFT")

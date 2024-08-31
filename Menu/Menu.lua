@@ -144,6 +144,7 @@ end
 ---
 --- Initializes the menu if it hasn't been initialized yet
 function menu:ShowMenu()
+    if self.window and self.window:IsShown() then return end
     CUF:Log("|cff00ccffShow Menu|r")
     if not self.window then
         self:CreateMenu()

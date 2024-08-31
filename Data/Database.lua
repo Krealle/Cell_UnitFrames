@@ -5,7 +5,7 @@ local CUF = select(2, ...)
 local DB = CUF.DB
 
 -----------------------------------------
--- Getters
+-- MARK: Layout Getters
 -----------------------------------------
 
 -- Returns CUF UnitLayoutTable from CellDB
@@ -65,7 +65,7 @@ function DB.GetAuraFilter(which, kind, unit, layout)
 end
 
 -----------------------------------------
--- Setters
+-- MARK: Layout Setters
 -----------------------------------------
 
 ---@param which "buffs"|"debuffs"
@@ -75,4 +75,22 @@ end
 ---@param layout string?
 function DB.SetAuraFilter(which, kind, value, unit, layout)
     DB.GetAllWidgetTables(unit, layout)[which].filter[kind] = value
+end
+
+-----------------------------------------
+-- MARK: General Getters
+-----------------------------------------
+
+---@return string
+function DB.GetMasterLayout()
+    return CUF_DB.masterLayout
+end
+
+-----------------------------------------
+-- MARK: General Setters
+-----------------------------------------
+
+---@param layout string
+function DB.SetMasterLayout(layout)
+    CUF_DB.masterLayout = layout
 end

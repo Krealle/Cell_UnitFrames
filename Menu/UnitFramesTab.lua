@@ -3,11 +3,10 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local L = CUF.L
-local F = Cell.funcs
 
 local Builder = CUF.Builder
 local Handler = CUF.Handler
-local MenuWindow = CUF.MenuWindow
+local Menu = CUF.Menu
 
 ---@class UnitsFramesTab: Menu.Tab
 ---@field unitPages table<Unit, UnitsMenuPage>
@@ -25,7 +24,7 @@ unitFramesTab.widgetHeight = 400
 unitFramesTab.unitHeight = 180
 unitFramesTab.paneHeight = 17
 
-MenuWindow:AddTab(unitFramesTab)
+Menu:AddTab(unitFramesTab)
 
 ---@param unit Unit
 function unitFramesTab:SetUnitPage(unit)
@@ -230,15 +229,15 @@ end
 function unitFramesTab:Create()
     CUF:Log("|cff00ccffCreate UnitFramesTab|r")
 
-    local inset = MenuWindow.inset
+    local inset = Menu.inset
     local windowHeight = self.unitHeight + self.widgetHeight + (self.paneHeight * 2)
 
-    local sectionWidth = MenuWindow.tabAnchor:GetWidth()
+    local sectionWidth = Menu.tabAnchor:GetWidth()
 
-    self.window = CUF:CreateFrame("CUF_Menu_UnitFrame", MenuWindow.window,
+    self.window = CUF:CreateFrame("CUF_Menu_UnitFrame", Menu.window,
         sectionWidth,
         windowHeight, true)
-    self.window:SetPoint("TOPLEFT", MenuWindow.tabAnchor, "TOPLEFT")
+    self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
     -- Unit Buttons
     self.unitPane = Cell:CreateTitledPane(self.window, L.UnitFrames, sectionWidth,

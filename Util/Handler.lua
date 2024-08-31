@@ -94,12 +94,13 @@ end
 ---@param selectedWidget WIDGET_KIND?
 function Handler.UpdateSelected(selectedUnit, selectedWidget)
     CUF:Log("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
+    local isCorrectLayout = CUF.vars.selectedLayout == DB.GetMasterLayout()
     Util:IterateAllUnitButtons(
         function(button)
             button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
-                    local isSelected = widget == selectedWidget and button._isSelected
+                    local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout
                     button.widgets[widget]:_SetIsSelected(isSelected)
                 end
             end

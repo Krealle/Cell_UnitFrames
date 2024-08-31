@@ -40,6 +40,8 @@ function layoutProfile:SetLayoutItems()
             ["value"] = layoutName,
             ["onClick"] = function()
                 DB.SetMasterLayout(layoutName)
+                CUF:Fire("UpdateUnitButtons")
+                CUF:Fire("UpdateWidget", layoutName)
             end,
         })
     end

@@ -67,7 +67,7 @@ end
 local function OnAddonLoaded(owner, loadedAddonName)
     if loadedAddonName == AddonName then
         -- Load our DB
-        CUF_DB = CUF_DB or {}
+        CUF.DB.InitDB()
 
         -- Load Cell and type it
         CUF.Cell = Cell

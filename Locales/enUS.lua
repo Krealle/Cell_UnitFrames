@@ -23,10 +23,29 @@ L.CopyLayoutFrom = "Copy Layout From"
 L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current layout!|r
 
 Copy settings from another layout]]
-L.CopyFromPopUp = "Copy settings from |cFFFFD700%s|r to |cFFFFD700%s|r?"
+L.CopyFromPopUp = "Copy settings from %s to %s?"
 
 L.CopyWidgetsFrom = "Copy Widgets From"
 L.CopyWidgetsFromTooltip = "Copy widget settings from another unit"
+L.Backups = "Backups"
+L.RestoreBackup = "Restore Backup"
+L.RestoreBackupTooltip = [[Restores a backup of Cell UnitFrame settings
+
+%s
+
+%s]]
+L.BackupInfo = [[%s created: %s
+Layouts: %s]]
+L.CreateBackup = "Create Backup"
+L.CreateBackupTooltip = [[Creates a backup of Cell UnitFrame settings for these layouts:
+%s]]
+L.CreateBackupPopup = [[Create a backup for these layouts?
+%s]]
+L.BackupOverwrite = [[This will overwrite your previous backup:
+%s]]
+L.RestoreBackupPopup = [[Restore this backup?
+%s]]
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"
@@ -120,6 +139,10 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
+L.CreatedAutomaticBackup = "New version detected. Created backups for:"
+L.CreatedManualBackup = "Created manual backups for:"
+L.Backup_manual = "Manual Backup"
+L.Backup_automatic = "Automatic Backup"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

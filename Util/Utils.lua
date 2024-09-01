@@ -241,6 +241,28 @@ function Util.DictionaryToArray(dictionary)
     return array
 end
 
+---@return string[]
+function Util:GetAllLayoutNames()
+    local layoutNames = {}
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, layoutName)
+    end
+
+    return layoutNames
+end
+
+---@param formatted boolean?
+---@return string
+function Util:GetAllLayoutNamesAsString(formatted)
+    local layoutNames = {}
+
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, Util:FormatLayoutName(layoutName, formatted))
+    end
+
+    return table.concat(layoutNames, ", ")
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------
@@ -365,10 +387,30 @@ function Util:ToTitleCase(...)
     return table.concat(args)
 end
 
-local function GetFormattedTimestamp()
+--- Returns a formatted timestamp "15:30:10:350"
+---@param showSec boolean?
+---@param showMillisec boolean?
+---@return string
+function Util:GetFormattedTimeStamp(showSec, showMillisec)
     local time = date("*t")
-    local millisec = math.floor(GetTime() * 1000) % 1000
-    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
+
+    if showMillisec then
+        local millisec = math.floor(GetTime() * 1000) % 1000
+        return string.format("%02d:%02d:%02d:%03d", time.hour, time.min, time.sec, millisec)
+    end
+    if showSec then
+        return string.format("%02d:%02d:%02d", time.hour, time.min, time.sec)
+    end
+
+    return string.format("%02d:%02d", time.hour, time.min)
+end
+
+--- Returns a formatted date "January 1"
+---@return string
+function Util:GetFormattedDate()
+    local d = C_DateAndTime.GetCurrentCalendarTime()
+    local month = CALENDAR_FULLDATE_MONTH_NAMES[d.month]
+    return string.format("%s %d", month, d.monthDay)
 end
 
 -- Trims whitespace from the start and end of a string
@@ -411,6 +453,20 @@ function Util.FormatName(fullName, format)
     return fullName
 end
 
+--- Replaces "default" with _G.DEFAULT
+---@param layoutName string
+---@param color boolean? whether to color the name gold
+---@return string
+function Util:FormatLayoutName(layoutName, color)
+    ---@diagnostic disable-next-line: undefined-field
+    local normalizedLayoutName = layoutName == "default" and _G.DEFAULT or layoutName
+    if color then
+        return "|cFFFFD700" .. normalizedLayoutName .. "|r"
+    end
+
+    return normalizedLayoutName
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------
@@ -426,7 +482,7 @@ end
 ---@param ... any
 function CUF:Log(...)
     if not CUF.IsInDebugMode() then return end
-    print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
+    print("[" .. Util:GetFormattedTimeStamp(true, true) .. "]", "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any

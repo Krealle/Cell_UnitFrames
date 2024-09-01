@@ -433,10 +433,16 @@ end
 
 --- Replaces "default" with _G.DEFAULT
 ---@param layoutName string
+---@param color boolean? whether to color the name gold
 ---@return string
-function Util:NormalizeLayoutName(layoutName)
+function Util:FormatLayoutName(layoutName, color)
     ---@diagnostic disable-next-line: undefined-field
-    return layoutName == "default" and _G.DEFAULT or layoutName
+    local normalizedLayoutName = layoutName == "default" and _G.DEFAULT or layoutName
+    if color then
+        return "|cFFFFD700" .. normalizedLayoutName .. "|r"
+    end
+
+    return normalizedLayoutName
 end
 
 -------------------------------------------------

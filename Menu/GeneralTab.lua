@@ -36,11 +36,11 @@ function copyLayoutFrom.SetLayoutItems()
     for layoutName, _ in pairs(CellDB.layouts) do
         if layoutName ~= DB.GetMasterLayout() then
             tinsert(dropdownItems, {
-                ["text"] = Util:NormalizeLayoutName(layoutName),
+                ["text"] = Util:FormatLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
-                    Menu:ShowPopup(string.format(L.CopyFromPopUp, Util:NormalizeLayoutName(layoutName),
-                            Util:NormalizeLayoutName(DB.GetMasterLayout())),
+                    Menu:ShowPopup(string.format(L.CopyFromPopUp, Util:FormatLayoutName(layoutName),
+                            Util:FormatLayoutName(DB.GetMasterLayout())),
                         function()
                             DB.CopyFullLayout(layoutName, DB.GetMasterLayout())
                             CUF:Fire("UpdateUnitButtons")

@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 ---@class CUF.database
 local DB = CUF.DB
 
+local Util = CUF.Util
+
 -- Props that should only be initialized once
 -- eg we only want to initialize filters, not keep adding to them
 -- which would potentially add spells that are unwanted by the user
@@ -27,7 +29,7 @@ end
 ---@param from string
 ---@param to string
 function DB.CopyFullLayout(from, to)
-    CellDB.layouts[to].CUFUnits = CUF.Util:CopyDeep(DB.GetLayoutTable(from))
+    CellDB.layouts[to].CUFUnits = Util:CopyDeep(DB.GetLayoutTable(from))
 end
 
 --- Copy ALL widget settings from one unit to another
@@ -44,7 +46,7 @@ function DB.CopyWidgetSettings(from, to)
 
     for widgetName, widgetTable in pairs(fromWidgetTables) do
         if toWidgetTables[widgetName] then
-            toWidgetTables[widgetName] = CUF.Util:CopyDeep(widgetTable)
+            toWidgetTables[widgetName] = Util:CopyDeep(widgetTable)
         end
     end
 end
@@ -66,7 +68,7 @@ function DB.CreateVersionBackup()
     CUF_DB.backups.version.CUFVersion = CUF.version
 
     for layoutName, layoutTable in pairs(CellDB.layouts) do
-        CUF_DB.backups.version.layouts[layoutName] = CUF.Util:CopyDeep(layoutTable.CUFUnits)
+        CUF_DB.backups.version.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
     end
 end
 
@@ -84,8 +86,8 @@ function DB.VerifyDB()
             if type(layoutTable.CUFUnits[unit]) ~= "table" then
                 layoutTable.CUFUnits[unit] = Cell.funcs:Copy(unitLayout)
             else
-                CUF.Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
-                --CUF.Util:RenameProp(layoutTable.CUFUnits[unit], "pointTo", "relativePoint")
+                Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
+                --Util:RenameProp(layoutTable.CUFUnits[unit], "pointTo", "relativePoint")
 
                 -- Remove any widgets that shouldn't be there
                 for widgetName, _ in pairs(layoutTable.CUFUnits[unit].widgets) do

@@ -25,6 +25,10 @@ function DB.InitDB()
     CUF_DB.backups.version.layouts = CUF_DB.backups.version.layouts or {}
 end
 
+-----------------------------------------
+-- MARK: Copy
+-----------------------------------------
+
 -- Copy ALL settings from one layout to another
 ---@param from string
 ---@param to string
@@ -51,6 +55,10 @@ function DB.CopyWidgetSettings(from, to)
     end
 end
 
+-----------------------------------------
+-- MARK: Backup
+-----------------------------------------
+
 --- Create a backup of the current layotus
 ---
 --- This is used to create to a backup for updates that either:
@@ -71,6 +79,10 @@ function DB.CreateVersionBackup()
         CUF_DB.backups.version.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
     end
 end
+
+-----------------------------------------
+-- MARK: Verify
+-----------------------------------------
 
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present

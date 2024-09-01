@@ -11,7 +11,7 @@ local Util = CUF.Util
 ---@class GeneralTab: Menu.Tab
 local generalTab = {}
 generalTab.id = "generalTab"
-generalTab.height = 160
+generalTab.height = 170
 generalTab.paneHeight = 17
 
 Menu:AddTab(generalTab)
@@ -145,12 +145,49 @@ end
 ---@class LayoutBackup: Frame
 local layoutBackup = {}
 
+--- Show popup to restore a backup
+---@param backupType "manual"|"version"
+function layoutBackup:OnRestoreSelect(backupType)
+    local currentBackupInfo = DB.GetBackupInfo(backupType)
+    local popupMsg = string.format(L.RestoreBackupPopup, currentBackupInfo)
+
+    Menu:ShowPopup(
+        popupMsg,
+        function()
+            DB.RestoreFromBackup("version")
+            layoutBackup.Update()
+        end)
+end
+
 --- Update the dropdown items (maybe we didnt havent manual back but we do now)
 ---
 --- Update tooltips
 function layoutBackup.Update()
     if not generalTab:IsShown() then return end
-    --CUF:Log("|cff00ccffgeneralTab SetLayoutItems|r")
+
+    local dropdownItems = { {
+        ["text"] = L.db_version,
+        ["value"] = "version",
+        ["onClick"] = function()
+            layoutBackup:OnRestoreSelect("version")
+        end,
+    } }
+
+    if DB.GetBackupInfo("manual") ~= "" then
+        tinsert(dropdownItems, {
+            ["text"] = L.db_manual,
+            ["value"] = "manual",
+            ["onClick"] = function()
+                layoutBackup:OnRestoreSelect("manual")
+            end,
+        })
+    end
+
+    layoutBackup.restoreDropdown:SetItems(dropdownItems)
+    layoutBackup.restoreDropdown:ClearSelected()
+
+    local restoreTooltip = string.format(L.RestoreBackupTooltip, DB.GetBackupInfo("version"), DB.GetBackupInfo("manual"))
+    CUF:SetTooltips(layoutBackup.restoreDropdown, "ANCHOR_TOPLEFT", 0, 3, L.RestoreBackup, restoreTooltip)
 
     local createTooltip = string.format(L.CreateBackupTooltip, Util:GetAllLayoutNamesAsString(true))
     CUF:SetTooltips(layoutBackup.createManulBackup, "ANCHOR_TOPLEFT", 0, 3, L.CreateBackup, createTooltip)
@@ -159,11 +196,16 @@ end
 function layoutBackup:Create()
     local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
 
-    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 75, true, true)
+    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 85, true, true)
     self.frame:SetPoint("TOPLEFT", layoutProfile.frame, "BOTTOMLEFT", 0, -20)
 
     local layoutPane = Cell:CreateTitledPane(self.frame, L.Backups, sectionWidth, generalTab.paneHeight)
     layoutPane:SetPoint("TOPLEFT")
+
+    ---@type CellDropdown
+    self.restoreDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
+    self.restoreDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -20)
+    self.restoreDropdown:SetLabel(L.RestoreBackup)
 
     self.createManulBackup = CUF:CreateButton(self.frame, L.CreateBackup, { sectionWidth - 10, 16 },
         function()

@@ -119,6 +119,33 @@ function DB.CreateManulBackup()
     CreateBackup("manual", L.CreatedManualBackup)
 end
 
+--- Restore layouts from a backup
+---@param backupType "manual"|"version"
+function DB.RestoreFromBackup(backupType)
+    ---@type CUF.database.backup
+    local backup = CUF_DB.backups[backupType]
+    CUF:Log("|cff00ccffRestoreBackup:|r", backupType, backup.timestamp)
+
+    if not backup then
+        CUF:Warn("Failed to restore! No backup found.")
+        return
+    end
+
+    for layoutName, backupLayoutTable in pairs(backup.layouts) do
+        if not CellDB.layouts[layoutName] then
+            CUF:Warn("Failed to restore Layout:", Util:FormatLayoutName(layoutName, true),
+                " - Layout is missing from Cell!")
+        else
+            CUF:Print("Restored:", Util:FormatLayoutName(layoutName, true))
+            CUF:DevAdd({ layoutTable = CellDB.layouts[layoutName].CUFUnits, backup = backupLayoutTable }, layoutName)
+            CellDB.layouts[layoutName].CUFUnits = Util:CopyDeep(backupLayoutTable)
+        end
+    end
+
+    CUF:Fire("UpdateUnitButtons")
+    CUF:Fire("UpdateWidget", DB.GetMasterLayout())
+end
+
 ---@param backupType "manual"|"version"
 function DB.GetBackupInfo(backupType)
     ---@type CUF.database.backup

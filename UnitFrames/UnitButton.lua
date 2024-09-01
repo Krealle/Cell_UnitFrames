@@ -372,6 +372,7 @@ local function UpdateAppearance(kind)
         Util:IterateAllUnitButtons(function(button)
             U:UnitFrame_UpdateHealthColor(button)
             button.widgets.powerBar.UpdatePowerType(button)
+            button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
         end)
     end
     if not kind or kind == "fullColor" then
@@ -383,11 +384,6 @@ local function UpdateAppearance(kind)
                 U:UnitFrame_UpdateHealthColor(button)
                 button.widgets.powerBar.UpdatePowerType(button)
             end)
-        end)
-    end
-    if not kind or kind == "alpha" then
-        Util:IterateAllUnitButtons(function(button)
-            button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
         end)
     end
     if not kind or kind == "outOfRangeAlpha" then

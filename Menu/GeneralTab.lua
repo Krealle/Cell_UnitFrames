@@ -33,7 +33,7 @@ function copyLayoutFrom.SetLayoutItems()
 
     local dropdownItems = {}
 
-    for layoutName, _ in pairs(CellDB.layouts) do
+    for _, layoutName in pairs(Util:GetAllLayoutNames()) do
         if layoutName ~= DB.GetMasterLayout() then
             tinsert(dropdownItems, {
                 ["text"] = Util:FormatLayoutName(layoutName),
@@ -100,7 +100,7 @@ function layoutProfile:SetLayoutItems()
         end,
     } }
 
-    for layoutName, _ in pairs(CellDB.layouts) do
+    for _, layoutName in pairs(Util:GetAllLayoutNames()) do
         tinsert(dropdownItems, {
             ---@diagnostic disable-next-line: undefined-field
             ["text"] = layoutName == "default" and _G.DEFAULT or layoutName,

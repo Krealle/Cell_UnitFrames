@@ -86,13 +86,11 @@ local function CreateBackup(backupType, msg)
     backup.timestamp = timestamp
     backup.CUFVersion = CUF.version
 
-    local layouts = {}
     for layoutName, layoutTable in pairs(CellDB.layouts) do
-        tinsert(layouts, Util:FormatLayoutName(layoutName, true))
         backup.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
     end
 
-    local layoutNames = table.concat(layouts, ", ")
+    local layoutNames = Util:GetAllLayoutNamesAsString(true)
     backup.layoutNames = layoutNames
 
     CUF:Print(msg, layoutNames)
@@ -161,7 +159,7 @@ function DB.VerifyMasterLayout()
 
     local masterLayoutIsValid = false
 
-    for layoutName, _ in pairs(CellDB.layouts) do
+    for _, layoutName in pairs(Util:GetAllLayoutNames()) do
         if layoutName == masterLayout then
             masterLayoutIsValid = true
         end

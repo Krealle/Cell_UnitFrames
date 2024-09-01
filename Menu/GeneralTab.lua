@@ -146,7 +146,7 @@ end
 local layoutBackup = {}
 
 --- Show popup to restore a backup
----@param backupType "manual"|"version"
+---@param backupType "manual"|"automatic"
 function layoutBackup:OnRestoreSelect(backupType)
     local currentBackupInfo = DB.GetBackupInfo(backupType)
     local popupMsg = string.format(L.RestoreBackupPopup, currentBackupInfo)
@@ -154,7 +154,7 @@ function layoutBackup:OnRestoreSelect(backupType)
     Menu:ShowPopup(
         popupMsg,
         function()
-            DB.RestoreFromBackup("version")
+            DB.RestoreFromBackup("automatic")
             layoutBackup.Update()
         end)
 end
@@ -166,16 +166,16 @@ function layoutBackup.Update()
     if not generalTab:IsShown() then return end
 
     local dropdownItems = { {
-        ["text"] = L.db_version,
-        ["value"] = "version",
+        ["text"] = L.Backup_automatic,
+        ["value"] = "automatic",
         ["onClick"] = function()
-            layoutBackup:OnRestoreSelect("version")
+            layoutBackup:OnRestoreSelect("automatic")
         end,
     } }
 
     if DB.GetBackupInfo("manual") ~= "" then
         tinsert(dropdownItems, {
-            ["text"] = L.db_manual,
+            ["text"] = L.Backup_manual,
             ["value"] = "manual",
             ["onClick"] = function()
                 layoutBackup:OnRestoreSelect("manual")
@@ -186,7 +186,8 @@ function layoutBackup.Update()
     layoutBackup.restoreDropdown:SetItems(dropdownItems)
     layoutBackup.restoreDropdown:ClearSelected()
 
-    local restoreTooltip = string.format(L.RestoreBackupTooltip, DB.GetBackupInfo("version"), DB.GetBackupInfo("manual"))
+    local restoreTooltip = string.format(L.RestoreBackupTooltip, DB.GetBackupInfo("automatic"),
+        DB.GetBackupInfo("manual"))
     CUF:SetTooltips(layoutBackup.restoreDropdown, "ANCHOR_TOPLEFT", 0, 3, L.RestoreBackup, restoreTooltip)
 
     local createTooltip = string.format(L.CreateBackupTooltip, Util:GetAllLayoutNamesAsString(true))

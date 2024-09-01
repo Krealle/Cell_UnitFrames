@@ -22,11 +22,11 @@ function DB.InitDB()
 
     -- Backups
     ---@class CUF.database.backups
-    ---@field version CUF.database.backup
+    ---@field automatic CUF.database.backup
     ---@field manual CUF.database.backup
     CUF_DB.backups = CUF_DB.backups or {}
 
-    DB.CreateVersionBackup()
+    DB.CreateAutomaticBackup()
 end
 
 -----------------------------------------
@@ -70,7 +70,7 @@ end
 ---@field layoutNames string
 
 --- Generic function to create a backup of the current layotus
----@param backupType "manual"|"version" the type of backup to create
+---@param backupType "manual"|"automatic" the type of backup to create
 ---@param msg string the message to print to the chat window
 local function CreateBackup(backupType, msg)
     CUF_DB.backups[backupType] = CUF_DB.backups[backupType] or {}
@@ -103,13 +103,13 @@ end
 --- A) Change the way the layout is stored
 --- B) Implement poentially breaking changes
 --- C) Prevent data loss due to a bug
-function DB.CreateVersionBackup()
+function DB.CreateAutomaticBackup()
     if not CUF_DB.version -- First time addon is loaded, nothing to backup
-        or CUF_DB.backups.version.CUFVersion == CUF.version then
+        or (CUF_DB.backups.automatic and CUF_DB.backups.automatic.CUFVersion == CUF.version) then
         return
     end
 
-    CreateBackup("version", L.CreatedVersionBackup)
+    CreateBackup("automatic", L.CreatedAutomaticBackup)
 end
 
 --- Create a backup of the current layotus
@@ -120,7 +120,7 @@ function DB.CreateManulBackup()
 end
 
 --- Restore layouts from a backup
----@param backupType "manual"|"version"
+---@param backupType "manual"|"automatic"
 function DB.RestoreFromBackup(backupType)
     ---@type CUF.database.backup
     local backup = CUF_DB.backups[backupType]
@@ -146,13 +146,13 @@ function DB.RestoreFromBackup(backupType)
     CUF:Fire("UpdateWidget", DB.GetMasterLayout())
 end
 
----@param backupType "manual"|"version"
+---@param backupType "manual"|"automatic"
 function DB.GetBackupInfo(backupType)
     ---@type CUF.database.backup
     local backup = CUF_DB.backups[backupType]
     if not backup then return "" end
 
-    local name = "|cffffa500" .. L["db_" .. backupType] .. ":|r"
+    local name = "|cffffa500" .. L["Backup_" .. backupType] .. ":|r"
     local info = string.format(L.BackupInfo, name, backup.timestamp, backup.layoutNames)
 
     return info

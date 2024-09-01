@@ -139,10 +139,10 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
-L.CreatedVersionBackup = "New version detected. Created backups for:"
+L.CreatedAutomaticBackup = "New version detected. Created backups for:"
 L.CreatedManualBackup = "Created manual backups for:"
-L.db_manual = "Manual Backup"
-L.db_version = "Automatic Backup"
+L.Backup_manual = "Manual Backup"
+L.Backup_automatic = "Automatic Backup"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

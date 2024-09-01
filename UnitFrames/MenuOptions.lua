@@ -61,7 +61,7 @@ local function AddLoadPageDB(unitPage)
                     ["text"] = L[unit],
                     ["value"] = unit,
                     ["onClick"] = function()
-                        Menu:ShowPopup(string.format(L.CopyFromPopUp, unit, unitPage.id),
+                        Menu:ShowPopup(string.format(L.CopyFromPopUp, L[unit], L[unitPage.id]),
                             function()
                                 CUF.DB.CopyWidgetSettings(unit, unitPage.id)
                                 CUF:Fire("LoadPageDB", unitPage.id, CUF.vars.selectedWidget)

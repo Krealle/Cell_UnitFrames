@@ -23,6 +23,8 @@ function DB.InitDB()
     CUF_DB.backups = CUF_DB.backups or {}
     CUF_DB.backups.version = CUF_DB.backups.version or {}
     CUF_DB.backups.version.layouts = CUF_DB.backups.version.layouts or {}
+
+    DB.CreateVersionBackup()
 end
 
 -----------------------------------------
@@ -88,8 +90,6 @@ end
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()
     if not CellDB or not CellDB.layouts then return false end
-
-    DB.CreateVersionBackup()
 
     for _, layoutTable in pairs(CellDB.layouts) do
         layoutTable.CUFUnits = layoutTable.CUFUnits or {}

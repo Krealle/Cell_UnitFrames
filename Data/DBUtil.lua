@@ -13,6 +13,16 @@ DB.PropsToOnlyInit = {
     whitelist = true,
 }
 
+--- Initialize the DB
+function DB.InitDB()
+    CUF_DB = CUF_DB or {}
+
+    -- Backups
+    CUF_DB.backups = CUF_DB.backups or {}
+    CUF_DB.backups.version = CUF_DB.backups.version or {}
+    CUF_DB.backups.version.layouts = CUF_DB.backups.version.layouts or {}
+end
+
 -- Copy ALL settings from one layout to another
 ---@param from string
 ---@param to string

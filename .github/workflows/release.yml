@@ -68,5 +68,5 @@ jobs:
         with:
           webhook-url: ${{ secrets.RELEASE_WEBHOOK_URL }}
           embed-title: ${{ env.MESSAGE }}
-          embed-url: https://github.com/Krealle/Addon_Test_Env/releases/latest
+          embed-url: https://github.com/Krealle/Cell_UnitFrames/releases/latest
           embed-description: ${{needs.release.outputs.changeLogText}}

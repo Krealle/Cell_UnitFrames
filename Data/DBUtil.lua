@@ -119,6 +119,18 @@ function DB.CreateManulBackup()
     CreateBackup("manual", L.CreatedManualBackup)
 end
 
+---@param backupType "manual"|"version"
+function DB.GetBackupInfo(backupType)
+    ---@type CUF.database.backup
+    local backup = CUF_DB.backups[backupType]
+    if not backup then return "" end
+
+    local name = "|cffffa500" .. L["db_" .. backupType] .. ":|r"
+    local info = string.format(L.BackupInfo, name, backup.timestamp, backup.layoutNames)
+
+    return info
+end
+
 -----------------------------------------
 -- MARK: Verify
 -----------------------------------------

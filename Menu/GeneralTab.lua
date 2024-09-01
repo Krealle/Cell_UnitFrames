@@ -11,7 +11,7 @@ local Util = CUF.Util
 ---@class GeneralTab: Menu.Tab
 local generalTab = {}
 generalTab.id = "generalTab"
-generalTab.height = 150
+generalTab.height = 160
 generalTab.paneHeight = 17
 
 Menu:AddTab(generalTab)
@@ -139,6 +139,52 @@ function layoutProfile:Create()
 end
 
 -------------------------------------------------
+-- MARK: Backup
+-------------------------------------------------
+
+---@class LayoutBackup: Frame
+local layoutBackup = {}
+
+--- Update the dropdown items (maybe we didnt havent manual back but we do now)
+---
+--- Update tooltips
+function layoutBackup.Update()
+    if not generalTab:IsShown() then return end
+    --CUF:Log("|cff00ccffgeneralTab SetLayoutItems|r")
+
+    local createTooltip = string.format(L.CreateBackupTooltip, Util:GetAllLayoutNamesAsString(true))
+    CUF:SetTooltips(layoutBackup.createManulBackup, "ANCHOR_TOPLEFT", 0, 3, L.CreateBackup, createTooltip)
+end
+
+function layoutBackup:Create()
+    local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
+
+    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 75, true, true)
+    self.frame:SetPoint("TOPLEFT", layoutProfile.frame, "BOTTOMLEFT", 0, -20)
+
+    local layoutPane = Cell:CreateTitledPane(self.frame, L.Backups, sectionWidth, generalTab.paneHeight)
+    layoutPane:SetPoint("TOPLEFT")
+
+    self.createManulBackup = CUF:CreateButton(self.frame, L.CreateBackup, { sectionWidth - 10, 16 },
+        function()
+            local popupMsg = string.format(L.CreateBackupPopup, Util:GetAllLayoutNamesAsString(true))
+
+            local currentBackupInfo = DB.GetBackupInfo("manual")
+            if currentBackupInfo ~= "" then
+                popupMsg = popupMsg .. "\n\n" .. string.format(L.BackupOverwrite, currentBackupInfo)
+            end
+
+            Menu:ShowPopup(
+                popupMsg,
+                function()
+                    DB.CreateManulBackup()
+                    layoutBackup.Update()
+                end)
+        end)
+    self.createManulBackup:SetPoint("TOPLEFT", self.restoreDropdown, "BOTTOMLEFT", 0, -10)
+end
+
+-------------------------------------------------
 -- MARK: Show/Hide
 -------------------------------------------------
 
@@ -152,6 +198,7 @@ function generalTab:ShowTab()
     self.window:Show()
     layoutProfile:SetLayoutItems()
     copyLayoutFrom:SetLayoutItems()
+    layoutBackup:Update()
 end
 
 function generalTab:HideTab()
@@ -176,4 +223,5 @@ function generalTab:Create()
 
     layoutProfile:Create()
     copyLayoutFrom:Create()
+    layoutBackup:Create()
 end

@@ -70,3 +70,4 @@ jobs:
           embed-title: ${{ env.MESSAGE }}
           embed-url: https://github.com/Krealle/Cell_UnitFrames/releases/latest
           embed-description: ${{needs.release.outputs.changeLogText}}
+          content: "<@&1278369314604322921>"

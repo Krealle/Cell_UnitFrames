@@ -122,6 +122,11 @@ end
 --- Restore layouts from a backup
 ---@param backupType "manual"|"automatic"
 function DB.RestoreFromBackup(backupType)
+    if InCombatLockdown() then
+        CUF:Warn("Can't restore while in combat!")
+        return
+    end
+
     ---@type CUF.database.backup
     local backup = CUF_DB.backups[backupType]
     CUF:Log("|cff00ccffRestoreBackup:|r", backupType, backup.timestamp)

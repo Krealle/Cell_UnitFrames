@@ -5,8 +5,8 @@ local Cell = CUF.Cell
 
 local L = CUF.L
 local DB = CUF.DB
-
 local Menu = CUF.Menu
+local Util = CUF.Util
 
 ---@class GeneralTab: Menu.Tab
 local generalTab = {}
@@ -18,14 +18,6 @@ Menu:AddTab(generalTab)
 
 function generalTab:IsShown()
     return generalTab.window and generalTab.window:IsShown()
-end
-
---- Replaces "default" with _G.DEFAULT
----@param layoutName string
----@return string
-local function normalizeLayoutName(layoutName)
-    ---@diagnostic disable-next-line: undefined-field
-    return layoutName == "default" and _G.DEFAULT or layoutName
 end
 
 -------------------------------------------------
@@ -44,11 +36,11 @@ function copyLayoutFrom.SetLayoutItems()
     for layoutName, _ in pairs(CellDB.layouts) do
         if layoutName ~= DB.GetMasterLayout() then
             tinsert(dropdownItems, {
-                ["text"] = normalizeLayoutName(layoutName),
+                ["text"] = Util:NormalizeLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
-                    Menu:ShowPopup(string.format(L.CopyFromPopUp, normalizeLayoutName(layoutName),
-                            normalizeLayoutName(DB.GetMasterLayout())),
+                    Menu:ShowPopup(string.format(L.CopyFromPopUp, Util:NormalizeLayoutName(layoutName),
+                            Util:NormalizeLayoutName(DB.GetMasterLayout())),
                         function()
                             DB.CopyFullLayout(layoutName, DB.GetMasterLayout())
                             CUF:Fire("UpdateUnitButtons")

@@ -431,6 +431,14 @@ function Util.FormatName(fullName, format)
     return fullName
 end
 
+--- Replaces "default" with _G.DEFAULT
+---@param layoutName string
+---@return string
+function Util:NormalizeLayoutName(layoutName)
+    ---@diagnostic disable-next-line: undefined-field
+    return layoutName == "default" and _G.DEFAULT or layoutName
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

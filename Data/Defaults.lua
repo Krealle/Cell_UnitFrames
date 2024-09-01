@@ -456,6 +456,7 @@ Defaults.Widgets = {
 ---@field widgets WidgetTables
 ---@field tooltipPosition TooltipPosition
 ---@field sameSizeAsPlayer boolean?
+---@field hideBlizzardCastBar boolean?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -468,6 +469,7 @@ Defaults.Layouts = {
         position = { 800, 500 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        hideBlizzardCastBar = false,
     },
     target = {
         enabled = false,

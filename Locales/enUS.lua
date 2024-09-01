@@ -143,6 +143,9 @@ L.CreatedAutomaticBackup = "New version detected. Created backups for:"
 L.CreatedManualBackup = "Created manual backups for:"
 L.Backup_manual = "Manual Backup"
 L.Backup_automatic = "Automatic Backup"
+L.HideDefaultCastBar = "Hide Default Cast Bar"
+L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
+Reload to show it again after disabling this option.]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

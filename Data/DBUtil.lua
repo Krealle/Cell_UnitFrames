@@ -5,6 +5,7 @@ local CUF = select(2, ...)
 local DB = CUF.DB
 
 local Util = CUF.Util
+local L = CUF.L
 
 -- Props that should only be initialized once
 -- eg we only want to initialize filters, not keep adding to them
@@ -69,17 +70,25 @@ end
 --- B) Implement poentially breaking changes
 --- C) Prevent data loss due to a bug
 function DB.CreateVersionBackup()
-    if CUF_DB.backups.version.CUFVersion == CUF.version then
+    if not CUF_DB.version -- First time addon is loaded, nothing to backup
+        or CUF_DB.backups.version.CUFVersion == CUF.version then
         return
     end
 
+    -- Clear old backups
     wipe(CUF_DB.backups.version.layouts)
 
+    local timestamp = string.format("%s, %s", CUF.Util:GetFormattedTimeStamp(), CUF.Util:GetFormattedDate())
+    CUF_DB.backups.version.timestamp = timestamp
     CUF_DB.backups.version.CUFVersion = CUF.version
 
+    local layouts = {}
     for layoutName, layoutTable in pairs(CellDB.layouts) do
+        tinsert(layouts, Util:FormatLayoutName(layoutName, true))
         CUF_DB.backups.version.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
     end
+
+    CUF:Print(L.CreatedVersionBackup, table.concat(layouts, ", "))
 end
 
 -----------------------------------------

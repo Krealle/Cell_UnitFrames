@@ -49,10 +49,33 @@ function DB.CopyWidgetSettings(from, to)
     end
 end
 
+--- Create a backup of the current layotus
+---
+--- This is used to create to a backup for updates that either:
+---
+--- A) Change the way the layout is stored
+--- B) Implement poentially breaking changes
+--- C) Prevent data loss due to a bug
+function DB.CreateVersionBackup()
+    if CUF_DB.backups.version.CUFVersion == CUF.version then
+        return
+    end
+
+    wipe(CUF_DB.backups.version.layouts)
+
+    CUF_DB.backups.version.CUFVersion = CUF.version
+
+    for layoutName, layoutTable in pairs(CellDB.layouts) do
+        CUF_DB.backups.version.layouts[layoutName] = CUF.Util:CopyDeep(layoutTable.CUFUnits)
+    end
+end
+
 -- Make sure that we have an active CellDB and that it has all the UnitLayouts we need
 ---@return false? noCellDB If CellDB is not present
 function DB.VerifyDB()
     if not CellDB or not CellDB.layouts then return false end
+
+    DB.CreateVersionBackup()
 
     for _, layoutTable in pairs(CellDB.layouts) do
         layoutTable.CUFUnits = layoutTable.CUFUnits or {}

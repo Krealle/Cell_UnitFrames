@@ -25,6 +25,8 @@ L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current 
 Copy settings from another layout]]
 L.CopyFromPopUp = "Copy settings from |cFFFFD700%s|r to |cFFFFD700%s|r?"
 
+L.CopyWidgetsFrom = "Copy Widgets From"
+L.CopyWidgetsFromTooltip = "Copy widget settings from another unit"
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"

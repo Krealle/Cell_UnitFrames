@@ -47,15 +47,13 @@ function copyLayoutFrom.SetLayoutItems()
                 ["text"] = normalizeLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
-                    local popup = CUF:CreateConfirmPopup(Menu.window, 300,
-                        string.format(L.CopyFromPopUp, normalizeLayoutName(layoutName),
+                    Menu:ShowPopup(string.format(L.CopyFromPopUp, normalizeLayoutName(layoutName),
                             normalizeLayoutName(DB.GetMasterLayout())),
                         function()
                             DB.CopyFullLayout(layoutName, DB.GetMasterLayout())
                             CUF:Fire("UpdateUnitButtons")
                             CUF:Fire("UpdateWidget", DB.GetMasterLayout())
-                        end, nil, true)
-                    popup:SetPoint("TOP", 0, -70)
+                        end)
                     copyLayoutFrom.layoutDropdown:ClearSelected()
                 end,
             })

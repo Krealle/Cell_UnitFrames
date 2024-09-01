@@ -36,7 +36,8 @@ local DEFAULT_HARM_SPELLS = {
 
 ---@param self CUFUnitButton
 ---@param ir boolean?
-local function UnitFrame_UpdateInRange(self, ir)
+---@param forceUpdate boolean?
+local function UnitFrame_UpdateInRange(self, ir, forceUpdate)
     local unit = self.states.displayedUnit
     if not unit then return end
 
@@ -52,7 +53,7 @@ local function UnitFrame_UpdateInRange(self, ir)
 
     self.states.inRange = inRange
     if Cell.loaded then
-        if self.states.inRange ~= self.states.wasInRange then
+        if self.states.inRange ~= self.states.wasInRange or forceUpdate then
             if inRange then
                 if CELL_FADE_OUT_HEALTH_PERCENT then
                     if not self.states.healthPercent or self.states.healthPercent < CELL_FADE_OUT_HEALTH_PERCENT then
@@ -516,6 +517,8 @@ function CUFUnitButton_OnLoad(button)
             and widget.enabled
             and not widget._isEnabled
     end
+
+    button.UpdateInRange = UnitFrame_UpdateInRange
 
     -- script
     button:SetScript("OnAttributeChanged", UnitFrame_OnAttributeChanged) -- init

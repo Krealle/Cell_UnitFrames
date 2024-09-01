@@ -390,5 +390,10 @@ local function UpdateAppearance(kind)
             button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
         end)
     end
+    if not kind or kind == "outOfRangeAlpha" then
+        Util:IterateAllUnitButtons(function(button)
+            button:UpdateInRange(nil, true)
+        end)
+    end
 end
 CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)

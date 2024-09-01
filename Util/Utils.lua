@@ -383,6 +383,14 @@ function Util:GetFormattedTimeStamp(showSec, showMillisec)
     return string.format("%02d:%02d", time.hour, time.min)
 end
 
+--- Returns a formatted date "January 1"
+---@return string
+function Util:GetFormattedDate()
+    local d = C_DateAndTime.GetCurrentCalendarTime()
+    local month = CALENDAR_FULLDATE_MONTH_NAMES[d.month]
+    return string.format("%s %d", month, d.monthDay)
+end
+
 -- Trims whitespace from the start and end of a string
 --
 -- https://snippets.bentasker.co.uk/page-1706031030-Trim-whitespace-from-string-LUA.html

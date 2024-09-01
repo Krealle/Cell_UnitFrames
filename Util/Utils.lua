@@ -241,6 +241,28 @@ function Util.DictionaryToArray(dictionary)
     return array
 end
 
+---@return string[]
+function Util:GetAllLayoutNames()
+    local layoutNames = {}
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, layoutName)
+    end
+
+    return layoutNames
+end
+
+---@param formatted boolean?
+---@return string
+function Util:GetAllLayoutNamesAsString(formatted)
+    local layoutNames = {}
+
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, Util:FormatLayoutName(layoutName, formatted))
+    end
+
+    return table.concat(layoutNames, ", ")
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

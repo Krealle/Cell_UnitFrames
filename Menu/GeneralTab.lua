@@ -66,11 +66,14 @@ function copyLayoutFrom:Create()
 
     local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
 
-    local pane = Cell:CreateTitledPane(generalTab.window, L.CopyLayoutFrom, sectionWidth, generalTab.paneHeight)
-    pane:SetPoint("TOPRIGHT")
+    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
+    self.frame:SetPoint("TOPRIGHT")
+
+    local pane = Cell:CreateTitledPane(self.frame, L.CopyLayoutFrom, sectionWidth, generalTab.paneHeight)
+    pane:SetPoint("TOPLEFT")
 
     ---@type CellDropdown
-    self.layoutDropdown = Cell:CreateDropdown(generalTab.window, sectionWidth - 10)
+    self.layoutDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
     CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyLayoutFrom, L.CopyFromTooltip)
 end
@@ -123,11 +126,14 @@ function layoutProfile:Create()
 
     local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
 
-    local layoutPane = Cell:CreateTitledPane(generalTab.window, L.MasterLayout, sectionWidth, generalTab.paneHeight)
+    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
+    self.frame:SetPoint("TOPLEFT")
+
+    local layoutPane = Cell:CreateTitledPane(self.frame, L.MasterLayout, sectionWidth, generalTab.paneHeight)
     layoutPane:SetPoint("TOPLEFT")
 
     ---@type CellDropdown
-    self.layoutDropdown = Cell:CreateDropdown(generalTab.window, sectionWidth - 10)
+    self.layoutDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -10)
     CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
 end

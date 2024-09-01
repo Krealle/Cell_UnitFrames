@@ -365,10 +365,22 @@ function Util:ToTitleCase(...)
     return table.concat(args)
 end
 
-local function GetFormattedTimestamp()
+--- Returns a formatted timestamp "15:30:10:350"
+---@param showSec boolean?
+---@param showMillisec boolean?
+---@return string
+function Util:GetFormattedTimeStamp(showSec, showMillisec)
     local time = date("*t")
-    local millisec = math.floor(GetTime() * 1000) % 1000
-    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
+
+    if showMillisec then
+        local millisec = math.floor(GetTime() * 1000) % 1000
+        return string.format("%02d:%02d:%02d:%03d", time.hour, time.min, time.sec, millisec)
+    end
+    if showSec then
+        return string.format("%02d:%02d:%02d", time.hour, time.min, time.sec)
+    end
+
+    return string.format("%02d:%02d", time.hour, time.min)
 end
 
 -- Trims whitespace from the start and end of a string
@@ -426,7 +438,7 @@ end
 ---@param ... any
 function CUF:Log(...)
     if not CUF.IsInDebugMode() then return end
-    print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
+    print("[" .. Util:GetFormattedTimeStamp(true, true) .. "]", "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any

@@ -385,5 +385,10 @@ local function UpdateAppearance(kind)
             end)
         end)
     end
+    if not kind or kind == "alpha" then
+        Util:IterateAllUnitButtons(function(button)
+            button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
+        end)
+    end
 end
 CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)

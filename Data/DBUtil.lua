@@ -21,9 +21,9 @@ function DB.InitDB()
     CUF_DB = CUF_DB or {}
 
     -- Backups
+    ---@class CUF.database.backups
+    ---@field version CUF.database.backup
     CUF_DB.backups = CUF_DB.backups or {}
-    CUF_DB.backups.version = CUF_DB.backups.version or {}
-    CUF_DB.backups.version.layouts = CUF_DB.backups.version.layouts or {}
 
     DB.CreateVersionBackup()
 end
@@ -62,6 +62,41 @@ end
 -- MARK: Backup
 -----------------------------------------
 
+---@class CUF.database.backup
+---@field timestamp string
+---@field CUFVersion number
+---@field layouts table<string, UnitLayoutTable>
+---@field layoutNames string
+
+--- Generic function to create a backup of the current layotus
+---@param backupType "version" the type of backup to create
+---@param msg string the message to print to the chat window
+local function CreateBackup(backupType, msg)
+    CUF_DB.backups[backupType] = CUF_DB.backups[backupType] or {}
+    CUF_DB.backups[backupType].layouts = CUF_DB.backups[backupType].layouts or {}
+
+    ---@type CUF.database.backup
+    local backup = CUF_DB.backups[backupType]
+
+    -- Clear old backups
+    wipe(backup.layouts)
+
+    local timestamp = string.format("%s, %s", CUF.Util:GetFormattedTimeStamp(), CUF.Util:GetFormattedDate())
+    backup.timestamp = timestamp
+    backup.CUFVersion = CUF.version
+
+    local layouts = {}
+    for layoutName, layoutTable in pairs(CellDB.layouts) do
+        tinsert(layouts, Util:FormatLayoutName(layoutName, true))
+        backup.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
+    end
+
+    local layoutNames = table.concat(layouts, ", ")
+    backup.layoutNames = layoutNames
+
+    CUF:Print(msg, layoutNames)
+end
+
 --- Create a backup of the current layotus
 ---
 --- This is used to create to a backup for updates that either:
@@ -75,20 +110,7 @@ function DB.CreateVersionBackup()
         return
     end
 
-    -- Clear old backups
-    wipe(CUF_DB.backups.version.layouts)
-
-    local timestamp = string.format("%s, %s", CUF.Util:GetFormattedTimeStamp(), CUF.Util:GetFormattedDate())
-    CUF_DB.backups.version.timestamp = timestamp
-    CUF_DB.backups.version.CUFVersion = CUF.version
-
-    local layouts = {}
-    for layoutName, layoutTable in pairs(CellDB.layouts) do
-        tinsert(layouts, Util:FormatLayoutName(layoutName, true))
-        CUF_DB.backups.version.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
-    end
-
-    CUF:Print(L.CreatedVersionBackup, table.concat(layouts, ", "))
+    CreateBackup("version", L.CreatedVersionBackup)
 end
 
 -----------------------------------------

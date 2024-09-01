@@ -150,6 +150,7 @@ function DB.RestoreFromBackup(backupType)
 
     DB.VerifyDB()
 
+    CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateUnitButtons")
     CUF:Fire("UpdateWidget", DB.GetMasterLayout())
 end

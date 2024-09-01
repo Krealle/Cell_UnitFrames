@@ -39,8 +39,10 @@ function copyLayoutFrom.SetLayoutItems()
                 ["text"] = Util:FormatLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
-                    Menu:ShowPopup(string.format(L.CopyFromPopUp, Util:FormatLayoutName(layoutName),
-                            Util:FormatLayoutName(DB.GetMasterLayout())),
+                    Menu:ShowPopup(
+                        string.format(L.CopyFromPopUp,
+                            Util:FormatLayoutName(layoutName, true),
+                            Util:FormatLayoutName(DB.GetMasterLayout(), true)),
                         function()
                             DB.CopyFullLayout(layoutName, DB.GetMasterLayout())
                             CUF:Fire("UpdateUnitButtons")

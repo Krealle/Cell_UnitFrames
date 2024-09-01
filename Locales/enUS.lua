@@ -23,7 +23,7 @@ L.CopyLayoutFrom = "Copy Layout From"
 L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current layout!|r
 
 Copy settings from another layout]]
-L.CopyFromPopUp = "Copy settings from |cFFFFD700%s|r to |cFFFFD700%s|r?"
+L.CopyFromPopUp = "Copy settings from %s to %s?"
 
 L.CopyWidgetsFrom = "Copy Widgets From"
 L.CopyWidgetsFromTooltip = "Copy widget settings from another unit"
@@ -120,6 +120,7 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
+L.CreatedVersionBackup = "New version detected. Created backups for:"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

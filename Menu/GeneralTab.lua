@@ -165,25 +165,17 @@ end
 function layoutBackup.Update()
     if not generalTab:IsShown() then return end
 
-    local dropdownItems = { {
-        ["text"] = L.Backup_automatic,
-        ["value"] = "automatic",
-        ["onClick"] = function()
-            layoutBackup:OnRestoreSelect("automatic")
-        end,
-    } }
-
-    if DB.GetBackupInfo("manual") ~= "" then
-        tinsert(dropdownItems, {
-            ["text"] = L.Backup_manual,
-            ["value"] = "manual",
+    layoutBackup.restoreDropdown:ClearItems()
+    for backupName, _ in pairs(CUF_DB.backups) do
+        layoutBackup.restoreDropdown:AddItem({
+            ["text"] = L["Backup_" .. backupName],
+            ["value"] = backupName,
             ["onClick"] = function()
-                layoutBackup:OnRestoreSelect("manual")
+                layoutBackup:OnRestoreSelect(backupName)
             end,
         })
     end
 
-    layoutBackup.restoreDropdown:SetItems(dropdownItems)
     layoutBackup.restoreDropdown:ClearSelected()
 
     local restoreTooltip = string.format(L.RestoreBackupTooltip, DB.GetBackupInfo("automatic"),

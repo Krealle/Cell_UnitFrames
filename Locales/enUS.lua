@@ -121,6 +121,7 @@ L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
 L.CreatedVersionBackup = "New version detected. Created backups for:"
+L.CreatedManualBackup = "Created manual backups for:"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

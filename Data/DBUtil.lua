@@ -23,6 +23,7 @@ function DB.InitDB()
     -- Backups
     ---@class CUF.database.backups
     ---@field version CUF.database.backup
+    ---@field manual CUF.database.backup
     CUF_DB.backups = CUF_DB.backups or {}
 
     DB.CreateVersionBackup()
@@ -69,7 +70,7 @@ end
 ---@field layoutNames string
 
 --- Generic function to create a backup of the current layotus
----@param backupType "version" the type of backup to create
+---@param backupType "manual"|"version" the type of backup to create
 ---@param msg string the message to print to the chat window
 local function CreateBackup(backupType, msg)
     CUF_DB.backups[backupType] = CUF_DB.backups[backupType] or {}
@@ -111,6 +112,13 @@ function DB.CreateVersionBackup()
     end
 
     CreateBackup("version", L.CreatedVersionBackup)
+end
+
+--- Create a backup of the current layotus
+---
+--- Overrides old manual backup
+function DB.CreateManulBackup()
+    CreateBackup("manual", L.CreatedManualBackup)
 end
 
 -----------------------------------------

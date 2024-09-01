@@ -131,6 +131,12 @@ function DB.RestoreFromBackup(backupType)
         return
     end
 
+    -- TODO: Later this should bounce the restore completely on version mismatch
+    -- For now it might be okay to just verify the DB
+    if backup.CUFVersion ~= CUF.version then
+        CUF:Log("Old version detected, verifying DB.", "Backup:", backup.CUFVersion, "New:", CUF.version)
+    end
+
     for layoutName, backupLayoutTable in pairs(backup.layouts) do
         if not CellDB.layouts[layoutName] then
             CUF:Warn("Failed to restore Layout:", Util:FormatLayoutName(layoutName, true),
@@ -141,6 +147,8 @@ function DB.RestoreFromBackup(backupType)
             CellDB.layouts[layoutName].CUFUnits = Util:CopyDeep(backupLayoutTable)
         end
     end
+
+    DB.VerifyDB()
 
     CUF:Fire("UpdateUnitButtons")
     CUF:Fire("UpdateWidget", DB.GetMasterLayout())

@@ -1,6 +1,10 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+-------------------------------------------------
+-- MARK: Defaults
+-------------------------------------------------
+
 ---@class CUF.defaults
 local Defaults = CUF.Defaults
 Defaults.Options = {}
@@ -101,6 +105,25 @@ Defaults.Options.fontWidth = {
     auxValue = 3,
 }
 
+---@class Defaults.Colors
+Defaults.Colors = {
+    castBar = {
+        interruptible = { 0.2, 0.57, 0.5, 1 },
+        nonInterruptible = { 0.43, 0.43, 0.43, 1 },
+        background = { 0, 0, 0, 0.8 },
+        stageZero = { 0.2, 0.57, 0.5, 1 },
+        stageOne = { 0.3, 0.47, 0.45, 1 },
+        stageTwo = { 0.4, 0.4, 0.4, 1 },
+        stageThree = { 0.54, 0.3, 0.3, 1 },
+        stageFour = { 0.65, 0.2, 0.3, 1 },
+        fullyCharged = { 0.77, 0.1, 0.2, 1 },
+    }
+}
+
+-------------------------------------------------
+-- MARK: Widgets (Text)
+-------------------------------------------------
+
 ---@class WidgetTables
 Defaults.Widgets = {
     ---@type NameTextWidgetTable
@@ -166,7 +189,7 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "CENTER",
         },
-    },
+    }, -- MARK: Widgets (Auras)
     ---@type AuraWidgetTable
     buffs = {
         enabled = false,
@@ -252,7 +275,7 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPRIGHT",
         },
-    },
+    }, -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {
         enabled = false,
@@ -342,7 +365,7 @@ Defaults.Widgets = {
             offsetX = -15,
             relativePoint = "CENTER",
         },
-    },
+    }, -- MARK: Widgets (Bars)
     ---@type ShieldBarWidgetTable
     shieldBar = {
         enabled = false,
@@ -432,6 +455,10 @@ Defaults.Widgets = {
         }
     }
 }
+
+-------------------------------------------------
+-- MARK: Units
+-------------------------------------------------
 
 ---@class Size
 ---@field [1] number

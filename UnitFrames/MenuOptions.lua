@@ -43,6 +43,9 @@ local function AddLoadPageDB(unitPage)
             unitPage.hideBlizzardCastBarCB:SetChecked(pageDB.hideBlizzardCastBar)
         end
 
+        -- click casting
+        unitPage.clickCastCB:SetChecked(pageDB.clickCast)
+
         if isPlayerPage then
             unitPage.widthSlider:SetEnabled(true)
             unitPage.heightSlider:SetEnabled(true)
@@ -100,10 +103,11 @@ local function AddUnitsToMenu()
                 unitPage.pageButton = CUF:CreateButton(parent.unitSection, L[unit], { 85, 17 })
                 unitPage.pageButton.id = unit ---@type Unit
 
+                -- First row
+
                 ---@type CheckButton
                 unitPage.enabledCB = Cell:CreateCheckButton(unitPage.frame,
-                    L["Enable"] .. " " .. L[unit] .. " " .. L
-                    .Frame,
+                    L["Enable"],
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked
                         if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
@@ -112,6 +116,13 @@ local function AddUnitsToMenu()
                         CUF:Fire("UpdateVisibility", unit)
                     end)
                 unitPage.enabledCB:SetPoint("TOPLEFT", 5, -10)
+
+                unitPage.clickCastCB = Cell:CreateCheckButton(unitPage.frame, L["Click Casting"],
+                    function(checked)
+                        CUF.DB.SelectedLayoutTable()[unit].clickCast = checked
+                        CUF:Fire("UpdateClickCasting", false, false, unit)
+                    end)
+                unitPage.clickCastCB:SetPoint("TOPLEFT", unitPage.enabledCB, "TOPRIGHT", 70, 0)
 
                 if unit ~= CUF.constants.UNIT.PLAYER then
                     -- same size as player
@@ -131,7 +142,7 @@ local function AddUnitsToMenu()
                                 CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
                             end
                         end)
-                    unitPage.sameSizeAsPlayerCB:SetPoint("TOPLEFT", unitPage.enabledCB, "TOPRIGHT", 200, 0)
+                    unitPage.sameSizeAsPlayerCB:SetPoint("TOPLEFT", unitPage.clickCastCB, "TOPRIGHT", 130, 0)
                 else
                     -- Disable blizzard cast bar
                     unitPage.hideBlizzardCastBarCB = Cell:CreateCheckButton(unitPage.frame, L.HideDefaultCastBar,
@@ -139,8 +150,10 @@ local function AddUnitsToMenu()
                             CUF.DB.SelectedLayoutTable()[unit].hideBlizzardCastBar = checked
                             CUF:Fire("UpdateVisibility", unit)
                         end, L.HideDefaultCastBarTooltip)
-                    unitPage.hideBlizzardCastBarCB:SetPoint("TOPLEFT", unitPage.enabledCB, "TOPRIGHT", 200, 0)
+                    unitPage.hideBlizzardCastBarCB:SetPoint("TOPLEFT", unitPage.clickCastCB, "TOPRIGHT", 130, 0)
                 end
+
+                -- Second row
 
                 ---@type CellSlider
                 unitPage.widthSlider = Cell:CreateSlider(L["Width"], unitPage.frame, 20, 500, 117, 1, function(value)
@@ -173,6 +186,8 @@ local function AddUnitsToMenu()
                 unitPage.copyFromDropdown:SetLabel(L.CopyWidgetsFrom)
                 CUF:SetTooltips(unitPage.copyFromDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyWidgetsFrom,
                     L.CopyWidgetsFromTooltip)
+
+                -- Third row
 
                 ---@type CellSlider
                 unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)

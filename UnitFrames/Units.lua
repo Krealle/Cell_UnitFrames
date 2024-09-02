@@ -87,8 +87,5 @@ function U:InitUnitButtons()
         local button = CreateUnitButton(unit, unitFrame)
 
         RegisterUnitButtonCallbacks(unit, button, unitFrame, anchorFrame, hoverFrame, config)
-
-        button:SetAttribute('*type1', 'target')     -- makes left click target the unit
-        button:SetAttribute('*type2', 'togglemenu') -- makes right click toggle a unit menu
     end
 end

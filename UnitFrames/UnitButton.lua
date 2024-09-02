@@ -393,3 +393,69 @@ local function UpdateAppearance(kind)
     end
 end
 CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)
+
+-------------------------------------------------
+-- MARK: Update Click Casting
+-------------------------------------------------
+
+local previousClickCastings
+
+local function GetMouseWheelBindKey(fullKey, noTypePrefix)
+    local modifier, key = strmatch(fullKey, "^(.*)type%-(.+)$")
+    modifier = string.gsub(modifier, "-", "")
+
+    if noTypePrefix then
+        return modifier .. key
+    else
+        return "type-" .. modifier .. key -- type-ctrlSCROLLUP
+    end
+end
+
+---@param button CUFUnitButton
+local function ClearClickCastings(button)
+    if not previousClickCastings then return end
+    button:SetAttribute("cell", nil)
+    button:SetAttribute("menu", nil)
+    for _, t in pairs(previousClickCastings) do
+        local bindKey = t[1]
+        if strfind(bindKey, "SCROLL") then
+            bindKey = GetMouseWheelBindKey(t[1])
+        end
+
+        button:SetAttribute(bindKey, nil)
+        local attr = string.gsub(bindKey, "type", "spell")
+        button:SetAttribute(attr, nil)
+        attr = string.gsub(bindKey, "type", "macro")
+        button:SetAttribute(attr, nil)
+        attr = string.gsub(bindKey, "type", "macrotext")
+        button:SetAttribute(attr, nil)
+        attr = string.gsub(bindKey, "type", "item")
+        button:SetAttribute(attr, nil)
+    end
+end
+
+---@param noReload boolean?
+---@param onlyqueued boolean?
+---@param which string?
+function U.UpdateClickCasting(noReload, onlyqueued, which)
+    Util:IterateAllUnitButtons(function(button, unit)
+        if not which or which == unit then
+            if CUF.DB.CurrentLayoutTable()[unit].clickCast then
+                F:UpdateClickCastings(noReload, onlyqueued)
+                local snippet = F:GetBindingSnippet()
+                CUF:DevAdd(snippet, "snippet")
+                F:UpdateClickCastOnFrame(button, snippet)
+            else
+                ClearClickCastings(button)
+
+                button:SetAttribute('*type1', 'target')     -- makes left click target the unit
+                button:SetAttribute('*type2', 'togglemenu') -- makes right click toggle a unit menu
+            end
+        end
+    end)
+
+    previousClickCastings = F:Copy(Cell.vars.clickCastings["useCommon"] and Cell.vars.clickCastings["common"] or
+        Cell.vars.clickCastings[Cell.vars.playerSpecID])
+end
+
+CUF:RegisterCallback("UpdateClickCasting", "UpdateClickCasting", U.UpdateClickCasting)

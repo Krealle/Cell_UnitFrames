@@ -457,6 +457,7 @@ Defaults.Widgets = {
 ---@field tooltipPosition TooltipPosition
 ---@field sameSizeAsPlayer boolean?
 ---@field hideBlizzardCastBar boolean?
+---@field clickCast boolean
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -470,6 +471,7 @@ Defaults.Layouts = {
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         hideBlizzardCastBar = false,
+        clickCast = false,
     },
     target = {
         enabled = false,
@@ -494,6 +496,7 @@ Defaults.Layouts = {
         },
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
+        clickCast = false,
     },
     focus = {
         enabled = false,
@@ -518,6 +521,7 @@ Defaults.Layouts = {
         },
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
+        clickCast = false,
     },
     targettarget = {
         enabled = false,
@@ -534,6 +538,7 @@ Defaults.Layouts = {
         },
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
+        clickCast = false,
     },
     pet = {
         enabled = false,
@@ -554,5 +559,6 @@ Defaults.Layouts = {
         },
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
+        clickCast = false,
     },
 }

@@ -51,6 +51,11 @@ local function OnCellInitialUpdateLayout(_layout)
     Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance",
         function(kind) CUF:Fire("UpdateAppearance", kind) end)
 
+    Cell:RegisterCallback("UpdateQueuedClickCastings", "CUF_UpdateQueuedClickCastings",
+        function() CUF:Fire("UpdateClickCasting", true, true) end)
+    Cell:RegisterCallback("UpdateClickCastings", "CUF_UpdateClickCastings",
+        function(noReload, onlyqueued) CUF:Fire("UpdateClickCasting", noReload, onlyqueued) end)
+
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 

@@ -37,10 +37,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.CAST_BAR, unit)
 
     if not setting or setting == const.OPTION_KIND.COLOR then
-        if not subSetting or subSetting == const.OPTION_KIND.USE_CLASS_COLOR then
-            castBar.useClassColor = styleTable.color.useClassColor
-        end
         castBar:SetCastBarColorStyle()
+    end
+    if not setting or setting == const.OPTION_KIND.USE_CLASS_COLOR then
+        castBar.useClassColor = styleTable.useClassColor
     end
 
     if not setting or setting == const.OPTION_KIND.TIMER then

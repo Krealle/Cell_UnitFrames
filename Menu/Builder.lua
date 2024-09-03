@@ -1351,8 +1351,7 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
     self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
 
-    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor,
-        const.OPTION_KIND.COLOR .. "." .. const.OPTION_KIND.USE_CLASS_COLOR)
+    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor, const.OPTION_KIND.USE_CLASS_COLOR)
     self:AnchorRightOfCB(f.classColorCB, f.reverseCB)
 
     return f

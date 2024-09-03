@@ -401,6 +401,7 @@ Defaults.Widgets = {
     ---@type CastBarWidgetTable
     castBar = {
         enabled = false,
+        useClassColor = true,
         frameLevel = 10,
         position = {
             point = "TOPLEFT",
@@ -411,13 +412,6 @@ Defaults.Widgets = {
         size = {
             width = 200,
             height = 30,
-        },
-        color = {
-            texture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
-            useClassColor = true,
-            interruptible = { 0.2, 0.57, 0.5, 1 },
-            nonInterruptible = { 0.43, 0.43, 0.43, 1 },
-            background = { 0, 0, 0, 0.8 },
         },
         reverse = false,
         timer = {
@@ -453,14 +447,6 @@ Defaults.Widgets = {
         empower = {
             useFullyCharged = true,
             showEmpowerName = false,
-            pipColors = {
-                stageZero = { 0.2, 0.57, 0.5, 1 },
-                stageOne = { 0.3, 0.47, 0.45, 1 },
-                stageTwo = { 0.4, 0.4, 0.4, 1 },
-                stageThree = { 0.54, 0.3, 0.3, 1 },
-                stageFour = { 0.65, 0.2, 0.3, 1 },
-                fullyCharged = { 0.77, 0.1, 0.2, 1 },
-            }
         },
         border = {
             showBorder = true,

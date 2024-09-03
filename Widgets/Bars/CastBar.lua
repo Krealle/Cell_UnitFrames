@@ -38,9 +38,6 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.CAST_BAR, unit)
 
     if not setting or setting == const.OPTION_KIND.COLOR then
-        if not subSetting or subSetting == const.OPTION_KIND.TEXTURE then
-            castBar.statusBar:SetStatusBarTexture(styleTable.color.texture)
-        end
         if not subSetting or subSetting == const.OPTION_KIND.USE_CLASS_COLOR then
             castBar.useClassColor = styleTable.color.useClassColor
         end
@@ -758,6 +755,8 @@ local function SetCastBarColorStyle(self)
     self.interruptibleColor = colors.interruptible
     self.nonInterruptibleColor = colors.nonInterruptible
     self.background:SetVertexColor(unpack(colors.background))
+
+    self.statusBar:SetStatusBarTexture(colors.texture)
 end
 
 ---@param self CastBarWidget

@@ -44,15 +44,7 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         if not subSetting or subSetting == const.OPTION_KIND.USE_CLASS_COLOR then
             castBar.useClassColor = styleTable.color.useClassColor
         end
-        if not subSetting or subSetting == const.OPTION_KIND.INTERRUPTIBLE then
-            castBar.interruptibleColor = styleTable.color.interruptible
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.NON_INTERRUPTIBLE then
-            castBar.nonInterruptibleColor = styleTable.color.nonInterruptible
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.BACKGROUND then
-            castBar.background:SetVertexColor(unpack(styleTable.color.background))
-        end
+        castBar:SetCastBarColorStyle()
     end
 
     if not setting or setting == const.OPTION_KIND.TIMER then
@@ -748,8 +740,12 @@ end
 local function SetEmpowerStyle(self, styleTable)
     self.useFullyCharged = styleTable.useFullyCharged
     self.showEmpowerSpellName = styleTable.showEmpowerName
+end
 
-    local colors = styleTable.pipColors
+---@param self CastBarWidget
+local function SetCastBarColorStyle(self)
+    local colors = DB.GetColors().castBar
+
     self.PipColorMap = {
         [0] = colors.stageZero,
         [1] = colors.stageOne,
@@ -758,6 +754,10 @@ local function SetEmpowerStyle(self, styleTable)
         [4] = colors.stageFour,
         [5] = colors.fullyCharged,
     }
+
+    self.interruptibleColor = colors.interruptible
+    self.nonInterruptibleColor = colors.nonInterruptible
+    self.background:SetVertexColor(unpack(colors.background))
 end
 
 ---@param self CastBarWidget
@@ -941,6 +941,7 @@ function W:CreateCastBar(button)
     castBar.Disable = Disable
     castBar.Update = Update
 
+    castBar.SetCastBarColorStyle = SetCastBarColorStyle
     castBar.SetCastBarColor = SetCastBarColor
     castBar.SetEmpowerStyle = SetEmpowerStyle
     castBar.SetBorderStyle = SetBorderStyle

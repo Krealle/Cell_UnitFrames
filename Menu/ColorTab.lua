@@ -25,14 +25,18 @@ function ColorTab:CreateImportExport()
 
     self.importExportFrame = CUF.ImportExport:CreateImportExportFrame("Colors",
         function(imported)
-            CUF_DB.colors = imported
+            Util:SafeImport(imported, CUF_DB.colors)
+
             self:UpdateColors()
             CUF:Fire("UpdateUnitButtons")
             CUF:Fire("UpdateWidget", DB.GetMasterLayout())
         end,
         DB.GetColors,
-        -- TODO: verify colors
-        function(imported) return true end)
+        function(imported)
+            -- We allow missing keys here since we might be importing old versions
+            -- And it's not a big deal if any new ones are missing
+            return Util:IsValidCopy(imported, CUF.Defaults.Colors, true)
+        end)
 
     local pane = Cell:CreateTitledPane(section, L.ImportExportColors, section:GetWidth(), self.paneHeight)
     pane:SetPoint("TOPLEFT")

@@ -79,21 +79,17 @@ function ColorTab:CreateSections()
 
     local prevSection
     local colorTables = DB.GetColors()
-
     local colorOrder = CUF.Defaults.ColorsMenuOrder
+
     for which, order in pairs(colorOrder) do
         ---@class CUF.ColorSection: Frame
         local section = CUF:CreateFrame("ColorSection_" .. Util:ToTitleCase(which),
-            self.window,
-            self.window:GetWidth(),
-            1,
-            false, true)
+            self.window, self.window:GetWidth(), 1, false, true)
         section.id = which
         section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
 
         local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
         sectionTitle:SetPoint("TOPLEFT", 10, -10)
-
         sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
         sectionTitle.title:SetText(L[which])
         sectionTitle.title:SetScale(1.2)
@@ -101,9 +97,7 @@ function ColorTab:CreateSections()
 
         ---@type CellColorPicker
         local prevCp
-        local cpInRow = 0
-        local numRows = 1
-        local rowLenght = 0
+        local numRows, cpInRow, rowLength = 1, 0, 0
 
         ---@type table<string, RGBAOpt>
         local colorTable = colorTables[which]
@@ -111,7 +105,6 @@ function ColorTab:CreateSections()
             ---@class CUF.ColorSection.ColorPicker: CellColorPicker
             local cp = Cell:CreateColorPicker(section, L[colorName], true)
             cp.id = colorName
-
             cp:SetColor(colorTable[colorName])
             cp.onChange = function(r, g, b, a)
                 DB.SetColor(which, colorName, { r, g, b, a })
@@ -123,35 +116,30 @@ function ColorTab:CreateSections()
             -- First ColorPicker
             if not prevCp then
                 cp:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -heightPerCp)
-            elseif rowLenght + cpWidth > section:GetWidth() or cpInRow == 3 then
+            elseif rowLength + cpWidth > section:GetWidth() or cpInRow == 3 then
                 -- Check if cp will fit in the row
-                numRows = numRows + 1
-                rowLenght = 0
-                cpInRow = 0
-
+                numRows, cpInRow, rowLength = numRows + 1, 0, 0
                 cp:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -(heightPerCp * numRows))
             else
                 -- New row
                 cp:SetPoint("TOPLEFT", prevCp, "TOPRIGHT", cpGap, 0)
-
-                rowLenght = rowLenght + (cpGap / 2)
+                rowLength = rowLength + (cpGap / 2)
             end
 
             cpInRow = cpInRow + 1
-            rowLenght = rowLenght + cpWidth
+            rowLength = rowLength + cpWidth
             prevCp = cp
 
             tinsert(section.cps, cp)
         end
 
-        local sectionHeight = 40 + numRows * heightPerCp
-        section:SetHeight(sectionHeight)
+        section:SetHeight(40 + numRows * heightPerCp)
 
         if not prevSection then
-            self.window:SetHeight(self.importExportSection:GetHeight() + sectionHeight + (sectionGap * 2))
+            self.window:SetHeight(self.importExportSection:GetHeight() + section:GetHeight() + (sectionGap * 2))
             section:SetPoint("TOPLEFT", self.importExportSection, "BOTTOMLEFT", 0, -sectionGap)
         else
-            self.window:SetHeight(self.window:GetHeight() + sectionHeight + sectionGap)
+            self.window:SetHeight(self.window:GetHeight() + section:GetHeight() + sectionGap)
             section:SetPoint("TOPLEFT", prevSection, "BOTTOMLEFT", 0, -sectionGap)
         end
 

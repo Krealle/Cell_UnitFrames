@@ -111,6 +111,7 @@ Defaults.Options.fontWidth = {
 ---@class Defaults.Colors
 Defaults.Colors = {
     castBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
         interruptible = { 0.2, 0.57, 0.5, 1 },
         nonInterruptible = { 0.43, 0.43, 0.43, 1 },
         background = { 0, 0, 0, 0.8 },
@@ -125,6 +126,7 @@ Defaults.Colors = {
 
 Defaults.ColorsMenuOrder = {
     castBar = {
+        { "texture",          "texture" },
         { "background",       "rgb" },
         { "interruptible",    "rgb" },
         { "nonInterruptible", "rgb" },

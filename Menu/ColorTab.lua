@@ -8,6 +8,7 @@ local DB = CUF.DB
 local Menu = CUF.Menu
 local Util = CUF.Util
 local const = CUF.constants
+local Builder = CUF.Builder
 
 ---@class ColorTab: Menu.Tab
 local ColorTab = {}
@@ -66,6 +67,9 @@ function ColorTab:UpdateColors()
         for _, cp in pairs(section.cps) do
             cp:SetColor(colorTable[cp.id])
         end
+        for _, dropdown in pairs(section.dropdowns) do
+            dropdown:SetSelected(Builder.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
+        end
     end
 end
 
@@ -96,13 +100,42 @@ end
 ---@return Frame
 local function CreateSperatorTitle(title, parent)
     local sectionTitle = CUF:CreateFrame(nil, parent, 1, 1, true, true) --[[@as OptionTitle]]
-    sectionTitle:SetPoint("TOPLEFT", 0, -10)
+    sectionTitle:SetPoint("TOPLEFT")
     sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
     sectionTitle.title:SetText(L[title])
     sectionTitle.title:SetScale(1)
     sectionTitle.title:SetPoint("TOPLEFT")
 
+    sectionTitle:SetHeight(sectionTitle.title:GetStringHeight())
     return sectionTitle
+end
+
+---- Create a texture dropdown
+---@param which Defaults.Colors.Types
+---@param colorName string
+---@param colorTable table<string, RGBAOpt>
+---@param parent Frame
+---@return Frame
+local function CreateTextureDropdown(which, colorName, colorTable, parent)
+    ---@class CUF.ColorSection.Dropdown: CellDropdown
+    local textureDropdown = Cell:CreateDropdown(parent, 160, "texture")
+    textureDropdown:SetLabel(L[colorName])
+    textureDropdown.id = colorName
+
+    local textureDropdownItems = {}
+    for name, tex in pairs(Builder:GetTextures()) do
+        tinsert(textureDropdownItems, {
+            ["text"] = name,
+            ["texture"] = tex,
+            ["onClick"] = function()
+                DB.SetColor(which, colorName, tex)
+            end,
+        })
+    end
+    textureDropdown:SetItems(textureDropdownItems)
+    textureDropdown:SetSelected(Builder.textureToName[colorTable[colorName]], colorTable[colorName])
+
+    return textureDropdown
 end
 
 --- Create sections with color pickers for each color type
@@ -110,6 +143,7 @@ function ColorTab:CreateSections()
     local heightPerCp = 25
     local cpGap = (self.window:GetWidth() / 3) * 0.80
     local sectionGap = 10
+    local baseHeight = 40
 
     self.colorSections = {} ---@type CUF.ColorSection[]
 
@@ -123,6 +157,7 @@ function ColorTab:CreateSections()
             self.window, self.window:GetWidth(), 1, false, true)
         section.id = which
         section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
+        section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
 
         local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
         sectionTitle:SetPoint("TOPLEFT", sectionGap, -sectionGap)
@@ -130,12 +165,14 @@ function ColorTab:CreateSections()
         sectionTitle.title:SetText(L[which])
         sectionTitle.title:SetScale(1.2)
         sectionTitle.title:SetPoint("TOPLEFT")
+        sectionTitle:SetHeight(sectionTitle.title:GetStringHeight())
 
         local gridLayout = {
             maxColumns = 3,
             currentRow = 1,
             currentColumn = 1,
-            currentColumnWidth = sectionGap * 2
+            currentColumnWidth = sectionGap * 2,
+            firstInRow = nil
         }
 
         ---@type table<string, RGBAOpt>
@@ -147,8 +184,31 @@ function ColorTab:CreateSections()
             if colorType == "seperator" then
                 element = CreateSperatorTitle(colorName, section)
                 gridLayout.currentColumn = 1
-                gridLayout.currentRow = gridLayout.currentRow + 1
                 gridLayout.currentColumnWidth = section:GetWidth()
+                gridLayout.currentRow = gridLayout.currentRow + 1
+
+                element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
+                gridLayout.firstInRow = element
+            elseif colorType == "texture" then
+                element = CreateTextureDropdown(which, colorName, colorTable, section)
+                gridLayout.currentColumn = 1
+                gridLayout.currentColumnWidth = section:GetWidth()
+
+                if gridLayout.currentRow > 1 then
+                    gridLayout.currentRow = gridLayout.currentRow + 1
+                end
+
+                baseHeight = baseHeight + 10
+
+                -- Start of a new row
+                if not gridLayout.firstInRow then
+                    element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                else
+                    element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                end
+                gridLayout.firstInRow = element
+
+                tinsert(section.dropdowns, element)
             elseif colorType == "rgb" then
                 element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
 
@@ -161,23 +221,27 @@ function ColorTab:CreateSections()
                 end
 
                 gridLayout.currentColumnWidth = gridLayout.currentColumnWidth + elementWidth
-
                 tinsert(section.cps, element)
-            end
 
-            -- Position the element in the grid
-            if gridLayout.currentColumn == 1 then
-                -- Start of a new row
-                element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -(heightPerCp * gridLayout.currentRow))
-            else
-                -- Position to the right of the previous element
-                element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
+                -- Position the element in the grid
+                if gridLayout.currentColumn == 1 then
+                    -- Start of a new row
+                    if not gridLayout.firstInRow then
+                        element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap)
+                    else
+                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
+                    end
+                    gridLayout.firstInRow = element
+                else
+                    -- Position to the right of the previous element
+                    element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
+                end
             end
 
             gridLayout.currentColumn = gridLayout.currentColumn + 1
         end
 
-        section:SetHeight(40 + gridLayout.currentRow * heightPerCp)
+        section:SetHeight(baseHeight + gridLayout.currentRow * heightPerCp)
 
         if not prevSection then
             self.window:SetHeight(self.importExportSection:GetHeight() + section:GetHeight() + (sectionGap * 2))

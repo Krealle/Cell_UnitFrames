@@ -147,6 +147,7 @@ L.Backup_automatic = "Automatic Backup"
 L.HideDefaultCastBar = "Hide Default Cast Bar"
 L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
 Reload to show it again after disabling this option.]]
+L.texture = "Texture"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

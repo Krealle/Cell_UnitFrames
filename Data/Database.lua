@@ -119,7 +119,7 @@ end
 --- Sets the color of a specific color type
 ---@param which Defaults.Colors.Types
 ---@param colorName string
----@param val RGBAOpt
+---@param val RGBAOpt|string
 function DB.SetColor(which, colorName, val)
     DB.GetColors()[which][colorName] = val
 end

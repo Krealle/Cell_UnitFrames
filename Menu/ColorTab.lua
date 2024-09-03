@@ -141,10 +141,9 @@ end
 
 --- Create sections with color pickers for each color type
 function ColorTab:CreateSections()
-    local heightPerCp = 25
+    local heightPerCp = 30
     local cpGap = (self.window:GetWidth() / 3) * 0.80
     local sectionGap = 10
-    local baseHeight = 40
 
     self.colorSections = {} ---@type CUF.ColorSection[]
 
@@ -175,6 +174,7 @@ function ColorTab:CreateSections()
             currentColumnWidth = sectionGap * 2,
             firstInRow = nil
         }
+        local baseHeight = 35
 
         ---@type table<string, RGBAOpt>
         local colorTable = colorTables[which]
@@ -190,6 +190,7 @@ function ColorTab:CreateSections()
 
                 element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
                 gridLayout.firstInRow = element
+                baseHeight = baseHeight + element:GetHeight() + sectionGap
             elseif colorType == "texture" then
                 element = CreateTextureDropdown(which, colorName, colorTable, section)
                 gridLayout.currentColumn = 1
@@ -199,8 +200,6 @@ function ColorTab:CreateSections()
                     gridLayout.currentRow = gridLayout.currentRow + 1
                 end
 
-                baseHeight = baseHeight + 10
-
                 -- Start of a new row
                 if not gridLayout.firstInRow then
                     element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
@@ -208,6 +207,8 @@ function ColorTab:CreateSections()
                     element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
                 end
                 gridLayout.firstInRow = element
+
+                baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
 
                 tinsert(section.dropdowns, element)
             elseif colorType == "rgb" then
@@ -233,6 +234,7 @@ function ColorTab:CreateSections()
                         element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
                     end
                     gridLayout.firstInRow = element
+                    baseHeight = baseHeight + element:GetHeight() + sectionGap
                 else
                     -- Position to the right of the previous element
                     element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
@@ -242,7 +244,7 @@ function ColorTab:CreateSections()
             gridLayout.currentColumn = gridLayout.currentColumn + 1
         end
 
-        section:SetHeight(baseHeight + gridLayout.currentRow * heightPerCp)
+        section:SetHeight(baseHeight --[[ + gridLayout.currentRow * heightPerCp ]])
 
         if not prevSection then
             self.window:SetHeight(self.importExportSection:GetHeight() + section:GetHeight() + (sectionGap * 2))

@@ -43,7 +43,6 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
     CastBarGeneral = 21,
-    CastBarColor = 22,
     CastBarTimer = 23,
     CastBarSpell = 24,
     CastBarSpark = 25,
@@ -1352,42 +1351,9 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
     self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
 
-    return f
-end
-
----@param parent Frame
----@param widgetName WIDGET_KIND
----@return CastBarColorOptions
-function Builder:CreateCastBarColorOptions(parent, widgetName)
-    ---@class CastBarColorOptions: OptionsFrame
-    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.id = "CastBarColorOptions"
-    f.optionHeight = 110
-
-    -- Title
-    f.title = self:CreateOptionTitle(f, "Colors")
-    local path = const.OPTION_KIND.COLOR .. "."
-
-    -- First Row
-    f.texture = self:CreateTextureDropdown(f, widgetName, path .. const.OPTION_KIND.TEXTURE)
-    self:AnchorBelow(f.texture, f.title)
-
     f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor,
-        path .. const.OPTION_KIND.USE_CLASS_COLOR)
-    self:AnchorRight(f.classColorCB, f.texture)
-
-    -- Second Row
-    f.interruptible = self:CreateColorPickerOptions(f, widgetName, L.Interruptible,
-        path .. const.OPTION_KIND.INTERRUPTIBLE)
-    self:AnchorBelow(f.interruptible, f.texture)
-
-    f.nonInterruptible = self:CreateColorPickerOptions(f, widgetName, L.NonInterruptible,
-        path .. const.OPTION_KIND.NON_INTERRUPTIBLE)
-    self:AnchorRightOfColorPicker(f.nonInterruptible, f.interruptible)
-
-    f.background = self:CreateColorPickerOptions(f, widgetName, L.Background,
-        path .. const.OPTION_KIND.BACKGROUND)
-    self:AnchorRightOfColorPicker(f.background, f.nonInterruptible)
+        const.OPTION_KIND.COLOR .. "." .. const.OPTION_KIND.USE_CLASS_COLOR)
+    self:AnchorRightOfCB(f.classColorCB, f.reverseCB)
 
     return f
 end
@@ -1576,7 +1542,6 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
     [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
-    [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,

@@ -20,7 +20,6 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarGeneral,
-    Builder.MenuOptions.CastBarColor,
     Builder.MenuOptions.CastBarEmpower,
     Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.CastBarSpell,

@@ -55,23 +55,8 @@ function ColorTab:CreateImportExport()
 end
 
 -------------------------------------------------
--- MARK: Sections
+-- MARK: Elements
 -------------------------------------------------
-
---- Update all color pickers with the current color table
----
---- This is called when a new color table is imported
-function ColorTab:UpdateColors()
-    for _, section in pairs(self.colorSections) do
-        local colorTable = DB.GetColors()[section.id]
-        for _, cp in pairs(section.cps) do
-            cp:SetColor(colorTable[cp.id])
-        end
-        for _, dropdown in pairs(section.dropdowns) do
-            dropdown:SetSelected(Builder.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
-        end
-    end
-end
 
 --- Create a color picker
 ---@param which Defaults.Colors.Types
@@ -137,6 +122,25 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
     textureDropdown:SetSelected(Builder.textureToName[colorTable[colorName]], colorTable[colorName])
 
     return textureDropdown
+end
+
+-------------------------------------------------
+-- MARK: Sections
+-------------------------------------------------
+
+--- Update all color pickers with the current color table
+---
+--- This is called when a new color table is imported
+function ColorTab:UpdateColors()
+    for _, section in pairs(self.colorSections) do
+        local colorTable = DB.GetColors()[section.id]
+        for _, cp in pairs(section.cps) do
+            cp:SetColor(colorTable[cp.id])
+        end
+        for _, dropdown in pairs(section.dropdowns) do
+            dropdown:SetSelected(Builder.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
+        end
+    end
 end
 
 --- Create sections with color pickers for each color type

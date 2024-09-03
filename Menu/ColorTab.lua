@@ -14,6 +14,7 @@ local Builder = CUF.Builder
 local ColorTab = {}
 ColorTab.id = "colorTab"
 ColorTab.paneHeight = 17
+ColorTab.sectionsHeight = 0
 
 -------------------------------------------------
 -- MARK: Import / Export
@@ -145,9 +146,18 @@ end
 
 --- Create sections with color pickers for each color type
 function ColorTab:CreateSections()
-    local heightPerCp = 30
     local cpGap = (self.window:GetWidth() / 3) * 0.80
     local sectionGap = 10
+
+    ---@class ColorTab.colorSection: Frame
+    ---@field scrollFrame CellScrollFrame
+    local colorSection = CUF:CreateFrame("CUF_Menu_ColorSection", self.window,
+        self.window:GetWidth(),
+        self.window:GetHeight() - self.importExportSection:GetHeight() - (sectionGap * 2), true, true)
+    colorSection:SetPoint("TOPLEFT", self.importExportSection, "BOTTOMLEFT", 0, -sectionGap)
+
+    Cell:CreateScrollFrame(colorSection)
+    colorSection.scrollFrame:SetScrollStep(50)
 
     self.colorSections = {} ---@type CUF.ColorSection[]
 
@@ -157,8 +167,8 @@ function ColorTab:CreateSections()
 
     for which, order in pairs(colorOrder) do
         ---@class CUF.ColorSection: Frame
-        local section = CUF:CreateFrame("ColorSection_" .. Util:ToTitleCase(which),
-            self.window, self.window:GetWidth(), 1, false, true)
+        local section = CUF:CreateFrame(colorSection:GetName() .. "_" .. Util:ToTitleCase(which),
+            colorSection.scrollFrame.content, self.window:GetWidth() - 10, 1, false, true)
         section.id = which
         section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
         section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
@@ -248,19 +258,20 @@ function ColorTab:CreateSections()
             gridLayout.currentColumn = gridLayout.currentColumn + 1
         end
 
-        section:SetHeight(baseHeight --[[ + gridLayout.currentRow * heightPerCp ]])
+        section:SetHeight(baseHeight)
+        self.sectionsHeight = self.sectionsHeight + baseHeight + sectionGap
 
         if not prevSection then
-            self.window:SetHeight(self.importExportSection:GetHeight() + section:GetHeight() + (sectionGap * 2))
-            section:SetPoint("TOPLEFT", self.importExportSection, "BOTTOMLEFT", 0, -sectionGap)
+            section:SetPoint("TOPLEFT", colorSection.scrollFrame.content)
         else
-            self.window:SetHeight(self.window:GetHeight() + section:GetHeight() + sectionGap)
             section:SetPoint("TOPLEFT", prevSection, "BOTTOMLEFT", 0, -sectionGap)
         end
 
         prevSection = section
         tinsert(self.colorSections, section)
     end
+
+    self.colorSection = colorSection
 end
 
 -------------------------------------------------
@@ -274,6 +285,9 @@ function ColorTab:ShowTab()
     end
 
     self.window:Show()
+
+    self.colorSection.scrollFrame:SetContentHeight(self.sectionsHeight)
+    self.colorSection.scrollFrame:ResetScroll()
 end
 
 function ColorTab:HideTab()
@@ -292,9 +306,9 @@ end
 function ColorTab:Create()
     local sectionWidth = Menu.tabAnchor:GetWidth()
 
-    self.window = CUF:CreateFrame("CUF_Menu_UnitFrame", Menu.window,
+    self.window = CUF:CreateFrame("CUF_Menu_Color", Menu.window,
         sectionWidth,
-        0, true)
+        335, true)
     self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
     self:CreateImportExport()

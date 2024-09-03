@@ -105,8 +105,12 @@ Defaults.Options.fontWidth = {
     auxValue = 3,
 }
 
+---@alias Defaults.Colors.Types
+---| "castBar"
+
 ---@class Defaults.Colors
 Defaults.Colors = {
+    ---@type table<string, RGBAOpt>
     castBar = {
         interruptible = { 0.2, 0.57, 0.5, 1 },
         nonInterruptible = { 0.43, 0.43, 0.43, 1 },
@@ -117,7 +121,22 @@ Defaults.Colors = {
         stageThree = { 0.54, 0.3, 0.3, 1 },
         stageFour = { 0.65, 0.2, 0.3, 1 },
         fullyCharged = { 0.77, 0.1, 0.2, 1 },
-    }
+    },
+}
+
+---@type table<Defaults.Colors.Types, string[]>
+Defaults.ColorsMenuOrder = {
+    castBar = {
+        "background",
+        "interruptible",
+        "nonInterruptible",
+        "stageZero",
+        "stageOne",
+        "stageTwo",
+        "stageThree",
+        "stageFour",
+        "fullyCharged"
+    },
 }
 
 -------------------------------------------------

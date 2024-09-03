@@ -101,6 +101,19 @@ function DB.GetMasterLayout(rawValue)
     return CUF_DB.masterLayout
 end
 
+--- Returns the colors table from DB
+---
+--- Parse the which arg to only return a specific color table
+---@param which Defaults.Colors.Types?
+---@return Defaults.Colors
+function DB.GetColors(which)
+    local colors = CUF_DB.colors
+    if which then
+        return colors[which]
+    end
+    return CUF_DB.colors
+end
+
 -----------------------------------------
 -- MARK: General Setters
 -----------------------------------------
@@ -108,4 +121,12 @@ end
 ---@param layout string
 function DB.SetMasterLayout(layout)
     CUF_DB.masterLayout = layout
+end
+
+--- Sets the color of a specific color type
+---@param which Defaults.Colors.Types
+---@param colorName string
+---@param val RGBAOpt
+function DB.SetColor(which, colorName, val)
+    DB.GetColors(which)[colorName] = val
 end

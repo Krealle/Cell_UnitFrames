@@ -1047,19 +1047,15 @@ end
 
 local LSM = LibStub("LibSharedMedia-3.0", true)
 local textures
-local textureToName = {}
+Builder.textureToName = {}
 
----@class TextureDropdownItem
----@field [1] string
----@field [2] Texture
-
----@return TextureDropdownItem[]
-local function GetTextures()
+---@return table<string,string>
+function Builder:GetTextures()
     if textures then return textures end
 
     textures = F:Copy(LSM:HashTable("statusbar"))
     for name, texture in pairs(textures) do
-        textureToName[texture] = name
+        Builder.textureToName[texture] = name
     end
 
     return textures
@@ -1081,7 +1077,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
     textureDropdown.Get_DB = HandleWidgetOption
 
     local textureDropdownItems = {}
-    for name, tex in pairs(GetTextures()) do
+    for name, tex in pairs(self:GetTextures()) do
         tinsert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
@@ -1094,7 +1090,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
 
     local function LoadPageDB()
         local tex = textureDropdown.Get_DB(widgetName, path)
-        textureDropdown:SetSelected(textureToName[tex], tex)
+        textureDropdown:SetSelected(Builder.textureToName[tex], tex)
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "TextureDropdown_" .. path)
 

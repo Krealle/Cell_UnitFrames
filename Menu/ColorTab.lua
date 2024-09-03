@@ -69,6 +69,42 @@ function ColorTab:UpdateColors()
     end
 end
 
+--- Create a color picker
+---@param which Defaults.Colors.Types
+---@param colorName string
+---@param colorTable table<string, RGBAOpt>
+---@param parent Frame
+---@return CUF.ColorSection.ColorPicker, number
+local function CreateColorPicker(which, colorName, colorTable, parent)
+    ---@class CUF.ColorSection.ColorPicker: CellColorPicker
+    local cp = Cell:CreateColorPicker(parent, L[colorName], true)
+    cp.id = colorName
+    cp:SetColor(colorTable[colorName])
+    cp.onChange = function(r, g, b, a)
+        DB.SetColor(which, colorName, { r, g, b, a })
+        CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
+    end
+
+    local cpWidth = math.max(cp:GetWidth() + cp.label:GetWidth() + 5, (ColorTab.window:GetWidth() / 3) - 15)
+
+    return cp, cpWidth
+end
+
+--- Create a sperator title
+---@param title string
+---@param parent Frame
+---@return Frame
+local function CreateSperatorTitle(title, parent)
+    local sectionTitle = CUF:CreateFrame(nil, parent, 1, 1, true, true) --[[@as OptionTitle]]
+    sectionTitle:SetPoint("TOPLEFT", 0, -10)
+    sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
+    sectionTitle.title:SetText(L[title])
+    sectionTitle.title:SetScale(1)
+    sectionTitle.title:SetPoint("TOPLEFT")
+
+    return sectionTitle
+end
+
 --- Create sections with color pickers for each color type
 function ColorTab:CreateSections()
     local heightPerCp = 25
@@ -89,51 +125,59 @@ function ColorTab:CreateSections()
         section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
 
         local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
-        sectionTitle:SetPoint("TOPLEFT", 10, -10)
+        sectionTitle:SetPoint("TOPLEFT", sectionGap, -sectionGap)
         sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
         sectionTitle.title:SetText(L[which])
         sectionTitle.title:SetScale(1.2)
         sectionTitle.title:SetPoint("TOPLEFT")
 
-        ---@type CellColorPicker
-        local prevCp
-        local numRows, cpInRow, rowLength = 1, 0, 0
+        local gridLayout = {
+            maxColumns = 3,
+            currentRow = 1,
+            currentColumn = 1,
+            currentColumnWidth = sectionGap * 2
+        }
 
         ---@type table<string, RGBAOpt>
         local colorTable = colorTables[which]
-        for _, colorName in ipairs(order) do
-            ---@class CUF.ColorSection.ColorPicker: CellColorPicker
-            local cp = Cell:CreateColorPicker(section, L[colorName], true)
-            cp.id = colorName
-            cp:SetColor(colorTable[colorName])
-            cp.onChange = function(r, g, b, a)
-                DB.SetColor(which, colorName, { r, g, b, a })
-                CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
+        for _, info in ipairs(order) do
+            local colorName, colorType = info[1], info[2]
+            local element, elementWidth
+
+            if colorType == "seperator" then
+                element = CreateSperatorTitle(colorName, section)
+                gridLayout.currentColumn = 1
+                gridLayout.currentRow = gridLayout.currentRow + 1
+                gridLayout.currentColumnWidth = section:GetWidth()
+            elseif colorType == "rgb" then
+                element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
+
+                -- Move to the next column, or wrap to the next row if necessary
+                if gridLayout.currentColumn > gridLayout.maxColumns
+                    or (gridLayout.currentColumnWidth + elementWidth) > (section:GetWidth()) then
+                    gridLayout.currentColumn = 1
+                    gridLayout.currentRow = gridLayout.currentRow + 1
+                    gridLayout.currentColumnWidth = sectionGap * 2
+                end
+
+                gridLayout.currentColumnWidth = gridLayout.currentColumnWidth + elementWidth
+
+                tinsert(section.cps, element)
             end
 
-            local cpWidth = cp:GetWidth() + cp.label:GetWidth()
-
-            -- First ColorPicker
-            if not prevCp then
-                cp:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -heightPerCp)
-            elseif rowLength + cpWidth > section:GetWidth() or cpInRow == 3 then
-                -- Check if cp will fit in the row
-                numRows, cpInRow, rowLength = numRows + 1, 0, 0
-                cp:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -(heightPerCp * numRows))
+            -- Position the element in the grid
+            if gridLayout.currentColumn == 1 then
+                -- Start of a new row
+                element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -(heightPerCp * gridLayout.currentRow))
             else
-                -- New row
-                cp:SetPoint("TOPLEFT", prevCp, "TOPRIGHT", cpGap, 0)
-                rowLength = rowLength + (cpGap / 2)
+                -- Position to the right of the previous element
+                element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
             end
 
-            cpInRow = cpInRow + 1
-            rowLength = rowLength + cpWidth
-            prevCp = cp
-
-            tinsert(section.cps, cp)
+            gridLayout.currentColumn = gridLayout.currentColumn + 1
         end
 
-        section:SetHeight(40 + numRows * heightPerCp)
+        section:SetHeight(40 + gridLayout.currentRow * heightPerCp)
 
         if not prevSection then
             self.window:SetHeight(self.importExportSection:GetHeight() + section:GetHeight() + (sectionGap * 2))

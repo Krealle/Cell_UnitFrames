@@ -123,18 +123,18 @@ Defaults.Colors = {
     },
 }
 
----@type table<Defaults.Colors.Types, string[]>
 Defaults.ColorsMenuOrder = {
     castBar = {
-        "background",
-        "interruptible",
-        "nonInterruptible",
-        "stageZero",
-        "stageOne",
-        "stageTwo",
-        "stageThree",
-        "stageFour",
-        "fullyCharged"
+        { "background",       "rgb" },
+        { "interruptible",    "rgb" },
+        { "nonInterruptible", "rgb" },
+        { "Empowers",         "seperator" },
+        { "stageZero",        "rgb" },
+        { "stageOne",         "rgb" },
+        { "stageTwo",         "rgb" },
+        { "stageThree",       "rgb" },
+        { "stageFour",        "rgb" },
+        { "fullyCharged",     "rgb" }
     },
 }
 

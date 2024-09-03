@@ -91,6 +91,52 @@ function Util:CopyDeep(table, seen)
     return setmetatable(res, getmetatable(table))
 end
 
+--- Check if a table is a valid copy of another table, used for import checks
+---
+--- This function will check if a table is a valid copy of another table.
+--- It will check if the table has the same structure as the template table.
+--- @param table table The table to check
+--- @param template table The template table to check against
+--- @param allowMissing boolean? Whether to allow missing keys
+--- @return boolean
+function Util:IsValidCopy(table, template, allowMissing)
+    if type(table) ~= "table" or type(template) ~= "table" then
+        return false
+    end
+
+    for k, v in pairs(template) do
+        if (not table[k] and not allowMissing)
+            or (not self:IsPropSameType(table[k], v)) then
+            return false
+        end
+
+        if type(v) == "table" then
+            if not Util:IsValidCopy(table[k], v, allowMissing) then
+                return false
+            end
+        end
+    end
+
+    -- TODO: Maybe check if table has keys not present in template?
+    -- right now that is dealt with in SafeImport so for now w/e
+
+    return true
+end
+
+--- Safely perform an import
+---
+--- This does not overwrite the current table.
+--- It instead iterates over the imported table and copies the valid props to the current table.
+---@param imported table
+---@param current table
+function Util:SafeImport(imported, current)
+    for k, v in pairs(imported) do
+        if current[k] and self:IsPropSameType(current[k], v) then
+            current[k] = self:CopyDeep(v)
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------
@@ -261,6 +307,14 @@ function Util:GetAllLayoutNamesAsString(formatted)
     end
 
     return table.concat(layoutNames, ", ")
+end
+
+--- Check if two values have the same type
+---@param a any
+---@param b any
+---@return boolean
+function Util:IsPropSameType(a, b)
+    return type(a) == type(b)
 end
 
 -------------------------------------------------

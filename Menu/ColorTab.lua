@@ -129,6 +129,7 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
             ["texture"] = tex,
             ["onClick"] = function()
                 DB.SetColor(which, colorName, tex)
+                CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
             end,
         })
     end

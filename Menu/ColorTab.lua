@@ -7,6 +7,7 @@ local L = CUF.L
 local DB = CUF.DB
 local Menu = CUF.Menu
 local Util = CUF.Util
+local const = CUF.constants
 
 ---@class ColorTab: Menu.Tab
 local ColorTab = {}
@@ -106,6 +107,7 @@ function ColorTab:CreateSections()
             cp:SetColor(colorTable[colorName])
             cp.onChange = function(r, g, b, a)
                 DB.SetColor(which, colorName, { r, g, b, a })
+                CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
             end
 
             local cpWidth = cp:GetWidth() + cp.label:GetWidth()

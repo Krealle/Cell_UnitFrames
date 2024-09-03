@@ -107,6 +107,7 @@ Defaults.Options.fontWidth = {
 
 ---@alias Defaults.Colors.Types
 ---| "castBar"
+---| "reaction"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -121,6 +122,12 @@ Defaults.Colors = {
         stageThree = { 0.54, 0.3, 0.3, 1 },
         stageFour = { 0.65, 0.2, 0.3, 1 },
         fullyCharged = { 0.77, 0.1, 0.2, 1 },
+    },
+    reaction = {
+        friendly = { 0.29, 0.69, 0.3, 1 },
+        hostile = { 0.78, 0.25, 0.25, 1 },
+        neutral = { 0.85, 0.77, 0.36, 1 },
+        pet = { 0.29, 0.69, 0.3, 1 },
     },
 }
 
@@ -137,6 +144,12 @@ Defaults.ColorsMenuOrder = {
         { "stageThree",       "rgb" },
         { "stageFour",        "rgb" },
         { "fullyCharged",     "rgb" }
+    },
+    reaction = {
+        { "friendly", "rgb" },
+        { "hostile",  "rgb" },
+        { "neutral",  "rgb" },
+        { "pet",      "rgb" },
     },
 }
 

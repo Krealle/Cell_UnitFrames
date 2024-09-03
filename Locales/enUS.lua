@@ -194,4 +194,9 @@ L.holyPower = "Holy Power"
 L.arcaneCharges = "Arcane Charges"
 L.soulShards = "Soul Shards"
 
+L.reaction = "Reaction"
+L.friendly = "Friendly"
+L.hostile = "Hostile"
+L.neutral = "Neutral"
+
 L.ImportExportColors = "Import & Export Color Settings"

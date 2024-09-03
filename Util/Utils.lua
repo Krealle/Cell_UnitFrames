@@ -3,6 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
+local DB = CUF.DB
 
 ---@class CUF.Util
 local Util = CUF.Util
@@ -251,25 +252,25 @@ function Util:GetUnitClassColor(unit, class, guid)
 
     -- Friendly
     if selectionType == 3 then
-        return unpack(CUF.constants.COLORS.FRIENDLY)
+        return unpack(DB.GetColors().reaction.friendly)
     end
 
     -- Hostile
     if selectionType == 0 then
-        return unpack(CUF.constants.COLORS.HOSTILE)
+        return unpack(DB.GetColors().reaction.hostile)
     end
 
     -- Pet
     if selectionType == 4 then
         if UnitIsEnemy(unit, "player") then
-            return unpack(CUF.constants.COLORS.HOSTILE)
+            return unpack(DB.GetColors().reaction.hostile)
         end
 
-        return unpack(CUF.constants.COLORS.FRIENDLY)
+        return unpack(DB.GetColors().reaction.pet)
     end
 
     -- Neutral
-    return unpack(CUF.constants.COLORS.NEUTRAL)
+    return unpack(DB.GetColors().reaction.neutral)
 end
 
 --- Converts a dictionary table to an array eg.

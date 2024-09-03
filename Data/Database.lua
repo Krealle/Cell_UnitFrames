@@ -102,15 +102,8 @@ function DB.GetMasterLayout(rawValue)
 end
 
 --- Returns the colors table from DB
----
---- Parse the which arg to only return a specific color table
----@param which Defaults.Colors.Types?
 ---@return Defaults.Colors
-function DB.GetColors(which)
-    local colors = CUF_DB.colors
-    if which then
-        return colors[which]
-    end
+function DB.GetColors()
     return CUF_DB.colors
 end
 
@@ -128,5 +121,5 @@ end
 ---@param colorName string
 ---@param val RGBAOpt
 function DB.SetColor(which, colorName, val)
-    DB.GetColors(which)[colorName] = val
+    DB.GetColors()[which][colorName] = val
 end

@@ -110,7 +110,6 @@ Defaults.Options.fontWidth = {
 
 ---@class Defaults.Colors
 Defaults.Colors = {
-    ---@type table<string, RGBAOpt>
     castBar = {
         interruptible = { 0.2, 0.57, 0.5, 1 },
         nonInterruptible = { 0.43, 0.43, 0.43, 1 },

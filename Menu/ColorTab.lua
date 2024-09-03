@@ -53,21 +53,25 @@ end
 -- MARK: Sections
 -------------------------------------------------
 
+--- Update all color pickers with the current color table
+---
+--- This is called when a new color table is imported
 function ColorTab:UpdateColors()
     for _, section in pairs(self.colorSections) do
-        local colorTable = DB.GetColors(section.id)
+        local colorTable = DB.GetColors()[section.id]
         for _, cp in pairs(section.cps) do
             cp:SetColor(colorTable[cp.id])
         end
     end
 end
 
+--- Create sections with color pickers for each color type
 function ColorTab:CreateSections()
     local heightPerCp = 25
     local cpGap = (self.window:GetWidth() / 3) * 0.80
     local sectionGap = 10
 
-    self.colorSections = {}
+    self.colorSections = {} ---@type CUF.ColorSection[]
 
     local prevSection
     local colorTables = DB.GetColors()
@@ -81,7 +85,7 @@ function ColorTab:CreateSections()
             1,
             false, true)
         section.id = which
-        section.cps = {}
+        section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
 
         local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
         sectionTitle:SetPoint("TOPLEFT", 10, -10)
@@ -157,7 +161,6 @@ end
 -------------------------------------------------
 
 function ColorTab:ShowTab()
-    --CUF:Log("|cff00ccffShow ColorTab|r")
     if not self.window then
         self:Create()
         self.init = true
@@ -168,7 +171,6 @@ end
 
 function ColorTab:HideTab()
     if not self.window or not self.window:IsShown() then return end
-    --CUF:Log("|cff00ccffHide ColorTab|r")
     self.window:Hide()
 end
 

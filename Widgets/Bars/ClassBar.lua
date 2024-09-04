@@ -473,6 +473,17 @@ function W:CreateClassBar(button)
         bar.bg:SetTexture(Cell.vars.texture)
         bar.bg:SetAllPoints()
 
+        bar.border = CreateFrame("Frame", nil, bar, "BackdropTemplate")
+        bar.border:SetAllPoints()
+        bar.border:SetFrameLevel(bar:GetFrameLevel() + 1)
+        bar.border:SetBackdrop({
+            bgFile = nil,
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = 1,
+        })
+        bar.border:SetBackdropBorderColor(0, 0, 0, 1)
+        bar.border:Show()
+
         bar:Hide()
 
         bar.UpdateRune = UpdateRune

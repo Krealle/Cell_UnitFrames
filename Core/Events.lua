@@ -16,6 +16,7 @@ local CUF = select(2, ...)
 ---| "UpdatePixelPerfect"
 ---| "UpdateAppearance"
 ---| "AddonLoaded"
+---| "UpdateClickCasting"
 local callbacks = {}
 
 ---@param eventName Callbacks

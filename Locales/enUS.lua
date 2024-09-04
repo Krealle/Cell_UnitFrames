@@ -5,6 +5,48 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
+-- Tabs
+L.unitFramesTab = "Unit Frames"
+L.generalTab = "General"
+L.colorTab = "Colors"
+
+L.MasterLayout = "Master Layout"
+L.CUFLayoutMasterNone = "|cffffb5c5None|r"
+L.MasterLayoutTooltip = [[The layout to use for |cFFFFD700Cell UnitFrames|r.
+
+Selecting a specific layout will always use that layout
+regardless of |cFFFFD700Cell|r Auto Switch settings.
+
+Selecting |cffffb5c5None|r will Auto Switch to use the
+currently active layout in |cFFFFD700Cell|r.]]
+
+L.CopyLayoutFrom = "Copy Layout From"
+L.CopyFromTooltip = [[|cFFFF0000This will overwrite all settings in the current layout!|r
+
+Copy settings from another layout]]
+L.CopyFromPopUp = "Copy settings from %s to %s?"
+
+L.CopyWidgetsFrom = "Copy Widgets From"
+L.CopyWidgetsFromTooltip = "Copy widget settings from another unit"
+L.Backups = "Backups"
+L.RestoreBackup = "Restore Backup"
+L.RestoreBackupTooltip = [[Restores a backup of Cell UnitFrame settings
+
+%s
+
+%s]]
+L.BackupInfo = [[%s created: %s
+Layouts: %s]]
+L.CreateBackup = "Create Backup"
+L.CreateBackupTooltip = [[Creates a backup of Cell UnitFrame settings for these layouts:
+%s]]
+L.CreateBackupPopup = [[Create a backup for these layouts?
+%s]]
+L.BackupOverwrite = [[This will overwrite your previous backup:
+%s]]
+L.RestoreBackupPopup = [[Restore this backup?
+%s]]
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"
@@ -48,7 +90,6 @@ L["duration"] = "Duration"
 L["duration-and-max"] = "Duration & Max"
 L.ShowSpell = "Show Spell"
 L.Empower = "Empower"
-L.Stage = "Stage"
 L.FullyCharged = "Fully Charged"
 L.UseFullyCharged = "Use Fully Charged"
 L.ShowEmpowerName = "Show Empower Name"
@@ -98,6 +139,14 @@ L.RelativeTo = "Relative To"
 L.Texture = "Texture"
 L["left"] = "Left"
 L["right"] = "Right"
+L.CreatedAutomaticBackup = "New version detected. Created backups for:"
+L.CreatedManualBackup = "Created manual backups for:"
+L.Backup_manual = "Manual Backup"
+L.Backup_automatic = "Automatic Backup"
+L.HideDefaultCastBar = "Hide Default Cast Bar"
+L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
+Reload to show it again after disabling this option.]]
+L.texture = "Texture"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"
@@ -129,3 +178,24 @@ L["def"] = "Displays the deficit."
 L["def:short"] = "Displays the deficit as a shortvalue."
 L["def:per"] = "Displays the deficit as a percentage."
 L["def:per-short"] = "Displays the deficit as a percentage without decimals."
+
+-- Colors
+L.stageZero = "Stage 0"
+L.stageOne = "Stage 1"
+L.stageTwo = "Stage 2"
+L.stageThree = "Stage 3"
+L.stageFour = "Stage 4"
+L.fullyCharged = "Fully Charged"
+L.background = "Background"
+L.interruptible = "Interruptible"
+L.nonInterruptible = "Non-Interruptible"
+L.holyPower = "Holy Power"
+L.arcaneCharges = "Arcane Charges"
+L.soulShards = "Soul Shards"
+
+L.reaction = "Reaction"
+L.friendly = "Friendly"
+L.hostile = "Hostile"
+L.neutral = "Neutral"
+
+L.ImportExportColors = "Import & Export Color Settings"

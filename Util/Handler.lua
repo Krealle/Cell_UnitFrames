@@ -29,7 +29,7 @@ local function IterateGenericSetters(button, unit, widgetName, setting, subSetti
     if not button:HasWidget(widgetName) then return end
     local widget = button.widgets[widgetName] ---@type Widget
 
-    local styleTable = DB.GetWidgetTable(widgetName, unit)
+    local styleTable = DB.GetCurrentWidgetTable(widgetName, unit)
 
     if (not setting or setting == "enabled") and type(widget.SetEnabled) == "function" then
         widget:SetEnabled(styleTable)
@@ -60,7 +60,7 @@ end
 function Handler.UpdateWidgets(layout, unit, widgetName, setting, ...)
     CUF:Log("|cffff7777UpdateWidgets:|r", layout, unit, widgetName, setting, ...)
 
-    if layout and layout ~= Cell.vars.currentLayout then return end
+    if layout and layout ~= DB.GetMasterLayout() then return end
 
     for name, func in pairs(Handler.widgets) do
         if not widgetName or name == widgetName then
@@ -94,22 +94,29 @@ end
 ---@param selectedWidget WIDGET_KIND?
 function Handler.UpdateSelected(selectedUnit, selectedWidget)
     CUF:Log("|cffff7777Handler.UpdateSelected:|r", selectedUnit, selectedWidget, CUF.vars.isMenuOpen)
+    local isCorrectLayout = CUF.vars.selectedLayout == DB.GetMasterLayout()
     Util:IterateAllUnitButtons(
-    ---@param button CUFUnitButton
         function(button)
             button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
-                    local isSelected = widget == selectedWidget and button._isSelected
+                    local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout
                     button.widgets[widget]:_SetIsSelected(isSelected)
                 end
             end
         end)
 end
 
+--- Load the widget table for the selected unit and widget
+---
+--- This is called when we selected a unit or widget in the menu.
+--- Or when a layout is loaded.
 ---@param page Unit
 ---@param subPage WIDGET_KIND
 function Handler.LoadPageDB(page, subPage)
+    if not CUF.vars.isMenuOpen then return end
+    if CUF.vars.selectedTab ~= "unitFramesTab" then return end
+
     -- Both params are only present when LoadLayoutDB is called
     if not page or not subPage then
         if (page and page == Handler.previousPage)

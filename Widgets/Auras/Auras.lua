@@ -219,7 +219,7 @@ end
 -------------------------------------------------
 
 ---@param self CellAuraIcons
-local function Enable(self) -- Has unique name because of some obscure referncing bug?
+local function Enable(self)
     self._owner:AddEventListener("UNIT_AURA", self.Update)
 
     self:Show()
@@ -228,6 +228,13 @@ end
 
 ---@param self CellAuraIcons
 local function Disable(self)
+    -- We don't want to remove the event listener if we still have one of the widgets enabled
+    if self._owner:IsVisible() then
+        if self._owner.widgets.buffs.enabled or self._owner.widgets.debuffs.enabled then
+            return
+        end
+    end
+
     self._owner:RemoveEventListener("UNIT_AURA", self.Update)
 end
 

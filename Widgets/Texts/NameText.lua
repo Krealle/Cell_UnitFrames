@@ -39,7 +39,7 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT,
 ---@param subSetting string
 function W.UpdateNameTextWidget(button, unit, setting, subSetting)
     local widget = button.widgets.nameText
-    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit) --[[@as NameTextWidgetTable]]
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.NAME_TEXT, unit) --[[@as NameTextWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.WIDTH then
         widget.width = styleTable.width

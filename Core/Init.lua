@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 _G.CUF = CUF
 
-CUF.version = 1
+CUF.version = 2
 
 CUF.Cell = Cell
 
@@ -30,5 +30,6 @@ CUF.Builder = {}
 ---@field testMode boolean
 ---@field isMenuOpen boolean
 ---@field isRetail boolean
+---@field selectedTab string
 CUF.vars = {}
 CUF.unitButtons = {}

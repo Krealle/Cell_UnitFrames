@@ -43,7 +43,6 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
     CastBarGeneral = 21,
-    CastBarColor = 22,
     CastBarTimer = 23,
     CastBarSpell = 24,
     CastBarSpark = 25,
@@ -63,7 +62,7 @@ Builder.MenuOptions = {
 ---@field pageName string
 ---@field options table<MenuOptions>
 
----@param settingsFrame MenuFrame.settingsFrame
+---@param settingsFrame UnitsFramesTab.settingsFrame
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
 ---@return WidgetMenuPage
@@ -185,7 +184,7 @@ end
 ---@param optionPath string
 ---@param newValue any
 local function HandleWidgetOption(widgetName, optionPath, newValue)
-    local widgetTable = DB.GetWidgetTable(widgetName)
+    local widgetTable = DB.GetSelectedWidgetTable(widgetName)
 
     local function traversePath(tbl, pathParts, value)
         for i = 1, #pathParts - 1 do
@@ -617,7 +616,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
 
     f.dropdown.Set_DB = function(...)
         HandleWidgetOption(...)
-        if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
+        if DB.GetSelectedWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else
             f.colorPicker:Hide()
@@ -631,7 +630,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
 
     local function LoadPageDB()
         f.colorPicker:SetColor(unpack(HandleWidgetOption(widgetName, "color.rgb")))
-        if DB.GetWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
+        if DB.GetSelectedWidgetTable(widgetName).color.type == const.ColorType.CUSTOM then
             f.colorPicker:Show()
         else
             f.colorPicker:Hide()
@@ -1047,19 +1046,15 @@ end
 
 local LSM = LibStub("LibSharedMedia-3.0", true)
 local textures
-local textureToName = {}
+Builder.textureToName = {}
 
----@class TextureDropdownItem
----@field [1] string
----@field [2] Texture
-
----@return TextureDropdownItem[]
-local function GetTextures()
+---@return table<string,string>
+function Builder:GetTextures()
     if textures then return textures end
 
     textures = F:Copy(LSM:HashTable("statusbar"))
     for name, texture in pairs(textures) do
-        textureToName[texture] = name
+        Builder.textureToName[texture] = name
     end
 
     return textures
@@ -1081,7 +1076,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
     textureDropdown.Get_DB = HandleWidgetOption
 
     local textureDropdownItems = {}
-    for name, tex in pairs(GetTextures()) do
+    for name, tex in pairs(self:GetTextures()) do
         tinsert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
@@ -1094,7 +1089,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
 
     local function LoadPageDB()
         local tex = textureDropdown.Get_DB(widgetName, path)
-        textureDropdown:SetSelected(textureToName[tex], tex)
+        textureDropdown:SetSelected(Builder.textureToName[tex], tex)
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "TextureDropdown_" .. path)
 
@@ -1186,16 +1181,16 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
-        DB.GetWidgetTable(widgetName).font[kind].rgb[1] = r
-        DB.GetWidgetTable(widgetName).font[kind].rgb[2] = g
-        DB.GetWidgetTable(widgetName).font[kind].rgb[3] = b
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[1] = r
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[2] = g
+        DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[3] = b
     end)
     self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
 
     local function LoadPageDB()
-        f.colorPicker:SetColor(DB.GetWidgetTable(widgetName).font[kind].rgb[1],
-            DB.GetWidgetTable(widgetName).font[kind].rgb[2],
-            DB.GetWidgetTable(widgetName).font[kind].rgb[3])
+        f.colorPicker:SetColor(DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[1],
+            DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[2],
+            DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[3])
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox")
 
@@ -1356,42 +1351,8 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
     self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
 
-    return f
-end
-
----@param parent Frame
----@param widgetName WIDGET_KIND
----@return CastBarColorOptions
-function Builder:CreateCastBarColorOptions(parent, widgetName)
-    ---@class CastBarColorOptions: OptionsFrame
-    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.id = "CastBarColorOptions"
-    f.optionHeight = 110
-
-    -- Title
-    f.title = self:CreateOptionTitle(f, "Colors")
-    local path = const.OPTION_KIND.COLOR .. "."
-
-    -- First Row
-    f.texture = self:CreateTextureDropdown(f, widgetName, path .. const.OPTION_KIND.TEXTURE)
-    self:AnchorBelow(f.texture, f.title)
-
-    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor,
-        path .. const.OPTION_KIND.USE_CLASS_COLOR)
-    self:AnchorRight(f.classColorCB, f.texture)
-
-    -- Second Row
-    f.interruptible = self:CreateColorPickerOptions(f, widgetName, L.Interruptible,
-        path .. const.OPTION_KIND.INTERRUPTIBLE)
-    self:AnchorBelow(f.interruptible, f.texture)
-
-    f.nonInterruptible = self:CreateColorPickerOptions(f, widgetName, L.NonInterruptible,
-        path .. const.OPTION_KIND.NON_INTERRUPTIBLE)
-    self:AnchorRightOfColorPicker(f.nonInterruptible, f.interruptible)
-
-    f.background = self:CreateColorPickerOptions(f, widgetName, L.Background,
-        path .. const.OPTION_KIND.BACKGROUND)
-    self:AnchorRightOfColorPicker(f.background, f.nonInterruptible)
+    f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor, const.OPTION_KIND.USE_CLASS_COLOR)
+    self:AnchorRightOfCB(f.classColorCB, f.reverseCB)
 
     return f
 end
@@ -1469,7 +1430,7 @@ function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
     ---@class CastBarEmpowerOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarEmpowerOptions"
-    f.optionHeight = 170
+    f.optionHeight = 60
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Empower")
@@ -1485,41 +1446,6 @@ function Builder:CreateCastBarEmpowerOptions(parent, widgetName)
         L.ShowEmpowerNameTooltip)
     f.showEmpowerName:SetPoint("TOPLEFT", f.useFullyCharged, "TOPLEFT",
         (self.spacingX * 1.5) + f.useFullyCharged.label:GetWidth(), 0)
-
-    -- Second Row
-    local colorPath = const.OPTION_KIND.EMPOWER .. "." .. const.OPTION_KIND.PIP_COLORS .. "."
-
-    f.stageZero = self:CreateColorPickerOptions(f, widgetName,
-        L.Stage .. " " .. 0 .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.STAGE_ZERO)
-    self:AnchorBelow(f.stageZero, f.useFullyCharged)
-
-    f.stageOne = self:CreateColorPickerOptions(f, widgetName,
-        L.Stage .. " " .. 1 .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.STAGE_ONE)
-    self:AnchorRightOfColorPicker(f.stageOne, f.stageZero)
-
-    f.stageTwo = self:CreateColorPickerOptions(f, widgetName,
-        L.Stage .. " " .. 2 .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.STAGE_TWO)
-    self:AnchorRightOfColorPicker(f.stageTwo, f.stageOne)
-
-    -- Third Row
-    f.stageThree = self:CreateColorPickerOptions(f, widgetName,
-        L.Stage .. " " .. 3 .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.STAGE_THREE)
-    self:AnchorBelowCB(f.stageThree, f.stageZero)
-
-    f.stageFour = self:CreateColorPickerOptions(f, widgetName,
-        L.Stage .. " " .. 4 .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.STAGE_FOUR)
-    self:AnchorRightOfColorPicker(f.stageFour, f.stageThree)
-
-    -- Fourth Row
-    f.fullyCharged = self:CreateColorPickerOptions(f, widgetName,
-        L.FullyCharged .. " " .. L["Color"],
-        colorPath .. const.OPTION_KIND.FULLY_CHARGED)
-    self:AnchorBelowCB(f.fullyCharged, f.stageThree)
 
     return f
 end
@@ -1615,7 +1541,6 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.FrameLevel] = Builder.CreateFrameLevelOptions,
     [Builder.MenuOptions.ColorPicker] = Builder.CreateColorPickerOptions,
     [Builder.MenuOptions.CastBarGeneral] = Builder.CreateCastBarGeneralOptions,
-    [Builder.MenuOptions.CastBarColor] = Builder.CreateCastBarColorOptions,
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,

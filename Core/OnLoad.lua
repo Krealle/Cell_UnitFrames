@@ -20,7 +20,7 @@ local function OnCellInitialUpdateLayout(_layout)
 
     -- Hide Blizzard Unit Frames
     for _, unit in pairs(CUF.constants.UNIT) do
-        if CUF.DB.SelectedLayoutTable()[unit].enabled then
+        if CUF.DB.CurrentLayoutTable()[unit].enabled then
             CUF:HideBlizzardUnitFrame(unit)
         end
     end
@@ -51,8 +51,13 @@ local function OnCellInitialUpdateLayout(_layout)
     Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance",
         function(kind) CUF:Fire("UpdateAppearance", kind) end)
 
+    Cell:RegisterCallback("UpdateQueuedClickCastings", "CUF_UpdateQueuedClickCastings",
+        function() CUF:Fire("UpdateClickCasting", true, true) end)
+    Cell:RegisterCallback("UpdateClickCastings", "CUF_UpdateClickCastings",
+        function(noReload, onlyqueued) CUF:Fire("UpdateClickCasting", noReload, onlyqueued) end)
+
     -- Init widgets
-    CUF:Fire("UpdateWidget", CUF.vars.selectedLayout)
+    CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 
     Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end
@@ -67,7 +72,7 @@ end
 local function OnAddonLoaded(owner, loadedAddonName)
     if loadedAddonName == AddonName then
         -- Load our DB
-        CUF_DB = CUF_DB or {}
+        CUF.DB.InitDB()
 
         -- Load Cell and type it
         CUF.Cell = Cell

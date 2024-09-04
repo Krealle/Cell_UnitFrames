@@ -43,9 +43,15 @@
 ---@field SetSelected function
 ---@field SetFont function
 ---@field button button
+---@field ClearSelected function
+---@field GetSelected function
+---@field AddItem function
+---@field ClearItems function
 
 ---@class CellColorPicker: Frame, BackdropTemplate
----@field SetColor function
+---@field SetColor fun(self: CellColorPicker, r: number|table, g: number?, b: number?, a: number?)
+---@field label FontString
+---@field onChange fun(r: number, g: number, b: number, a: number)
 
 ---@class CellSlider: Slider
 ---@field afterValueChangedFn function

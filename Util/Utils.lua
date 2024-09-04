@@ -3,6 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
+local DB = CUF.DB
 
 ---@class CUF.Util
 local Util = CUF.Util
@@ -75,11 +76,73 @@ function Util:RenameProp(table, oldKey, newKey)
     end
 end
 
+---@param table table
+---@param seen table?
+---@return table
+function Util:CopyDeep(table, seen)
+    -- Handle non-tables and previously-seen tables.
+    if type(table) ~= 'table' then return table end
+    if seen and seen[table] then return seen[table] end
+
+    -- New table; mark it as seen an copy recursively.
+    local s = seen or {}
+    local res = {}
+    s[table] = res
+    for k, v in next, table do res[self:CopyDeep(k, s)] = self:CopyDeep(v, s) end
+    return setmetatable(res, getmetatable(table))
+end
+
+--- Check if a table is a valid copy of another table, used for import checks
+---
+--- This function will check if a table is a valid copy of another table.
+--- It will check if the table has the same structure as the template table.
+--- @param table table The table to check
+--- @param template table The template table to check against
+--- @param allowMissing boolean? Whether to allow missing keys
+--- @return boolean
+function Util:IsValidCopy(table, template, allowMissing)
+    if type(table) ~= "table" or type(template) ~= "table" then
+        return false
+    end
+
+    for k, v in pairs(template) do
+        if (not table[k] and not allowMissing)
+            or (not self:IsPropSameType(table[k], v)) then
+            return false
+        end
+
+        if type(v) == "table" then
+            if not Util:IsValidCopy(table[k], v, allowMissing) then
+                return false
+            end
+        end
+    end
+
+    -- TODO: Maybe check if table has keys not present in template?
+    -- right now that is dealt with in SafeImport so for now w/e
+
+    return true
+end
+
+--- Safely perform an import
+---
+--- This does not overwrite the current table.
+--- It instead iterates over the imported table and copies the valid props to the current table.
+---@param imported table
+---@param current table
+function Util:SafeImport(imported, current)
+    for k, v in pairs(imported) do
+        if current[k] and self:IsPropSameType(current[k], v) then
+            current[k] = self:CopyDeep(v)
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------
 
----@param func function
+---@param func fun(button: CUFUnitButton, unit: string, ...)
 ---@param unitToIterate string?
 function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     for _, unit in pairs(CUF.constants.UNIT) do
@@ -189,25 +252,25 @@ function Util:GetUnitClassColor(unit, class, guid)
 
     -- Friendly
     if selectionType == 3 then
-        return unpack(CUF.constants.COLORS.FRIENDLY)
+        return unpack(DB.GetColors().reaction.friendly)
     end
 
     -- Hostile
     if selectionType == 0 then
-        return unpack(CUF.constants.COLORS.HOSTILE)
+        return unpack(DB.GetColors().reaction.hostile)
     end
 
     -- Pet
     if selectionType == 4 then
         if UnitIsEnemy(unit, "player") then
-            return unpack(CUF.constants.COLORS.HOSTILE)
+            return unpack(DB.GetColors().reaction.hostile)
         end
 
-        return unpack(CUF.constants.COLORS.FRIENDLY)
+        return unpack(DB.GetColors().reaction.pet)
     end
 
     -- Neutral
-    return unpack(CUF.constants.COLORS.NEUTRAL)
+    return unpack(DB.GetColors().reaction.neutral)
 end
 
 --- Converts a dictionary table to an array eg.
@@ -223,6 +286,36 @@ function Util.DictionaryToArray(dictionary)
         table.insert(array, value)
     end
     return array
+end
+
+---@return string[]
+function Util:GetAllLayoutNames()
+    local layoutNames = {}
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, layoutName)
+    end
+
+    return layoutNames
+end
+
+---@param formatted boolean?
+---@return string
+function Util:GetAllLayoutNamesAsString(formatted)
+    local layoutNames = {}
+
+    for layoutName, _ in pairs(CellDB.layouts) do
+        tinsert(layoutNames, Util:FormatLayoutName(layoutName, formatted))
+    end
+
+    return table.concat(layoutNames, ", ")
+end
+
+--- Check if two values have the same type
+---@param a any
+---@param b any
+---@return boolean
+function Util:IsPropSameType(a, b)
+    return type(a) == type(b)
 end
 
 -------------------------------------------------
@@ -291,6 +384,18 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     return editBox
 end
 
+---@param parent Frame
+---@param width number
+---@param text string
+---@param onAccept function?
+---@param onReject function?
+---@param mask boolean?
+---@param hasEditBox boolean?
+---@param dropdowns boolean?
+function CUF:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
+    return Cell:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
+end
+
 ---@param frame Frame
 ---@param anchor "ANCHOR_TOP" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_RIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_CURSOR"
 ---@param x number
@@ -337,10 +442,30 @@ function Util:ToTitleCase(...)
     return table.concat(args)
 end
 
-local function GetFormattedTimestamp()
+--- Returns a formatted timestamp "15:30:10:350"
+---@param showSec boolean?
+---@param showMillisec boolean?
+---@return string
+function Util:GetFormattedTimeStamp(showSec, showMillisec)
     local time = date("*t")
-    local millisec = math.floor(GetTime() * 1000) % 1000
-    return string.format("[%02d:%02d:%02d:%03d]", time.hour, time.min, time.sec, millisec)
+
+    if showMillisec then
+        local millisec = math.floor(GetTime() * 1000) % 1000
+        return string.format("%02d:%02d:%02d:%03d", time.hour, time.min, time.sec, millisec)
+    end
+    if showSec then
+        return string.format("%02d:%02d:%02d", time.hour, time.min, time.sec)
+    end
+
+    return string.format("%02d:%02d", time.hour, time.min)
+end
+
+--- Returns a formatted date "January 1"
+---@return string
+function Util:GetFormattedDate()
+    local d = C_DateAndTime.GetCurrentCalendarTime()
+    local month = CALENDAR_FULLDATE_MONTH_NAMES[d.month]
+    return string.format("%s %d", month, d.monthDay)
 end
 
 -- Trims whitespace from the start and end of a string
@@ -383,6 +508,20 @@ function Util.FormatName(fullName, format)
     return fullName
 end
 
+--- Replaces "default" with _G.DEFAULT
+---@param layoutName string
+---@param color boolean? whether to color the name gold
+---@return string
+function Util:FormatLayoutName(layoutName, color)
+    ---@diagnostic disable-next-line: undefined-field
+    local normalizedLayoutName = layoutName == "default" and _G.DEFAULT or layoutName
+    if color then
+        return "|cFFFFD700" .. normalizedLayoutName .. "|r"
+    end
+
+    return normalizedLayoutName
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------
@@ -398,7 +537,7 @@ end
 ---@param ... any
 function CUF:Log(...)
     if not CUF.IsInDebugMode() then return end
-    print(GetFormattedTimestamp(), "|cffffa500[CUF]|r", ...)
+    print("[" .. Util:GetFormattedTimeStamp(true, true) .. "]", "|cffffa500[CUF]|r", ...)
 end
 
 ---@param data any

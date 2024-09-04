@@ -72,7 +72,11 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
     cp:SetColor(colorTable[colorName])
     cp.onChange = function(r, g, b, a)
         DB.SetColor(which, colorName, { r, g, b, a })
-        CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
+        if which == "castBar" then
+            CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
+        else
+            CUF:Fire("UpdateAppearance", "color")
+        end
     end
 
     local cpWidth = math.max(cp:GetWidth() + cp.label:GetWidth() + 5, (ColorTab.window:GetWidth() / 3) - 15)

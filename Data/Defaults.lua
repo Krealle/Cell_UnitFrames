@@ -1,6 +1,10 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+-------------------------------------------------
+-- MARK: Defaults
+-------------------------------------------------
+
 ---@class CUF.defaults
 local Defaults = CUF.Defaults
 Defaults.Options = {}
@@ -101,6 +105,58 @@ Defaults.Options.fontWidth = {
     auxValue = 3,
 }
 
+---@alias Defaults.Colors.Types
+---| "castBar"
+---| "reaction"
+
+---@class Defaults.Colors
+Defaults.Colors = {
+    castBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        interruptible = { 0.2, 0.57, 0.5, 1 },
+        nonInterruptible = { 0.43, 0.43, 0.43, 1 },
+        background = { 0, 0, 0, 0.8 },
+        stageZero = { 0.2, 0.57, 0.5, 1 },
+        stageOne = { 0.3, 0.47, 0.45, 1 },
+        stageTwo = { 0.4, 0.4, 0.4, 1 },
+        stageThree = { 0.54, 0.3, 0.3, 1 },
+        stageFour = { 0.65, 0.2, 0.3, 1 },
+        fullyCharged = { 0.77, 0.1, 0.2, 1 },
+    },
+    reaction = {
+        friendly = { 0.29, 0.69, 0.3, 1 },
+        hostile = { 0.78, 0.25, 0.25, 1 },
+        neutral = { 0.85, 0.77, 0.36, 1 },
+        pet = { 0.29, 0.69, 0.3, 1 },
+    },
+}
+
+Defaults.ColorsMenuOrder = {
+    castBar = {
+        { "texture",          "texture" },
+        { "background",       "rgb" },
+        { "interruptible",    "rgb" },
+        { "nonInterruptible", "rgb" },
+        { "Empowers",         "seperator" },
+        { "stageZero",        "rgb" },
+        { "stageOne",         "rgb" },
+        { "stageTwo",         "rgb" },
+        { "stageThree",       "rgb" },
+        { "stageFour",        "rgb" },
+        { "fullyCharged",     "rgb" }
+    },
+    reaction = {
+        { "friendly", "rgb" },
+        { "hostile",  "rgb" },
+        { "neutral",  "rgb" },
+        { "pet",      "rgb" },
+    },
+}
+
+-------------------------------------------------
+-- MARK: Widgets (Text)
+-------------------------------------------------
+
 ---@class WidgetTables
 Defaults.Widgets = {
     ---@type NameTextWidgetTable
@@ -166,7 +222,7 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "CENTER",
         },
-    },
+    }, -- MARK: Widgets (Auras)
     ---@type AuraWidgetTable
     buffs = {
         enabled = false,
@@ -252,7 +308,7 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPRIGHT",
         },
-    },
+    }, -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {
         enabled = false,
@@ -342,7 +398,7 @@ Defaults.Widgets = {
             offsetX = -15,
             relativePoint = "CENTER",
         },
-    },
+    }, -- MARK: Widgets (Bars)
     ---@type ShieldBarWidgetTable
     shieldBar = {
         enabled = false,
@@ -358,6 +414,7 @@ Defaults.Widgets = {
     ---@type CastBarWidgetTable
     castBar = {
         enabled = false,
+        useClassColor = true,
         frameLevel = 10,
         position = {
             point = "TOPLEFT",
@@ -368,13 +425,6 @@ Defaults.Widgets = {
         size = {
             width = 200,
             height = 30,
-        },
-        color = {
-            texture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
-            useClassColor = true,
-            interruptible = { 0.2, 0.57, 0.5, 1 },
-            nonInterruptible = { 0.43, 0.43, 0.43, 1 },
-            background = { 0, 0, 0, 0.8 },
         },
         reverse = false,
         timer = {
@@ -410,14 +460,6 @@ Defaults.Widgets = {
         empower = {
             useFullyCharged = true,
             showEmpowerName = false,
-            pipColors = {
-                stageZero = { 0.2, 0.57, 0.5, 1 },
-                stageOne = { 0.3, 0.47, 0.45, 1 },
-                stageTwo = { 0.4, 0.4, 0.4, 1 },
-                stageThree = { 0.54, 0.3, 0.3, 1 },
-                stageFour = { 0.65, 0.2, 0.3, 1 },
-                fullyCharged = { 0.77, 0.1, 0.2, 1 },
-            }
         },
         border = {
             showBorder = true,
@@ -432,6 +474,10 @@ Defaults.Widgets = {
         }
     }
 }
+
+-------------------------------------------------
+-- MARK: Units
+-------------------------------------------------
 
 ---@class Size
 ---@field [1] number

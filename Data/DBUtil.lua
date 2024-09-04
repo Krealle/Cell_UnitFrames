@@ -6,6 +6,7 @@ local DB = CUF.DB
 
 local Util = CUF.Util
 local L = CUF.L
+local Defaults = CUF.Defaults
 
 -- Props that should only be initialized once
 -- eg we only want to initialize filters, not keep adding to them
@@ -25,6 +26,10 @@ function DB.InitDB()
     ---@field automatic CUF.database.backup
     ---@field manual CUF.database.backup
     CUF_DB.backups = CUF_DB.backups or {}
+
+    ---@type Defaults.Colors
+    CUF_DB.colors = CUF_DB.colors or Util:CopyDeep(Defaults.Colors)
+    Util:AddMissingProps(CUF_DB.colors, Defaults.Colors)
 
     DB.CreateAutomaticBackup()
 end

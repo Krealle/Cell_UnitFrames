@@ -8,6 +8,7 @@ CUF.L = L
 -- Tabs
 L.unitFramesTab = "Unit Frames"
 L.generalTab = "General"
+L.colorTab = "Colors"
 
 L.MasterLayout = "Master Layout"
 L.CUFLayoutMasterNone = "|cffffb5c5None|r"
@@ -89,7 +90,6 @@ L["duration"] = "Duration"
 L["duration-and-max"] = "Duration & Max"
 L.ShowSpell = "Show Spell"
 L.Empower = "Empower"
-L.Stage = "Stage"
 L.FullyCharged = "Fully Charged"
 L.UseFullyCharged = "Use Fully Charged"
 L.ShowEmpowerName = "Show Empower Name"
@@ -146,6 +146,7 @@ L.Backup_automatic = "Automatic Backup"
 L.HideDefaultCastBar = "Hide Default Cast Bar"
 L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
 Reload to show it again after disabling this option.]]
+L.texture = "Texture"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"
@@ -177,3 +178,24 @@ L["def"] = "Displays the deficit."
 L["def:short"] = "Displays the deficit as a shortvalue."
 L["def:per"] = "Displays the deficit as a percentage."
 L["def:per-short"] = "Displays the deficit as a percentage without decimals."
+
+-- Colors
+L.stageZero = "Stage 0"
+L.stageOne = "Stage 1"
+L.stageTwo = "Stage 2"
+L.stageThree = "Stage 3"
+L.stageFour = "Stage 4"
+L.fullyCharged = "Fully Charged"
+L.background = "Background"
+L.interruptible = "Interruptible"
+L.nonInterruptible = "Non-Interruptible"
+L.holyPower = "Holy Power"
+L.arcaneCharges = "Arcane Charges"
+L.soulShards = "Soul Shards"
+
+L.reaction = "Reaction"
+L.friendly = "Friendly"
+L.hostile = "Hostile"
+L.neutral = "Neutral"
+
+L.ImportExportColors = "Import & Export Color Settings"

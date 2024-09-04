@@ -20,7 +20,6 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
     Builder.MenuOptions.CastBarGeneral,
-    Builder.MenuOptions.CastBarColor,
     Builder.MenuOptions.CastBarEmpower,
     Builder.MenuOptions.CastBarTimer,
     Builder.MenuOptions.CastBarSpell,
@@ -38,21 +37,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.CAST_BAR, unit)
 
     if not setting or setting == const.OPTION_KIND.COLOR then
-        if not subSetting or subSetting == const.OPTION_KIND.TEXTURE then
-            castBar.statusBar:SetStatusBarTexture(styleTable.color.texture)
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.USE_CLASS_COLOR then
-            castBar.useClassColor = styleTable.color.useClassColor
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.INTERRUPTIBLE then
-            castBar.interruptibleColor = styleTable.color.interruptible
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.NON_INTERRUPTIBLE then
-            castBar.nonInterruptibleColor = styleTable.color.nonInterruptible
-        end
-        if not subSetting or subSetting == const.OPTION_KIND.BACKGROUND then
-            castBar.background:SetVertexColor(unpack(styleTable.color.background))
-        end
+        castBar:SetCastBarColorStyle()
+    end
+    if not setting or setting == const.OPTION_KIND.USE_CLASS_COLOR then
+        castBar.useClassColor = styleTable.useClassColor
     end
 
     if not setting or setting == const.OPTION_KIND.TIMER then
@@ -748,8 +736,12 @@ end
 local function SetEmpowerStyle(self, styleTable)
     self.useFullyCharged = styleTable.useFullyCharged
     self.showEmpowerSpellName = styleTable.showEmpowerName
+end
 
-    local colors = styleTable.pipColors
+---@param self CastBarWidget
+local function SetCastBarColorStyle(self)
+    local colors = DB.GetColors().castBar
+
     self.PipColorMap = {
         [0] = colors.stageZero,
         [1] = colors.stageOne,
@@ -758,6 +750,12 @@ local function SetEmpowerStyle(self, styleTable)
         [4] = colors.stageFour,
         [5] = colors.fullyCharged,
     }
+
+    self.interruptibleColor = colors.interruptible
+    self.nonInterruptibleColor = colors.nonInterruptible
+    self.background:SetVertexColor(unpack(colors.background))
+
+    self.statusBar:SetStatusBarTexture(colors.texture)
 end
 
 ---@param self CastBarWidget
@@ -941,6 +939,7 @@ function W:CreateCastBar(button)
     castBar.Disable = Disable
     castBar.Update = Update
 
+    castBar.SetCastBarColorStyle = SetCastBarColorStyle
     castBar.SetCastBarColor = SetCastBarColor
     castBar.SetEmpowerStyle = SetEmpowerStyle
     castBar.SetBorderStyle = SetBorderStyle

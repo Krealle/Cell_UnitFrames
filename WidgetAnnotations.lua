@@ -193,7 +193,6 @@
 ---@field frameLevel number
 ---@field position PositionOpt
 ---@field size SizeOpt
----@field color CastBarColorsOpt
 ---@field reverse boolean
 ---@field timer BigFontOpt
 ---@field timerFormat CastBarTimerFormat
@@ -204,13 +203,7 @@
 ---@field empower EmpowerOpt
 ---@field border BorderOpt
 ---@field icon CastBarIconOpt
-
----@class CastBarColorsOpt
----@field texture string
 ---@field useClassColor boolean
----@field interruptible RGBAOpt
----@field nonInterruptible RGBAOpt
----@field background RGBAOpt
 
 ---@class CastBarSparkOpt
 ---@field enabled boolean
@@ -223,17 +216,8 @@
 ---@field zoom number
 
 ---@class EmpowerOpt
----@field pipColors EmpowerColorOpt
 ---@field useFullyCharged boolean
 ---@field showEmpowerName boolean
-
----@class EmpowerColorOpt
----@field stageZero RGBAOpt
----@field stageOne RGBAOpt
----@field stageTwo RGBAOpt
----@field stageThree RGBAOpt
----@field stageFour RGBAOpt
----@field fullyCharged RGBAOpt
 
 -------------------------------------------------
 -- MARK: Generic Options

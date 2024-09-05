@@ -108,6 +108,9 @@ Defaults.Options.fontWidth = {
 ---@alias Defaults.Colors.Types
 ---| "castBar"
 ---| "reaction"
+---| "essence"
+---| "classResources"
+---| "comboPoints"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -129,6 +132,29 @@ Defaults.Colors = {
         neutral = { 0.85, 0.77, 0.36, 1 },
         pet = { 0.29, 0.69, 0.3, 1 },
     },
+    essence = {
+        ["1"] = { 0.2, 0.57, 0.5, 1 },
+        ["2"] = { 0.2, 0.57, 0.5, 1 },
+        ["3"] = { 0.2, 0.57, 0.5, 1 },
+        ["4"] = { 0.2, 0.57, 0.5, 1 },
+        ["5"] = { 0.2, 0.57, 0.5, 1 },
+        ["6"] = { 0.2, 0.57, 0.5, 1 },
+    },
+    classResources = {
+        holyPower = { 0.9, 0.89, 0.04, 1 },
+        arcaneCharges = { 0, 0.62, 1, 1 },
+        soulShards = { 0.58, 0.51, 0.8, 1 },
+    },
+    comboPoints = {
+        ["1"] = { 0.76, 0.3, 0.3, 1 },
+        ["2"] = { 0.79, 0.56, 0.3, 1 },
+        ["3"] = { 0.82, 0.82, 0.3, 1 },
+        ["4"] = { 0.56, 0.79, 0.3, 1 },
+        ["5"] = { 0.43, 0.77, 0.3, 1 },
+        ["6"] = { 0.3, 0.76, 0.3, 1 },
+        ["7"] = { 0.36, 0.82, 0.54, 1 },
+        charged = { 0.15, 0.64, 1, 1 },
+    }
 }
 
 Defaults.ColorsMenuOrder = {
@@ -151,6 +177,29 @@ Defaults.ColorsMenuOrder = {
         { "neutral",  "rgb" },
         { "pet",      "rgb" },
     },
+    essence = {
+        { "1", "rgb" },
+        { "2", "rgb" },
+        { "3", "rgb" },
+        { "4", "rgb" },
+        { "5", "rgb" },
+        { "6", "rgb" },
+    },
+    classResources = {
+        { "holyPower",     "rgb" },
+        { "soulShards",    "rgb" },
+        { "arcaneCharges", "rgb" },
+    },
+    comboPoints = {
+        { "1",       "rgb" },
+        { "2",       "rgb" },
+        { "3",       "rgb" },
+        { "4",       "rgb" },
+        { "5",       "rgb" },
+        { "6",       "rgb" },
+        { "7",       "rgb" },
+        { "charged", "rgb" },
+    }
 }
 
 -------------------------------------------------

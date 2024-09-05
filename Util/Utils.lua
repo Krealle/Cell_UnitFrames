@@ -465,6 +465,11 @@ end
 function Util:GetFormattedDate()
     local d = C_DateAndTime.GetCurrentCalendarTime()
     local month = CALENDAR_FULLDATE_MONTH_NAMES[d.month]
+
+    if d.monthDay == 0 or month == nil then
+        return tostring(date("%b %d"))
+    end
+
     return string.format("%s %d", month, d.monthDay)
 end
 

@@ -573,7 +573,7 @@ function W:CreateClassBar(button)
     classBar.isPartialRessource = false
     classBar.lastPower = 0
 
-    for i = 1, 6 do
+    for i = 1, 7 do
         ---@class ClassBar.Bar: StatusBar
         ---@field runeUpdateTimer FunctionContainer?
         ---@field essenceUpdateTimer FunctionContainer?

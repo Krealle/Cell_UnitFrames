@@ -461,28 +461,25 @@ function W:CreateClassBar(button)
         ---@class ClassBar.Bar: StatusBar
         ---@field runeUpdateTimer FunctionContainer?
         ---@field essenceUpdateTimer FunctionContainer?
-        local bar = CreateFrame("StatusBar", nil, classBar)
+        local bar = CreateFrame("StatusBar", classBar:GetName() .. "Bar" .. i, classBar)
+        classBar[i] = bar
         bar.index = i
 
-        bar:SetStatusBarTexture(Cell.vars.texture)
-
-        -- Set the min/max values for the combo points
+        bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
         bar:SetMinMaxValues(0, 1)
 
         bar.bg = bar:CreateTexture(nil, "BACKGROUND")
-        bar.bg:SetTexture(Cell.vars.texture)
+        bar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
         bar.bg:SetAllPoints()
 
         bar.border = CreateFrame("Frame", nil, bar, "BackdropTemplate")
         bar.border:SetAllPoints()
-        bar.border:SetFrameLevel(bar:GetFrameLevel() + 1)
         bar.border:SetBackdrop({
             bgFile = nil,
             edgeFile = "Interface\\Buttons\\WHITE8X8",
             edgeSize = 1,
         })
         bar.border:SetBackdropBorderColor(0, 0, 0, 1)
-        bar.border:Show()
 
         bar:Hide()
 
@@ -492,8 +489,6 @@ function W:CreateClassBar(button)
 
         bar.StopEssenceTimer = StopEssenceTimer
         bar.StartEssenceTimer = StartEssenceTimer
-
-        classBar[i] = bar
     end
 
     function classBar:HideBars()

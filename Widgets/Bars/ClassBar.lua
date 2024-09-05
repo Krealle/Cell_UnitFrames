@@ -101,6 +101,8 @@ end
 
 ---@param self ClassBarWidget
 local function UpdateColors(self)
+    if not self.enabled then return end
+
     if self.classPowerID == Enum.PowerType.Essence then
         local colors = DB.GetColors().essence
         for i = 1, #self do
@@ -156,6 +158,8 @@ end
 
 ---@param self ClassBarWidget
 local function UpdateSize(self)
+    if not self.enabled then return end
+
     local maxWidth
     if self.sameSizeAsHealthBar then
         maxWidth = self.parent:GetWidth()
@@ -464,9 +468,9 @@ end
 local function Enable(self)
     self.requiredPowerType = REQUIRED_ENERGY[self._owner.states.class]
     self.requiredSpec = REQUIRED_SPEC[self._owner.states.class]
-    CUF:Log(self._owner.states.class, self.requiredPowerType, self.requiredSpec)
 
     self:UpdatePowerType()
+    self.Update(self._owner)
 
     -- This class doesn't have a power type so no reason to show bars
     if not self.classPowerID then

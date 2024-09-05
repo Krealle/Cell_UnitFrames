@@ -29,9 +29,11 @@ function DB.InitDB()
 
     ---@type Defaults.Colors
     CUF_DB.colors = CUF_DB.colors or Util:CopyDeep(Defaults.Colors)
-    Util:AddMissingProps(CUF_DB.colors, Defaults.Colors)
 
     DB.CreateAutomaticBackup()
+    DB:Revise()
+
+    Util:AddMissingProps(CUF_DB.colors, Defaults.Colors)
 end
 
 -----------------------------------------
@@ -73,6 +75,7 @@ end
 ---@field CUFVersion number
 ---@field layouts table<string, UnitLayoutTable>
 ---@field layoutNames string
+---@field colors Defaults.Colors
 
 --- Generic function to create a backup of the current layotus
 ---@param backupType "manual"|"automatic" the type of backup to create
@@ -90,6 +93,8 @@ local function CreateBackup(backupType, msg)
     local timestamp = string.format("%s, %s", CUF.Util:GetFormattedTimeStamp(), CUF.Util:GetFormattedDate())
     backup.timestamp = timestamp
     backup.CUFVersion = CUF.version
+
+    backup.colors = Util:CopyDeep(CUF_DB.colors)
 
     for layoutName, layoutTable in pairs(CellDB.layouts) do
         backup.layouts[layoutName] = Util:CopyDeep(layoutTable.CUFUnits)
@@ -158,6 +163,8 @@ function DB.RestoreFromBackup(backupType)
         end
     end
 
+    CUF_DB.colors = Util:CopyDeep(backup.colors)
+
     DB.VerifyDB()
 
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
@@ -194,15 +201,6 @@ function DB.VerifyDB()
                 layoutTable.CUFUnits[unit] = Cell.funcs:Copy(unitLayout)
             else
                 Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
-                --Util:RenameProp(layoutTable.CUFUnits[unit], "pointTo", "relativePoint")
-
-                -- Remove any widgets that shouldn't be there
-                for widgetName, _ in pairs(layoutTable.CUFUnits[unit].widgets) do
-                    if type(widgetName) == "string" and not unitLayout.widgets[widgetName] then
-                        CUF:Warn("Found widget in DB that doesn't exist for", unit .. ": " .. widgetName)
-                        layoutTable.CUFUnits[unit].widgets[widgetName] = nil
-                    end
-                end
             end
         end
     end

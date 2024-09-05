@@ -22,6 +22,7 @@ Data/Constants.lua
 Data/Defaults.lua
 Data/Database.lua
 Data/DBUtil.lua
+Data/Revise.lua
 
 Util/Utils.lua
 Util/Handler.lua

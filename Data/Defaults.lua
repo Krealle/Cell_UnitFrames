@@ -525,7 +525,20 @@ Defaults.Widgets = {
     ---@type ClassBarWidgetTable
     classBar = {
         enabled = true,
+        spacing = 5,
         frameLevel = 10,
+        verticalFill = false,
+        sameSizeAsHealthBar = true,
+        size = {
+            width = 200,
+            height = 8,
+        },
+        position = {
+            point = "BOTTOMLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "TOPLEFT",
+        },
     }
 }
 

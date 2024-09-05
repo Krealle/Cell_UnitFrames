@@ -225,12 +225,11 @@
 ---@class ClassBarWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
---[[ ---@field position PositionOpt
----@field size SizeOpt ]]
---[[ ---@field colors ClassBarColorsOpt
-
----@class ClassBarColorsOpt
----@field  ]]
+---@field position PositionOpt
+---@field size SizeOpt
+---@field spacing number
+---@field verticalFill boolean
+---@field sameSizeAsHealthBar boolean
 
 -------------------------------------------------
 -- MARK: Generic Options

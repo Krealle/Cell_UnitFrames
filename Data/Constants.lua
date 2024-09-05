@@ -147,6 +147,9 @@ const.OPTION_KIND = {
     ZOOM = "zoom",
     SPELL_WIDTH = "spellWidth",
     HIDE_IF_EMPTY_OR_FULL = "hideIfEmptyOrFull",
+    SPACING = "spacing",
+    VERTICAL_FILL = "verticalFill",
+    SAME_SIZE_AS_HEALTH_BAR = "sameSizeAsHealthBar",
 }
 
 ---@enum AURA_OPTION_KIND

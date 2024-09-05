@@ -131,6 +131,7 @@ L.levelText = "Level Text"
 L.readyCheckIcon = "Ready Check Icon"
 L.restingIcon = "Resting Icon"
 L.castBar = "Cast Bar"
+L.classBar = "Class Bar"
 
 -- Misc
 L.Frame = "Frame"
@@ -147,6 +148,8 @@ L.HideDefaultCastBar = "Hide Default Cast Bar"
 L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
 Reload to show it again after disabling this option.]]
 L.texture = "Texture"
+L.VerticalFill = "Vertical Fill"
+L.SameSizeAsHealthBar = "Same Size As Health Bar"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

@@ -43,6 +43,7 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
     CastBarGeneral = 21,
+    ClassBarOptions = 22,
     CastBarTimer = 23,
     CastBarSpell = 24,
     CastBarSpark = 25,
@@ -1514,6 +1515,42 @@ function Builder:CreateCastBarIconOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Class Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return ClassBarOptions
+function Builder:CreateClassBarOptions(parent, widgetName)
+    ---@class ClassBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "ClassBarOptions"
+    f.optionHeight = 120
+
+    -- First Row
+    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, nil, -1000, 1000)
+    f.anchorOptions:SetPoint("TOPLEFT", 0, -5)
+
+    -- Second Row
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
+    self:AnchorBelow(f.sizeOptions, f.anchorOptions.anchorDropdown)
+
+    f.spacing = self:CreateSlider(f, widgetName, L["Spacing"], nil, 0, 50,
+        const.OPTION_KIND.SPACING)
+    self:AnchorRight(f.spacing, f.sizeOptions.sizeHeightSlider)
+
+    -- Third Row
+    f.verticalFill = self:CreateCheckBox(f, widgetName, L.VerticalFill, const.OPTION_KIND.VERTICAL_FILL)
+    self:AnchorBelow(f.verticalFill, f.sizeOptions.sizeWidthSlider)
+
+    f.sameSizeAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameSizeAsHealthBar,
+        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+    self:AnchorRightOfCB(f.sameSizeAsHealthBar, f.verticalFill)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1547,4 +1584,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
     [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
     [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
+    [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
 }

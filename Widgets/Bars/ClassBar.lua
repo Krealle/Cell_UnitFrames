@@ -51,6 +51,7 @@ local TIMER_TICK_INTERVAL = 0.1
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.CLASS_BAR,
+    Builder.MenuOptions.ClassBarOptions,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton

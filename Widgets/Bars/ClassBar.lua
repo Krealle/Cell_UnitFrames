@@ -192,7 +192,6 @@ local function UpdateSize(self)
     end
 end
 
-
 ---@param self ClassBarWidget
 local function UpdatePowerType(self)
     if self.inVehicle and PlayerVehicleHasComboPoints() then
@@ -224,13 +223,16 @@ local function TogglePowerEvents(self, enable)
             -- Or it will *NOT* update properly
             self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdateEssence)
         else
-            self._owner:AddEventListener("UNIT_POWER_POINT_CHARGE", self.UpdatePower)
+            -- Check for Charged Combo Points
+            if self._owner.states.class == "ROGUE" then
+                self._owner:AddEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
+            end
             self._owner:AddEventListener("UNIT_POWER_UPDATE", self.UpdatePower)
         end
 
         self._owner:AddEventListener("UNIT_MAXPOWER", self.UpdateMaxPower)
     else
-        self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdatePower)
+        self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
         self._owner:RemoveEventListener("UNIT_POWER_UPDATE", self.UpdatePower)
         self._owner:RemoveEventListener("RUNE_POWER_UPDATE", self.UpdateRunes)
         self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdateMaxPower)
@@ -301,6 +303,29 @@ local function UpdateMaxPower(button, event, unit, powerType)
     classBar.maxPower = UnitPowerMax(unit, classBar.classPowerID)
 
     classBar:UpdateSize()
+end
+
+
+---@param button CUFUnitButton
+---@param event "UNIT_POWER_POINT_CHARGE"
+---@param unit Unit
+local function UpdateChargedComboPoints(button, event, unit)
+    local classBar = button.widgets.classBar
+
+    -- Update the relevant bars
+    local chargedPoints = GetUnitChargedPowerPoints(button.states.unit)
+    if chargedPoints and #chargedPoints > 0 then
+        local color = DB.GetColors().comboPoints.charged
+
+        for _, point in ipairs(chargedPoints) do
+            SetBarColor(classBar[point], color)
+        end
+
+        return
+    end
+
+    -- Update all to reset colors if no charged points
+    classBar:UpdateColors()
 end
 
 -------------------------------------------------
@@ -621,6 +646,7 @@ function W:CreateClassBar(button)
     classBar.UpdateRunes = UpdateRunes
     classBar.UpdateEssence = UpdateEssence
     classBar.UpdateMaxPower = UpdateMaxPower
+    classBar.UpdateChargedComboPoints = UpdateChargedComboPoints
 
     classBar.ShouldShow = ShouldShow
     classBar.UpdateSize = UpdateSize

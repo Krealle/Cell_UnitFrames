@@ -122,6 +122,11 @@ local function UpdateColors(self)
         for i = 1, #self do
             SetBarColor(self[i], colors[tostring(i)])
         end
+    elseif self.classPowerID == Enum.PowerType.Chi then
+        local colors = DB.GetColors().chi
+        for i = 1, #self do
+            SetBarColor(self[i], colors[tostring(i)])
+        end
     else
         for i = 1, #self do
             local r, g, b = 1 / i, i * 0.2, 0

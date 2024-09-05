@@ -232,11 +232,11 @@ local function TogglePowerEvents(self, enable)
 
         self._owner:AddEventListener("UNIT_MAXPOWER", self.UpdateMaxPower)
     else
-        self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
+        self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdateMaxPower)
         self._owner:RemoveEventListener("UNIT_POWER_UPDATE", self.UpdatePower)
         self._owner:RemoveEventListener("RUNE_POWER_UPDATE", self.UpdateRunes)
-        self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdateMaxPower)
-        self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.Update)
+        self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdateEssence)
+        self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
     end
 end
 
@@ -253,7 +253,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event ("UNIT_POWER_POINT_CHARGE"|"UNIT_POWER_UPDATE"|"UNIT_MAXPOWER")?
+---@param event "UNIT_POWER_UPDATE"?
 ---@param unit "player"
 ---@param powerType string?
 local function UpdatePower(button, event, unit, powerType)
@@ -263,9 +263,6 @@ local function UpdatePower(button, event, unit, powerType)
     local classBar = button.widgets.classBar
     if powerType ~= classBar.powerType then
         return
-    end
-    if event == "UNIT_MAXPOWER" then
-        classBar.maxPower = UnitPowerMax(unit, classBar.classPowerID)
     end
 
     local cur
@@ -441,7 +438,7 @@ local function UpdateRune(bar)
 end
 
 ---@param button CUFUnitButton
----@param event "RUNE_POWER_UPDATE"?
+---@param event "RUNE_POWER_UPDATE"
 ---@param runeIndex number
 ---@param added boolean?
 local function UpdateRunes(button, event, runeIndex, added)
@@ -483,10 +480,10 @@ local function Update(button, event)
     classBar:UpdateSize()
     classBar:UpdateColors()
 
-    CUF:Log("ClassBar - Update:", event, "classPowerID:", classBar.classPowerID, "powerType:", classBar.powerType,
+    --[[ CUF:Log("ClassBar - Update:", event, "classPowerID:", classBar.classPowerID, "powerType:", classBar.powerType,
         "maxPower:", classBar.maxPower, "isPartialRessource:", classBar.isPartialRessource,
-        "maxPower:", classBar.maxPower)
-    classBar.UpdatePower(button, "UNIT_POWER_UPDATE", "player", classBar.powerType)
+        "maxPower:", classBar.maxPower) ]]
+    classBar.UpdatePower(button, nil, "player", classBar.powerType)
 end
 
 ---@param self ClassBarWidget

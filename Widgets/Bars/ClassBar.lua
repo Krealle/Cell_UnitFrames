@@ -65,9 +65,19 @@ function W.UpdateClassBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.COLOR then
         widget:UpdateColors()
     end
-    --[[ if widget.enabled and button:IsVisible() then
-        widget.Update(button)
-    end ]]
+    if not setting or setting == const.OPTION_KIND.SPACING then
+        widget:SetSpacingStyle(styleTable.spacing)
+    end
+    if not setting or setting == const.OPTION_KIND.VERTICAL_FILL then
+        widget:SetFillStyle(styleTable.verticalFill)
+    end
+    if not setting or setting == const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR then
+        widget.sameSizeAsHealthBar = styleTable.sameSizeAsHealthBar
+        widget:UpdateSize()
+    end
+    if not setting or setting == const.OPTION_KIND.SIZE then
+        widget:SetSizeStyle(styleTable.size)
+    end
 end
 
 Handler:RegisterWidget(W.UpdateClassBarWidget, const.WIDGET_KIND.CLASS_BAR)
@@ -122,20 +132,29 @@ end
 
 ---@param self ClassBarWidget
 local function UpdateSize(self)
-    local maxWidth = self.parent:GetWidth()
+    local maxWidth
+    if self.sameSizeAsHealthBar then
+        maxWidth = self.parent:GetWidth()
+    else
+        maxWidth = self.width
+    end
+    self:SetSize(maxWidth, self.height)
 
     local barWidth = maxWidth / self.maxPower
+    local totalWidth = (barWidth * self.maxPower) - self.spacing
+    local startX = (maxWidth - totalWidth) / 2
+
     for i = 1, #self do
         local bar = self[i]
-        bar:ClearAllPoints()
 
         if i <= self.maxPower then
-            bar:SetWidth(barWidth)
-            bar:SetSize(barWidth, 8)
+            bar:ClearAllPoints()
+            bar:SetSize(barWidth - self.spacing, self.height)
+
             if i == 1 then
-                bar:SetPoint("TOPLEFT", self.parent, "TOPLEFT", 0, 0)
+                bar:SetPoint("LEFT", self, "LEFT", startX, 0)
             else
-                bar:SetPoint("TOPLEFT", self[i - 1], "TOPRIGHT", 0, 0)
+                bar:SetPoint("LEFT", self[i - 1], "RIGHT", self.spacing, 0)
             end
 
             bar:Show()
@@ -144,6 +163,7 @@ local function UpdateSize(self)
         end
     end
 end
+
 
 ---@param self ClassBarWidget
 local function UpdatePowerType(self)
@@ -466,6 +486,35 @@ local function Disable(self)
 end
 
 -------------------------------------------------
+-- MARK: Options
+-------------------------------------------------
+
+---@param self ClassBarWidget
+---@param spacing number
+local function SetSpacingStyle(self, spacing)
+    self.spacing = spacing
+    self:UpdateSize()
+end
+
+---@param self ClassBarWidget
+---@param verticalFill boolean
+local function SetFillStyle(self, verticalFill)
+    local orientation = verticalFill and "VERTICAL" or "HORIZONTAL"
+    for i = 1, #self do
+        local bar = self[i]
+        bar:SetOrientation(orientation)
+    end
+end
+
+---@param self ClassBarWidget
+---@param sizeSize SizeOpt
+local function SetSizeStyle(self, sizeSize)
+    self.width = sizeSize.width
+    self.height = sizeSize.height
+    self:UpdateSize()
+end
+
+-------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------
 
@@ -484,6 +533,11 @@ function W:CreateClassBar(button)
     classBar._owner = button
     classBar.enabled = false
     classBar.parent = button.widgets.healthBar
+
+    classBar.spacing = 5
+    classBar.sameSizeAsHealthBar = true
+    classBar.height = 8
+    classBar.width = 200
 
     classBar.showForVehicle = false
     classBar.inVehicle = false
@@ -547,8 +601,13 @@ function W:CreateClassBar(button)
     classBar.TogglePowerEvents = TogglePowerEvents
 
     classBar.SetEnabled = W.SetEnabled
+    classBar.SetPosition = W.SetPosition
     classBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
     classBar._SetIsSelected = W.SetIsSelected
+
+    classBar.SetFillStyle = SetFillStyle
+    classBar.SetSizeStyle = SetSizeStyle
+    classBar.SetSpacingStyle = SetSpacingStyle
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CLASS_BAR, W.CreateClassBar)

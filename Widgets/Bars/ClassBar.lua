@@ -138,11 +138,11 @@ local function UpdateColors(self)
 
         local spec = GetSpecialization()
         if spec == SPEC_DEATHKNIGHT_BLOOD then
-            color = DB.GetColors().rune.bloodRune
+            color = DB.GetColors().runes.bloodRune
         elseif spec == SPEC_DEATHKNIGHT_FROST then
-            color = DB.GetColors().rune.frostRune
+            color = DB.GetColors().runes.frostRune
         elseif spec == SPEC_DEATHKNIGHT_UNHOLY then
-            color = DB.GetColors().rune.unholyRune
+            color = DB.GetColors().runes.unholyRune
         end
 
         for i = 1, #self do

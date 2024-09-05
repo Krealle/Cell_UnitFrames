@@ -163,7 +163,7 @@ Defaults.Colors = {
         ["5"] = { 0.26, 0.67, 0.46, 1 },
         ["6"] = { 0.13, 0.64, 0.5, 1 },
     },
-    rune = {
+    runes = {
         bloodRune = { 1.0, 0.24, 0.24, 1 },
         frostRune = { 0.24, 1.0, 1.0, 1 },
         unholyRune = { 0.24, 1.0, 0.24, 1 },
@@ -221,7 +221,7 @@ Defaults.ColorsMenuOrder = {
         { "5", "rgb" },
         { "6", "rgb" },
     },
-    rune = {
+    runes = {
         { "bloodRune",  "rgb" },
         { "frostRune",  "rgb" },
         { "unholyRune", "rgb" },

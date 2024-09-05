@@ -316,7 +316,7 @@ function ColorTab:Create()
 
     self.window = CUF:CreateFrame("CUF_Menu_Color", Menu.window,
         sectionWidth,
-        335, true)
+        400, true)
     self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
     self:CreateImportExport()

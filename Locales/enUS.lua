@@ -131,6 +131,7 @@ L.levelText = "Level Text"
 L.readyCheckIcon = "Ready Check Icon"
 L.restingIcon = "Resting Icon"
 L.castBar = "Cast Bar"
+L.classBar = "Class Bar"
 
 -- Misc
 L.Frame = "Frame"
@@ -147,6 +148,8 @@ L.HideDefaultCastBar = "Hide Default Cast Bar"
 L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
 Reload to show it again after disabling this option.]]
 L.texture = "Texture"
+L.VerticalFill = "Vertical Fill"
+L.SameSizeAsHealthBar = "Same Size As Health Bar"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"
@@ -192,6 +195,15 @@ L.nonInterruptible = "Non-Interruptible"
 L.holyPower = "Holy Power"
 L.arcaneCharges = "Arcane Charges"
 L.soulShards = "Soul Shards"
+L.runes = "Runes"
+L.bloodRune = "Blood Rune"
+L.frostRune = "Frost Rune"
+L.unholyRune = "Unholy Rune"
+L.charged = "Charged"
+L.comboPoints = "Combo Points"
+L.chi = "Chi"
+L.essence = "Essence"
+L.classResources = "Class Resources"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

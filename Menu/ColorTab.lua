@@ -74,6 +74,12 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
         DB.SetColor(which, colorName, { r, g, b, a })
         if which == "castBar" then
             CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
+        elseif which == "essence"
+            or which == "classResources"
+            or which == "comboPoints"
+            or which == "chi"
+            or which == "runes" then
+            CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, "classBar", const.OPTION_KIND.COLOR)
         else
             CUF:Fire("UpdateAppearance", "color")
         end
@@ -312,7 +318,7 @@ function ColorTab:Create()
 
     self.window = CUF:CreateFrame("CUF_Menu_Color", Menu.window,
         sectionWidth,
-        335, true)
+        400, true)
     self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
     self:CreateImportExport()

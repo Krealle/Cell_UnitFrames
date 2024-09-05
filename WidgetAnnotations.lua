@@ -14,6 +14,7 @@
 ---| ReadyCheckIconWidgetTable
 ---| RestingIconWidgetTable
 ---| CastBarWidgetTable
+---| ClassBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -29,6 +30,7 @@
 ---| ReadyCheckIconWidget
 ---| RestingIconWidget
 ---| CastBarWidget
+---| ClassBarWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -52,6 +54,7 @@
 ---@field readyCheckIcon ReadyCheckIconWidget
 ---@field restingIcon RestingIconWidget
 ---@field castBar CastBarWidget
+---@field classBar ClassBarWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -218,6 +221,15 @@
 ---@class EmpowerOpt
 ---@field useFullyCharged boolean
 ---@field showEmpowerName boolean
+
+---@class ClassBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field position PositionOpt
+---@field size SizeOpt
+---@field spacing number
+---@field verticalFill boolean
+---@field sameSizeAsHealthBar boolean
 
 -------------------------------------------------
 -- MARK: Generic Options

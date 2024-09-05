@@ -111,6 +111,8 @@ Defaults.Options.fontWidth = {
 ---| "essence"
 ---| "classResources"
 ---| "comboPoints"
+---| "chi"
+---| "runes"
 
 ---@class Defaults.Colors
 Defaults.Colors = {

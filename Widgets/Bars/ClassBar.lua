@@ -10,6 +10,10 @@ local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
 
+local SPEC_DEATHKNIGHT_BLOOD = 1
+local SPEC_DEATHKNIGHT_FROST = 2
+local SPEC_DEATHKNIGHT_UNHOLY = 3
+
 local CLASS_POWER_ID = {
     ["MONK"] = Enum.PowerType.Chi,
     ["PALADIN"] = Enum.PowerType.HolyPower,
@@ -126,6 +130,21 @@ local function UpdateColors(self)
         local colors = DB.GetColors().chi
         for i = 1, #self do
             SetBarColor(self[i], colors[tostring(i)])
+        end
+    elseif self.classPowerID == Enum.PowerType.Runes then
+        local color
+
+        local spec = GetSpecialization()
+        if spec == SPEC_DEATHKNIGHT_BLOOD then
+            color = DB.GetColors().rune.bloodRune
+        elseif spec == SPEC_DEATHKNIGHT_FROST then
+            color = DB.GetColors().rune.frostRune
+        elseif spec == SPEC_DEATHKNIGHT_UNHOLY then
+            color = DB.GetColors().rune.unholyRune
+        end
+
+        for i = 1, #self do
+            SetBarColor(self[i], color)
         end
     else
         for i = 1, #self do

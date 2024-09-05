@@ -22,12 +22,13 @@ function DB:Revise()
             local castBar = layout.widgets.castBar
             if not castBar then return end
 
-            if castBar.useClassColor then
-                castBar.useClassColor = castBar.color.useClassColor
-            end
             if castBar.color then
+                if castBar.color.useClassColor ~= nil then
+                    castBar.useClassColor = castBar.color.useClassColor
+                end
                 castBar.color = nil
             end
+
             if castBar.empower and castBar.empower.pipColors then
                 castBar.empower.pipColors = nil
             end

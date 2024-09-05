@@ -105,32 +105,32 @@ local function UpdateColors(self)
 
     if self.classPowerID == Enum.PowerType.Essence then
         local colors = DB.GetColors().essence
-        for i = 1, #self do
-            SetBarColor(self[i], colors[i])
+        for i = 1, self.maxPower do
+            SetBarColor(self[i], colors[tostring(i)])
         end
     elseif self.classPowerID == Enum.PowerType.SoulShards then
         local color = DB.GetColors().classResources.soulShards
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], color)
         end
     elseif self.classPowerID == Enum.PowerType.HolyPower then
         local color = DB.GetColors().classResources.holyPower
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], color)
         end
     elseif self.classPowerID == Enum.PowerType.ArcaneCharges then
         local color = DB.GetColors().classResources.arcaneCharges
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], color)
         end
     elseif self.classPowerID == Enum.PowerType.ComboPoints then
         local colors = DB.GetColors().comboPoints
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], colors[tostring(i)])
         end
     elseif self.classPowerID == Enum.PowerType.Chi then
         local colors = DB.GetColors().chi
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], colors[tostring(i)])
         end
     elseif self.classPowerID == Enum.PowerType.Runes then
@@ -145,11 +145,11 @@ local function UpdateColors(self)
             color = DB.GetColors().runes.unholyRune
         end
 
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             SetBarColor(self[i], color)
         end
     else
-        for i = 1, #self do
+        for i = 1, self.maxPower do
             local r, g, b = 1 / i, i * 0.2, 0
             SetBarColor(self[i], { r, g, b, 1 })
         end

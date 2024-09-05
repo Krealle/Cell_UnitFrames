@@ -58,9 +58,12 @@ menu:AddWidget(const.WIDGET_KIND.CLASS_BAR,
 ---@param setting string
 ---@param subSetting string
 function W.UpdateClassBarWidget(button, unit, setting, subSetting, ...)
-    local widget = button.widgets.shieldBar
-    local styleTable = DB.GetWidgetTable(const.WIDGET_KIND.CLASS_BAR, unit) --[[@as ClassBarWidgetTable]]
+    local widget = button.widgets.classBar
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.CLASS_BAR, unit) --[[@as ClassBarWidgetTable]]
 
+    if not setting or setting == const.OPTION_KIND.COLOR then
+        widget:UpdateColors()
+    end
     --[[ if widget.enabled and button:IsVisible() then
         widget.Update(button)
     end ]]
@@ -72,17 +75,47 @@ Handler:RegisterWidget(W.UpdateClassBarWidget, const.WIDGET_KIND.CLASS_BAR)
 -- MARK: Functions
 -------------------------------------------------
 
+---@param bar ClassBar.Bar
+---@param color RGBAOpt
+local function SetBarColor(bar, color)
+    local r, g, b, a = unpack(color)
+
+    bar:SetStatusBarColor(r, g, b, a)
+    bar.bg:SetVertexColor(r * 0.3, g * 0.3, b * 0.3, a)
+end
+
 ---@param self ClassBarWidget
----@param powerType Enum.PowerType
-local function UpdateColors(self, powerType)
-    for i = 1, #self do
-        local bar = self[i]
-        --bar:SetStatusBarTexture(self.parent:GetStatusBarTexture())
-
-        local r, g, b = 1 / i, i * 0.2, 0
-
-        bar:SetStatusBarColor(r, g, b, 1)
-        bar.bg:SetVertexColor(r * 0.3, g * 0.3, b * 0.3, 1)
+local function UpdateColors(self)
+    if self.classPowerID == Enum.PowerType.Essence then
+        local colors = DB.GetColors().essence
+        for i = 1, #self do
+            SetBarColor(self[i], colors[i])
+        end
+    elseif self.classPowerID == Enum.PowerType.SoulShards then
+        local color = DB.GetColors().classResources.soulShards
+        for i = 1, #self do
+            SetBarColor(self[i], color)
+        end
+    elseif self.classPowerID == Enum.PowerType.HolyPower then
+        local color = DB.GetColors().classResources.holyPower
+        for i = 1, #self do
+            SetBarColor(self[i], color)
+        end
+    elseif self.classPowerID == Enum.PowerType.ArcaneCharges then
+        local color = DB.GetColors().classResources.arcaneCharges
+        for i = 1, #self do
+            SetBarColor(self[i], color)
+        end
+    elseif self.classPowerID == Enum.PowerType.ComboPoints then
+        local colors = DB.GetColors().comboPoints
+        for i = 1, #self do
+            SetBarColor(self[i], colors[tostring(i)])
+        end
+    else
+        for i = 1, #self do
+            local r, g, b = 1 / i, i * 0.2, 0
+            SetBarColor(self[i], { r, g, b, 1 })
+        end
     end
 end
 
@@ -374,7 +407,7 @@ local function Update(button, event)
 
     classBar:TogglePowerEvents(true)
     classBar:UpdateSize()
-    classBar:UpdateColors(classBar.classPowerID)
+    classBar:UpdateColors()
 
     CUF:Log("ClassBar - Update:", event, "classPowerID:", classBar.classPowerID, "powerType:", classBar.powerType,
         "maxPower:", classBar.maxPower, "isPartialRessource:", classBar.isPartialRessource,

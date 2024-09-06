@@ -6,7 +6,7 @@ local F = Cell.funcs
 
 local L = CUF.L
 local Util = CUF.Util
-local Handler = CUF.Handler
+local DB = CUF.DB
 
 ---@class CUF.Menu
 ---@field window CellCombatFrame
@@ -58,14 +58,43 @@ end
 -- Fires `LoadPageDB` and `UpdateVisibility` callbacks
 ---@param layout string
 function menu:LoadLayoutDB(layout)
-    CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, DB.GetMasterLayout(true), CUF.vars.selectedUnit, CUF.vars
+        .selectedWidget)
     CUF.DB.VerifyDB()
 
-    CUF.vars.selectedLayout = layout
+    local masterLayout = DB.GetMasterLayout(true)
+    if DB.GetMasterLayout(true) == "CUFLayoutMasterNone" then
+        CUF.vars.selectedLayout = layout
+    else
+        CUF.vars.selectedLayout = masterLayout
+    end
+    self:SetLayoutTitle()
 
     menu:ShowMenu()
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateVisibility")
+end
+
+-------------------------------------------------
+-- MARK: Layout Title
+-------------------------------------------------
+
+function menu:SetLayoutTitle()
+    if not self.window then return end
+    if not self.layoutTitle then return end
+
+    self.layoutTitle:SetText(L.EditingLayout .. ": " .. Util:FormatLayoutName(CUF.vars.selectedLayout))
+    self.layoutTitleFrame:SetHeight(self.layoutTitle:GetStringHeight() + 5 * 2)
+    self.layoutTitleFrame:SetWidth(self.layoutTitle:GetStringWidth() + 5 * 2)
+end
+
+function menu:ShowLayoutTitle()
+    self.layoutTitleFrame:Show()
+    self:SetLayoutTitle()
+end
+
+function menu:HideLayoutTitle()
+    self.layoutTitleFrame:Hide()
 end
 
 -------------------------------------------------
@@ -200,6 +229,17 @@ function menu:CreateMenu()
     title:SetTextScale(1.5)
     titleFrame:SetHeight(title:GetStringHeight() + pad * 2)
     titleFrame:SetWidth(title:GetStringWidth() + pad * 2)
+
+    -- Title
+    local layoutTitleFrame = CUF:CreateFrame(nil, titleFrame, 160, 10, false, true)
+    layoutTitleFrame:SetPoint("BOTTOMLEFT", titleFrame, "TOPLEFT", 0, -1)
+    self.layoutTitleFrame = layoutTitleFrame
+    layoutTitleFrame:Hide()
+
+    local layoutTitle = layoutTitleFrame:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIGET)
+    self.layoutTitle = layoutTitle
+    layoutTitle:SetPoint("CENTER")
+    layoutTitle:SetTextScale(1)
 
     -- Tabs
     self.tabPane = Cell:CreateTitledPane(self.window, nil, self.baseWidth, self.paneHeight)

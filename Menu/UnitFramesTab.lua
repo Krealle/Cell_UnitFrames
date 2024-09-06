@@ -180,18 +180,23 @@ function unitFramesTab:ShowTab()
 
         self.init = true
 
+        Menu:ShowLayoutTitle()
+
         return
     end
 
     self.window:Show()
 
     Menu:LoadLayoutDB(CUF.vars.selectedLayout)
+
+    Menu:ShowLayoutTitle()
 end
 
 function unitFramesTab:HideTab()
     if not unitFramesTab:IsShown() then return end
     CUF:Log("|cff00ccffHide unitFramesTab|r")
     self.window:Hide()
+    Menu:HideLayoutTitle()
 
     -- Reset selected widget to hide previews
     Handler.UpdateSelected()

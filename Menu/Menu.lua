@@ -89,7 +89,6 @@ function menu:SetLayoutTitle()
 end
 
 function menu:ShowLayoutTitle()
-    --self.layoutTitle:SetText("Editing: " .. CUF.vars.selectedLayout)
     self.layoutTitleFrame:Show()
     self:SetLayoutTitle()
 end

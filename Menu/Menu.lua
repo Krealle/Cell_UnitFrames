@@ -6,7 +6,7 @@ local F = Cell.funcs
 
 local L = CUF.L
 local Util = CUF.Util
-local Handler = CUF.Handler
+local DB = CUF.DB
 
 ---@class CUF.Menu
 ---@field window CellCombatFrame
@@ -58,10 +58,16 @@ end
 -- Fires `LoadPageDB` and `UpdateVisibility` callbacks
 ---@param layout string
 function menu:LoadLayoutDB(layout)
-    CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+    CUF:Log("|cff00ff00LoadLayoutDB:|r", layout, DB.GetMasterLayout(true), CUF.vars.selectedUnit, CUF.vars
+        .selectedWidget)
     CUF.DB.VerifyDB()
 
-    CUF.vars.selectedLayout = layout
+    local masterLayout = DB.GetMasterLayout(true)
+    if DB.GetMasterLayout(true) == "CUFLayoutMasterNone" then
+        CUF.vars.selectedLayout = layout
+    else
+        CUF.vars.selectedLayout = masterLayout
+    end
 
     menu:ShowMenu()
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)

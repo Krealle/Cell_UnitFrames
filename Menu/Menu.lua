@@ -83,7 +83,7 @@ function menu:SetLayoutTitle()
     if not self.window then return end
     if not self.layoutTitle then return end
 
-    self.layoutTitle:SetText(L.Editing .. ": " .. Util:FormatLayoutName(CUF.vars.selectedLayout))
+    self.layoutTitle:SetText(L.EditingLayout .. ": " .. Util:FormatLayoutName(CUF.vars.selectedLayout))
     self.layoutTitleFrame:SetHeight(self.layoutTitle:GetStringHeight() + 5 * 2)
     self.layoutTitleFrame:SetWidth(self.layoutTitle:GetStringWidth() + 5 * 2)
 end

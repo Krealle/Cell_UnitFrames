@@ -150,7 +150,7 @@ Reload to show it again after disabling this option.]]
 L.texture = "Texture"
 L.VerticalFill = "Vertical Fill"
 L.SameSizeAsHealthBar = "Same Size As Health Bar"
-L.Editing = "Editing Layout"
+L.EditingLayout = "Editing Layout"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

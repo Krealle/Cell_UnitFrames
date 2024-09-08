@@ -11,7 +11,7 @@ local CUF = select(2, ...)
 local function OnCellInitialUpdateLayout(_layout)
     -- Load vars
     CUF.vars.isMenuOpen = false
-    CUF.vars.testMode = true
+    CUF.vars.testMode = false
 
     CUF.vars.selectedUnit = CUF.constants.UNIT.PLAYER
     CUF.vars.selectedWidget = CUF.constants.WIDGET_KIND.NAME_TEXT

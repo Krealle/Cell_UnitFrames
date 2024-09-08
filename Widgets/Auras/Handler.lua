@@ -201,7 +201,7 @@ end
 ---@param updateInfo UnitAuraUpdateInfo?
 function U.UnitFrame_UpdateAuras(button, event, unit, updateInfo)
     local buffChanged, debuffChanged = ShouldUpdateAuras(button, updateInfo)
-    local previewMode = CUF.vars.testMode and button._isSelected
+    local previewMode = button._isSelected
 
     if not buffChanged and not debuffChanged and not previewMode then return end
 

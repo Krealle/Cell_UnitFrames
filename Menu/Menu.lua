@@ -294,13 +294,29 @@ end
 local function UpdatePreview()
     --CUF:Log("Cell_UpdatePreview")
     local layoutsTab = Util.findChildByName(Cell.frames.optionsFrame, "CellOptionsFrame_LayoutsTab")
-    if not layoutsTab then return end
+
+    if not layoutsTab then
+        if CUF.vars.testMode then
+            CUF:Print("UpdatePreview Unable to find layoutsTab")
+        end
+        return
+    end
 
     local layoutPane = Util.findChildByName(layoutsTab, "Layout")
-    if not layoutPane then return end
+    if not layoutPane then
+        if CUF.vars.testMode then
+            CUF:Print("UpdatePreview Unable to find layoutPane")
+        end
+        return
+    end
 
     local layoutDropdown = Util.findChildByProp(layoutPane, "items")
-    if not layoutDropdown then return end
+    if not layoutDropdown then
+        if CUF.vars.testMode then
+            CUF:Print("UpdatePreview Unable to find layoutDropdown")
+        end
+        return
+    end
 
     hooksecurefunc(layoutDropdown, "SetSelectedValue", function(self)
         --CUF:Log("Cell_SetSelectedValue", self:GetSelected())
@@ -317,6 +333,10 @@ end
 ---@param tab string
 local function ShowTab(tab)
     --CUF:Log("Cell_ShowTab", tab)
+    if CUF.vars.testMode then
+        CUF:Print("Cell_ShowTab", tab)
+    end
+
     if tab ~= "layouts" then
         menu:HideMenu()
     elseif not menu.init then

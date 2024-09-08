@@ -4,6 +4,7 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 local DB = CUF.DB
+local L = CUF.L
 
 ---@class CUF.Util
 local Util = CUF.Util
@@ -20,7 +21,7 @@ function Util.findChildByName(frame, name)
         ---@cast child CellUnknowFrame
         local childName = child:GetName() or (child.title and child.title:GetText()) or ""
 
-        if childName == name then
+        if childName == name or childName == L[name] then
             return child
         end
     end
@@ -32,7 +33,7 @@ end
 function Util.findChildByProp(frame, prop)
     for _, child in pairs({ frame:GetChildren() }) do
         ---@cast child CellUnknowFrame
-        if child[prop] then
+        if child[prop] or child[L[prop]] then
             return child
         end
     end

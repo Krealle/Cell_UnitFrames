@@ -226,7 +226,7 @@ function DB.VerifyMasterLayout()
     end
 
     if not masterLayoutIsValid then
-        CUF:Warn("Master layout is not valid, setting to default")
+        CUF:Warn("Master layout is not valid, setting to " .. Util:FormatLayoutName("default", true))
         DB.SetMasterLayout("default")
     end
 end

@@ -225,6 +225,7 @@ const.CastBarTimerFormat = {
     REMAINING = "remaining",
     DURATION = "duration",
     DURATION_AND_MAX = "duration-and-max",
+    HIDDEN = "hidden",
 }
 
 ---@enum NameFormat

@@ -376,8 +376,17 @@ local function onUpdate(self, elapsed)
             end
         end
 
-        if (self.timerText) and (self.elapsed >= .01) then
+        self:SetValue(self.duration)
+
+        if self.elapsed >= .01 then
+            self.elapsed = 0
+
             local timerFormat = self.timerText.format
+            if timerFormat == const.CastBarTimerFormat.HIDDEN then
+                self.timerText:SetText("")
+                return
+            end
+
             if self.empowering then
                 self.timerText:SetFormattedText("%d", self.CurStage)
             elseif timerFormat == const.CastBarTimerFormat.DURATION then
@@ -399,11 +408,7 @@ local function onUpdate(self, elapsed)
             if (self.empowering) then
                 self:OnUpdateStage()
             end
-
-            self.elapsed = 0
         end
-
-        self:SetValue(self.duration)
     else
         self:ResetAttributes()
         self:Hide()

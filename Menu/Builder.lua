@@ -1366,6 +1366,7 @@ function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
     local f = Builder:CreateBigFontOptions(parent, widgetName, "Timer", const.OPTION_KIND.TIMER)
 
     local items = {
+        const.CastBarTimerFormat.HIDDEN,
         const.CastBarTimerFormat.NORMAL,
         const.CastBarTimerFormat.REMAINING,
         const.CastBarTimerFormat.DURATION,

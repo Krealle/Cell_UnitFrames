@@ -30,6 +30,10 @@ function DB.InitDB()
     ---@type Defaults.Colors
     CUF_DB.colors = CUF_DB.colors or Util:CopyDeep(Defaults.Colors)
 
+    if not CUF_DB.masterLayout then
+        CUF_DB.masterLayout = "default"
+    end
+
     DB.CreateAutomaticBackup()
     DB:Revise()
 

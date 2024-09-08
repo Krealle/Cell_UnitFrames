@@ -31,5 +31,9 @@ CUF.Builder = {}
 ---@field isMenuOpen boolean
 ---@field isRetail boolean
 ---@field selectedTab string
+---@field inEditMode boolean
 CUF.vars = {}
+
+---@class CUF.unitButtons
+---@field [Unit] CUFUnitButton
 CUF.unitButtons = {}

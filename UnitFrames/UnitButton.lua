@@ -21,8 +21,15 @@ local Util = CUF.Util
 function U:UpdateUnitButtonPosition(unit, button)
     local layout = CUF.DB.CurrentLayoutTable()
 
+    local x, y
+    if unit == const.UNIT.TARGET and layout[unit].mirrorPlayer then
+        x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
+    else
+        x, y = unpack(layout[unit].position)
+    end
+
     button:ClearAllPoints()
-    button:SetPoint("CENTER", UIParent, "CENTER", unpack(layout[unit].position))
+    button:SetPoint("CENTER", UIParent, "CENTER", x, y)
 end
 
 -------------------------------------------------
@@ -61,7 +68,9 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         end
     end
 
-    U:UpdateUnitButtonPosition(unit, button)
+    if not kind or kind == "position" then
+        U:UpdateUnitButtonPosition(unit, button)
+    end
 end
 
 -------------------------------------------------
@@ -301,8 +310,11 @@ end
 ---@param unitFrame CUFUnitFrame
 local function RegisterUnitButtonCallbacks(unit, button, unitFrame)
     ---@param kind string?
-    local function UpdateLayout(_, kind)
-        U:UpdateUnitButtonLayout(unit, kind, button)
+    ---@param which Unit?
+    local function UpdateLayout(_, kind, which)
+        if not which or which == unit then
+            U:UpdateUnitButtonLayout(unit, kind, button)
+        end
     end
     CUF:RegisterCallback("UpdateLayout", button.name .. "Frame_UpdateLayout", UpdateLayout)
 

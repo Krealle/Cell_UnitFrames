@@ -71,5 +71,6 @@ UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua
 UnitFrames/OnLoad.lua
 UnitFrames/MenuOptions.lua
+UnitFrames/EditMode.lua
 
 Core/OnLoad.lua

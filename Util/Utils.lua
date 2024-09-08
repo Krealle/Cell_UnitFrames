@@ -424,6 +424,30 @@ function Util.SetIconZoom(icon, zoomLevel)
 end
 
 -------------------------------------------------
+-- MARK: Pixel Perfect
+-------------------------------------------------
+
+--- Calculates the nearest pixel size of a number
+---@param number number
+---@return number
+function Util.GetNearestPixelSize(number)
+    return PixelUtil.GetNearestPixelSize(number, PixelUtil.GetPixelToUIUnitFactor())
+end
+
+--- Calculates the relative position of a frame to the center of the UIParent
+---@param frame Frame
+---@return number, number
+function Util.GetPositionRelativeToUIParentCenter(frame)
+    local uiParentX, uiParentY = UIParent:GetCenter()
+    local frameX, frameY = frame:GetCenter()
+
+    local relativeX = Util.GetNearestPixelSize(frameX - uiParentX)
+    local relativeY = Util.GetNearestPixelSize(frameY - uiParentY)
+
+    return relativeX, relativeY
+end
+
+-------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------
 

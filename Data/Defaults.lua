@@ -599,6 +599,7 @@ Defaults.Widgets = {
 ---@field sameSizeAsPlayer boolean?
 ---@field hideBlizzardCastBar boolean?
 ---@field clickCast boolean
+---@field mirrorPlayer boolean?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -638,6 +639,7 @@ Defaults.Layouts = {
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
         clickCast = false,
+        mirrorPlayer = false,
     },
     focus = {
         enabled = false,

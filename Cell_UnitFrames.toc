@@ -70,7 +70,6 @@ Widgets/Auras/Handler.lua
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua
 UnitFrames/OnLoad.lua
-UnitFrames/Units.lua
 UnitFrames/MenuOptions.lua
 
 Core/OnLoad.lua

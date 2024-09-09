@@ -45,8 +45,9 @@ local function CreatePositioningPopup()
     positioningPopup.title = title
 
     -- Offsets
-    local xVal = GetScreenWidth() / 2
-    local yVal = GetScreenHeight() / 2
+    local maxX, maxY = GetPhysicalScreenSize()
+    local xVal = maxX / 2
+    local yVal = maxY / 2
 
     positioningPopup.xPosSlider = Cell:CreateSlider(L["X Offset"], positioningPopup, -xVal, xVal, 150, 1)
     positioningPopup.xPosSlider:SetPoint("TOPLEFT", 10, -45)
@@ -256,6 +257,7 @@ local function CreateOverlayBox(button, unit)
     overlay:SetFrameStrata("HIGH")
     overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
     overlay:Hide()
+    overlay:SetClampedToScreen(true)
 
     local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     label:SetPoint("CENTER")
@@ -293,10 +295,9 @@ local function CreateOverlayBox(button, unit)
     end)
     overlay:SetScript("OnDragStop", function()
         button:StopMovingOrSizing()
-        local x, y = Util.GetPositionRelativeToUIParentCenter(button)
 
-        CUF.DB.CurrentLayoutTable()[unit].position = { x, y }
-        U:UpdateUnitButtonPosition(unit, button)
+        local x, y = Util.GetPositionRelativeToScreenCenter(button)
+        U:SavePosition(unit, x, y)
 
         if unit == const.UNIT.PLAYER then
             CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)

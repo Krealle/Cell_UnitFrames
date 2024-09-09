@@ -431,18 +431,18 @@ end
 ---@param number number
 ---@return number
 function Util.GetNearestPixelSize(number)
-    return PixelUtil.GetNearestPixelSize(number, PixelUtil.GetPixelToUIUnitFactor())
+    return PixelUtil.GetNearestPixelSize(number, 1)
 end
 
 --- Calculates the relative position of a frame to the center of the UIParent
 ---@param frame Frame
 ---@return number, number
-function Util.GetPositionRelativeToUIParentCenter(frame)
-    local uiParentX, uiParentY = UIParent:GetCenter()
+function Util.GetPositionRelativeToScreenCenter(frame)
     local frameX, frameY = frame:GetCenter()
+    local width, height = GetPhysicalScreenSize()
 
-    local relativeX = Util.GetNearestPixelSize(frameX - uiParentX)
-    local relativeY = Util.GetNearestPixelSize(frameY - uiParentY)
+    local relativeX = Util.GetNearestPixelSize(frameX - (width / 2))
+    local relativeY = Util.GetNearestPixelSize(frameY - (height / 2))
 
     return relativeX, relativeY
 end

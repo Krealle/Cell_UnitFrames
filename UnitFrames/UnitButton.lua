@@ -16,6 +16,29 @@ local Util = CUF.Util
 -- MARK: Button Position
 -------------------------------------------------
 
+--- Save the position of a unit button
+--- Clamps the position to the screen size
+---@param unit Unit
+---@param x number
+---@param y number
+function U:SavePosition(unit, x, y)
+    local layout = CUF.DB.CurrentLayoutTable()
+    local unitLayout = layout[unit]
+
+    local maxX, maxY = GetPhysicalScreenSize()
+
+    if x > maxX / 2 then
+        x = maxX
+    end
+    if y > maxY / 2 then
+        y = maxY
+    end
+
+    unitLayout.position = { x, y }
+
+    CUF:Fire("UpdateLayout", nil, "position", unit)
+end
+
 ---@param unit Unit
 ---@param button CUFUnitButton
 function U:UpdateUnitButtonPosition(unit, button)
@@ -301,6 +324,7 @@ local function CreateUnitButton(unit)
         "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
     button:SetAttribute("unit", unit)
     button:SetPoint("TOPLEFT")
+    button:SetClampedToScreen(true)
 
     button.name = name
     CUF.unitButtons[unit] = button

@@ -158,6 +158,8 @@ L.EditMode = "Edit Mode"
 L.ToggleEditMode = "Toggle Edit Mode"
 L.EditModeButtonTooltip = [[Edit mode allows you to position the Unit Frames.
 
+Clicking on a Unit Frame will bring up more options.
+
 "/cuf edit" will also toggle this mode.]]
 
 -- Custom Formats

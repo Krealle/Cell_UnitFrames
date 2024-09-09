@@ -118,16 +118,36 @@ end
 ---@type table<Unit, Frame>
 local overlays = {}
 
+local colors = {
+    [const.UNIT.PLAYER] = { 1, 0, 0 },
+    [const.UNIT.TARGET] = { 1, 0.5, 0 },
+    [const.UNIT.TARGET_TARGET] = { 1, 1, 0 },
+    [const.UNIT.FOCUS] = { 0, 1, 0 },
+    [const.UNIT.PET] = { 0, 0.5, 1 },
+}
+
 ---@param button CUFUnitButton
 ---@param unit Unit
 local function CreateOverlayBox(button, unit)
     ---@class CUFOverlayBox: Button, BackdropTemplate
     local overlay = CreateFrame("Button", nil, UIParent, "BackdropTemplate")
     overlay:SetAllPoints(button)
-    overlay:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8x8",
+
+    overlay.border = CreateFrame("Frame", nil, overlay, "BackdropTemplate")
+    overlay.border:SetAllPoints()
+    overlay.border:SetBackdrop({
+        bgFile = nil,
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = 1,
     })
-    overlay:SetBackdropColor(0, 1, 1, 0.5)
+    overlay.border:SetBackdropBorderColor(0, 0, 0, 1)
+
+    overlay.tex = overlay:CreateTexture(nil, "ARTWORK")
+    overlay.tex:SetTexture(Cell.vars.whiteTexture)
+    overlay.tex:SetAllPoints()
+
+    local r, g, b = unpack(colors[unit])
+    overlay.tex:SetVertexColor(r, g, b, 0.5)
 
     overlay:SetFrameStrata("HIGH")
     overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)

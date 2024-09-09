@@ -132,10 +132,10 @@ local function CreateOverlayBox(button, unit)
     overlay:SetFrameStrata("HIGH")
     overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
 
-    local overlayText = overlay:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    local overlayText = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     overlayText:SetPoint("BOTTOM", overlay, "TOP", 0, 5)
     overlayText:SetText(L[unit])
-    overlayText:SetTextColor(0, 1, 1, 1)
+    overlayText:SetScale(1.5)
 
     overlay:RegisterForDrag("LeftButton")
     overlay:RegisterForClicks("LeftButtonUp")

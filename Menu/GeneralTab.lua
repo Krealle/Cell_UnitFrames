@@ -154,7 +154,7 @@ function layoutBackup:OnRestoreSelect(backupType)
     Menu:ShowPopup(
         popupMsg,
         function()
-            DB.RestoreFromBackup("automatic")
+            DB.RestoreFromBackup(backupType)
             layoutBackup.Update()
         end)
 end

@@ -143,7 +143,7 @@ local function AddUnitsToMenu()
                 -- Second row
 
                 ---@type CellSlider
-                unitPage.widthSlider = Cell:CreateSlider(L["Width"], unitPage.frame, 20, 500, 117, 1, function(value)
+                unitPage.widthSlider = Cell:CreateSlider(L["Width"], unitPage.frame, 5, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[1] = value
                     UpdateSize()
                 end)
@@ -159,7 +159,7 @@ local function AddUnitsToMenu()
                 -- Third row
 
                 ---@type CellSlider
-                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 20, 500, 117, 1, function(value)
+                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 5, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[2] = value
                     UpdateSize()
                 end)

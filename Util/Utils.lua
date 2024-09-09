@@ -519,6 +519,10 @@ function Util.FormatName(fullName, format)
         table.insert(nameParts, name)
     end
 
+    if #nameParts == 1 then
+        return fullName
+    end
+
     local firstName = nameParts[1] or ""
     local lastName = nameParts[#nameParts] or ""
     if lastName == "" then return fullName end

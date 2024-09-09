@@ -256,6 +256,7 @@ local function CreateOverlayBox(button, unit)
     overlay:SetFrameStrata("HIGH")
     overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
     overlay:Hide()
+    overlay:SetClampedToScreen(true)
 
     local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     label:SetPoint("CENTER")

@@ -91,10 +91,12 @@ end
 function menu:ShowLayoutTitle()
     self.layoutTitleFrame:Show()
     self:SetLayoutTitle()
+    self.editModeButton:Show()
 end
 
 function menu:HideLayoutTitle()
     self.layoutTitleFrame:Hide()
+    self.editModeButton:Hide()
 end
 
 -------------------------------------------------
@@ -256,6 +258,21 @@ function menu:CreateMenu()
     self.tabAnchor:SetPoint("TOPLEFT", self.tabPane, "BOTTOMLEFT", self.inset, -self.paneBuffer)
 
     self:InitTabs()
+
+    local editModeButton = Cell:CreateButton(self.tabPane, L.EditMode, "accent",
+        { 100, 25 })
+    editModeButton:SetPoint("TOPLEFT", self.tabPane, "BOTTOMLEFT", 0, 0)
+    CUF:SetTooltips(editModeButton, "ANCHOR_TOPLEFT", 0, 3, L.ToggleEditMode,
+        L.EditModeButtonTooltip)
+
+    editModeButton:SetScript("OnClick", function()
+        CUF.uFuncs:EditMode()
+    end)
+    editModeButton:SetScript("OnHide", function()
+        CUF.uFuncs:EditMode(false)
+    end)
+    self.editModeButton = editModeButton
+    self.editModeButton:Hide()
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

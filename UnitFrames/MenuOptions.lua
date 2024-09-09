@@ -12,12 +12,6 @@ local function UpdateSize()
     end
 end
 
-local function UpdateArrangement()
-    if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, CUF.vars.selectedUnit .. "-arrangement")
-    end
-end
-
 ---@param unitPage UnitsMenuPage
 local function AddLoadPageDB(unitPage)
     -- Load page from DB
@@ -33,9 +27,6 @@ local function AddLoadPageDB(unitPage)
         unitPage.heightSlider:SetValue(pageDB.size[2])
         unitPage.powerSizeSlider:SetValue(pageDB.powerSize)
 
-        -- unit arrangement
-        unitPage.anchorDropdown:SetSelectedValue(pageDB.point)
-
         -- same as player
         if not isPlayerPage then
             unitPage.sameSizeAsPlayerCB:SetChecked(isSameSizeAsPlayer)
@@ -50,12 +41,10 @@ local function AddLoadPageDB(unitPage)
             unitPage.widthSlider:SetEnabled(true)
             unitPage.heightSlider:SetEnabled(true)
             unitPage.powerSizeSlider:SetEnabled(true)
-            unitPage.anchorDropdown:SetEnabled(true)
         else
             unitPage.widthSlider:SetEnabled(not isSameSizeAsPlayer)
             unitPage.heightSlider:SetEnabled(not isSameSizeAsPlayer)
             unitPage.powerSizeSlider:SetEnabled(not isSameSizeAsPlayer)
-            unitPage.anchorDropdown:SetEnabled(not isSameSizeAsPlayer)
         end
 
         -- copy from
@@ -133,8 +122,6 @@ local function AddUnitsToMenu()
                             unitPage.widthSlider:SetEnabled(not checked)
                             unitPage.heightSlider:SetEnabled(not checked)
                             unitPage.powerSizeSlider:SetEnabled(not checked)
-                            -- TODO: should be arrangment based instead
-                            unitPage.anchorDropdown:SetEnabled(not checked)
 
                             -- update size and power
                             UpdateSize()
@@ -163,26 +150,8 @@ local function AddUnitsToMenu()
                 unitPage.widthSlider:SetPoint("TOPLEFT", unitPage.enabledCB, 0, -50)
 
                 ---@type CellDropdown
-                unitPage.anchorDropdown = Cell:CreateDropdown(unitPage.frame, 117)
-                unitPage.anchorDropdown:SetPoint("TOPLEFT", unitPage.widthSlider, "TOPRIGHT", 30, 0)
-
-                local dropdownItems = {}
-                for _, point in ipairs(CUF.constants.UNIT_ANCHOR_POINTS) do
-                    tinsert(dropdownItems, {
-                        ["text"] = L[point],
-                        ["value"] = point,
-                        ["onClick"] = function()
-                            CUF.DB.SelectedLayoutTable()[unit].point = point
-                            UpdateArrangement()
-                        end,
-                    })
-                end
-                unitPage.anchorDropdown:SetItems(dropdownItems)
-                unitPage.anchorDropdown:SetLabel(L["Anchor Point"])
-
-                ---@type CellDropdown
                 unitPage.copyFromDropdown = Cell:CreateDropdown(unitPage.frame, 117)
-                unitPage.copyFromDropdown:SetPoint("TOPLEFT", unitPage.anchorDropdown, "TOPRIGHT", 30, 0)
+                unitPage.copyFromDropdown:SetPoint("TOPLEFT", unitPage.widthSlider, "TOPRIGHT", 30, 0)
                 unitPage.copyFromDropdown:SetLabel(L.CopyWidgetsFrom)
                 CUF:SetTooltips(unitPage.copyFromDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyWidgetsFrom,
                     L.CopyWidgetsFromTooltip)

@@ -19,10 +19,13 @@ function SlashCmdList.CUF(msg, editbox)
             return
         end
         CUF.DB.RestoreFromBackup(rest)
+    elseif command == "edit" then
+        CUF.uFuncs:EditMode()
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
             "/cuf dev - toggle debug mode" .. "\n" ..
+            "/cuf edit - toggle edit mode" .. "\n" ..
             "/cuf restore <automatic|manual> - restore a backup"
         )
     end

@@ -2,10 +2,8 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local L = CUF.L
 local F = Cell.funcs
 local P = Cell.pixelPerfectFuncs
-local A = Cell.animations
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
@@ -15,144 +13,30 @@ local const = CUF.constants
 local Util = CUF.Util
 
 -------------------------------------------------
--- MARK: Save Tooltip Position
--------------------------------------------------
-
----@param unit Unit
----@param tooltipPoint FramePoint
----@param tooltipRelativePoint FramePoint
----@param tooltipX number
----@param tooltipY number
-function U:SaveTooltipPosition(unit, tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY)
-    CUF.DB.CurrentLayoutTable()[unit].tooltipPosition = { tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY }
-end
-
--------------------------------------------------
--- MARK: Create Unit Frame
--------------------------------------------------
-
----@param unit Unit
----@param onEnterLogic function?
----@return CUFUnitFrame CUFUnitFrame
----@return CUFAnchorFrame CUFAnchorFrame
----@return CUFHoverFrame CUFHoverFrame
----@return CUFConfigButton CUFConfigButton
-function U:CreateBaseUnitFrame(unit, onEnterLogic)
-    local name = const.TITLE_CASED_UNITS[unit]
-
-    ---@class CUFUnitFrame: Frame
-    local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
-
-    -- Anchor
-    ---@class CUFAnchorFrame: Frame, CellAnimation
-    local anchorFrame = CreateFrame("Frame", "CUF_" .. name .. "_AnchorFrame", frame)
-    PixelUtil.SetPoint(anchorFrame, "TOPLEFT", UIParent, "CENTER", 1, -1)
-    anchorFrame:SetMovable(true)
-    anchorFrame:SetClampedToScreen(true)
-
-    -- Hover
-    ---@class CUFHoverFrame: Frame
-    local hoverFrame = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    hoverFrame:SetPoint("TOP", anchorFrame, 0, 1)
-    hoverFrame:SetPoint("BOTTOM", anchorFrame, 0, -1)
-    hoverFrame:SetPoint("LEFT", anchorFrame, -1, 0)
-    hoverFrame:SetPoint("RIGHT", anchorFrame, 1, 0)
-
-    A:ApplyFadeInOutToMenu(anchorFrame, hoverFrame)
-
-    ---@class CUFConfigButton: Button
-    ---@field UpdatePixelPerfect function
-    local config = Cell:CreateButton(anchorFrame, nil, "accent", { 20, 10 }, false, true, nil, nil,
-        "SecureHandlerAttributeTemplate,SecureHandlerClickTemplate")
-    config:SetFrameStrata("MEDIUM")
-    config:SetAllPoints(anchorFrame)
-    config:RegisterForDrag("LeftButton")
-    config:SetScript("OnDragStart", function()
-        anchorFrame:StartMoving()
-        anchorFrame:SetUserPlaced(false)
-    end)
-    config:SetScript("OnDragStop", function()
-        anchorFrame:StopMovingOrSizing()
-        P:SavePosition(anchorFrame, CUF.DB.CurrentLayoutTable()[unit].position)
-    end)
-    config:HookScript("OnEnter", function()
-        hoverFrame:GetScript("OnEnter")(hoverFrame)
-        CellTooltip:SetOwner(config, "ANCHOR_NONE")
-
-        local tooltipPoint, tooltipRelativePoint, tooltipX, tooltipY = unpack(CUF.DB.CurrentLayoutTable()[unit]
-            .tooltipPosition)
-        P:Point(CellTooltip, tooltipPoint, config, tooltipRelativePoint, tooltipX, tooltipY)
-
-        CellTooltip:AddLine(L[unit] .. " " .. L.Frame)
-
-        -- Execute additional logic passed to the function
-        if type(onEnterLogic) == "function" then
-            onEnterLogic(CellTooltip)
-        end
-
-        CellTooltip:Show()
-    end)
-    config:HookScript("OnLeave", function()
-        hoverFrame:GetScript("OnLeave")(hoverFrame)
-        CellTooltip:Hide()
-    end)
-
-    return frame, anchorFrame, hoverFrame, config
-end
-
--------------------------------------------------
 -- MARK: Button Position
 -------------------------------------------------
 
 ---@param unit Unit
 ---@param button CUFUnitButton
----@param anchorFrame CUFAnchorFrame
-function U:UpdateUnitButtonPosition(unit, button, anchorFrame)
+function U:UpdateUnitButtonPosition(unit, button)
     local layout = CUF.DB.CurrentLayoutTable()
-
-    local anchorPoint
-    if layout[unit].sameSizeAsPlayer then
-        anchorPoint = layout[const.UNIT.PLAYER].point
-    else
-        anchorPoint = layout[unit].point
-    end
+    local unitLayout = layout[unit]
 
     button:ClearAllPoints()
-    -- NOTE: detach from PreviewAnchor
-    P:LoadPosition(anchorFrame, layout[unit].position)
+    if unitLayout.anchorToParent then
+        local parent = CUF.unitButtons[unitLayout.parent]
+        local anchor = unitLayout.anchorPosition --[[@as ParentAnchor]]
 
-    if CellDB.general.menuPosition == "top_bottom" then
-        P:Size(anchorFrame, 20, 10)
-
-        if anchorPoint == "BOTTOMLEFT" then
-            P:Point(button, "BOTTOMLEFT", anchorFrame, "TOPLEFT", 0, 4)
-            U:SaveTooltipPosition(unit, "TOPLEFT", "BOTTOMLEFT", 0, -3)
-        elseif anchorPoint == "BOTTOMRIGHT" then
-            P:Point(button, "BOTTOMRIGHT", anchorFrame, "TOPRIGHT", 0, 4)
-            U:SaveTooltipPosition(unit, "TOPRIGHT", "BOTTOMRIGHT", 0, -3)
-        elseif anchorPoint == "TOPLEFT" then
-            P:Point(button, "TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, -4)
-            U:SaveTooltipPosition(unit, "BOTTOMLEFT", "TOPLEFT", 0, 3)
-        elseif anchorPoint == "TOPRIGHT" then
-            P:Point(button, "TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, -4)
-            U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "TOPRIGHT", 0, 3)
+        PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+    else
+        local x, y
+        if unit == const.UNIT.TARGET and unitLayout.mirrorPlayer then
+            x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
+        else
+            x, y = unpack(unitLayout.position)
         end
-    else -- left_right
-        P:Size(anchorFrame, 10, 20)
 
-        if anchorPoint == "BOTTOMLEFT" then
-            P:Point(button, "BOTTOMLEFT", anchorFrame, "BOTTOMRIGHT", 4, 0)
-            U:SaveTooltipPosition(unit, "BOTTOMRIGHT", "BOTTOMLEFT", -3, 0)
-        elseif anchorPoint == "BOTTOMRIGHT" then
-            P:Point(button, "BOTTOMRIGHT", anchorFrame, "BOTTOMLEFT", -4, 0)
-            U:SaveTooltipPosition(unit, "BOTTOMLEFT", "BOTTOMRIGHT", 3, 0)
-        elseif anchorPoint == "TOPLEFT" then
-            P:Point(button, "TOPLEFT", anchorFrame, "TOPRIGHT", 4, 0)
-            U:SaveTooltipPosition(unit, "TOPRIGHT", "TOPLEFT", -3, 0)
-        elseif anchorPoint == "TOPRIGHT" then
-            P:Point(button, "TOPRIGHT", anchorFrame, "TOPLEFT", -4, 0)
-            U:SaveTooltipPosition(unit, "TOPLEFT", "TOPRIGHT", 3, 0)
-        end
+        PixelUtil.SetPoint(button, "CENTER", UIParent, "CENTER", x, y)
     end
 end
 
@@ -163,8 +47,7 @@ end
 ---@param unit Unit
 ---@param kind string?
 ---@param button CUFUnitButton
----@param anchorFrame CUFAnchorFrame
-function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
+function U:UpdateUnitButtonLayout(unit, kind, button)
     local layout = CUF.DB.CurrentLayoutTable()
 
     -- Size
@@ -177,33 +60,6 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
         end
 
         P:Size(button, width, height)
-    end
-
-    -- Anchor points
-    if not kind or strfind(kind, "arrangement$") then
-        local anchorPoint
-        if layout[unit].sameSizeAsPlayer then
-            anchorPoint = layout[const.UNIT.PLAYER].point
-        else
-            anchorPoint = layout[unit].point
-        end
-
-        -- anchors
-        local relativePoint
-        if anchorPoint == "BOTTOMLEFT" then
-            relativePoint = "TOPLEFT"
-        elseif anchorPoint == "BOTTOMRIGHT" then
-            relativePoint = "TOPRIGHT"
-        elseif anchorPoint == "TOPLEFT" then
-            relativePoint = "BOTTOMLEFT"
-        elseif anchorPoint == "TOPRIGHT" then
-            relativePoint = "BOTTOMRIGHT"
-        end
-
-        button:ClearAllPoints()
-        button:SetPoint(anchorPoint, anchorFrame, relativePoint, 0)
-
-        U:UpdateUnitButtonPosition(unit, button, anchorFrame)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
@@ -220,42 +76,8 @@ function U:UpdateUnitButtonLayout(unit, kind, button, anchorFrame)
         end
     end
 
-    -- load position
-    if not P:LoadPosition(anchorFrame, layout[unit].position) then
-        P:ClearPoints(anchorFrame)
-        -- no position, use default
-        anchorFrame:SetPoint("TOPLEFT", UIParent, "CENTER")
-    end
-end
-
--------------------------------------------------
--- MARK: Update Menu
--------------------------------------------------
-
----@param kind ("lock" | "fadeOut" | "position")?
----@param unit Unit
----@param button CUFUnitButton
----@param anchorFrame CUFAnchorFrame
----@param config CUFConfigButton
-function U:UpdateUnitButtonMenu(kind, unit, button, anchorFrame, config)
-    if not kind or kind == "lock" then
-        if CellDB.general.locked then
-            config:RegisterForDrag()
-        else
-            config:RegisterForDrag("LeftButton")
-        end
-    end
-
-    if not kind or kind == "fadeOut" then
-        if CellDB.general.fadeOut then
-            anchorFrame.fadeOut:Play()
-        else
-            anchorFrame.fadeIn:Play()
-        end
-    end
-
-    if kind == "position" then
-        U:UpdateUnitButtonPosition(unit, button, anchorFrame)
+    if not kind or kind == "position" then
+        U:UpdateUnitButtonPosition(unit, button)
     end
 end
 
@@ -459,3 +281,73 @@ function U.UpdateClickCasting(noReload, onlyqueued, which)
 end
 
 CUF:RegisterCallback("UpdateClickCasting", "UpdateClickCasting", U.UpdateClickCasting)
+
+-------------------------------------------------
+-- MARK: Create
+-------------------------------------------------
+
+---@param unit Unit
+---@return CUFUnitButton
+---@return CUFUnitFrame CUFUnitFrame
+local function CreateUnitButton(unit)
+    local name = CUF.constants.TITLE_CASED_UNITS[unit]
+
+    ---@class CUFUnitFrame: Frame
+    local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
+
+    local button = CreateFrame("Button",
+        "CUF_" .. name,
+        frame,
+        "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
+    button:SetAttribute("unit", unit)
+    button:SetPoint("TOPLEFT")
+
+    button.name = name
+    CUF.unitButtons[unit] = button
+
+    return button, frame
+end
+
+-------------------------------------------------
+-- MARK: Register Callbacks
+-------------------------------------------------
+
+-- Register callbacks: UpdateLayout, UpdateVisibility, UpdateUnitButtons
+---@param unit Unit
+---@param button CUFUnitButton
+---@param unitFrame CUFUnitFrame
+local function RegisterUnitButtonCallbacks(unit, button, unitFrame)
+    ---@param kind string?
+    ---@param which Unit?
+    local function UpdateLayout(_, kind, which)
+        if not which or which == unit then
+            U:UpdateUnitButtonLayout(unit, kind, button)
+        end
+    end
+    CUF:RegisterCallback("UpdateLayout", button.name .. "Frame_UpdateLayout", UpdateLayout)
+
+    ---@param which string? Frame name (unit)
+    local function UnitFrame_UpdateVisibility(which)
+        U:UpdateUnitFrameVisibility(which, unit, button, unitFrame)
+    end
+    CUF:RegisterCallback("UpdateVisibility", button.name .. "Frame_UpdateVisibility", UnitFrame_UpdateVisibility)
+
+    -- Call all callback functions and do a full update
+    local function UpdateUnitButtons()
+        UpdateLayout()
+        UnitFrame_UpdateVisibility()
+    end
+    CUF:RegisterCallback("UpdateUnitButtons", button.name .. "UpdateUnitButtons", UpdateUnitButtons)
+end
+
+-------------------------------------------------
+-- MARK: Init
+-------------------------------------------------
+
+-- Initialize unit buttons
+function U:InitUnitButtons()
+    for _, unit in pairs(CUF.constants.UNIT) do
+        local button, unitFrame = CreateUnitButton(unit)
+        RegisterUnitButtonCallbacks(unit, button, unitFrame)
+    end
+end

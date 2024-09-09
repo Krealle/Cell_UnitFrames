@@ -17,6 +17,7 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF.vars.selectedWidget = CUF.constants.WIDGET_KIND.NAME_TEXT
     CUF.vars.selectedLayout = Cell.vars.currentLayout
     CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+    CUF.vars.inEditMode = false
 
     -- Hide Blizzard Unit Frames
     for _, unit in pairs(CUF.constants.UNIT) do

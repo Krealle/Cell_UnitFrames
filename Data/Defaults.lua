@@ -592,7 +592,6 @@ Defaults.Widgets = {
 ---@field enabled boolean
 ---@field powerSize number
 ---@field size Size
----@field point FramePoint
 ---@field position Position
 ---@field widgets WidgetTables
 ---@field tooltipPosition TooltipPosition
@@ -608,7 +607,6 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        point = "BOTTOMLEFT",
         position = { 800, 500 },
         widgets = Defaults.Widgets,
         tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
@@ -619,7 +617,6 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        point = "BOTTOMLEFT",
         position = { 1400, 500 },
         widgets = {
             nameText = Defaults.Widgets.nameText,
@@ -645,7 +642,6 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 100, 30 },
-        point = "BOTTOMLEFT",
         position = { 800, 700 },
         widgets = {
             nameText = Defaults.Widgets.nameText,
@@ -670,7 +666,6 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 40 },
-        point = "BOTTOMLEFT",
         position = { 1620, 500 },
         widgets = {
             nameText = Defaults.Widgets.nameText,
@@ -687,7 +682,6 @@ Defaults.Layouts = {
         enabled = false,
         powerSize = 2,
         size = { 200, 30 },
-        point = "BOTTOMLEFT",
         position = { 800, 460 },
         widgets = {
             nameText = Defaults.Widgets.nameText,

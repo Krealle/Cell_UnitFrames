@@ -87,6 +87,9 @@ local function UpdateUnitHealthState(button)
             button.states.hasSoulstone = nil
             --I.UpdateStatusIcon(self)
         end
+        -- Resolve racecase
+        -- TODO: Revist
+        U:UnitFrame_UpdateHealthColor(button)
     end
 
     button.states.wasDeadOrGhost = button.states.isDeadOrGhost

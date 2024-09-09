@@ -556,6 +556,25 @@ function Util:FormatLayoutName(layoutName, color)
     return normalizedLayoutName
 end
 
+--- Formats a duration in seconds to a string
+---
+--- Format is 1w, 2d, 3h, 4m, 5
+---@param duration number
+---@return string
+function Util.FormatDuration(duration)
+    if duration >= 604800 then
+        return math.floor(duration / 604800) .. "w"
+    elseif duration >= 86400 then
+        return math.floor(duration / 86400) .. "d"
+    elseif duration >= 3600 then
+        return math.floor(duration / 3600) .. "h"
+    elseif duration >= 60 then
+        return math.floor(duration / 60) .. "m"
+    else
+        return tostring(duration)
+    end
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

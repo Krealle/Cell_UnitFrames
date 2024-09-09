@@ -171,6 +171,61 @@ local function Icons_SetPersonal(icons, personal)
     icons.personal = personal
 end
 
+---@param icons CellAuraIcons
+---@param show boolean
+local function Icons_ShowDuration(icons, show)
+    for _, icon in ipairs(icons) do
+        icon._showDuration = show
+        icon.duration:SetShown(show)
+    end
+end
+
+-- We need to override this so we can format the duration for really long auras
+local function Icon_OnUpdate(frame, elapsed)
+    frame._remain = frame._duration - (GetTime() - frame._start)
+    if frame._remain < 0 then frame._remain = 0 end
+
+    if frame._remain > frame._threshold then
+        frame.duration:SetText("")
+        return
+    end
+
+    frame._elapsed = frame._elapsed + elapsed
+    if frame._elapsed >= 0.1 then
+        frame._elapsed = 0
+        -- color
+        if Cell.vars.iconDurationColors then
+            if frame._remain < Cell.vars.iconDurationColors[3][4] then
+                frame.duration:SetTextColor(Cell.vars.iconDurationColors[3][1], Cell.vars.iconDurationColors[3][2],
+                    Cell.vars.iconDurationColors[3][3])
+            elseif frame._remain < (Cell.vars.iconDurationColors[2][4] * frame._duration) then
+                frame.duration:SetTextColor(Cell.vars.iconDurationColors[2][1], Cell.vars.iconDurationColors[2][2],
+                    Cell.vars.iconDurationColors[2][3])
+            else
+                frame.duration:SetTextColor(Cell.vars.iconDurationColors[1][1], Cell.vars.iconDurationColors[1][2],
+                    Cell.vars.iconDurationColors[1][3])
+            end
+        else
+            frame.duration:SetTextColor(frame.duration.r, frame.duration.g, frame.duration.b)
+        end
+    end
+
+    -- format
+    if frame._remain > 60 then
+        frame.duration:SetFormattedText(Util.FormatDuration(frame._remain))
+    else
+        if Cell.vars.iconDurationRoundUp then
+            frame.duration:SetFormattedText("%d", ceil(frame._remain))
+        else
+            if frame._remain < Cell.vars.iconDurationDecimal then
+                frame.duration:SetFormattedText("%.1f", frame._remain)
+            else
+                frame.duration:SetFormattedText("%d", frame._remain)
+            end
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: Preview Helpers
 -------------------------------------------------
@@ -267,6 +322,34 @@ function W:CreateAuraIcons(button, type)
         icon.preview = CreateFrame("Frame", nil, icon)
         icon.preview:Hide()
         icon.preview.elapsedTime = 0
+
+        -- Set to false so Cell doesn't try to format the duration
+        icon.showDuration = false
+
+        -- Hook SetCooldown so we can show custom formatting
+        hooksecurefunc(icon, "SetCooldown", function(frame, start, duration, ...)
+            if duration == 0 then return end
+
+            if not frame._showDuration then
+                frame.duration:Hide()
+            else
+                if frame._showDuration == true then
+                    frame._threshold = duration
+                elseif frame._showDuration >= 1 then
+                    frame._threshold = frame._showDuration
+                else -- < 1
+                    frame._threshold = frame._showDuration * duration
+                end
+                frame.duration:Show()
+            end
+
+            if frame._showDuration then
+                frame._start = start
+                frame._duration = duration
+                frame._elapsed = 0.1 -- update immediately
+                frame:SetScript("OnUpdate", Icon_OnUpdate)
+            end
+        end)
     end
 
     auraIcons.SetEnabled = W.SetEnabled
@@ -287,6 +370,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetCastByNPC = Icons_SetCastByNPC
     auraIcons.SetNonPersonal = Icons_SetNonPersonal
     auraIcons.SetPersonal = Icons_SetPersonal
+    auraIcons.ShowDuration = Icons_ShowDuration
 
     auraIcons.ShowPreview = Icons_ShowPreview
     auraIcons.HidePreview = Icons_HidePreview
@@ -350,6 +434,8 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field tex Texture
 ---@field index number
 ---@field preview CellAuraIcon.preview
+---@field showDuration boolean
+---@field _showDuration boolean
 
 ---@class CellAuraIcons: Frame
 ---@field indicatorType "icons"

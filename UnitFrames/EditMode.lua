@@ -249,27 +249,13 @@ local colors = {
 ---@param button CUFUnitButton
 ---@param unit Unit
 local function CreateOverlayBox(button, unit)
-    ---@class CUFOverlayBox: Button, BackdropTemplate
-    local overlay = CreateFrame("Button", nil, UIParent, "BackdropTemplate")
+    ---@class CUFOverlayBox: CellButton
+    local overlay = CUF:CreateButton(UIParent, "", { 1, 1 },
+        function() ShowPositioningPopup(unit) end, "accent")
     overlay:SetAllPoints(button)
     overlay:SetFrameStrata("HIGH")
     overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
     overlay:Hide()
-
-    local border = CreateFrame("Frame", nil, overlay, "BackdropTemplate")
-    border:SetAllPoints()
-    border:SetBackdrop({
-        bgFile = nil,
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = 1,
-    })
-    border:SetBackdropBorderColor(0, 0, 0, 1)
-
-    local tex = overlay:CreateTexture(nil, "ARTWORK")
-    tex:SetTexture(Cell.vars.whiteTexture)
-    tex:SetAllPoints()
-    local r, g, b = unpack(colors[unit])
-    tex:SetVertexColor(r, g, b, 0.5)
 
     local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     label:SetPoint("CENTER")
@@ -277,7 +263,6 @@ local function CreateOverlayBox(button, unit)
 
     -- Register mouse and movable
     overlay:RegisterForDrag("LeftButton")
-    overlay:RegisterForClicks("LeftButtonUp")
     overlay:SetMovable(true)
     button:SetMovable(true)
 
@@ -318,9 +303,6 @@ local function CreateOverlayBox(button, unit)
         end
 
         UpdatePositioningPopup()
-    end)
-    overlay:SetScript("OnClick", function()
-        ShowPositioningPopup(unit)
     end)
 
     -- Hooks

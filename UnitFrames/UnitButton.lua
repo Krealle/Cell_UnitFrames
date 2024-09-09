@@ -27,7 +27,7 @@ function U:UpdateUnitButtonPosition(unit, button)
         local parent = CUF.unitButtons[unitLayout.parent]
         local anchor = unitLayout.anchorPosition --[[@as ParentAnchor]]
 
-        button:SetPoint(anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+        PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
     else
         local x, y
         if unit == const.UNIT.TARGET and unitLayout.mirrorPlayer then
@@ -36,7 +36,7 @@ function U:UpdateUnitButtonPosition(unit, button)
             x, y = unpack(unitLayout.position)
         end
 
-        button:SetPoint("CENTER", UIParent, "CENTER", x, y)
+        PixelUtil.SetPoint(button, "CENTER", UIParent, "CENTER", x, y)
     end
 end
 

@@ -82,6 +82,7 @@ local function OnAddonLoaded(owner, loadedAddonName)
         Cell.vars.currentLayoutTable = Cell.vars.currentLayoutTable --[[@as LayoutTable]]
 
         CUF.DB.VerifyDB()
+        CUF.DB.VerifyUnitPositions()
 
         CUF_DB.version = CUF.version
 

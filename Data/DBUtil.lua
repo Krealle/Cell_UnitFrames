@@ -233,3 +233,18 @@ end
 
 CUF:RegisterCallback("UpdateLayout", "CUF_VerifyMasterLayout", DB.VerifyMasterLayout)
 CUF:RegisterCallback("LoadPageDB", "CUF_VerifyMasterLayout", DB.VerifyMasterLayout)
+
+function DB.VerifyUnitPositions()
+    local maxX, maxY = GetPhysicalScreenSize()
+    local xVal = maxX / 2
+    local yVal = maxY / 2
+
+    for _, layoutTable in pairs(CellDB.layouts) do
+        for unit, unitLayout in pairs(layoutTable.CUFUnits) do
+            local x, y = unpack(unitLayout.position)
+            if x > xVal or y > yVal then
+                unitLayout.position = Defaults.Layouts[unit].position
+            end
+        end
+    end
+end

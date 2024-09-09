@@ -105,9 +105,18 @@ local function ShowPositioningPopup(unit, button)
     positioningPopup.yPosSlider:SetEnabled(not isMirrored)
 end
 
+local function HidePositioningPopup()
+    if positioningPopup then
+        positioningPopup:Hide()
+    end
+end
+
 -------------------------------------------------
 -- MARK: Overlay
 -------------------------------------------------
+
+---@type table<Unit, Frame>
+local overlays = {}
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -155,16 +164,42 @@ local function CreateOverlayBox(button, unit)
 
     overlay:HookScript("OnShow", function()
         button:SetMovable(true)
+        overlay:RegisterEvent("PLAYER_REGEN_DISABLED")
     end)
     overlay:HookScript("OnHide", function()
         button:SetMovable(false)
+        overlay:UnregisterEvent("PLAYER_REGEN_DISABLED")
     end)
 
     return overlay
 end
 
----@type table<Unit, Frame>
-local overlays = {}
+local function HideOverlays()
+    for _, overlay in pairs(overlays) do
+        overlay:Hide()
+    end
+end
+
+local function ShowOverlays()
+    for _, unit in pairs(CUF.constants.UNIT) do
+        if overlays[unit] then
+            overlays[unit]:Show()
+        else
+            overlays[unit] = CreateOverlayBox(CUF.unitButtons[unit], unit)
+        end
+    end
+end
+
+-------------------------------------------------
+-- MARK: Edit Mode
+-------------------------------------------------
+
+local eventFrame = CreateFrame("Frame")
+eventFrame:SetScript("OnEvent", function()
+    CUF.vars.inEditMode = false
+    HideOverlays()
+    HidePositioningPopup()
+end)
 
 ---@param show boolean?
 function U:EditMode(show)
@@ -175,22 +210,11 @@ function U:EditMode(show)
     end
 
     if CUF.vars.inEditMode then
-        for _, unit in pairs(CUF.constants.UNIT) do
-            if overlays[unit] then
-                overlays[unit]:Show()
-            else
-                overlays[unit] = CreateOverlayBox(CUF.unitButtons[unit], unit)
-            end
-        end
+        ShowOverlays()
+        eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
     else
-        for _, unit in pairs(CUF.constants.UNIT) do
-            if overlays[unit] then
-                overlays[unit]:Hide()
-            end
-        end
-
-        if positioningPopup then
-            positioningPopup:Hide()
-        end
+        HideOverlays()
+        HidePositioningPopup()
+        eventFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
     end
 end

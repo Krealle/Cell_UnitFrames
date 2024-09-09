@@ -20,6 +20,7 @@ local positioningPopup
 
 local function CreatePositioningPopup()
     ---@class CUFPositioningPopup: Frame
+    ---@field unit Unit
     positioningPopup = CUF:CreateFrame("CUFPositioningPopup", UIParent, 200, 160)
     positioningPopup:SetPoint("CENTER")
     positioningPopup:Hide()
@@ -63,6 +64,26 @@ local function CreatePositioningPopup()
     positioningPopup.mirrorCB = mirrorCB
 end
 
+local function UpdatePositioningPopup()
+    if not positioningPopup then return end
+    local unit = positioningPopup.unit
+
+    positioningPopup.xPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[1])
+    positioningPopup.yPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[2])
+
+    local isMirrored = CUF.DB.CurrentLayoutTable()[unit].mirrorPlayer or false
+
+    if unit == const.UNIT.TARGET then
+        positioningPopup.mirrorCB:SetChecked(isMirrored)
+        positioningPopup.mirrorCB:Show()
+    else
+        positioningPopup.mirrorCB:Hide()
+    end
+
+    positioningPopup.xPosSlider:SetEnabled(not isMirrored)
+    positioningPopup.yPosSlider:SetEnabled(not isMirrored)
+end
+
 ---@param unit Unit
 ---@param button CUFUnitButton
 local function ShowPositioningPopup(unit, button)
@@ -72,8 +93,7 @@ local function ShowPositioningPopup(unit, button)
     positioningPopup:Show()
     positioningPopup.title:SetText(L["Positioning"] .. ": " .. CUF.constants.TITLE_CASED_UNITS[unit])
 
-    positioningPopup.xPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[1])
-    positioningPopup.yPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[2])
+    positioningPopup.unit = unit
 
     positioningPopup.xPosSlider.onValueChangedFn = function(value)
         CUF.DB.CurrentLayoutTable()[unit].position[1] = value
@@ -92,17 +112,7 @@ local function ShowPositioningPopup(unit, button)
         end
     end
 
-    local isMirrored = CUF.DB.CurrentLayoutTable()[unit].mirrorPlayer or false
-
-    if unit == const.UNIT.TARGET then
-        positioningPopup.mirrorCB:SetChecked(isMirrored)
-        positioningPopup.mirrorCB:Show()
-    else
-        positioningPopup.mirrorCB:Hide()
-    end
-
-    positioningPopup.xPosSlider:SetEnabled(not isMirrored)
-    positioningPopup.yPosSlider:SetEnabled(not isMirrored)
+    UpdatePositioningPopup()
 end
 
 local function HidePositioningPopup()
@@ -196,6 +206,8 @@ local function CreateOverlayBox(button, unit)
         if unit == const.UNIT.PLAYER then
             CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
         end
+
+        UpdatePositioningPopup()
     end)
     overlay:SetScript("OnClick", function()
         ShowPositioningPopup(unit, button)

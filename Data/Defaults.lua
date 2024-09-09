@@ -113,6 +113,7 @@ Defaults.Options.fontWidth = {
 ---| "comboPoints"
 ---| "chi"
 ---| "runes"
+---| "shieldBar"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -169,6 +170,10 @@ Defaults.Colors = {
         bloodRune = { 1.0, 0.24, 0.24, 1 },
         frostRune = { 0.24, 1.0, 1.0, 1 },
         unholyRune = { 0.24, 1.0, 0.24, 1 },
+    },
+    shieldBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        color = { 1, 1, 0, 0.25 },
     }
 }
 
@@ -227,6 +232,10 @@ Defaults.ColorsMenuOrder = {
         { "bloodRune",  "rgb" },
         { "frostRune",  "rgb" },
         { "unholyRune", "rgb" },
+    },
+    shieldBar = {
+        { "texture", "texture" },
+        { "color",   "rgb" },
     }
 }
 

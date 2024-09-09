@@ -194,6 +194,7 @@ L["def:per"] = "Displays the deficit as a percentage."
 L["def:per-short"] = "Displays the deficit as a percentage without decimals."
 
 -- Colors
+L.color = "Color"
 L.stageZero = "Stage 0"
 L.stageOne = "Stage 1"
 L.stageTwo = "Stage 2"

@@ -166,8 +166,14 @@ end
 ---@type table<Unit, Frame>
 local overlays = {}
 
-function U:EditMode()
-    CUF.vars.inEditMode = not CUF.vars.inEditMode
+---@param show boolean?
+function U:EditMode(show)
+    if show ~= nil then
+        CUF.vars.inEditMode = show
+    else
+        CUF.vars.inEditMode = not CUF.vars.inEditMode
+    end
+
     if CUF.vars.inEditMode then
         for _, unit in pairs(CUF.constants.UNIT) do
             if overlays[unit] then

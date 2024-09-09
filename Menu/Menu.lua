@@ -230,6 +230,16 @@ function menu:CreateMenu()
     titleFrame:SetHeight(title:GetStringHeight() + pad * 2)
     titleFrame:SetWidth(title:GetStringWidth() + pad * 2)
 
+    local previewModeButton = Cell:CreateButton(titleFrame, L["Edit Mode"], "accent",
+        { 80, 20 })
+    previewModeButton:SetPoint("BOTTOMLEFT", titleFrame, "BOTTOMRIGHT", -1, 0)
+    previewModeButton:SetScript("OnClick", function()
+        CUF.uFuncs:EditMode()
+    end)
+    previewModeButton:SetScript("OnHide", function()
+        CUF.uFuncs:EditMode(false)
+    end)
+
     -- Title
     local layoutTitleFrame = CUF:CreateFrame(nil, titleFrame, 160, 10, false, true)
     layoutTitleFrame:SetPoint("BOTTOMLEFT", titleFrame, "TOPLEFT", 0, -1)

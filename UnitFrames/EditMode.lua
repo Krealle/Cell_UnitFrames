@@ -331,6 +331,7 @@ local function CreateOverlayBox(button, unit)
         button:SetMovable(false)
     end)
 
+    overlays[unit] = overlay
     return overlay
 end
 
@@ -344,6 +345,9 @@ local function HideOverlays(instant)
             overlay:Hide()
         else
             overlay.fadeOut:Play()
+            if overlay.fadeIn:IsPlaying() then
+                overlay.fadeIn:Stop()
+            end
         end
     end
 end
@@ -351,11 +355,11 @@ end
 --- Play the fade in animation and show the overlays
 local function ShowOverlays()
     for _, unit in pairs(CUF.constants.UNIT) do
-        if overlays[unit] then
-            overlays[unit].fadeIn:Play()
-        else
-            overlays[unit] = CreateOverlayBox(CUF.unitButtons[unit], unit)
-            overlays[unit].fadeIn:Play()
+        local overlay = overlays[unit] or CreateOverlayBox(CUF.unitButtons[unit], unit)
+
+        overlay.fadeIn:Play()
+        if overlay.fadeOut:IsPlaying() then
+            overlay.fadeOut:Stop()
         end
     end
 end

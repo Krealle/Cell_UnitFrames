@@ -115,7 +115,7 @@ end
 -- MARK: Overlay
 -------------------------------------------------
 
----@type table<Unit, Frame>
+---@type table<Unit, CUFOverlayBox>
 local overlays = {}
 
 local colors = {
@@ -132,39 +132,60 @@ local function CreateOverlayBox(button, unit)
     ---@class CUFOverlayBox: Button, BackdropTemplate
     local overlay = CreateFrame("Button", nil, UIParent, "BackdropTemplate")
     overlay:SetAllPoints(button)
+    overlay:SetFrameStrata("HIGH")
+    overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
+    overlay:Hide()
 
-    overlay.border = CreateFrame("Frame", nil, overlay, "BackdropTemplate")
-    overlay.border:SetAllPoints()
-    overlay.border:SetBackdrop({
+    local border = CreateFrame("Frame", nil, overlay, "BackdropTemplate")
+    border:SetAllPoints()
+    border:SetBackdrop({
         bgFile = nil,
         edgeFile = "Interface\\Buttons\\WHITE8X8",
         edgeSize = 1,
     })
-    overlay.border:SetBackdropBorderColor(0, 0, 0, 1)
+    border:SetBackdropBorderColor(0, 0, 0, 1)
 
-    overlay.tex = overlay:CreateTexture(nil, "ARTWORK")
-    overlay.tex:SetTexture(Cell.vars.whiteTexture)
-    overlay.tex:SetAllPoints()
-
+    local tex = overlay:CreateTexture(nil, "ARTWORK")
+    tex:SetTexture(Cell.vars.whiteTexture)
+    tex:SetAllPoints()
     local r, g, b = unpack(colors[unit])
-    overlay.tex:SetVertexColor(r, g, b, 0.5)
-
-    overlay:SetFrameStrata("HIGH")
-    overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
+    tex:SetVertexColor(r, g, b, 0.5)
 
     local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     label:SetPoint("CENTER")
     label:SetText(L[unit])
 
+    -- Register mouse and movable
     overlay:RegisterForDrag("LeftButton")
     overlay:RegisterForClicks("LeftButtonUp")
     overlay:SetMovable(true)
     button:SetMovable(true)
 
+    -- Animation
+    overlay.fadeIn = overlay:CreateAnimationGroup()
+    local fadeIn = overlay.fadeIn:CreateAnimation("alpha")
+    fadeIn:SetFromAlpha(0)
+    fadeIn:SetToAlpha(1)
+    fadeIn:SetDuration(0.5)
+    fadeIn:SetSmoothing("OUT")
+    fadeIn:SetScript("OnPlay", function()
+        overlay:Show()
+    end)
+
+    overlay.fadeOut = overlay:CreateAnimationGroup()
+    local fadeOut = overlay.fadeOut:CreateAnimation("alpha")
+    fadeOut:SetFromAlpha(1)
+    fadeOut:SetToAlpha(0)
+    fadeOut:SetDuration(0.5)
+    fadeOut:SetSmoothing("IN")
+    fadeOut:SetScript("OnFinished", function()
+        overlay:Hide()
+    end)
+
+    -- Scripts
     overlay:SetScript("OnDragStart", function()
         button:StartMoving()
     end)
-
     overlay:SetScript("OnDragStop", function()
         button:StopMovingOrSizing()
         local x, y = Util.GetPositionRelativeToUIParentCenter(button)
@@ -176,35 +197,43 @@ local function CreateOverlayBox(button, unit)
             CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
         end
     end)
-
     overlay:SetScript("OnClick", function()
         ShowPositioningPopup(unit, button)
     end)
 
+    -- Hooks
     overlay:HookScript("OnShow", function()
         button:SetMovable(true)
-        overlay:RegisterEvent("PLAYER_REGEN_DISABLED")
     end)
     overlay:HookScript("OnHide", function()
         button:SetMovable(false)
-        overlay:UnregisterEvent("PLAYER_REGEN_DISABLED")
     end)
 
     return overlay
 end
 
-local function HideOverlays()
+--- Play the fade out animation and hide the overlays
+---
+--- If instant is true, the overlays will be hidden instantly
+---@param instant boolean?
+local function HideOverlays(instant)
     for _, overlay in pairs(overlays) do
-        overlay:Hide()
+        if instant then
+            overlay:Hide()
+        else
+            overlay.fadeOut:Play()
+        end
     end
 end
 
+--- Play the fade in animation and show the overlays
 local function ShowOverlays()
     for _, unit in pairs(CUF.constants.UNIT) do
         if overlays[unit] then
-            overlays[unit]:Show()
+            overlays[unit].fadeIn:Play()
         else
             overlays[unit] = CreateOverlayBox(CUF.unitButtons[unit], unit)
+            overlays[unit].fadeIn:Play()
         end
     end
 end
@@ -216,10 +245,13 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:SetScript("OnEvent", function()
     CUF.vars.inEditMode = false
-    HideOverlays()
+    HideOverlays(true)
     HidePositioningPopup()
 end)
 
+--- Enable or disable edit mode
+---
+--- If show is nil then the current state will be toggled
 ---@param show boolean?
 function U:EditMode(show)
     if show ~= nil then

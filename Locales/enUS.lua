@@ -156,7 +156,9 @@ L.MirrorPlayer = "Mirror Player"
 L.Positioning = "Positioning"
 L.EditMode = "Edit Mode"
 L.ToggleEditMode = "Toggle Edit Mode"
-L.EditModeButtonTooltip = "Edit mode allows you to position the Unit Frames."
+L.EditModeButtonTooltip = [[Edit mode allows you to position the Unit Frames.
+
+"/cuf edit" will also toggle this mode.]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

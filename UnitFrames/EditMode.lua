@@ -294,10 +294,9 @@ local function CreateOverlayBox(button, unit)
     end)
     overlay:SetScript("OnDragStop", function()
         button:StopMovingOrSizing()
-        local x, y = Util.GetPositionRelativeToUIParentCenter(button)
 
-        CUF.DB.CurrentLayoutTable()[unit].position = { x, y }
-        U:UpdateUnitButtonPosition(unit, button)
+        local x, y = Util.GetPositionRelativeToScreenCenter(button)
+        U:SavePosition(unit, x, y)
 
         if unit == const.UNIT.PLAYER then
             CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)

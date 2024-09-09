@@ -22,7 +22,6 @@ local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
-    Builder.MenuOptions.ColorPicker,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.FrameLevel)
 
@@ -32,10 +31,10 @@ menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
 ---@param subSetting string
 function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.shieldBar
-    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
+    --local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
 
-    if not setting or setting == const.OPTION_KIND.RGBA then
-        widget:SetColor(unpack(styleTable.rgba))
+    if not setting or setting == const.OPTION_KIND.COLOR then
+        widget:UpdateStyle()
     end
 
     if widget.enabled and button:IsVisible() then
@@ -134,8 +133,10 @@ function W:CreateShieldBar(button)
     local tex = shieldBar:CreateTexture(nil, "BORDER", nil, -7)
     tex:SetAllPoints()
 
-    function shieldBar:SetColor(r, g, b, a)
-        tex:SetColorTexture(r, g, b, a)
+    function shieldBar:UpdateStyle()
+        local colors = DB.GetColors().shieldBar
+        tex:SetTexture(colors.texture)
+        tex:SetVertexColor(unpack(colors.color))
     end
 
     ---@param styleTable ShieldBarWidgetTable

@@ -21,7 +21,7 @@ local positioningPopup
 local function CreatePositioningPopup()
     ---@class CUFPositioningPopup: Frame
     ---@field unit Unit
-    positioningPopup = CUF:CreateFrame("CUFPositioningPopup", UIParent, 200, 160)
+    positioningPopup = CUF:CreateFrame("CUFPositioningPopup", UIParent, 340, 160)
     positioningPopup:SetPoint("CENTER")
     positioningPopup:Hide()
 
@@ -44,15 +44,34 @@ local function CreatePositioningPopup()
     title:SetPoint("TOPLEFT", 5, -5)
     positioningPopup.title = title
 
+    -- Offsets
     local xVal = GetScreenWidth() / 2
     local yVal = GetScreenHeight() / 2
 
     positioningPopup.xPosSlider = Cell:CreateSlider(L["X Offset"], positioningPopup, -xVal, xVal, 150, 1)
-    positioningPopup.xPosSlider:SetPoint("TOP", 0, -45)
+    positioningPopup.xPosSlider:SetPoint("TOPLEFT", 10, -45)
+    positioningPopup.xPosSlider.onValueChangedFn = function(value)
+        CUF.DB.CurrentLayoutTable()[positioningPopup.unit].position[1] = value
+        CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+
+        if positioningPopup.unit == const.UNIT.PLAYER then
+            CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
+        end
+    end
 
     positioningPopup.yPosSlider = Cell:CreateSlider(L["Y Offset"], positioningPopup, -yVal, yVal, 150, 1)
-    positioningPopup.yPosSlider:SetPoint("TOPLEFT", positioningPopup.xPosSlider, "BOTTOMLEFT", 0, -40)
+    positioningPopup.yPosSlider:SetPoint("TOPLEFT", positioningPopup.xPosSlider, "TOPRIGHT", 20, 0)
 
+    positioningPopup.yPosSlider.onValueChangedFn = function(value)
+        CUF.DB.CurrentLayoutTable()[positioningPopup.unit].position[2] = value
+        CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+
+        if positioningPopup.unit == const.UNIT.PLAYER then
+            CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
+        end
+    end
+
+    -- Mirror
     ---@type CheckButton
     local mirrorCB = Cell:CreateCheckButton(positioningPopup, L["MirrorPlayer"], function(checked)
         CUF.DB.CurrentLayoutTable()[const.UNIT.TARGET].mirrorPlayer = checked
@@ -60,18 +79,88 @@ local function CreatePositioningPopup()
         positioningPopup.xPosSlider:SetEnabled(not checked)
         positioningPopup.yPosSlider:SetEnabled(not checked)
     end)
-    mirrorCB:SetPoint("TOPLEFT", positioningPopup.yPosSlider, "BOTTOMLEFT", 0, -30)
+    mirrorCB:SetPoint("TOPLEFT", positioningPopup.xPosSlider, "BOTTOMLEFT", 0, -40)
     positioningPopup.mirrorCB = mirrorCB
+
+    -- Parent Anchor
+    local parentAnchorFrame = CreateFrame("Frame", nil, positioningPopup)
+
+    ---@type CellCheckButton
+    local anchorToParentCB = Cell:CreateCheckButton(parentAnchorFrame, "", function(checked)
+        CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorToParent = checked
+        U:UpdateUnitButtonPosition("target", CUF.unitButtons.target)
+        CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+
+        positioningPopup.pointDropdown:SetEnabled(checked)
+        positioningPopup.relativeDropdown:SetEnabled(checked)
+        positioningPopup.parentOffsetXSlider:SetEnabled(checked)
+        positioningPopup.parentOffsetYSlider:SetEnabled(checked)
+
+        positioningPopup.xPosSlider:SetEnabled(not checked)
+        positioningPopup.yPosSlider:SetEnabled(not checked)
+    end)
+    anchorToParentCB:SetPoint("TOPLEFT", positioningPopup.xPosSlider, "BOTTOMLEFT", 0, -40)
+    positioningPopup.anchorToParentCB = anchorToParentCB
+
+    ---@type CellDropdown
+    local pointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    pointDropdown:SetPoint("TOPLEFT", anchorToParentCB, "BOTTOMLEFT", 0, -30)
+    pointDropdown:SetLabel(L["Anchor Point"])
+
+    ---@type CellDropdown
+    local relativePointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    relativePointDropdown:SetPoint("TOPLEFT", pointDropdown, "TOPRIGHT", 30, 0)
+    relativePointDropdown:SetLabel(L["To UnitButton's"])
+
+    for _, point in pairs(const.ANCHOR_POINTS) do
+        pointDropdown:AddItem({
+            text = L[point],
+            value = point,
+            onClick = function()
+                CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.point = point
+                CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+            end,
+        })
+        relativePointDropdown:AddItem({
+            text = L[point],
+            value = point,
+            onClick = function()
+                CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.relativePoint = point
+                CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+            end,
+        })
+    end
+
+    local parentOffsetXSlider = Cell:CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
+    parentOffsetXSlider:SetPoint("TOPLEFT", pointDropdown, "BOTTOMLEFT", 0, -30)
+    parentOffsetXSlider.onValueChangedFn = function(value)
+        CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.offsetX = value
+        CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+    end
+
+    local parentOffsetYSlider = Cell:CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
+    parentOffsetYSlider:SetPoint("TOPLEFT", parentOffsetXSlider, "TOPRIGHT", 20, 0)
+    parentOffsetYSlider.onValueChangedFn = function(value)
+        CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.offsetY = value
+        CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
+    end
+
+    positioningPopup.parentAnchorFrame = parentAnchorFrame
+    positioningPopup.pointDropdown = pointDropdown
+    positioningPopup.relativeDropdown = relativePointDropdown
+    positioningPopup.parentOffsetXSlider = parentOffsetXSlider
+    positioningPopup.parentOffsetYSlider = parentOffsetYSlider
 end
 
 local function UpdatePositioningPopup()
     if not positioningPopup then return end
     local unit = positioningPopup.unit
+    local layout = CUF.DB.CurrentLayoutTable()[unit]
 
-    positioningPopup.xPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[1])
-    positioningPopup.yPosSlider:SetValue(CUF.DB.CurrentLayoutTable()[unit].position[2])
+    positioningPopup.xPosSlider:SetValue(layout.position[1])
+    positioningPopup.yPosSlider:SetValue(layout.position[2])
 
-    local isMirrored = CUF.DB.CurrentLayoutTable()[unit].mirrorPlayer or false
+    local isMirrored = layout.mirrorPlayer or false
 
     if unit == const.UNIT.TARGET then
         positioningPopup.mirrorCB:SetChecked(isMirrored)
@@ -80,13 +169,33 @@ local function UpdatePositioningPopup()
         positioningPopup.mirrorCB:Hide()
     end
 
-    positioningPopup.xPosSlider:SetEnabled(not isMirrored)
-    positioningPopup.yPosSlider:SetEnabled(not isMirrored)
+    if layout.anchorToParent ~= nil then
+        local checked = layout.anchorToParent
+
+        positioningPopup.anchorToParentCB:SetChecked(checked)
+        positioningPopup.anchorToParentCB.label:SetText(L["Anchor To"] .. " " .. L[layout.parent])
+
+        positioningPopup.pointDropdown:SetSelectedValue(layout.anchorPosition.point)
+        positioningPopup.relativeDropdown:SetSelectedValue(layout.anchorPosition
+            .relativePoint)
+        positioningPopup.parentOffsetXSlider:SetValue(layout.anchorPosition.offsetX)
+        positioningPopup.parentOffsetYSlider:SetValue(layout.anchorPosition.offsetY)
+
+        positioningPopup.pointDropdown:SetEnabled(checked)
+        positioningPopup.relativeDropdown:SetEnabled(checked)
+        positioningPopup.parentOffsetXSlider:SetEnabled(checked)
+        positioningPopup.parentOffsetYSlider:SetEnabled(checked)
+
+        positioningPopup.xPosSlider:SetEnabled(not checked)
+        positioningPopup.yPosSlider:SetEnabled(not checked)
+    else
+        positioningPopup.xPosSlider:SetEnabled(not isMirrored)
+        positioningPopup.yPosSlider:SetEnabled(not isMirrored)
+    end
 end
 
 ---@param unit Unit
----@param button CUFUnitButton
-local function ShowPositioningPopup(unit, button)
+local function ShowPositioningPopup(unit)
     if not positioningPopup then
         CreatePositioningPopup()
     end
@@ -95,20 +204,15 @@ local function ShowPositioningPopup(unit, button)
 
     positioningPopup.unit = unit
 
-    positioningPopup.xPosSlider.onValueChangedFn = function(value)
-        CUF.DB.CurrentLayoutTable()[unit].position[1] = value
-        U:UpdateUnitButtonPosition(unit, button)
-
-        if unit == const.UNIT.PLAYER then
-            CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
-        end
-    end
-    positioningPopup.yPosSlider.onValueChangedFn = function(value)
-        CUF.DB.CurrentLayoutTable()[unit].position[2] = value
-        U:UpdateUnitButtonPosition(unit, button)
-
-        if unit == const.UNIT.PLAYER then
-            CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
+    if CUF.DB.CurrentLayoutTable()[unit].anchorToParent ~= nil then
+        positioningPopup.parentAnchorFrame:Show()
+        positioningPopup:SetHeight(230)
+    else
+        positioningPopup.parentAnchorFrame:Hide()
+        if unit == const.UNIT.TARGET then
+            positioningPopup:SetHeight(120)
+        else
+            positioningPopup:SetHeight(85)
         end
     end
 
@@ -216,7 +320,7 @@ local function CreateOverlayBox(button, unit)
         UpdatePositioningPopup()
     end)
     overlay:SetScript("OnClick", function()
-        ShowPositioningPopup(unit, button)
+        ShowPositioningPopup(unit)
     end)
 
     -- Hooks

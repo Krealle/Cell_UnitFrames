@@ -582,11 +582,11 @@ Defaults.Widgets = {
 ---@field [1] number
 ---@field [2] number
 
----@class TooltipPosition
----@field [1] FramePoint
----@field [2] FramePoint
----@field [3] number
----@field [4] number
+---@class ParentAnchor
+---@field point FramePoint
+---@field relativePoint FramePoint
+---@field offsetX number
+---@field offsetY number
 
 ---@class UnitLayout
 ---@field enabled boolean
@@ -594,11 +594,13 @@ Defaults.Widgets = {
 ---@field size Size
 ---@field position Position
 ---@field widgets WidgetTables
----@field tooltipPosition TooltipPosition
 ---@field sameSizeAsPlayer boolean?
 ---@field hideBlizzardCastBar boolean?
 ---@field clickCast boolean
 ---@field mirrorPlayer boolean?
+---@field parent Unit?
+---@field anchorToParent boolean?
+---@field anchorPosition ParentAnchor?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -609,7 +611,6 @@ Defaults.Layouts = {
         size = { 200, 40 },
         position = { 800, 500 },
         widgets = Defaults.Widgets,
-        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         hideBlizzardCastBar = false,
         clickCast = false,
     },
@@ -633,7 +634,6 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
         },
-        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
         clickCast = false,
         mirrorPlayer = false,
@@ -658,7 +658,6 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
         },
-        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
         clickCast = false,
     },
@@ -674,9 +673,16 @@ Defaults.Layouts = {
             levelText = Defaults.Widgets.levelText,
             raidIcon = Defaults.Widgets.raidIcon,
         },
-        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
         clickCast = false,
+        anchorToParent = true,
+        parent = CUF.constants.UNIT.TARGET,
+        anchorPosition = {
+            point = "BOTTOMLEFT",
+            relativePoint = "BOTTOMRIGHT",
+            offsetX = 2,
+            offsetY = 0
+        },
     },
     pet = {
         enabled = false,
@@ -694,8 +700,15 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
         },
-        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
         sameSizeAsPlayer = false,
         clickCast = false,
+        anchorToParent = true,
+        parent = CUF.constants.UNIT.PLAYER,
+        anchorPosition = {
+            point = "TOPLEFT",
+            relativePoint = "BOTTOMLEFT",
+            offsetX = 0,
+            offsetY = -5
+        },
     },
 }

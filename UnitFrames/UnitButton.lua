@@ -20,16 +20,24 @@ local Util = CUF.Util
 ---@param button CUFUnitButton
 function U:UpdateUnitButtonPosition(unit, button)
     local layout = CUF.DB.CurrentLayoutTable()
-
-    local x, y
-    if unit == const.UNIT.TARGET and layout[unit].mirrorPlayer then
-        x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
-    else
-        x, y = unpack(layout[unit].position)
-    end
+    local unitLayout = layout[unit]
 
     button:ClearAllPoints()
-    button:SetPoint("CENTER", UIParent, "CENTER", x, y)
+    if unitLayout.anchorToParent then
+        local parent = CUF.unitButtons[unitLayout.parent]
+        local anchor = unitLayout.anchorPosition --[[@as ParentAnchor]]
+
+        button:SetPoint(anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+    else
+        local x, y
+        if unit == const.UNIT.TARGET and unitLayout.mirrorPlayer then
+            x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
+        else
+            x, y = unpack(unitLayout.position)
+        end
+
+        button:SetPoint("CENTER", UIParent, "CENTER", x, y)
+    end
 end
 
 -------------------------------------------------

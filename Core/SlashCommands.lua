@@ -25,6 +25,7 @@ function SlashCmdList.CUF(msg, editbox)
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
             "/cuf dev - toggle debug mode" .. "\n" ..
+            "/cuf edit - toggle edit mode" .. "\n" ..
             "/cuf restore <automatic|manual> - restore a backup"
         )
     end

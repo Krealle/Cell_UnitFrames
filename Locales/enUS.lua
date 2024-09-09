@@ -154,6 +154,9 @@ L.SameSizeAsHealthBar = "Same Size As Health Bar"
 L.EditingLayout = "Editing Layout"
 L.MirrorPlayer = "Mirror Player"
 L.Positioning = "Positioning"
+L.EditMode = "Edit Mode"
+L.ToggleEditMode = "Toggle Edit Mode"
+L.EditModeButtonTooltip = "Edit mode allows you to position the Unit Frames."
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

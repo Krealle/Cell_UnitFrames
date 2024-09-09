@@ -91,10 +91,12 @@ end
 function menu:ShowLayoutTitle()
     self.layoutTitleFrame:Show()
     self:SetLayoutTitle()
+    self.editModeButton:Show()
 end
 
 function menu:HideLayoutTitle()
     self.layoutTitleFrame:Hide()
+    self.editModeButton:Hide()
 end
 
 -------------------------------------------------
@@ -210,7 +212,7 @@ function menu:CreateMenu()
 
     ---@class CellCombatFrame
     self.window = CUF:CreateFrame("CUF_Menu", optionsFrame, self.baseWidth, 300)
-    self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -self.inset - 20)
+    self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -self.inset)
 
     -- mask
     F:ApplyCombatProtectionToFrame(self.window)
@@ -229,16 +231,6 @@ function menu:CreateMenu()
     title:SetTextScale(1.5)
     titleFrame:SetHeight(title:GetStringHeight() + pad * 2)
     titleFrame:SetWidth(title:GetStringWidth() + pad * 2)
-
-    local previewModeButton = Cell:CreateButton(titleFrame, L["Edit Mode"], "accent",
-        { 80, 20 })
-    previewModeButton:SetPoint("BOTTOMLEFT", titleFrame, "BOTTOMRIGHT", -1, 0)
-    previewModeButton:SetScript("OnClick", function()
-        CUF.uFuncs:EditMode()
-    end)
-    previewModeButton:SetScript("OnHide", function()
-        CUF.uFuncs:EditMode(false)
-    end)
 
     -- Title
     local layoutTitleFrame = CUF:CreateFrame(nil, titleFrame, 160, 10, false, true)
@@ -266,6 +258,21 @@ function menu:CreateMenu()
     self.tabAnchor:SetPoint("TOPLEFT", self.tabPane, "BOTTOMLEFT", self.inset, -self.paneBuffer)
 
     self:InitTabs()
+
+    local editModeButton = Cell:CreateButton(self.tabPane, L.EditMode, "accent",
+        { 100, 25 })
+    editModeButton:SetPoint("TOPLEFT", self.tabPane, "BOTTOMLEFT", 0, 0)
+    CUF:SetTooltips(editModeButton, "ANCHOR_TOPLEFT", 0, 3, L.ToggleEditMode,
+        L.EditModeButtonTooltip)
+
+    editModeButton:SetScript("OnClick", function()
+        CUF.uFuncs:EditMode()
+    end)
+    editModeButton:SetScript("OnHide", function()
+        CUF.uFuncs:EditMode(false)
+    end)
+    self.editModeButton = editModeButton
+    self.editModeButton:Hide()
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

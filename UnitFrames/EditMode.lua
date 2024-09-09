@@ -113,12 +113,18 @@ local function ShowPositioningPopup(unit, button)
     end
 
     UpdatePositioningPopup()
+
+    CUF:RegisterCallback("UpdateUnitButtons", "UpdatePositioningPopup", UpdatePositioningPopup)
+    CUF:RegisterCallback("UpdateLayout", "UpdatePositioningPopup", UpdatePositioningPopup)
 end
 
 local function HidePositioningPopup()
     if positioningPopup then
         positioningPopup:Hide()
     end
+
+    CUF:UnregisterCallback("UpdateUnitButtons", "UpdatePositioningPopup")
+    CUF:UnregisterCallback("UpdateLayout", "UpdatePositioningPopup")
 end
 
 -------------------------------------------------

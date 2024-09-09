@@ -552,7 +552,7 @@ Defaults.Widgets = {
     },
     ---@type ClassBarWidgetTable
     classBar = {
-        enabled = true,
+        enabled = false,
         spacing = 5,
         frameLevel = 10,
         verticalFill = false,

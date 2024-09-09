@@ -152,6 +152,8 @@ L.texture = "Texture"
 L.VerticalFill = "Vertical Fill"
 L.SameSizeAsHealthBar = "Same Size As Health Bar"
 L.EditingLayout = "Editing Layout"
+L.MirrorPlayer = "Mirror Player"
+L.Positioning = "Positioning"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

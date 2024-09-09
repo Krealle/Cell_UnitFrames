@@ -73,7 +73,7 @@ local function CreatePositioningPopup()
 
     -- Mirror
     ---@type CheckButton
-    local mirrorCB = Cell:CreateCheckButton(positioningPopup, L["MirrorPlayer"], function(checked)
+    local mirrorCB = Cell:CreateCheckButton(positioningPopup, L.MirrorPlayer, function(checked)
         CUF.DB.CurrentLayoutTable()[const.UNIT.TARGET].mirrorPlayer = checked
         U:UpdateUnitButtonPosition("target", CUF.unitButtons.target)
         positioningPopup.xPosSlider:SetEnabled(not checked)
@@ -200,7 +200,7 @@ local function ShowPositioningPopup(unit)
         CreatePositioningPopup()
     end
     positioningPopup:Show()
-    positioningPopup.title:SetText(L["Positioning"] .. ": " .. CUF.constants.TITLE_CASED_UNITS[unit])
+    positioningPopup.title:SetText(L.Positioning .. ": " .. L[unit])
 
     positioningPopup.unit = unit
 

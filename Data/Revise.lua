@@ -1,4 +1,4 @@
----@diagnostic disable: inject-field
+---@diagnostic disable: inject-field, undefined-field
 ---@class CUF
 local CUF = select(2, ...)
 
@@ -32,6 +32,54 @@ function DB:Revise()
             if castBar.empower and castBar.empower.pipColors then
                 castBar.empower.pipColors = nil
             end
+        end)
+    end
+    if CUF_DB.version < 5 then
+        -- Load late since we need proper screen size
+        CUF:AddEventListener("LOADING_SCREEN_DISABLED", function()
+            local sWidth = GetScreenWidth() / 2
+            local sHeight = GetScreenHeight() / 2
+            local buffer = 14
+
+            IterateUnitLayouts(function(layout)
+                if not layout.point then return end
+                local anchorPoint = layout.point
+
+                local xPos, yPos = unpack(layout.position)
+                local bWidth, bHeight = unpack(layout.size)
+                local bOffsetX = bWidth / 2
+                local bOffsetY = bHeight / 2
+
+                local newX = xPos - sWidth
+                local newY = yPos - sHeight
+
+                if CellDB.general.menuPosition == "top_bottom" then
+                    if anchorPoint == "BOTTOMLEFT" then
+                        newY = newY + buffer + bOffsetY
+                    elseif anchorPoint == "BOTTOMRIGHT" then
+                        newY = newY + buffer + bOffsetY
+                    elseif anchorPoint == "TOPLEFT" then
+                        newY = newY - 4 - bOffsetY
+                    elseif anchorPoint == "TOPRIGHT" then
+                        newY = newY - 4 - bOffsetY
+                    end
+                else
+                    if anchorPoint == "BOTTOMLEFT" then
+                        newX = newX + buffer + bOffsetX
+                    elseif anchorPoint == "BOTTOMRIGHT" then
+                        newX = newX - 4 - bOffsetX
+                    elseif anchorPoint == "TOPLEFT" then
+                        newX = newX + buffer + bOffsetX
+                    elseif anchorPoint == "TOPRIGHT" then
+                        newX = newX - 4 - bOffsetX
+                    end
+                end
+
+                layout.position = { newX, newY }
+            end)
+
+            CUF:Fire("UpdateUnitButtons")
+            return true
         end)
     end
 end

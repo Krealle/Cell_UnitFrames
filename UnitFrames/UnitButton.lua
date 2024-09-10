@@ -316,7 +316,7 @@ local function CreateUnitButton(unit)
     local name = CUF.constants.TITLE_CASED_UNITS[unit]
 
     ---@class CUFUnitFrame: Frame
-    local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", Cell.frames.mainFrame, "SecureFrameTemplate")
+    local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", CUF.mainFrame, "SecureFrameTemplate")
 
     local button = CreateFrame("Button",
         "CUF_" .. name,

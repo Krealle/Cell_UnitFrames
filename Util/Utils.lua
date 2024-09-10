@@ -427,6 +427,21 @@ end
 -- MARK: Pixel Perfect
 -------------------------------------------------
 
+---@return number
+function Util.GetPixelScale()
+    local width, height = GetPhysicalScreenSize()
+    if height then
+        return 768 / height
+    else
+        return 1
+    end
+end
+
+---@param frame Frame
+function Util.SetPixelScale(frame)
+    frame:SetScale(Util.GetPixelScale())
+end
+
 --- Calculates the nearest pixel size of a number
 ---@param number number
 ---@return number

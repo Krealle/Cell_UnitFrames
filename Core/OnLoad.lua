@@ -26,6 +26,13 @@ local function OnCellInitialUpdateLayout(_layout)
         end
     end
 
+    -- Main Frame
+    ---@class CUFMainFrame: Frame
+    local CUFMainFrame = CreateFrame("Frame", "CUFMainFrame", UIParent, "SecureFrameTemplate")
+    CUF.mainFrame = CUFMainFrame
+    CUFMainFrame:SetIgnoreParentScale(true)
+    CUF.Util.SetPixelScale(CUFMainFrame)
+
     -- Init Unit Buttons
     CUF.uFuncs:InitUnitButtons()
     CUF:Fire("UpdateUnitButtons")

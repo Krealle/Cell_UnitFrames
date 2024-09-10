@@ -169,6 +169,9 @@ function DB.RestoreFromBackup(backupType)
 
     CUF_DB.colors = Util:CopyDeep(backup.colors)
 
+    -- Verify that all colors are present
+    Util:AddMissingProps(CUF_DB.colors, Defaults.Colors)
+
     DB.VerifyDB()
 
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)

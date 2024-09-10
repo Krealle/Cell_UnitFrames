@@ -319,6 +319,16 @@ function Util:IsPropSameType(a, b)
     return type(a) == type(b)
 end
 
+---@param unit Unit
+function Util:ButtonIsAnchoredToParent(unit)
+    return DB.CurrentLayoutTable()[unit].anchorToParent
+end
+
+---@param unit Unit
+function Util:ButtonIsMirrored(unit)
+    return DB.CurrentLayoutTable()[unit].mirrorPlayer
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

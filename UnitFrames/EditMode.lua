@@ -303,6 +303,16 @@ local function CreateOverlayBox(button, unit)
             CUF:Fire("UpdateLayout", nil, "position", const.UNIT.TARGET)
         end
 
+        if Util:ButtonIsAnchoredToParent(unit) then
+            CUF.DB.CurrentLayoutTable()[unit].anchorToParent = false
+            CUF:Fire("UpdateLayout", nil, "position", unit)
+        end
+
+        if Util:ButtonIsMirrored(unit) then
+            CUF.DB.CurrentLayoutTable()[unit].mirrorPlayer = false
+            CUF:Fire("UpdateLayout", nil, "position", unit)
+        end
+
         UpdatePositioningPopup()
     end)
 

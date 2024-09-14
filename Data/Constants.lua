@@ -150,6 +150,7 @@ const.OPTION_KIND = {
     SPACING = "spacing",
     VERTICAL_FILL = "verticalFill",
     SAME_SIZE_AS_HEALTH_BAR = "sameSizeAsHealthBar",
+    REVERSE_FILL = "reverseFill",
 }
 
 ---@enum AURA_OPTION_KIND

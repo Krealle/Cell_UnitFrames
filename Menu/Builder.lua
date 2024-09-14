@@ -51,6 +51,7 @@ Builder.MenuOptions = {
     CastBarBorder = 27,
     CastBarIcon = 28,
     NameFormat = 29,
+    ShieldBarOptions = 30,
 }
 
 -------------------------------------------------
@@ -1552,6 +1553,41 @@ function Builder:CreateClassBarOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Shield Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return ShieldBarOptions
+function Builder:CreateShieldBarOptions(parent, widgetName)
+    ---@class ShieldBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "ShieldBarOptions"
+    f.optionHeight = 25
+
+    -- First Row
+    local anchorItems = {
+        "RIGHT",
+        "LEFT",
+        "healthBar"
+    }
+    f.anchorOptions = self:CreateDropdown(f, widgetName, L["Anchor Point"], 117, anchorItems,
+        const.OPTION_KIND.ANCHOR_POINT)
+    f.anchorOptions:SetPoint("TOPLEFT", 0, -5)
+
+    f.reverseFill = self:CreateCheckBox(f, widgetName, L["Reverse Fill"],
+        const.OPTION_KIND.REVERSE_FILL)
+    self:AnchorRight(f.reverseFill, f.anchorOptions)
+
+    -- Dirty hook, should be made generic really
+    hooksecurefunc(f.anchorOptions.text, "SetText", function(_, text)
+        f.reverseFill:SetEnabled(text == L.healthBar)
+    end)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1586,4 +1622,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
     [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
     [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
+    [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,
 }

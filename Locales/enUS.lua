@@ -133,6 +133,7 @@ L.readyCheckIcon = "Ready Check Icon"
 L.restingIcon = "Resting Icon"
 L.castBar = "Cast Bar"
 L.classBar = "Class Bar"
+L.healthBar = "Health Bar"
 
 -- Misc
 L.Frame = "Frame"

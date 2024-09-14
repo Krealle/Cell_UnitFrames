@@ -489,13 +489,8 @@ Defaults.Widgets = {
     shieldBar = {
         enabled = false,
         frameLevel = 10,
-        rgba = { 1, 1, 0, 0.25 },
-        position = {
-            point = "BOTTOMRIGHT",
-            offsetY = 0,
-            offsetX = 0,
-            relativePoint = "BOTTOMRIGHT",
-        },
+        point = "RIGHT",
+        reverseFill = false,
     },
     ---@type CastBarWidgetTable
     castBar = {

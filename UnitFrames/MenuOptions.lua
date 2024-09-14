@@ -67,6 +67,8 @@ local function AddLoadPageDB(unitPage)
             end
         end
 
+        unitPage.barOrientationDropdown:SetSelectedValue(pageDB.barOrientation)
+
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unitPage.id .. "_LoadPageDB", LoadPageDB)
@@ -155,6 +157,37 @@ local function AddUnitsToMenu()
                 unitPage.copyFromDropdown:SetLabel(L.CopyWidgetsFrom)
                 CUF:SetTooltips(unitPage.copyFromDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyWidgetsFrom,
                     L.CopyWidgetsFromTooltip)
+
+                ---@type CellDropdown
+                unitPage.barOrientationDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                unitPage.barOrientationDropdown:SetPoint("TOPLEFT", unitPage.copyFromDropdown, "TOPRIGHT", 40, 0)
+                unitPage.barOrientationDropdown:SetLabel(L["Bar Orientation"])
+                unitPage.barOrientationDropdown:SetItems({
+                    {
+                        ["text"] = L["Horizontal"],
+                        ["value"] = "horizontal",
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].barOrientation = "horizontal"
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "barOrientation", unit)
+                        end,
+                    },
+                    {
+                        ["text"] = L["Vertical"] .. " A",
+                        ["value"] = "vertical",
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].barOrientation = "vertical"
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "barOrientation", unit)
+                        end,
+                    },
+                    {
+                        ["text"] = L["Vertical"] .. " B",
+                        ["value"] = "vertical_health",
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].barOrientation = "vertical_health"
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "barOrientation", unit)
+                        end,
+                    },
+                })
 
                 -- Third row
 

@@ -87,8 +87,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
     if not kind or kind == "barOrientation" then
-        U:SetOrientation(button, Cell.vars.currentLayoutTable.barOrientation[1],
-            Cell.vars.currentLayoutTable.barOrientation[2])
+        U:SetOrientation(button, layout[unit].barOrientation, false)
     end
 
     if not kind or strfind(kind, "power$") or kind == "barOrientation" then

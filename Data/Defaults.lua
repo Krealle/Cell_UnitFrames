@@ -134,6 +134,7 @@ Defaults.Colors = {
         hostile = { 0.78, 0.25, 0.25, 1 },
         neutral = { 0.85, 0.77, 0.36, 1 },
         pet = { 0.29, 0.69, 0.3, 1 },
+        useClassColorForPet = false,
     },
     essence = {
         ["1"] = { 0.2, 0.57, 0.5, 1 },
@@ -192,10 +193,11 @@ Defaults.ColorsMenuOrder = {
         { "fullyCharged",     "rgb" }
     },
     reaction = {
-        { "friendly", "rgb" },
-        { "hostile",  "rgb" },
-        { "neutral",  "rgb" },
-        { "pet",      "rgb" },
+        { "friendly",            "rgb" },
+        { "hostile",             "rgb" },
+        { "neutral",             "rgb" },
+        { "pet",                 "rgb" },
+        { "useClassColorForPet", "toggle" },
     },
     essence = {
         { "1", "rgb" },

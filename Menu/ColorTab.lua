@@ -84,6 +84,7 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
             CUF:Fire("UpdateAppearance", "color")
         end
     end
+    cp.type = "colorPicker"
 
     local cpWidth = math.max(cp:GetWidth() + cp.label:GetWidth() + 5, (ColorTab.window:GetWidth() / 3) - 15)
 
@@ -135,6 +136,26 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
     return textureDropdown
 end
 
+---@param which Defaults.Colors.Types
+---@param colorName string
+---@param colorTable table<string, RGBAOpt>
+---@param parent Frame
+---@return CUF.ColorSection.Checkbox, number
+local function CreateCheckbox(which, colorName, colorTable, parent)
+    ---@class CUF.ColorSection.Checkbox: CellCheckButton
+    local cb = Cell:CreateCheckButton(parent, L[colorName], function(checked)
+        DB.SetColor(which, colorName, checked)
+        CUF:Fire("UpdateAppearance", "color")
+        CUF:Fire("UpdateWidget", DB.GetMasterLayout())
+    end)
+
+    local val = colorTable[colorName] --[[@as boolean]]
+    cb:SetChecked(val)
+    cb.type = "toggle"
+
+    return cb, math.max(cb:GetWidth() + cb.label:GetWidth() + 5, (ColorTab.window:GetWidth() / 3) - 15)
+end
+
 -------------------------------------------------
 -- MARK: Sections
 -------------------------------------------------
@@ -146,7 +167,12 @@ function ColorTab:UpdateColors()
     for _, section in pairs(self.colorSections) do
         local colorTable = DB.GetColors()[section.id]
         for _, cp in pairs(section.cps) do
-            cp:SetColor(colorTable[cp.id])
+            if cp.type == "toggle" then
+                cp:SetChecked(colorTable[cp.id])
+            elseif cp.type == "colorPicker" then
+                ---@cast cp CUF.ColorSection.ColorPicker
+                cp:SetColor(colorTable[cp.id])
+            end
         end
         for _, dropdown in pairs(section.dropdowns) do
             dropdown:SetSelected(Builder.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
@@ -180,7 +206,7 @@ function ColorTab:CreateSections()
         local section = CUF:CreateFrame(colorSection:GetName() .. "_" .. Util:ToTitleCase(which),
             colorSection.scrollFrame.content, self.window:GetWidth() - 10, 1, false, true)
         section.id = which
-        section.cps = {} ---@type CUF.ColorSection.ColorPicker[]
+        section.cps = {} ---@type (CUF.ColorSection.ColorPicker|CUF.ColorSection.Checkbox)[]
         section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
 
         local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
@@ -235,8 +261,12 @@ function ColorTab:CreateSections()
                 baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
 
                 tinsert(section.dropdowns, element)
-            elseif colorType == "rgb" then
-                element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
+            elseif colorType == "rgb" or colorType == "toggle" then
+                if colorType == "toggle" then
+                    element, elementWidth = CreateCheckbox(which, colorName, colorTable, section)
+                else
+                    element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
+                end
 
                 -- Move to the next column, or wrap to the next row if necessary
                 if gridLayout.currentColumn > gridLayout.maxColumns

@@ -267,6 +267,10 @@ function Util:GetUnitClassColor(unit, class, guid)
             return unpack(DB.GetColors().reaction.hostile)
         end
 
+        if unit == "pet" and DB.GetColors().reaction.useClassColorForPet then
+            return F:GetClassColor(select(2, UnitClass("player")))
+        end
+
         return unpack(DB.GetColors().reaction.pet)
     end
 

@@ -22,7 +22,7 @@ local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
-    Builder.MenuOptions.FullAnchor,
+    Builder.MenuOptions.ShieldBarOptions,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -31,10 +31,17 @@ menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
 ---@param subSetting string
 function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.shieldBar
-    --local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
 
     if not setting or setting == const.OPTION_KIND.COLOR then
         widget:UpdateStyle()
+    end
+    if not setting or setting == const.OPTION_KIND.ANCHOR_POINT then
+        widget:UpdatePosition(styleTable)
+    end
+    if not setting or setting == const.OPTION_KIND.REVERSE_FILL then
+        widget.reverseFill = styleTable.reverseFill
+        widget:Repoint()
     end
 
     if widget.enabled and button:IsVisible() then
@@ -100,14 +107,51 @@ end
 ---@param bar ShieldBarWidget
 ---@param percent number
 local function ShieldBar_SetValue(bar, percent)
+    percent = math.min(percent, 1)
+
     local maxWidth = bar.parentHealthBar:GetWidth()
-    local barWidth
-    if percent >= 1 then
-        barWidth = maxWidth
-    else
-        barWidth = maxWidth * percent
+    local barWidth = maxWidth * percent
+
+    if bar.currentPoint == "healthBar" then
+        local maxLossWidth = bar.parentHealthBarLoss:GetWidth()
+        local ratio = maxLossWidth / maxWidth
+
+        if percent > ratio then
+            if bar.reverseFill then
+                bar:Repoint("RIGHT")
+            else
+                barWidth = maxLossWidth
+            end
+        elseif bar.reverseFill then
+            bar:Repoint()
+        end
     end
+
     bar:SetWidth(barWidth)
+end
+
+---@param bar ShieldBarWidget
+---@param anchorPoint string?
+local function Repoint(bar, anchorPoint)
+    local point = anchorPoint or bar.currentPoint
+    if bar.currentAnchorPoint == point then return end
+    bar.currentAnchorPoint = point
+
+    bar:ClearAllPoints()
+
+    if point == "RIGHT" or point == "LEFT" then
+        bar:SetPoint("TOP", bar.parentHealthBar, "TOP", 0, 0)
+        bar:SetPoint("BOTTOM", bar.parentHealthBar, "BOTTOM", 0, 0)
+        bar:SetPoint(point, bar.parentHealthBar, point, 0, 0)
+        --[[ elseif point == "TOP" or point == "BOTTOM" then
+        bar:SetPoint("LEFT", bar.parentHealthBar, "LEFT", 0, 0)
+        bar:SetPoint("RIGHT", bar.parentHealthBar, "RIGHT", 0, 0)
+        bar:SetPoint(point, bar.parentHealthBar, point, 0, 0) ]]
+    else
+        bar:SetPoint("TOP", bar.parentHealthBarLoss, "TOP", 0, 0)
+        bar:SetPoint("BOTTOM", bar.parentHealthBarLoss, "BOTTOM", 0, 0)
+        bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
+    end
 end
 
 -------------------------------------------------
@@ -124,7 +168,12 @@ function W:CreateShieldBar(button)
     shieldBar.enabled = false
     shieldBar._isSelected = false
     shieldBar.parentHealthBar = button.widgets.healthBar
+    shieldBar.parentHealthBarLoss = button.widgets.healthBarLoss
     shieldBar._owner = button
+
+    shieldBar.reverseFill = false
+    shieldBar.currentPoint = "RIGHT"
+    shieldBar.currentAnchorPoint = ""
 
     shieldBar:Hide()
     shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 0.1 })
@@ -140,12 +189,10 @@ function W:CreateShieldBar(button)
     end
 
     ---@param styleTable ShieldBarWidgetTable
-    function shieldBar:SetPosition(styleTable)
-        local pos = styleTable.position
-        self:ClearAllPoints()
-        self:SetPoint("TOP", self.parentHealthBar, "TOP", 0, 0)
-        self:SetPoint("BOTTOM", self.parentHealthBar, "BOTTOM", 0, 0)
-        self:SetPoint(pos.point, self.parentHealthBar, pos.relativePoint, pos.offsetX, pos.offsetY)
+    function shieldBar:UpdatePosition(styleTable)
+        local point = styleTable.point
+        self.currentPoint = point
+        self:Repoint()
     end
 
     ---@param bar ShieldBarWidget
@@ -158,6 +205,7 @@ function W:CreateShieldBar(button)
     shieldBar.SetValue = ShieldBar_SetValue
     shieldBar.SetEnabled = W.SetEnabled
     shieldBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+    shieldBar.Repoint = Repoint
 
     shieldBar.Update = Update
     shieldBar.Enable = Enable

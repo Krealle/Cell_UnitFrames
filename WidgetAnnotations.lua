@@ -188,7 +188,7 @@
 ---@class ShieldBarWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
----@field point "RIGHT"|"LEFT"|"TOP"|"BOTTOM"|"healthBar"
+---@field point "RIGHT"|"LEFT"|"healthBar"
 ---@field reverseFill boolean
 
 ---@class CastBarWidgetTable

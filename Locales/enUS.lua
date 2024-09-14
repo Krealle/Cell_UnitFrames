@@ -217,6 +217,7 @@ L.comboPoints = "Combo Points"
 L.chi = "Chi"
 L.essence = "Essence"
 L.classResources = "Class Resources"
+L.useClassColorForPet = "Use Class Color for Pet"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

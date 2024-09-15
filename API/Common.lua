@@ -4,35 +4,23 @@ local CUF = select(2, ...)
 ---@class CUF.API
 local API = CUF.API
 
---- Returns a frame by its unit name
+--- Returns a frame by either its unit name or frame name
 ---
---- Example: local frame = API:GetUnitFrameByUnitName("player")
----@param unit Unit
----@return CUFUnitButton?
-function API:GetUnitFrameByUnitName(unit)
-    if not API:ValidateParms("GetUnitFrameByUnitName", { { unit, "string", "unit" } }) then return end
-
-    local unitFrame = CUF.unitButtons[unit]
-    if not unitFrame then
-        CUF:Warn("Unit '" .. unit .. "' does not exist.")
-        return
-    end
-
-    return unitFrame
-end
-
---- Returns a frame by its frame name
+--- Example: local frame = API:GetUnitFrame("player")
 ---
---- Example: local frame = API:GetUnitFrameByFrameName("CUF_Player")
----@param frameName string
+--- Example: local frame = API:GetUnitFrame("CUF_Player")
+---@param name string
 ---@return CUFUnitButton?
-function API:GetUnitFrameByFrameName(frameName)
-    if not API:ValidateParms("GetUnitFrameByFrameName", { { frameName, "string", "unit" } }) then return end
+function API:GetUnitFrame(name)
+    if not API:ValidateParms("GetUnitFrame", { { name, "string", "name" } }) then return end
 
-    local unitFrame = _G[frameName]
+    local unitFrame = CUF.unitButtons[name]
     if not unitFrame then
-        CUF:Warn("Frame '" .. frameName .. "' does not exist.")
-        return
+        unitFrame = _G[name]
+        if not unitFrame then
+            CUF:Warn("Cannot find valid unit frame for '" .. name .. "'.")
+            return
+        end
     end
 
     return unitFrame
@@ -51,6 +39,40 @@ end
 -- Private functions that the user should not call directly.
 ------------------------------------------------------------
 
+---@param point FramePoint
+---@return true|string
+local function IsValidPoint(point)
+    local isValidPoint = type(point) == "string" and
+        (point == "TOPLEFT"
+            or point == "TOPRIGHT"
+            or point == "BOTTOMLEFT"
+            or point == "BOTTOMRIGHT"
+            or point == "CENTER"
+            or point == "TOP"
+            or point == "BOTTOM"
+            or point == "LEFT"
+            or point == "RIGHT")
+
+    if not isValidPoint then
+        return "FramePoint"
+    end
+
+    return isValidPoint
+end
+
+---@param frame Frame
+---@return true|string
+local function IsValidFrame(frame)
+    local isValidFrame = type(frame) == "table" and
+        frame.GetName ~= nil
+
+    if not isValidFrame then
+        return "Frame"
+    end
+
+    return isValidFrame
+end
+
 --- Validates the types of the given parameters.
 ---@param functionName string The name of the function being called.
 ---@param params table A table of parameters to check, with each entry being {value, expectedType, paramName}.
@@ -60,15 +82,43 @@ function API:ValidateParms(functionName, params)
 
     for _, param in ipairs(params) do
         local value, expectedType, paramName = unpack(param)
-        if type(value) ~= expectedType then
-            local newError = string.format("Invalid type for param '%s'. Expected type '%s', got '%s'.",
+        local maybeErr
+
+        if type(value) == "nil" then
+            maybeErr = string.format("Missing param '%s'.", paramName)
+        elseif type(expectedType) == "function" then
+            local isValid = expectedType(value)
+            if type(isValid) == "string" then
+                maybeErr = string.format("Invalid type for param '%s'. Expected type '%s'.",
+                    paramName,
+                    isValid)
+            end
+        elseif expectedType == "Frame" then
+            local isValid = IsValidFrame(value)
+            if type(isValid) == "string" then
+                maybeErr = string.format("Invalid type for param '%s'. Expected type '%s'.",
+                    paramName,
+                    isValid)
+            end
+        elseif expectedType == "FramePoint" then
+            local isValid = IsValidPoint(value)
+            if type(isValid) == "string" then
+                maybeErr = string.format("Invalid type for param '%s'. Expected type '%s'.",
+                    paramName,
+                    isValid)
+            end
+        elseif type(value) ~= expectedType then
+            maybeErr = string.format("Invalid type for param '%s'. Expected type '%s', got '%s'.",
                 paramName,
                 expectedType,
                 type(value))
+        end
+
+        if type(maybeErr) == "string" then
             if not errorMsg then
-                errorMsg = newError
+                errorMsg = maybeErr
             else
-                errorMsg = errorMsg .. "\n" .. newError
+                errorMsg = errorMsg .. "\n" .. maybeErr
             end
         end
     end

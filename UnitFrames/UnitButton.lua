@@ -76,7 +76,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     local layout = CUF.DB.CurrentLayoutTable()
 
     -- Size
-    if not kind or strfind(kind, "size$") and not button.__customSize then
+    if (not kind or strfind(kind, "size$")) and not button.__customSize then
         local width, height
         if layout[unit].sameSizeAsPlayer then
             width, height = unpack(layout[const.UNIT.PLAYER].size)

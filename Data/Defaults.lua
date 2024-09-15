@@ -495,6 +495,7 @@ Defaults.Widgets = {
         frameLevel = 10,
         point = "RIGHT",
         reverseFill = false,
+        overShield = false,
     },
     ---@type CastBarWidgetTable
     castBar = {

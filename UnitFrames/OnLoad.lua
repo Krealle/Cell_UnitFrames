@@ -552,6 +552,8 @@ end
 ---@field _timers table
 ---@field _isSelected boolean
 ---@field name string
+---@field __customPositioning boolean
+---@field __customSize boolean
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

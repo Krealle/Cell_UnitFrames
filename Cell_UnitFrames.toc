@@ -73,4 +73,7 @@ UnitFrames/OnLoad.lua
 UnitFrames/MenuOptions.lua
 UnitFrames/EditMode.lua
 
+API/Common.lua
+API/CustomAnchors.lua
+
 Core/OnLoad.lua

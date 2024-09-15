@@ -22,6 +22,8 @@ CUF.Defaults = {}
 CUF.Debug = {}
 ---@class CUF.builder
 CUF.Builder = {}
+---@class CUF.API
+CUF.API = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string
@@ -32,6 +34,7 @@ CUF.Builder = {}
 ---@field isRetail boolean
 ---@field selectedTab string
 ---@field inEditMode boolean
+---@field customPositioning boolean
 CUF.vars = {}
 
 ---@class CUF.unitButtons

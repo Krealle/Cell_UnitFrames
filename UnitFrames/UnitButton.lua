@@ -42,6 +42,8 @@ end
 ---@param unit Unit
 ---@param button CUFUnitButton
 function U:UpdateUnitButtonPosition(unit, button)
+    if button.__customPositioning then return end
+
     local layout = CUF.DB.CurrentLayoutTable()
     local unitLayout = layout[unit]
 
@@ -74,7 +76,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     local layout = CUF.DB.CurrentLayoutTable()
 
     -- Size
-    if not kind or strfind(kind, "size$") then
+    if (not kind or strfind(kind, "size$")) and not button.__customSize then
         local width, height
         if layout[unit].sameSizeAsPlayer then
             width, height = unpack(layout[const.UNIT.PLAYER].size)

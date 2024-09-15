@@ -175,6 +175,7 @@ Defaults.Colors = {
     shieldBar = {
         texture = "Interface\\Buttons\\WHITE8X8",
         color = { 1, 1, 0, 0.25 },
+        overShield = { 1, 1, 1, 1 },
     }
 }
 
@@ -236,8 +237,9 @@ Defaults.ColorsMenuOrder = {
         { "unholyRune", "rgb" },
     },
     shieldBar = {
-        { "texture", "texture" },
-        { "color",   "rgb" },
+        { "texture",    "texture" },
+        { "color",      "rgb" },
+        { "overShield", "rgb" },
     }
 }
 

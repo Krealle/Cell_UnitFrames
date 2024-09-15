@@ -190,6 +190,7 @@
 ---@field frameLevel number
 ---@field point "RIGHT"|"LEFT"|"healthBar"
 ---@field reverseFill boolean
+---@field overShield boolean
 
 ---@class CastBarWidgetTable
 ---@field enabled boolean

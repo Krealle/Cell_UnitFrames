@@ -151,6 +151,7 @@ const.OPTION_KIND = {
     VERTICAL_FILL = "verticalFill",
     SAME_SIZE_AS_HEALTH_BAR = "sameSizeAsHealthBar",
     REVERSE_FILL = "reverseFill",
+    OVER_SHIELD = "overShield",
 }
 
 ---@enum AURA_OPTION_KIND

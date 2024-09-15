@@ -43,6 +43,9 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
         widget.reverseFill = styleTable.reverseFill
         widget:Repoint()
     end
+    if not setting or setting == const.OPTION_KIND.OVER_SHIELD then
+        widget.showOverShield = styleTable.overShield
+    end
 
     if widget.enabled and button:IsVisible() then
         widget.Update(button)
@@ -64,6 +67,9 @@ local function Update(button)
     if not shieldBar.enabled then
         shieldBar:Hide()
         return
+    end
+    if not shieldBar.showOverShield or shieldBar.currentPoint ~= "healthBar" then
+        shieldBar.overShieldGlow:Hide()
     end
 
     -- Preview
@@ -125,6 +131,10 @@ local function ShieldBar_SetValue(bar, percent)
         elseif bar.reverseFill then
             bar:Repoint()
         end
+
+        if bar.showOverShield and maxLossWidth == 0 then
+            bar.overShieldGlow:Show()
+        end
     end
 
     bar:SetWidth(barWidth)
@@ -151,6 +161,10 @@ local function Repoint(bar, anchorPoint)
         bar:SetPoint("TOP", bar.parentHealthBarLoss, "TOP", 0, 0)
         bar:SetPoint("BOTTOM", bar.parentHealthBarLoss, "BOTTOM", 0, 0)
         bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
+
+        bar.overShieldGlow:SetPoint("TOPRIGHT")
+        bar.overShieldGlow:SetPoint("BOTTOMRIGHT")
+        bar.overShieldGlow:SetWidth(4)
     end
 end
 
@@ -174,6 +188,7 @@ function W:CreateShieldBar(button)
     shieldBar.reverseFill = false
     shieldBar.currentPoint = "RIGHT"
     shieldBar.currentAnchorPoint = ""
+    shieldBar.showOverShield = false
 
     shieldBar:Hide()
     shieldBar:SetBackdrop({ edgeFile = Cell.vars.whiteTexture, edgeSize = 0.1 })
@@ -182,10 +197,16 @@ function W:CreateShieldBar(button)
     local tex = shieldBar:CreateTexture(nil, "BORDER", nil, -7)
     tex:SetAllPoints()
 
+    local overShieldGlow = shieldBar:CreateTexture(nil, "ARTWORK", nil, -4)
+    overShieldGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overShieldGlow:Hide()
+    shieldBar.overShieldGlow = overShieldGlow
+
     function shieldBar:UpdateStyle()
         local colors = DB.GetColors().shieldBar
         tex:SetTexture(colors.texture)
         tex:SetVertexColor(unpack(colors.color))
+        overShieldGlow:SetVertexColor(unpack(colors.overShield))
     end
 
     ---@param styleTable ShieldBarWidgetTable

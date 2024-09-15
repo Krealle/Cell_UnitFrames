@@ -4,13 +4,18 @@ local CUF = select(2, ...)
 ---@class CUF.API
 local API = CUF.API
 
---- Returns a frame by either its unit name or frame name
+--- Returns a frame by either its unit name or frame name.
 ---
---- Example: local frame = API:GetUnitFrame("player")
+--- This function searches for the frame using the given unit name (e.g., "player")
+--- or the full frame name (e.g., "CUF_Player"). If no valid frame is found, it returns `nil`.
 ---
---- Example: local frame = API:GetUnitFrame("CUF_Player")
----@param name string
----@return CUFUnitButton?
+--- Example usage:
+--- ```
+--- local frame = API:GetUnitFrame("player")
+--- local frame = API:GetUnitFrame("CUF_Player")
+--- ```
+---@param name string Unit or frame name
+---@return CUFUnitButton? unitFrame corresponding unit frame or nil if not found
 function API:GetUnitFrame(name)
     if not API:ValidateParms("GetUnitFrame", { { name, "string", "name" } }) then return end
 
@@ -26,10 +31,16 @@ function API:GetUnitFrame(name)
     return unitFrame
 end
 
---- Returns all unit frames as an indexed table
+--- Returns all unit frames as an indexed table.
 ---
---- Example: local frames = API:GetAllUnitFrames()
----@return table<string, CUFUnitButton>
+--- This function retrieves all unit frames and returns them in a table where the keys
+--- are unit names and the values are the corresponding unit frames.
+---
+--- Example usage:
+--- ```
+--- local frames = API:GetAllUnitFrames()
+--- ```
+--- @return table<string, CUFUnitButton> unitFrames table mapping unit names to their respective frames
 function API:GetAllUnitFrames()
     return CUF.unitButtons
 end

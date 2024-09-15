@@ -1579,9 +1579,14 @@ function Builder:CreateShieldBarOptions(parent, widgetName)
         const.OPTION_KIND.REVERSE_FILL)
     self:AnchorRight(f.reverseFill, f.anchorOptions)
 
+    f.overShield = self:CreateCheckBox(f, widgetName, L["Over Shield"],
+        const.OPTION_KIND.OVER_SHIELD)
+    self:AnchorRightOfCB(f.overShield, f.reverseFill)
+
     -- Dirty hook, should be made generic really
     hooksecurefunc(f.anchorOptions.text, "SetText", function(_, text)
         f.reverseFill:SetEnabled(text == L.healthBar)
+        f.overShield:SetEnabled(text == L.healthBar)
     end)
 
     return f

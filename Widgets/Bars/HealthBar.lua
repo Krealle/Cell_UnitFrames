@@ -87,9 +87,6 @@ local function UpdateUnitHealthState(button)
             button.states.hasSoulstone = nil
             --I.UpdateStatusIcon(self)
         end
-        -- Resolve racecase
-        -- TODO: Revist
-        U:UnitFrame_UpdateHealthColor(button)
     end
 
     button.states.wasDeadOrGhost = button.states.isDeadOrGhost
@@ -106,7 +103,7 @@ local function UpdateHealth(button)
 
     button.widgets.healthBar:SetValue(button.states.health)
 
-    if Cell.vars.useGradientColor or Cell.vars.useFullColor then
+    if Cell.vars.useGradientColor or Cell.vars.useFullColor or Cell.vars.useDeathColor then
         U:UnitFrame_UpdateHealthColor(button)
     end
 
@@ -129,7 +126,7 @@ local function UpdateHealthMax(button)
         button.widgets.healthBar:SetMinMaxValues(0, button.states.healthMax)
     end
 
-    if Cell.vars.useGradientColor or Cell.vars.useFullColor then
+    if Cell.vars.useGradientColor or Cell.vars.useFullColor or Cell.vars.useDeathColor then
         U:UnitFrame_UpdateHealthColor(button)
     end
 end

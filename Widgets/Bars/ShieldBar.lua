@@ -204,7 +204,17 @@ function W:CreateShieldBar(button)
 
     function shieldBar:UpdateStyle()
         local colors = DB.GetColors().shieldBar
-        tex:SetTexture(colors.texture)
+
+        if colors.texture == "Interface\\AddOns\\Cell\\Media\\shield" then
+            tex:SetTexture(colors.texture, "REPEAT", "REPEAT")
+            tex:SetHorizTile(true)
+            tex:SetVertTile(true)
+        else
+            tex:SetTexture(colors.texture)
+            tex:SetHorizTile(false)
+            tex:SetVertTile(false)
+        end
+
         tex:SetVertexColor(unpack(colors.color))
         overShieldGlow:SetVertexColor(unpack(colors.overShield))
     end

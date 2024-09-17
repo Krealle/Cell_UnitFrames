@@ -1047,6 +1047,7 @@ end
 -----------------------------------------------
 
 local LSM = LibStub("LibSharedMedia-3.0", true)
+LSM:Register("statusbar", "Cell Shield", "Interface\\AddOns\\Cell\\Media\\shield")
 local textures
 Builder.textureToName = {}
 

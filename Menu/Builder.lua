@@ -1134,7 +1134,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
-    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], nil, 1, 10,
+    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], nil, 2, 10,
         const.AURA_OPTION_KIND.NUM_PER_LINE)
     self:AnchorBelow(f.numPerLineSlider, f.maxIconsSlider)
 

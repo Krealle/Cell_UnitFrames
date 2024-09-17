@@ -218,6 +218,7 @@ L.chi = "Chi"
 L.essence = "Essence"
 L.classResources = "Class Resources"
 L.useClassColorForPet = "Use Class Color for Pet"
+L.overShield = "Overshield"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

@@ -2,6 +2,8 @@
 
 [![Discord](https://img.shields.io/discord/1062050991664529498?label=Discord&color=5865F2)](https://discord.gg/C5STjYRsCD)
 
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/vollmerino)
+
 Plugin for the amazing AddOn [Cell](https://www.curseforge.com/wow/addons/cell) that adds various unit frames.
 
 ## Units currently available

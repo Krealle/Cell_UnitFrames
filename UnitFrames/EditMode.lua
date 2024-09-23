@@ -373,6 +373,8 @@ end)
 --- If show is nil then the current state will be toggled
 ---@param show boolean?
 function U:EditMode(show)
+    if InCombatLockdown() then return end
+
     if show ~= nil then
         CUF.vars.inEditMode = show
     else

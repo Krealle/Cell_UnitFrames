@@ -148,6 +148,8 @@ local function ShieldBar_SetValue(bar, percent)
 
         if bar.showOverShield and ratio == 0 then
             bar.overShieldGlow:Show()
+        else
+            bar.overShieldGlow:Hide()
         end
     end
 

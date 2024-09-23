@@ -190,6 +190,8 @@ local function UpdateSize(self)
             bar:Hide()
         end
     end
+
+    self:UpdateColors()
 end
 
 ---@param self ClassBarWidget
@@ -301,7 +303,6 @@ local function UpdateMaxPower(button, event, unit, powerType)
 
     classBar:UpdateSize()
 end
-
 
 ---@param button CUFUnitButton
 ---@param event "UNIT_POWER_POINT_CHARGE"
@@ -478,7 +479,6 @@ local function Update(button, event)
 
     classBar:TogglePowerEvents(true)
     classBar:UpdateSize()
-    classBar:UpdateColors()
 
     --[[ CUF:Log("ClassBar - Update:", event, "classPowerID:", classBar.classPowerID, "powerType:", classBar.powerType,
         "maxPower:", classBar.maxPower, "isPartialRessource:", classBar.isPartialRessource,

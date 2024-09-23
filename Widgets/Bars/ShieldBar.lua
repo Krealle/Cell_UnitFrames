@@ -94,6 +94,7 @@ end
 local function Enable(self)
     self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
     self._owner:AddEventListener("UNIT_MAXHEALTH", Update)
+    self._owner:AddEventListener("UNIT_HEALTH", Update)
 
     self.Update(self._owner)
 
@@ -104,6 +105,7 @@ end
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", Update)
+    self._owner:RemoveEventListener("UNIT_HEALTH", Update)
 end
 
 -------------------------------------------------
@@ -119,20 +121,19 @@ local function ShieldBar_SetValue(bar, percent)
     local barWidth = maxWidth * percent
 
     if bar.currentPoint == "healthBar" then
-        local maxLossWidth = bar.parentHealthBarLoss:GetWidth()
-        local ratio = maxLossWidth / maxWidth
+        local ratio = 1 - bar._owner.states.healthPercent
 
         if percent > ratio then
             if bar.reverseFill then
                 bar:Repoint("RIGHT")
             else
-                barWidth = maxLossWidth
+                barWidth = maxWidth * ratio
             end
         elseif bar.reverseFill then
             bar:Repoint()
         end
 
-        if bar.showOverShield and maxLossWidth == 0 then
+        if bar.showOverShield and ratio == 0 then
             bar.overShieldGlow:Show()
         end
     end

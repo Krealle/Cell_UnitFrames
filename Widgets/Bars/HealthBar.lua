@@ -101,7 +101,11 @@ local function UpdateHealth(button)
     UpdateUnitHealthState(button)
     local healthPercent = button.states.healthPercent
 
-    button.widgets.healthBar:SetValue(button.states.health)
+    if CellDB["appearance"]["barAnimation"] == "Smooth" then
+        button.widgets.healthBar:SetSmoothedValue(button.states.health)
+    else
+        button.widgets.healthBar:SetValue(button.states.health)
+    end
 
     if Cell.vars.useGradientColor or Cell.vars.useFullColor or Cell.vars.useDeathColor then
         U:UnitFrame_UpdateHealthColor(button)

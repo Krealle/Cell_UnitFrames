@@ -199,6 +199,10 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
     -- update actions
     --I.UpdateActionsOrientation(button, orientation)
+
+    if button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then
+        W.UpdateShieldBarWidget(button, button.states.unit)
+    end
 end
 
 -------------------------------------------------

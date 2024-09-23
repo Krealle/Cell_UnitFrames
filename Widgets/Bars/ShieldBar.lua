@@ -2,6 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
+local F = Cell.funcs
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -27,8 +28,8 @@ menu:AddWidget(const.WIDGET_KIND.SHIELD_BAR,
 
 ---@param button CUFUnitButton
 ---@param unit Unit
----@param setting string
----@param subSetting string
+---@param setting string?
+---@param subSetting string?
 function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.shieldBar
     local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.SHIELD_BAR, unit) --[[@as ShieldBarWidgetTable]]
@@ -37,6 +38,13 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
         widget:UpdateStyle()
     end
     if not setting or setting == const.OPTION_KIND.ANCHOR_POINT then
+        if button.orientation == "horizontal" then
+            widget.reversePoint = "RIGHT"
+        else
+            widget.reversePoint = "TOP"
+        end
+        widget.currentAnchorPoint = nil
+
         widget:UpdatePosition(styleTable)
     end
     if not setting or setting == const.OPTION_KIND.REVERSE_FILL then
@@ -117,7 +125,12 @@ end
 local function ShieldBar_SetValue(bar, percent)
     percent = math.min(percent, 1)
 
-    local maxWidth = bar.parentHealthBar:GetWidth()
+    local maxWidth
+    if bar.reversePoint == "RIGHT" then
+        maxWidth = bar.parentHealthBar:GetWidth()
+    else
+        maxWidth = bar.parentHealthBar:GetHeight()
+    end
     local barWidth = maxWidth * percent
 
     if bar.currentPoint == "healthBar" then
@@ -125,7 +138,7 @@ local function ShieldBar_SetValue(bar, percent)
 
         if percent > ratio then
             if bar.reverseFill then
-                bar:Repoint("RIGHT")
+                bar:Repoint(bar.reversePoint)
             else
                 barWidth = maxWidth * ratio
             end
@@ -138,7 +151,11 @@ local function ShieldBar_SetValue(bar, percent)
         end
     end
 
-    bar:SetWidth(barWidth)
+    if bar.reversePoint == "RIGHT" then
+        bar:SetWidth(barWidth)
+    else
+        bar:SetHeight(barWidth)
+    end
 end
 
 ---@param bar ShieldBarWidget
@@ -154,18 +171,32 @@ local function Repoint(bar, anchorPoint)
         bar:SetPoint("TOP", bar.parentHealthBar, "TOP", 0, 0)
         bar:SetPoint("BOTTOM", bar.parentHealthBar, "BOTTOM", 0, 0)
         bar:SetPoint(point, bar.parentHealthBar, point, 0, 0)
-        --[[ elseif point == "TOP" or point == "BOTTOM" then
+    elseif point == "TOP" or point == "BOTTOM" then
         bar:SetPoint("LEFT", bar.parentHealthBar, "LEFT", 0, 0)
         bar:SetPoint("RIGHT", bar.parentHealthBar, "RIGHT", 0, 0)
-        bar:SetPoint(point, bar.parentHealthBar, point, 0, 0) ]]
+        bar:SetPoint(point, bar.parentHealthBar, point, 0, 0)
     else
-        bar:SetPoint("TOP", bar.parentHealthBarLoss, "TOP", 0, 0)
-        bar:SetPoint("BOTTOM", bar.parentHealthBarLoss, "BOTTOM", 0, 0)
-        bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
+        if bar._owner.orientation == "horizontal" then
+            bar:SetPoint("TOP", bar.parentHealthBarLoss, "TOP", 0, 0)
+            bar:SetPoint("BOTTOM", bar.parentHealthBarLoss, "BOTTOM", 0, 0)
+            bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
 
-        bar.overShieldGlow:SetPoint("TOPRIGHT")
-        bar.overShieldGlow:SetPoint("BOTTOMRIGHT")
-        bar.overShieldGlow:SetWidth(4)
+            bar.overShieldGlow:ClearAllPoints()
+            bar.overShieldGlow:SetPoint("TOPRIGHT")
+            bar.overShieldGlow:SetPoint("BOTTOMRIGHT")
+            F:RotateTexture(bar.overShieldGlow, 0)
+            bar.overShieldGlow:SetWidth(4)
+        else
+            bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
+            bar:SetPoint("RIGHT", bar.parentHealthBarLoss, "RIGHT", 0, 0)
+            bar:SetPoint("BOTTOM", bar.parentHealthBarLoss, "BOTTOM", 0, 0)
+
+            bar.overShieldGlow:ClearAllPoints()
+            bar.overShieldGlow:SetPoint("TOPLEFT")
+            bar.overShieldGlow:SetPoint("TOPRIGHT")
+            F:RotateTexture(bar.overShieldGlow, 90)
+            bar.overShieldGlow:SetHeight(4)
+        end
     end
 end
 
@@ -187,6 +218,7 @@ function W:CreateShieldBar(button)
     shieldBar._owner = button
 
     shieldBar.reverseFill = false
+    shieldBar.reversePoint = "RIGHT"
     shieldBar.currentPoint = "RIGHT"
     shieldBar.currentAnchorPoint = ""
     shieldBar.showOverShield = false

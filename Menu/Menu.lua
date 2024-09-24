@@ -267,12 +267,22 @@ function menu:CreateMenu()
 
     editModeButton:SetScript("OnClick", function()
         CUF.uFuncs:EditMode()
+        CUF.HelpTips:Acknowledge(editModeButton, L.HelpTip_EditModeToggle)
     end)
     editModeButton:SetScript("OnHide", function()
         CUF.uFuncs:EditMode(false)
     end)
     self.editModeButton = editModeButton
     self.editModeButton:Hide()
+
+    --CUF.HelpTips:ShowHelpTip(editModeButton, "LEFT")
+    CUF.HelpTips:Show(editModeButton, {
+        text = L.HelpTip_EditModeToggle,
+        dbKey = "editModeToggle",
+        buttonStyle = HelpTip.ButtonStyle.None,
+        alignment = HelpTip.Alignment.Left,
+        targetPoint = HelpTip.Point.LeftEdgeCenter,
+    })
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

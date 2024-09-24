@@ -275,7 +275,6 @@ function menu:CreateMenu()
     self.editModeButton = editModeButton
     self.editModeButton:Hide()
 
-    --CUF.HelpTips:ShowHelpTip(editModeButton, "LEFT")
     CUF.HelpTips:Show(editModeButton, {
         text = L.HelpTip_EditModeToggle,
         dbKey = "editModeToggle",

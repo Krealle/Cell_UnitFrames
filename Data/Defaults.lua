@@ -670,6 +670,14 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
         },
+        anchorToParent = false,
+        parent = CUF.constants.UNIT.PLAYER,
+        anchorPosition = {
+            point = "BOTTOMLEFT",
+            relativePoint = "TOPLEFT",
+            offsetX = 0,
+            offsetY = 10
+        },
         sameSizeAsPlayer = false,
         clickCast = false,
         barOrientation = "horizontal",

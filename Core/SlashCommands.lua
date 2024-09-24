@@ -21,12 +21,18 @@ function SlashCmdList.CUF(msg, editbox)
         CUF.DB.RestoreFromBackup(rest)
     elseif command == "edit" then
         CUF.uFuncs:EditMode()
+    elseif command == "tips" then
+        for tip, _ in pairs(CUF_DB.helpTips) do
+            CUF.DB.SetHelpTip(tip, false)
+        end
+        CUF:Print("All Help Tips have been reset, reload to see them again")
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
             "/cuf dev - toggle debug mode" .. "\n" ..
             "/cuf edit - toggle edit mode" .. "\n" ..
-            "/cuf restore <automatic|manual> - restore a backup"
+            "/cuf restore <automatic|manual> - restore a backup" .. "\n" ..
+            "/cuf resettips - reset all help tips"
         )
     end
 end

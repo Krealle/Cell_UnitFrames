@@ -214,6 +214,26 @@ function menu:CreateMenu()
     self.window = CUF:CreateFrame("CUF_Menu", optionsFrame, self.baseWidth, 300)
     self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -self.inset)
 
+    -- Draggable
+    self.window:SetMovable(true)
+    self.window:RegisterForDrag("LeftButton")
+
+    self.window:SetScript("OnDragStart", function()
+        self.window:StartMoving()
+        -- We don't want the menu to go to narnia
+        self.window:SetClampedToScreen(true)
+    end)
+    self.window:SetScript("OnDragStop", function()
+        self.window:StopMovingOrSizing()
+        local x, y = Util.GetPositionRelativeToScreenCenter(self.window)
+
+        -- coords are relative to the screen center so we need to offset them
+        local centerOffset = self.window:GetHeight() / 2
+
+        -- Set point to TOP so height grows downwards
+        self.window:SetPoint("TOP", nil, "CENTER", x, y + centerOffset)
+    end)
+
     -- mask
     F:ApplyCombatProtectionToFrame(self.window)
     Cell:CreateMask(self.window, nil, { 1, -1, -1, 1 })

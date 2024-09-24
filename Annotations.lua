@@ -107,3 +107,77 @@
 ---@field utf8upper fun(text: string): string
 ---@field utf8lower fun(text: string): string
 ---@field utf8reverse fun(text: string): string
+
+-------------------------------------------------
+-- MARK: Help Tip
+-------------------------------------------------
+
+-- Internal
+
+---@class HelpTips.Info
+---@field text string -- also acts as a key for various API, MUST BE SET
+---@field dbKey string
+---@field alignment HelpTip.Alignment Alignment of the helptip relative to the parent/relativeRegion (basically where the arrow is located)
+---@field targetPoint HelpTip.Point Where at the parent/relativeRegion the helptip should point
+---@field buttonStyle HelpTip.ButtonStyle?
+---@field textColor any? HIGHLIGHT_FONT_COLOR
+---@field textJustifyH FramePoint? "LEFT"
+---@field hideArrow boolean?
+---@field offsetX number?
+---@field offsetY number?
+---@field autoEdgeFlipping boolean? on: will flip helptip to opposite edge based on relative region's center vs helptip's center during OnUpdate
+---@field autoHorizontalSlide boolean? on: will change the alignment to fit helptip on screen during OnUpdate
+---@field useParentStrata boolean?
+---@field extraRightMarginPadding number? extra padding on the right side of the helptip
+---@field acknowledgeOnHide boolean? whether to treat a hide as an acknowledge
+---@field appendFrame Frame? if a helptip needs a custom display you can append your own frame to the text
+---@field appendFrameYOffset number? the offset for the vertical anchor for appendFrame
+---@field system string? reference string
+---@field systemPriority number? if a system and a priority is specified, higher priority helptips will close another helptip in that system
+---@field onHideCallback fun(acknowledged: boolean, ...)? callback whenever the helptip is closed
+---@field onAcknowledgeCallback fun(...)? callback whenever the helptip is closed by the user clicking its button
+
+---@class HelpTips.Frame: Frame
+---@field width number
+---@field info HelpTips.Info
+---@field acknowledged boolean
+---@field Close fun(self: HelpTips.Frame)
+---@field Init fun(self: HelpTips.Frame, parent: Frame, info: table, relativeRegion: Frame?)
+---@field Matches fun(self: HelpTips.Frame, parent: Frame, text: string): boolean
+
+-- Blizzard
+HelpTip = {}
+
+---@enum HelpTip.Point
+HelpTip.Point = {
+    TopEdgeLeft = 1,
+    TopEdgeCenter = 2,
+    TopEdgeRight = 3,
+    BottomEdgeLeft = 4,
+    BottomEdgeCenter = 5,
+    BottomEdgeRight = 6,
+    RightEdgeTop = 7,
+    RightEdgeCenter = 8,
+    RightEdgeBottom = 9,
+    LeftEdgeTop = 10,
+    LeftEdgeCenter = 11,
+    LeftEdgeBottom = 12,
+}
+
+---@enum HelpTip.Alignment
+HelpTip.Alignment = {
+    Left = 1,
+    Center = 2,
+    Right = 3,
+    Top = 1,
+    Bottom = 3,
+}
+
+---@enum HelpTip.ButtonStyle
+HelpTip.ButtonStyle = {
+    None = 1,
+    Close = 2,
+    Okay = 3,
+    GotIt = 4,
+    Next = 5,
+}

@@ -110,13 +110,13 @@ end
 ---@param helpTip string
 ---@return boolean
 function DB.GetHelpTip(helpTip)
-    local checked = CUF_DB.helpTips[helpTip]
-    if checked == nil then
+    local acknowledged = CUF_DB.helpTips[helpTip]
+    if acknowledged == nil then
         DB.SetHelpTip(helpTip, false)
         return false
     end
 
-    return checked
+    return acknowledged
 end
 
 -----------------------------------------
@@ -137,7 +137,7 @@ function DB.SetColor(which, colorName, val)
 end
 
 ---@param helpTip string
----@param val boolean
-function DB.SetHelpTip(helpTip, val)
-    CUF_DB.helpTips[helpTip] = val
+---@param acknowledged boolean
+function DB.SetHelpTip(helpTip, acknowledged)
+    CUF_DB.helpTips[helpTip] = acknowledged
 end

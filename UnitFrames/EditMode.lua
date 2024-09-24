@@ -350,6 +350,16 @@ local function ShowOverlays()
     for _, unit in pairs(CUF.constants.UNIT) do
         local overlay = overlays[unit] or CreateOverlayBox(CUF.unitButtons[unit], unit)
 
+        if unit == "player" then
+            CUF.HelpTips:Show(overlay, {
+                text = L.HelpTip_EditModeOverlay,
+                dbKey = "editModeOverlay",
+                buttonStyle = HelpTip.ButtonStyle.GotIt,
+                alignment = HelpTip.Alignment.Center,
+                targetPoint = HelpTip.Point.TopEdgeCenter,
+            })
+        end
+
         overlay.fadeIn:Play()
         if overlay.fadeOut:IsPlaying() then
             overlay.fadeOut:Stop()

@@ -226,3 +226,9 @@ L.hostile = "Hostile"
 L.neutral = "Neutral"
 
 L.ImportExportColors = "Import & Export Color Settings"
+
+-- Help Tips
+L.HelpTip_EditModeToggle = "Click here to position Unit Frames"
+L.HelpTip_EditModeOverlay = [[Drag to reposition the Unit Frame.
+
+Click for more options.]]

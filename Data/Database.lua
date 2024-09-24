@@ -107,6 +107,18 @@ function DB.GetColors()
     return CUF_DB.colors
 end
 
+---@param helpTip string
+---@return boolean
+function DB.GetHelpTip(helpTip)
+    local acknowledged = CUF_DB.helpTips[helpTip]
+    if acknowledged == nil then
+        DB.SetHelpTip(helpTip, false)
+        return false
+    end
+
+    return acknowledged
+end
+
 -----------------------------------------
 -- MARK: General Setters
 -----------------------------------------
@@ -122,4 +134,10 @@ end
 ---@param val RGBAOpt|string
 function DB.SetColor(which, colorName, val)
     DB.GetColors()[which][colorName] = val
+end
+
+---@param helpTip string
+---@param acknowledged boolean
+function DB.SetHelpTip(helpTip, acknowledged)
+    CUF_DB.helpTips[helpTip] = acknowledged
 end

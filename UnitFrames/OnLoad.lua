@@ -32,6 +32,7 @@ end
 
 local DEFAULT_HARM_SPELLS = {
     ["WARLOCK"] = 234153, -- Drain Life
+    ["EVOKER"] = 361469,  -- Living Flame
 }
 
 ---@param self CUFUnitButton

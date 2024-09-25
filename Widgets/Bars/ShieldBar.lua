@@ -134,7 +134,12 @@ local function ShieldBar_SetValue(bar, percent)
     local barWidth = maxWidth * percent
 
     if bar.currentPoint == "healthBar" then
-        local ratio = 1 - bar._owner.states.healthPercent
+        local healthPercent = bar._owner.states.healthPercent
+        if not healthPercent then
+            local unit = bar._owner.states.unit
+            healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
+        end
+        local ratio = 1 - healthPercent
 
         if percent > ratio then
             if bar.reverseFill then

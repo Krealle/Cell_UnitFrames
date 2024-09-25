@@ -162,6 +162,7 @@
 ---@field position PositionOpt
 ---@field spacing SpacingOpt
 ---@field size SizeOpt
+---@field hideInCombat boolean
 
 ---@class FilterOpt
 ---@field blacklist table<number>

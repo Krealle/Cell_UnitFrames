@@ -69,12 +69,13 @@ end
 
 ---@param icons CellAuraIcons
 ---@param show boolean
-local function Icons_ShowTooltip(icons, show)
+---@param hideInCombat boolean
+local function Icons_ShowTooltip(icons, show, hideInCombat)
     for i = 1, #icons do
         if show then
             icons[i]:SetScript("OnEnter", function(self)
                 -- Don't show tooltips in preview mode
-                if (CellDB["general"]["hideTooltipsInCombat"] and InCombatLockdown()) or icons._isSelected then return end
+                if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
                 GameTooltip:SetUnitAura(icons._owner.states.displayedUnit, self.index, icons.auraFilter)

@@ -40,8 +40,8 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
     if not setting or setting == const.AURA_OPTION_KIND.SHOW_STACK then
         auras:ShowStack(styleTable.showStack)
     end
-    if not setting or setting == const.AURA_OPTION_KIND.SHOW_TOOLTIP then
-        auras:ShowTooltip(styleTable.showTooltip)
+    if not setting or (setting == const.AURA_OPTION_KIND.SHOW_TOOLTIP or setting == const.AURA_OPTION_KIND.HIDE_IN_COMBAT) then
+        auras:ShowTooltip(styleTable.showTooltip, styleTable.hideInCombat)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SPACING then
         auras:SetSpacing({ styleTable.spacing.horizontal, styleTable.spacing.vertical })

@@ -186,6 +186,7 @@ const.AURA_OPTION_KIND = {
     BOSS = "boss",
     CAST_BY_PLAYERS = "castByPlayers",
     CAST_BY_NPC = "castByNPC",
+    HIDE_IN_COMBAT = "hideInCombat",
 }
 
 ---@enum AuraOrientation

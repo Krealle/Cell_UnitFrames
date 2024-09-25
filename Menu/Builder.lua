@@ -1110,7 +1110,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     ---@class AuraIconOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "AuraIconOptions"
-    f.optionHeight = 260
+    f.optionHeight = 285
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Icon")
@@ -1151,8 +1151,13 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.showAnimation = self:CreateCheckBox(f, widgetName, L["Show Animation"], const.AURA_OPTION_KIND.SHOW_ANIMATION)
     self:AnchorBelow(f.showAnimation, f.spacingHorizontalSlider)
 
+    -- Sixth Row
     f.showTooltip = self:CreateCheckBox(f, widgetName, L["Show Tooltips"], const.AURA_OPTION_KIND.SHOW_TOOLTIP)
-    self:AnchorBelow(f.showTooltip, f.spacingVerticalSlider)
+    self:AnchorBelowCB(f.showTooltip, f.showAnimation)
+
+    f.hideInCombat = self:CreateCheckBox(f, widgetName, L["Hide in Combat"], const.AURA_OPTION_KIND.HIDE_IN_COMBAT,
+        L.HideInCombatTooltip)
+    self:AnchorRightOfCB(f.hideInCombat, f.showTooltip)
 
     return f
 end

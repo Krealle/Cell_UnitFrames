@@ -74,6 +74,7 @@ L.BossTooltip = "Show auras cast by bosses"
 L.CastByPlayersTooltip = "Show auras cast by players"
 L.CastByNPCTooltip = "Show auras cast by NPCs"
 L.HideNoDurationTooltip = "Hide auras with no duration"
+L.HideInCombatTooltip = "Hide tooltips in combat"
 
 -- Cast Bar
 L.Reverse = "Reverse"

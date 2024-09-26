@@ -82,4 +82,14 @@ function DB:Revise()
             return true
         end)
     end
+    if CUF_DB.version < 6 then
+        IterateUnitLayouts(function(layout)
+            if not layout.widgets.healthText then return end
+            local hideIfEmptyOrFull = layout.widgets.healthText.hideIfEmptyOrFull
+            layout.widgets.healthText.hideIfFull = hideIfEmptyOrFull
+            layout.widgets.healthText.hideIfEmpty = hideIfEmptyOrFull
+
+            layout.widgets.healthText.hideIfEmptyOrFull = nil
+        end)
+    end
 end

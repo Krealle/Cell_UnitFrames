@@ -163,6 +163,10 @@ L.EditModeButtonTooltip = [[Edit mode allows you to position the Unit Frames.
 Clicking on a Unit Frame will bring up more options.
 
 "/cuf edit" will also toggle this mode.]]
+L.HideIfEmpty = "Hide if Empty"
+L.HideIfFull = "Hide if Full"
+L.ShowDeadStatus = "Show Dead Status"
+L.ShowDeadStatusTooltip = [[Show "Dead" instead of 0.]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

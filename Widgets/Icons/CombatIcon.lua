@@ -37,7 +37,7 @@ Handler:RegisterWidget(W.UpdateCombatIconWidget, const.WIDGET_KIND.COMBAT_ICON)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event? "PLAYER_REGEN_DISABLED" | "PLAYER_REGEN_ENABLED"
+---@param event? "PLAYER_REGEN_DISABLED" | "PLAYER_REGEN_ENABLED" | "UNIT_FLAGS"
 local function Update(button, event)
     local unit = button.states.displayedUnit
     if not unit then return end
@@ -45,8 +45,8 @@ local function Update(button, event)
     local combatIcon = button.widgets.combatIcon
 
     if combatIcon.enabled
-        and (InCombatLockdown()
-            or event == "PLAYER_REGEN_DISABLED"
+        and (event == "PLAYER_REGEN_DISABLED"
+            or UnitAffectingCombat(unit)
             or combatIcon._isSelected) then
         combatIcon:Show()
     else
@@ -56,16 +56,24 @@ end
 
 ---@param self CombatIconWidget
 local function Enable(self)
-    self._owner:AddEventListener("PLAYER_REGEN_DISABLED", Update, true)
-    self._owner:AddEventListener("PLAYER_REGEN_ENABLED", Update, true)
+    if self._owner.states.unit == "player" then
+        self._owner:AddEventListener("PLAYER_REGEN_DISABLED", Update, true)
+        self._owner:AddEventListener("PLAYER_REGEN_ENABLED", Update, true)
+    else
+        self._owner:AddEventListener("UNIT_FLAGS", Update)
+    end
 
     return true
 end
 
 ---@param self CombatIconWidget
 local function Disable(self)
-    self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", Update)
-    self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", Update)
+    if self._owner.states.unit == "player" then
+        self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", Update)
+        self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", Update)
+    else
+        self._owner:RemoveEventListener("UNIT_FLAGS", Update)
+    end
 end
 
 -------------------------------------------------

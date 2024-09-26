@@ -82,10 +82,12 @@
 ---@field textFormat string
 ---@field frameLevel number
 ---@field color ColorOpt
----@field hideIfEmptyOrFull boolean
 ---@field position PositionOpt
 ---@field format string
 ---@field font SmallFontOpt
+---@field hideIfFull boolean
+---@field hideIfEmpty boolean
+---@field showDeadStatus boolean
 
 ---@class PowerTextWidgetTable
 ---@field enabled boolean

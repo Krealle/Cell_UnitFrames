@@ -842,7 +842,7 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
 
     ---@class HealthFormatOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 100
+    f.optionHeight = 120
     f.id = "HealthFormatOptions"
 
     f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
@@ -866,12 +866,23 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
         SetEnabled(text == L["Custom"])
     end)
 
-    f.hideIfEmptyOrFull = self:CreateCheckBox(f, widgetName, L["hideIfEmptyOrFull"],
-        const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL)
-    self:AnchorBelow(f.hideIfEmptyOrFull, f.formatEditBox, 35)
+    f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
+        const.OPTION_KIND.HIDE_IF_EMPTY)
+    self:AnchorBelowCB(f.hideIfEmpty, f.formatEditBox)
+    f.hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
+        const.OPTION_KIND.HIDE_IF_FULL)
+    self:AnchorRightOfCB(f.hideIfFull, f.hideIfEmpty)
+    f.showDeadStatus = self:CreateCheckBox(f, widgetName, L.ShowDeadStatus,
+        const.OPTION_KIND.SHOW_DEAD_STATUS, L.ShowDeadStatusTooltip)
+    self:AnchorBelowCB(f.showDeadStatus, f.hideIfEmpty)
+
+    f.hideIfEmpty:HookScript("OnClick", function(...)
+        f.showDeadStatus:SetEnabled(not f.hideIfEmpty:GetChecked())
+    end)
 
     local function LoadPageDB()
         SetEnabled(HandleWidgetOption(widgetName, const.OPTION_KIND.FORMAT) == const.HealthTextFormat.CUSTOM)
+        f.showDeadStatus:SetEnabled(not HandleWidgetOption(widgetName, const.OPTION_KIND.HIDE_IF_EMPTY))
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "HealthFormatOptions")
 

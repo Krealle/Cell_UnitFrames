@@ -14,6 +14,7 @@ local Builder = CUF.Builder
 local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
+local L = CUF.L
 
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
@@ -45,8 +46,14 @@ function W.UpdateHealthTextWidget(button, unit, setting, subSetting, ...)
         widget:SetTextFormat(styleTable.textFormat)
         widget:SetFormat(styleTable.format)
     end
-    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL then
-        widget.hideIfEmptyOrFull = styleTable.hideIfEmptyOrFull
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_FULL then
+        widget.hideIfFull = styleTable.hideIfFull
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY then
+        widget.hideIfEmpty = styleTable.hideIfEmpty
+    end
+    if not setting or setting == const.OPTION_KIND.SHOW_DEAD_STATUS then
+        widget.showDeadStatus = styleTable.showDeadStatus
     end
 
     if widget.enabled and button:IsVisible() then
@@ -347,6 +354,9 @@ function W:CreateHealthText(button)
     healthText.textFormat = ""
     healthText._showingAbsorbs = false
     healthText.hideIfEmptyOrFull = false
+    healthText.hideIfFull = false
+    healthText.hideIfEmpty = false
+    healthText.showDeadStatus = false
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
@@ -355,12 +365,26 @@ function W:CreateHealthText(button)
     function healthText:UpdateValue()
         local health, healthMax, totalAbsorbs = GetHealthInfo(self._owner.states.displayedUnit, self._showingAbsorbs)
         if self.enabled and healthMax ~= 0 then
-            if self.hideIfEmptyOrFull and (health == 0 or health == healthMax) then
+            if self.hideIfFull and health == healthMax then
                 self:Hide()
-            else
-                self:SetValue(health, healthMax, totalAbsorbs)
-                self:Show()
+                return
             end
+
+            if health == 0 then
+                if self.hideIfEmpty then
+                    self:Hide()
+                    return
+                end
+
+                if self.showDeadStatus and UnitIsDeadOrGhost(self._owner.states.displayedUnit) then
+                    self:SetText(L["Dead"])
+                    self:Show()
+                    return
+                end
+            end
+
+            self:SetValue(health, healthMax, totalAbsorbs)
+            self:Show()
         end
     end
 

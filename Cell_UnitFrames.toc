@@ -50,6 +50,7 @@ Widgets/Texts/NameText.lua
 Widgets/Texts/HealthText.lua
 Widgets/Texts/PowerText.lua
 Widgets/Texts/LevelText.lua
+Widgets/Texts/CustomText.lua
 
 Widgets/Bars/HealthBar.lua
 Widgets/Bars/PowerBar.lua

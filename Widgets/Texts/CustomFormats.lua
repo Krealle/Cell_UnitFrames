@@ -296,6 +296,7 @@ function W.ProcessCustomTextFormat(textFormat, which)
     local elements = {}
     local lastEnd = 1
     local hasAbsorb = false
+    local hasHealth = false
 
     -- Process the text format and find all bracketed tags
     for bracketed in textFormat:gmatch("%b[]") do
@@ -308,7 +309,11 @@ function W.ProcessCustomTextFormat(textFormat, which)
         local maybeFunc = findTagFunction(tag, which)
 
         if maybeFunc then
-            hasAbsorb = tag:find("abs") ~= nil or hasAbsorb
+            if tag:find("abs") ~= nil then
+                hasAbsorb = true
+            else
+                hasHealth = true
+            end
             table.insert(elements, maybeFunc)
         else
             table.insert(elements, bracketed)
@@ -343,5 +348,5 @@ function W.ProcessCustomTextFormat(textFormat, which)
         end
 
         return Util:trim(table.concat(result))
-    end, hasAbsorb
+    end, hasAbsorb, hasHealth
 end

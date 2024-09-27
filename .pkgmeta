@@ -10,5 +10,6 @@ manual-changelog:
 ignore:
   - Annotations.lua
   - WidgetAnnotations.lua
+  - FramePoolAnnotation.lua
   - README.md
   - generate_changelog.sh

@@ -19,12 +19,12 @@ Core/Init.lua
 Core/Events.lua
 
 Data/Constants.lua
+Util/Utils.lua
 Data/Defaults.lua
 Data/Database.lua
 Data/DBUtil.lua
 Data/Revise.lua
 
-Util/Utils.lua
 Util/Handler.lua
 Util/HideBlizzard.lua
 Util/HelpTips.lua

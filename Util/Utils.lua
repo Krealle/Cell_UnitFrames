@@ -52,9 +52,9 @@ function Util:AddMissingProps(tableA, tableB, propsToIgnore)
 
     for key, bVal in pairs(tableB) do
         if tableA[key] == nil then
-            tableA[key] = bVal
+            tableA[key] = Util:CopyDeep(bVal)
         elseif type(tableA[key]) ~= type(bVal) then
-            tableA[key] = bVal
+            tableA[key] = Util:CopyDeep(bVal)
         elseif type(bVal) == "table" and not propsToIgnore[key] then
             self:AddMissingProps(tableA[key], bVal, propsToIgnore)
         end

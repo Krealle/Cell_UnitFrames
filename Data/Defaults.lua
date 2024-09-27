@@ -1,6 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+local Util = CUF.Util
+
 -------------------------------------------------
 -- MARK: Defaults
 -------------------------------------------------
@@ -339,11 +341,11 @@ Defaults.Widgets = {
         enabled = false,
         frameLevel = 11,
         texts = {
-            text1 = Defaults.CustomText,
-            text2 = Defaults.CustomText,
-            text3 = Defaults.CustomText,
-            text4 = Defaults.CustomText,
-            text5 = Defaults.CustomText
+            text1 = Util:CopyDeep(Defaults.CustomText),
+            text2 = Util:CopyDeep(Defaults.CustomText),
+            text3 = Util:CopyDeep(Defaults.CustomText),
+            text4 = Util:CopyDeep(Defaults.CustomText),
+            text5 = Util:CopyDeep(Defaults.CustomText)
         }
     }, -- MARK: Widgets (Auras)
     ---@type AuraWidgetTable

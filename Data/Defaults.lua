@@ -243,6 +243,25 @@ Defaults.ColorsMenuOrder = {
     }
 }
 
+---@type CustomTextWidgetTable
+Defaults.CustomText = {
+    enabled = false,
+    textFormat = "",
+    color = {
+        type = "custom",
+        rgb = { 1, 1, 1 },
+    },
+    position = {
+        point = "CENTER",
+        offsetY = 0,
+        offsetX = 0,
+        relativePoint = "CENTER",
+    },
+    font = Defaults.Options.smallFontOpt,
+    hideIfFull = false,
+    hideIfEmpty = false,
+}
+
 -------------------------------------------------
 -- MARK: Widgets (Text)
 -------------------------------------------------
@@ -314,6 +333,18 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "CENTER",
         },
+    },
+    ---@type CustomTextMainWidgetTable
+    customText = {
+        enabled = false,
+        frameLevel = 11,
+        texts = {
+            text1 = Defaults.CustomText,
+            text2 = Defaults.CustomText,
+            text3 = Defaults.CustomText,
+            text4 = Defaults.CustomText,
+            text5 = Defaults.CustomText
+        }
     }, -- MARK: Widgets (Auras)
     ---@type AuraWidgetTable
     buffs = {

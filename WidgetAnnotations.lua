@@ -106,12 +106,6 @@
 ---@field color ColorOpt
 ---@field position PositionOpt
 
----@class ReadyCheckIconWidgetTable
----@field enabled boolean
----@field frameLevel number
----@field size SizeOpt
----@field position PositionOpt
-
 -------------------------------------------------
 -- MARK: Icon Widgets
 -------------------------------------------------
@@ -145,6 +139,12 @@
 ---@field position PositionOpt
 ---@field frameLevel number
 ---@field size SizeOpt
+
+---@class ReadyCheckIconWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field size SizeOpt
+---@field position PositionOpt
 
 -------------------------------------------------
 -- MARK: Aura Widgets

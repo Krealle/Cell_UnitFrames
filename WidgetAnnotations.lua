@@ -15,6 +15,7 @@
 ---| RestingIconWidgetTable
 ---| CastBarWidgetTable
 ---| ClassBarWidgetTable
+---| CustomTextWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -31,6 +32,7 @@
 ---| RestingIconWidget
 ---| CastBarWidget
 ---| ClassBarWidget
+---| CustomTextWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -55,6 +57,7 @@
 ---@field restingIcon RestingIconWidget
 ---@field castBar CastBarWidget
 ---@field classBar ClassBarWidget
+---@field customText CustomTextWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -105,6 +108,20 @@
 ---@field font SmallFontOpt
 ---@field color ColorOpt
 ---@field position PositionOpt
+
+---@class CustomTextWidgetTable
+---@field enabled boolean
+---@field textFormat string
+---@field color ColorOpt
+---@field position PositionOpt
+---@field font SmallFontOpt
+---@field hideIfFull boolean
+---@field hideIfEmpty boolean
+
+---@class CustomTextMainWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field texts CustomTextWidgetTable[]
 
 -------------------------------------------------
 -- MARK: Icon Widgets

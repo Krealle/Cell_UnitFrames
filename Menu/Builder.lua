@@ -52,6 +52,7 @@ Builder.MenuOptions = {
     CastBarIcon = 28,
     NameFormat = 29,
     ShieldBarOptions = 30,
+    CustomText = 31,
 }
 
 -------------------------------------------------
@@ -1610,6 +1611,180 @@ function Builder:CreateShieldBarOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Custom Text
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return CustomTextOptions
+function Builder:CreateCustomTextOptions(parent, widgetName)
+    ---@class CustomTextOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 270
+    f.id = "CustomTextOptions"
+    f.selectedIndex = 1
+
+    local function Set_DB(_, path, value)
+        HandleWidgetOption(widgetName, "texts.text" .. f.selectedIndex .. "." .. path, value)
+    end
+    local function Get_DB(_, path)
+        return HandleWidgetOption(widgetName, "texts.text" .. f.selectedIndex .. "." .. path)
+    end
+
+    ---@type CellDropdown
+    local textDropdown = Cell:CreateDropdown(parent, 200)
+    textDropdown:SetLabel(L.customText)
+    textDropdown:SetPoint("TOPLEFT", f)
+
+    local enableCB = self:CreateCheckBox(parent, widgetName, L["Enabled"], const.OPTION_KIND.ENABLED)
+    self:AnchorRight(enableCB, textDropdown)
+    enableCB.Set_DB = Set_DB
+    enableCB.Get_DB = Get_DB
+
+    -- Format
+    local formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
+    self:AnchorBelow(formatEditBox, textDropdown)
+    formatEditBox.Set_DB = Set_DB
+    formatEditBox.Get_DB = Get_DB
+    CUF:SetTooltips(formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
+        unpack(CUF.widgets.CustomHealtFormatsTooltip))
+
+    -- Hide if
+    local hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
+        const.OPTION_KIND.HIDE_IF_EMPTY)
+    self:AnchorBelowCB(hideIfEmpty, formatEditBox)
+    local hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
+        const.OPTION_KIND.HIDE_IF_FULL)
+    self:AnchorRightOfCB(hideIfFull, hideIfEmpty)
+
+    hideIfEmpty.Set_DB = Set_DB
+    hideIfEmpty.Get_DB = Get_DB
+    hideIfFull.Set_DB = Set_DB
+    hideIfFull.Get_DB = Get_DB
+
+    -- Color
+    local items = {
+        { L["Class Color"],  const.ColorType.CLASS_COLOR },
+        { L["Custom Color"], const.ColorType.CUSTOM },
+    }
+
+    ---@type CellDropdown
+    local colorDropdown = Cell:CreateDropdown(parent, 200)
+    colorDropdown:SetLabel(L["Color"])
+    self:AnchorBelow(colorDropdown, hideIfEmpty)
+
+    local colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
+        Set_DB(widgetName, "color.rgb", { r, g, b })
+    end)
+    colorPicker:SetPoint("LEFT", colorDropdown, "RIGHT", 2, 0)
+
+    for _, item in pairs(items) do
+        colorDropdown:AddItem({
+            ["text"] = item[1],
+            ["value"] = item[2],
+            ["onClick"] = function()
+                if item[2] == const.ColorType.CUSTOM then
+                    colorPicker:Show()
+                else
+                    colorPicker:Hide()
+                end
+
+                Set_DB(widgetName, "color.type", item[2])
+            end,
+        })
+    end
+
+    -- Anchor
+    local anchorOptions = self:CreateAnchorOptions(parent, widgetName)
+    self:AnchorBelow(anchorOptions, colorDropdown)
+
+    anchorOptions.anchorDropdown.Set_DB = Set_DB
+    anchorOptions.anchorDropdown.Get_DB = Get_DB
+    anchorOptions.sliderX.Set_DB = Set_DB
+    anchorOptions.sliderX.Get_DB = Get_DB
+    anchorOptions.sliderY.Set_DB = Set_DB
+    anchorOptions.sliderY.Get_DB = Get_DB
+
+    -- Font
+    local fontItems = Util:GetFontItems()
+
+    local styleDropdown = self:CreateDropdown(parent, widgetName, "Font", nil, fontItems, "font.style")
+    self:AnchorBelow(styleDropdown, anchorOptions)
+
+    local outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, const.OUTLINES, "font.outline")
+    self:AnchorRight(outlineDropdown, styleDropdown)
+
+    local sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 5, 50, "font.size")
+    self:AnchorRight(sizeSlider, outlineDropdown)
+
+    local shadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked, cb)
+        Set_DB(widgetName, "font.shadow", checked)
+    end)
+    shadowCB:SetPoint("TOPLEFT", styleDropdown, "BOTTOMLEFT", 0, -10)
+
+    styleDropdown.Set_DB = Set_DB
+    styleDropdown.Get_DB = Get_DB
+    outlineDropdown.Set_DB = Set_DB
+    outlineDropdown.Get_DB = Get_DB
+    sizeSlider.Set_DB = Set_DB
+    sizeSlider.Get_DB = Get_DB
+
+    local function LoadText()
+        ---@type HealthTextWidgetTable
+        local widgetTable = HandleWidgetOption(widgetName, "texts.text" .. f.selectedIndex)
+
+        textDropdown:SetSelectedValue(f.selectedIndex)
+        enableCB:SetChecked(widgetTable.enabled)
+
+        -- Format
+        formatEditBox:SetText(widgetTable.textFormat)
+        hideIfEmpty:SetChecked(widgetTable.hideIfEmpty)
+        hideIfFull:SetChecked(widgetTable.hideIfFull)
+
+        -- Color
+        colorDropdown:SetSelectedValue(widgetTable.color.type)
+        local r, g, b, a = unpack(widgetTable.color.rgb)
+        colorPicker:SetColor(r, g, b, a)
+
+        if widgetTable.color.type == const.ColorType.CUSTOM then
+            colorPicker:Show()
+        else
+            colorPicker:Hide()
+        end
+
+        -- Anchor
+        anchorOptions.anchorDropdown:SetSelectedValue(widgetTable.position.point)
+        anchorOptions.sliderX:SetValue(widgetTable.position.offsetX)
+        anchorOptions.sliderY:SetValue(widgetTable.position.offsetY)
+
+        -- Font
+        styleDropdown:SetSelectedValue(widgetTable.font.style)
+        outlineDropdown:SetSelectedValue(widgetTable.font.outline)
+        sizeSlider:SetValue(widgetTable.font.size)
+        shadowCB:SetChecked(widgetTable.font.shadow)
+    end
+
+    for i = 1, 5 do
+        textDropdown:AddItem({
+            ["text"] = "Text " .. i,
+            ["value"] = i,
+            ["onClick"] = function()
+                f.selectedIndex = i
+                LoadText()
+            end,
+        })
+    end
+
+    local function LoadPageDB()
+        f.selectedIndex = 1
+        LoadText()
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "CustomTextOptions")
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1645,4 +1820,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
     [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
     [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,
+    [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
 }

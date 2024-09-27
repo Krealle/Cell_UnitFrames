@@ -346,13 +346,17 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateHealthText(button)
+---@param custom boolean?
+function W:CreateHealthText(button, custom)
     ---@class HealthTextWidget: TextWidget
     local healthText = W.CreateBaseTextWidget(button, const.WIDGET_KIND.HEALTH_TEXT)
-    button.widgets.healthText = healthText
+    if not custom then
+        button.widgets.healthText = healthText
+    end
 
     healthText.textFormat = ""
     healthText._showingAbsorbs = false
+    healthText._showingHealth = true
     healthText.hideIfEmptyOrFull = false
     healthText.hideIfFull = false
     healthText.hideIfEmpty = false
@@ -391,6 +395,10 @@ function W:CreateHealthText(button)
     healthText.Update = Update
     healthText.Enable = Enable
     healthText.Disable = Disable
+
+    if custom then
+        return healthText
+    end
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.HEALTH_TEXT, W.CreateHealthText)

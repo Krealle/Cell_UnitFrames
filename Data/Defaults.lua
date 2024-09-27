@@ -1,6 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+local Util = CUF.Util
+
 -------------------------------------------------
 -- MARK: Defaults
 -------------------------------------------------
@@ -243,6 +245,25 @@ Defaults.ColorsMenuOrder = {
     }
 }
 
+---@type CustomTextWidgetTable
+Defaults.CustomText = {
+    enabled = false,
+    textFormat = "",
+    color = {
+        type = "custom",
+        rgb = { 1, 1, 1 },
+    },
+    position = {
+        point = "CENTER",
+        offsetY = 0,
+        offsetX = 0,
+        relativePoint = "CENTER",
+    },
+    font = Defaults.Options.smallFontOpt,
+    hideIfFull = false,
+    hideIfEmpty = false,
+}
+
 -------------------------------------------------
 -- MARK: Widgets (Text)
 -------------------------------------------------
@@ -314,6 +335,18 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "CENTER",
         },
+    },
+    ---@type CustomTextMainWidgetTable
+    customText = {
+        enabled = false,
+        frameLevel = 11,
+        texts = {
+            text1 = Util:CopyDeep(Defaults.CustomText),
+            text2 = Util:CopyDeep(Defaults.CustomText),
+            text3 = Util:CopyDeep(Defaults.CustomText),
+            text4 = Util:CopyDeep(Defaults.CustomText),
+            text5 = Util:CopyDeep(Defaults.CustomText)
+        }
     }, -- MARK: Widgets (Auras)
     ---@type AuraWidgetTable
     buffs = {
@@ -639,6 +672,7 @@ Defaults.Layouts = {
             healthText = Defaults.Widgets.healthText,
             powerText = Defaults.Widgets.powerText,
             levelText = Defaults.Widgets.levelText,
+            customText = Defaults.Widgets.customText,
             buffs = Defaults.Widgets.buffs,
             debuffs = Defaults.Widgets.debuffs,
             raidIcon = Defaults.Widgets.raidIcon,
@@ -664,6 +698,7 @@ Defaults.Layouts = {
             healthText = Defaults.Widgets.healthText,
             powerText = Defaults.Widgets.powerText,
             levelText = Defaults.Widgets.levelText,
+            customText = Defaults.Widgets.customText,
             buffs = Defaults.Widgets.buffs,
             debuffs = Defaults.Widgets.debuffs,
             raidIcon = Defaults.Widgets.raidIcon,
@@ -720,6 +755,7 @@ Defaults.Layouts = {
             healthText = Defaults.Widgets.healthText,
             powerText = Defaults.Widgets.powerText,
             levelText = Defaults.Widgets.levelText,
+            customText = Defaults.Widgets.customText,
             buffs = Defaults.Widgets.buffs,
             debuffs = Defaults.Widgets.debuffs,
             raidIcon = Defaults.Widgets.raidIcon,

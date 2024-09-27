@@ -80,6 +80,7 @@ const.WIDGET_KIND = {
     HEALTH_TEXT = "healthText",
     POWER_TEXT = "powerText",
     LEVEL_TEXT = "levelText",
+    CUSTOM_TEXT = "customText",
     BUFFS = "buffs",
     DEBUFFS = "debuffs",
     RAID_ICON = "raidIcon",
@@ -155,6 +156,7 @@ const.OPTION_KIND = {
     REVERSE_FILL            = "reverseFill",
     OVER_SHIELD             = "overShield",
     SHOW_DEAD_STATUS        = "showDeadStatus",
+    CUSTOM_TEXTS            = "customTexts",
 }
 
 ---@enum AURA_OPTION_KIND

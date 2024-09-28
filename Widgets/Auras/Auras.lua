@@ -271,6 +271,15 @@ local function Icons_HidePreview(icons)
 end
 
 -------------------------------------------------
+-- MARK: API Functions
+-------------------------------------------------
+
+---@param icon CellAuraIcon
+---@param auraDate AuraData
+function Icon_PostUpdate(icon, auraDate)
+end
+
+-------------------------------------------------
 -- MARK: Update
 -------------------------------------------------
 
@@ -351,6 +360,12 @@ function W:CreateAuraIcons(button, type)
                 frame:SetScript("OnUpdate", Icon_OnUpdate)
             end
         end)
+
+        icon:HookScript("OnHide", function()
+            Util.GlowStop(icon)
+        end)
+
+        icon.PostUpdate = Icon_PostUpdate
     end
 
     auraIcons.SetEnabled = W.SetEnabled
@@ -429,6 +444,7 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field ShowStack fun(frame, show) Shared_ShowStack
 ---@field ShowAnimation fun(frame, show) BarIcon_ShowAnimation
 ---@field UpdatePixelPerfect fun(frame) BarIcon_UpdatePixelPerfect
+---@field PostUpdate fun(self: CellAuraIcon, auraDate: AuraData) Icon_PostUpdate
 ---@field cooldown StatusBar
 ---@field GetCooldownDuration function
 ---@field ShowCooldown function
@@ -437,6 +453,7 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field preview CellAuraIcon.preview
 ---@field showDuration boolean
 ---@field _showDuration boolean
+---@field __glowing string?
 
 ---@class CellAuraIcons: Frame
 ---@field indicatorType "icons"

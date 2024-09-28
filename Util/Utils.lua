@@ -477,6 +477,95 @@ function Util.GetPositionRelativeToScreenCenter(frame)
 end
 
 -------------------------------------------------
+-- MARK: Glow
+-------------------------------------------------
+
+local LCG = LibStub("LibCustomGlow-1.0")
+---@class GlowFrame: Frame
+---@field __glowing string?
+
+---@param frame GlowFrame|CellAuraIcon
+---@param color RGBAOpt?
+---@param N number?
+---@param frequency number?
+---@param length number?
+---@param thickness number?
+---@param xOffset number?
+---@param yOffset number?
+---@param border boolean?
+---@param key string?
+---@param frameLevel number?
+function Util.GlowStart_Pixel(frame, color, N, frequency, length, thickness, xOffset, yOffset, border, key, frameLevel)
+    if frame.__glowing ~= "Pixel" then
+        Util.GlowStop(frame, key)
+    end
+
+    LCG.PixelGlow_Start(frame, color, N, frequency, length, thickness, xOffset, yOffset, border, key, frameLevel)
+    frame.__glowing = "Pixel"
+end
+
+---@param frame GlowFrame|CellAuraIcon
+---@param color RGBAOpt?
+---@param N number?
+---@param frequency number?
+---@param scale number?
+---@param xOffset number?
+---@param yOffset number?
+---@param key string?
+---@param frameLevel number?
+function Util.GlowStart_Shine(frame, color, N, frequency, scale, xOffset, yOffset, key, frameLevel)
+    if frame.__glowing ~= "Shine" then
+        Util.GlowStop(frame, key)
+    end
+
+    LCG.AutoCastGlow_Start(frame, color, N, frequency, scale, xOffset, yOffset, key, frameLevel)
+    frame.__glowing = "Shine"
+end
+
+---@param frame GlowFrame|CellAuraIcon
+---@param color RGBAOpt?
+---@param duration number?
+---@param startAnim boolean?
+---@param xOffset number?
+---@param yOffset number?
+---@param key string?
+---@param frameLevel number?
+function Util.GlowStart_Proc(frame, color, duration, startAnim, xOffset, yOffset, key, frameLevel)
+    if frame.__glowing ~= "Proc" then
+        Util.GlowStop(frame, key)
+    end
+
+    LCG.ProcGlow_Start(frame, color, duration, startAnim, xOffset, yOffset, key, frameLevel)
+    frame.__glowing = "Proc"
+end
+
+---@param frame GlowFrame|CellAuraIcon
+---@param color RGBAOpt?
+---@param frequency number?
+---@param frameLevel number?
+function Util.GlowStart_Normal(frame, color, frequency, frameLevel)
+    if frame.__glowing ~= "Normal" then
+        Util.GlowStop(frame)
+    end
+
+    LCG.ButtonGlow_Start(frame, color, frequency, frameLevel)
+    frame.__glowing = "Normal"
+end
+
+---@param frame GlowFrame|CellAuraIcon
+---@param key string?
+function Util.GlowStop(frame, key)
+    if not frame.__glowing then return end
+
+    LCG.ButtonGlow_Stop(frame, key)
+    LCG.PixelGlow_Stop(frame, key)
+    LCG.AutoCastGlow_Stop(frame, key)
+    LCG.ProcGlow_Stop(frame, key)
+
+    frame.__glowing = nil
+end
+
+-------------------------------------------------
 -- MARK: Formatting
 -------------------------------------------------
 

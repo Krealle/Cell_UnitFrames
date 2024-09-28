@@ -185,6 +185,8 @@ local function UpdateAuraIcons(icons)
             auraData.refreshing
         )
         icons[icons._auraCount].index = auraData.index -- Tooltip
+
+        icons[icons._auraCount]:PostUpdate(auraData)
     end
 
     -- Resize

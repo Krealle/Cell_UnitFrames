@@ -368,6 +368,146 @@ local function ShowOverlays()
 end
 
 -------------------------------------------------
+-- MARK: Cell Edit Mode
+-------------------------------------------------
+
+local CellAnchorFrameNames = {
+    CellAnchorFrame = { name = "Main Frame", key = "main" },
+    CellSeparateNPCFrameAnchor = { name = "Seperate NPC Frame", key = "npc" },
+    CellRaidPetAnchorFrame = { name = "Raid Pet Frame", key = "pet" },
+    CellSpotlightAnchorFrame = { name = "Spotlight Frame", key = "spotlight" },
+    CellQuickAssistAnchorFrame = { name = "Quick Assist Frame" }, --CellDB["quickAssist"][Cell.vars.playerSpecID] => layoutTable["position"]
+}
+
+local cellPopup
+
+local function GetAnchorFrame()
+    if not cellPopup then return end
+
+    local anchor = cellPopup.frameDropdown:GetSelected()
+    if not anchor then return end
+
+    local anchorFrame = _G[anchor]
+    if not anchorFrame then return end
+
+    local key = CellAnchorFrameNames[cellPopup.frameDropdown:GetSelected()].key
+    return anchorFrame, key
+end
+
+local function UpdateCellEditModePopup()
+    if not cellPopup then return end
+
+    local anchorFrame, key = GetAnchorFrame()
+    if not anchorFrame then return end
+
+    local x, y
+    if key then
+        x, y = unpack(Cell.vars.currentLayoutTable[key].position)
+    else
+        x, y = unpack(CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
+    end
+
+    cellPopup.xPosSlider:SetValue(x)
+    cellPopup.yPosSlider:SetValue(y)
+end
+
+local function UpdateCellFramePosition()
+    if not cellPopup then return end
+    local x, y = cellPopup.xPosSlider:GetValue(), cellPopup.yPosSlider:GetValue()
+    local anchorFrame, key = GetAnchorFrame()
+
+    -- Use Cell functions directly to reduce chance of error
+    P:LoadPosition(anchorFrame, { x, y })
+    if key then
+        P:SavePosition(anchorFrame, Cell.vars.currentLayoutTable[key].position)
+    else
+        P:SavePosition(anchorFrame, CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
+    end
+end
+
+local function CreateCellEditModePopup()
+    ---@class CUF_CellEditModePopup: Frame
+    cellPopup = CUF:CreateFrame("CUF_CellEditModePopup", UIParent, 340, 150)
+    cellPopup:SetPoint("CENTER", 0, 200)
+
+    cellPopup:SetMovable(true)
+    cellPopup:EnableMouse(true)
+    cellPopup:RegisterForDrag("LeftButton")
+    cellPopup:SetScript("OnDragStart", function(self)
+        self:StartMoving()
+    end)
+    cellPopup:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+    end)
+
+    local closeBtn = Cell:CreateButton(cellPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+        "CELL_FONT_SPECIAL")
+    closeBtn:SetPoint("TOPRIGHT", P:Scale(-5), P:Scale(-1))
+    closeBtn:SetScript("OnClick", function() cellPopup:Hide() end)
+
+    local title = cellPopup:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS")
+    title:SetPoint("TOPLEFT", 5, -5)
+    title:SetText(L.CellEditMode)
+
+    local subTitle = cellPopup:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    subTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -5)
+    subTitle:SetText(L.CellEditModeTip)
+    subTitle:SetScale(0.9)
+
+    ---@type CellDropdown
+    local frameDropdown = Cell:CreateDropdown(cellPopup, 200)
+    frameDropdown:SetPoint("TOPLEFT", 10, -60)
+    frameDropdown:SetLabel(L["Frame"])
+
+    -- Offsets
+    local maxX, maxY = GetPhysicalScreenSize()
+    local xVal = maxX
+    local yVal = maxY
+
+    local xPosSlider = Cell:CreateSlider(L["X Offset"], cellPopup, 0, xVal, 150, 1)
+    xPosSlider:SetPoint("TOPLEFT", frameDropdown, "BOTTOMLEFT", 0, -30)
+    local yPosSlider = Cell:CreateSlider(L["Y Offset"], cellPopup, 0, yVal, 150, 1)
+    yPosSlider:SetPoint("TOPLEFT", xPosSlider, "TOPRIGHT", 20, 0)
+
+    yPosSlider.onValueChangedFn = UpdateCellFramePosition
+    xPosSlider.onValueChangedFn = UpdateCellFramePosition
+
+    for anchorName, info in pairs(CellAnchorFrameNames) do
+        frameDropdown:AddItem({
+            text = L[info.name],
+            value = anchorName,
+            onClick = function()
+                UpdateCellEditModePopup()
+            end,
+        })
+    end
+
+    frameDropdown:SetSelected(CellAnchorFrameNames.CellAnchorFrame.name)
+
+    cellPopup.xPosSlider = xPosSlider
+    cellPopup.yPosSlider = yPosSlider
+    cellPopup.frameDropdown = frameDropdown
+end
+
+local function ShowCellEditModePopup()
+    if not cellPopup then
+        CreateCellEditModePopup()
+    end
+    cellPopup:Show()
+
+    UpdateCellEditModePopup()
+
+    CUF:RegisterCallback("UpdateLayout", "UpdateCellEditModePopup", UpdateCellEditModePopup)
+end
+
+local function HideCellEditModePopup()
+    if cellPopup then
+        cellPopup:Hide()
+        CUF:UnregisterCallback("UpdateLayout", "UpdateCellEditModePopup")
+    end
+end
+
+-------------------------------------------------
 -- MARK: Edit Mode
 -------------------------------------------------
 
@@ -376,6 +516,7 @@ eventFrame:SetScript("OnEvent", function()
     CUF.vars.inEditMode = false
     HideOverlays(true)
     HidePositioningPopup()
+    HideCellEditModePopup()
 end)
 
 --- Enable or disable edit mode
@@ -393,10 +534,12 @@ function U:EditMode(show)
 
     if CUF.vars.inEditMode then
         ShowOverlays()
+        ShowCellEditModePopup()
         eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
     else
         HideOverlays()
         HidePositioningPopup()
+        HideCellEditModePopup()
         eventFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
     end
 end

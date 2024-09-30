@@ -169,6 +169,9 @@ L.HideIfFull = "Hide if Full"
 L.ShowDeadStatus = "Show Dead Status"
 L.ShowDeadStatusTooltip = [[Show "Dead" instead of 0.]]
 
+L.CellEditMode = "Cell Frames"
+L.CellEditModeTip = "(Previews won't dynamically update)"
+
 -- Custom Formats
 L.ValidTags = "Valid Tags"
 

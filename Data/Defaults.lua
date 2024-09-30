@@ -628,6 +628,11 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPLEFT",
         },
+    },
+    ---@type HealAbsorbWidgetTable
+    healAbsorb = {
+        enabled = false,
+        frameLevel = 10,
     }
 }
 

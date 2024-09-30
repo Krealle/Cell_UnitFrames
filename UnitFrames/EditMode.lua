@@ -457,16 +457,14 @@ local function CreateCellEditModePopup()
     ---@type CellDropdown
     local frameDropdown = Cell:CreateDropdown(cellPopup, 200)
     frameDropdown:SetPoint("TOPLEFT", 10, -60)
-    frameDropdown:SetLabel(L["Frame"])
+    frameDropdown:SetLabel(L.Frame)
 
     -- Offsets
     local maxX, maxY = GetPhysicalScreenSize()
-    local xVal = maxX
-    local yVal = maxY
 
-    local xPosSlider = Cell:CreateSlider(L["X Offset"], cellPopup, 0, xVal, 150, 1)
+    local xPosSlider = Cell:CreateSlider(L["X Offset"], cellPopup, 0, maxX, 150, 1)
     xPosSlider:SetPoint("TOPLEFT", frameDropdown, "BOTTOMLEFT", 0, -30)
-    local yPosSlider = Cell:CreateSlider(L["Y Offset"], cellPopup, 0, yVal, 150, 1)
+    local yPosSlider = Cell:CreateSlider(L["Y Offset"], cellPopup, 0, maxY, 150, 1)
     yPosSlider:SetPoint("TOPLEFT", xPosSlider, "TOPRIGHT", 20, 0)
 
     yPosSlider.onValueChangedFn = UpdateCellFramePosition

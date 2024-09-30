@@ -116,6 +116,7 @@ Defaults.Options.fontWidth = {
 ---| "chi"
 ---| "runes"
 ---| "shieldBar"
+---| "healAbsorb"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -178,6 +179,12 @@ Defaults.Colors = {
         texture = "Interface\\Buttons\\WHITE8X8",
         color = { 1, 1, 0, 0.25 },
         overShield = { 1, 1, 1, 1 },
+    },
+    healAbsorb = {
+        texture = "Interface\\AddOns\\Cell\\Media\\shield.tga",
+        color = { 1, 0.1, 0.1, 1 },
+        overShield = { 1, 1, 1, 1 },
+        invertColor = false,
     }
 }
 
@@ -242,6 +249,12 @@ Defaults.ColorsMenuOrder = {
         { "texture",    "texture" },
         { "color",      "rgb" },
         { "overShield", "rgb" },
+    },
+    healAbsorb = {
+        { "texture",     "texture" },
+        { "color",       "rgb" },
+        { "overShield",  "rgb" },
+        { "invertColor", "toggle" },
     }
 }
 

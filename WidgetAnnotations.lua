@@ -184,6 +184,7 @@
 ---@field hideInCombat boolean
 
 ---@class FilterOpt
+---@field whiteListPriority boolean
 ---@field blacklist table<number>
 ---@field whitelist table<number>
 ---@field hideNoDuration boolean

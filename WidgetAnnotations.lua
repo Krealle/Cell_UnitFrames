@@ -16,6 +16,7 @@
 ---| CastBarWidgetTable
 ---| ClassBarWidgetTable
 ---| CustomTextWidgetTable
+---| HealAbsorbWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -33,6 +34,7 @@
 ---| CastBarWidget
 ---| ClassBarWidget
 ---| CustomTextWidget
+---| HealAbsorbWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -58,6 +60,7 @@
 ---@field castBar CastBarWidget
 ---@field classBar ClassBarWidget
 ---@field customText CustomTextWidget
+---@field healAbsorb HealAbsorbWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -252,6 +255,10 @@
 ---@field spacing number
 ---@field verticalFill boolean
 ---@field sameSizeAsHealthBar boolean
+
+---@class HealAbsorbWidgetTable
+---@field enabled boolean
+---@field frameLevel number
 
 -------------------------------------------------
 -- MARK: Generic Options

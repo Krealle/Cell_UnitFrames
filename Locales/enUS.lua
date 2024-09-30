@@ -208,6 +208,11 @@ L["def:short"] = "Displays the deficit as a shortvalue."
 L["def:per"] = "Displays the deficit as a percentage."
 L["def:per-short"] = "Displays the deficit as a percentage without decimals."
 
+L["healabs"] = "Displays the amount of heal absorbs."
+L["healabs:short"] = "Displays the amount of heal absorbs as a shortvalue."
+L["healabs:per"] = "Displays the amount of heal absorbs as a percentage."
+L["healabs:per-short"] = "Displays the amount of heal absorbs as a percentage without decimals."
+
 -- Colors
 L.color = "Color"
 L.stageZero = "Stage 0"

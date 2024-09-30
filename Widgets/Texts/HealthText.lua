@@ -19,6 +19,7 @@ local L = CUF.L
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -121,14 +122,17 @@ end
 
 ---@param unit Unit
 ---@param absorbs boolean
+---@param healAbsorbs boolean
 ---@return number health
 ---@return number healthMax
 ---@return number totalAbsorbs
-local function GetHealthInfo(unit, absorbs)
+---@return number totalHealAbsorbs
+local function GetHealthInfo(unit, absorbs, healAbsorbs)
     local health = UnitHealth(unit)
     local healthMax = UnitHealthMax(unit)
     local totalAbsorbs = absorbs and UnitGetTotalAbsorbs(unit) or 0
-    return health, healthMax, totalAbsorbs
+    local healAborbs = healAbsorbs and UnitGetTotalHealAbsorbs(unit) or 0
+    return health, healthMax, totalAbsorbs, healAborbs
 end
 
 ---@param self HealthTextWidget
@@ -271,8 +275,8 @@ end
 local function SetHealth_Custom(self)
     local formatFn, hasAbsorb = W.ProcessCustomTextFormat(self.textFormat, "health")
     self._showingAbsorbs = hasAbsorb
-    self.SetValue = function(_, current, max, totalAbsorbs)
-        self:SetText(formatFn(current, max, totalAbsorbs))
+    self.SetValue = function(_, current, max, totalAbsorbs, healAbsorbs)
+        self:SetText(formatFn(current, max, totalAbsorbs, healAbsorbs))
     end
 end
 
@@ -357,6 +361,7 @@ function W:CreateHealthText(button, custom)
     healthText.textFormat = ""
     healthText._showingAbsorbs = false
     healthText._showingHealth = true
+    healthText._showingHealAbsorbs = false
     healthText.hideIfEmptyOrFull = false
     healthText.hideIfFull = false
     healthText.hideIfEmpty = false
@@ -364,10 +369,13 @@ function W:CreateHealthText(button, custom)
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
+    ---@type fun(self: HealthTextWidget, current: number, max: number, totalAbsorbs: number, healAbsorbs: number)
     healthText.SetValue = SetHealth_Percentage
 
     function healthText:UpdateValue()
-        local health, healthMax, totalAbsorbs = GetHealthInfo(self._owner.states.displayedUnit, self._showingAbsorbs)
+        local health, healthMax, totalAbsorbs, healAbsorbs = GetHealthInfo(self._owner.states.displayedUnit,
+            self._showingAbsorbs,
+            self._showingHealAbsorbs)
         if self.enabled and healthMax ~= 0 then
             if self.hideIfFull and health == healthMax then
                 self:Hide()
@@ -387,7 +395,7 @@ function W:CreateHealthText(button, custom)
                 end
             end
 
-            self:SetValue(health, healthMax, totalAbsorbs)
+            self:SetValue(health, healthMax, totalAbsorbs, healAbsorbs)
             self:Show()
         end
     end

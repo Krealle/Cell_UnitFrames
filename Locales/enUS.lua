@@ -140,6 +140,7 @@ L.restingIcon = "Resting Icon"
 L.castBar = "Cast Bar"
 L.classBar = "Class Bar"
 L.healthBar = "Health Bar"
+L.healAbsorb = "Heal Absorb"
 
 -- Misc
 L.Frame = "Frame"

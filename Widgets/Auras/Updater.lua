@@ -89,6 +89,9 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         if not subSetting or subSetting == "personal" then
             auras:SetPersonal(styleTable.filter.personal)
         end
+        if not subSetting or subSetting == const.AURA_OPTION_KIND.WHITE_LIST_PRIORITY then
+            auras:SetWhiteListPriority(styleTable.filter.whiteListPriority)
+        end
     end
 
     auras.Update(button)

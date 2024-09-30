@@ -183,7 +183,7 @@ Defaults.Colors = {
     healAbsorb = {
         texture = "Interface\\AddOns\\Cell\\Media\\shield",
         color = { 1, 0.1, 0.1, 1 },
-        overShield = { 1, 1, 1, 1 },
+        overAbsorb = { 1, 1, 1, 1 },
         invertColor = false,
     }
 }
@@ -253,7 +253,7 @@ Defaults.ColorsMenuOrder = {
     healAbsorb = {
         { "texture",     "texture" },
         { "color",       "rgb" },
-        { "overShield",  "rgb" },
+        { "overAbsorb",  "rgb" },
         { "invertColor", "toggle" },
     }
 }

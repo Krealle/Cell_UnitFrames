@@ -222,7 +222,7 @@ function W:CreateHealAbsorb(button)
         end
 
         tex:SetVertexColor(unpack(colors.color))
-        overAbsorbGlow:SetVertexColor(unpack(colors.overShield))
+        overAbsorbGlow:SetVertexColor(unpack(colors.overAbsorb))
 
         healAbsorb.absorbInvertColor = colors.invertColor
     end

@@ -5,6 +5,9 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
+-- Forwards from Cell
+L.invertColor = L["Invert Color"]
+
 -- Tabs
 L.unitFramesTab = "Unit Frames"
 L.generalTab = "General"
@@ -238,6 +241,7 @@ L.essence = "Essence"
 L.classResources = "Class Resources"
 L.useClassColorForPet = "Use Class Color for Pet"
 L.overShield = "Overshield"
+L.overAbsorb = "Overabsorb"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

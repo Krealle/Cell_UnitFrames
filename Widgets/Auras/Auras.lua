@@ -173,6 +173,12 @@ local function Icons_SetPersonal(icons, personal)
 end
 
 ---@param icons CellAuraIcons
+---@param priority boolean
+local function Icons_SetWhiteListPriority(icons, priority)
+    icons.whiteListPriority = priority
+end
+
+---@param icons CellAuraIcons
 ---@param show boolean
 local function Icons_ShowDuration(icons, show)
     for _, icon in ipairs(icons) do
@@ -380,6 +386,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetWhitelist = Icons_SetWhitelist
     auraIcons.SetUseBlacklist = Icons_SetUseBlacklist
     auraIcons.SetUseWhitelist = Icons_SetUseWhitelist
+    auraIcons.SetWhiteListPriority = Icons_SetWhiteListPriority
 
     auraIcons.SetBoss = Icons_SetBoss
     auraIcons.SetCastByPlayers = Icons_SetCastByPlayers
@@ -480,6 +487,7 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field minDuration number|boolean
 ---@field blacklist table<number, boolean>
 ---@field whitelist table<number, boolean>
+---@field whiteListPriority boolean
 ---@field useBlacklist boolean
 ---@field useWhitelist boolean
 ---@field boss boolean

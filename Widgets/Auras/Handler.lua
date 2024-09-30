@@ -164,6 +164,18 @@ local function UpdateAuraIcons(icons)
         local aData = icons._auraCache[a]
         local bData = icons._auraCache[b]
         if not aData or not bData then return false end
+
+        if icons.useWhitelist and icons.whiteListPriority then
+            local aIdx = icons.whitelist[aData.spellId]
+            local bIdx = icons.whitelist[bData.spellId]
+
+            if aIdx or bIdx then
+                if not aIdx and bIdx then return false end
+                if not bIdx then return true end
+                return aIdx < bIdx
+            end
+        end
+
         return aData.expirationTime > bData.expirationTime
     end)
 

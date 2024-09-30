@@ -192,6 +192,7 @@ const.AURA_OPTION_KIND = {
     CAST_BY_PLAYERS = "castByPlayers",
     CAST_BY_NPC = "castByNPC",
     HIDE_IN_COMBAT = "hideInCombat",
+    WHITE_LIST_PRIORITY = "whiteListPriority",
 }
 
 ---@enum AuraOrientation

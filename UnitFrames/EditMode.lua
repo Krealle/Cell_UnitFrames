@@ -376,7 +376,7 @@ local CellAnchorFrameNames = {
     CellSeparateNPCFrameAnchor = { name = "Seperate NPC Frame", key = "npc" },
     CellRaidPetAnchorFrame = { name = "Raid Pet Frame", key = "pet" },
     CellSpotlightAnchorFrame = { name = "Spotlight Frame", key = "spotlight" },
-    CellQuickAssistAnchorFrame = { name = "Quick Assist Frame" }, --CellDB["quickAssist"][Cell.vars.playerSpecID] => layoutTable["position"]
+    CellQuickAssistAnchorFrame = { name = "Quick Assist Frame" },
 }
 
 local cellPopup

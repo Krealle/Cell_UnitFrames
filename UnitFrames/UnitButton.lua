@@ -203,6 +203,9 @@ function U:SetOrientation(button, orientation, rotateTexture)
     if button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then
         W.UpdateShieldBarWidget(button, button.states.unit)
     end
+    if button:HasWidget(const.WIDGET_KIND.HEAL_ABSORB) then
+        button.widgets.healAbsorb:SetOrientation(orientation)
+    end
 end
 
 -------------------------------------------------

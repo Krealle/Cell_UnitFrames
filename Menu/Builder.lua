@@ -1265,7 +1265,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     ---@class AuraFilterOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "AuraFilterOptions"
-    f.optionHeight = 165
+    f.optionHeight = 195
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Filter")
@@ -1321,6 +1321,11 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L.UseWhitelist,
         const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.USE_WHITELIST)
     self:AnchorRightOfCB(f.useWhitelistCB, f.useBlacklistCB)
+
+    f.whiteListPriority = self:CreateCheckBox(f, widgetName, L.WhiteListPriority,
+        const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.WHITE_LIST_PRIORITY,
+        L.WhiteListPriorityTooltip)
+    self:AnchorBelowCB(f.whiteListPriority, f.useBlacklistCB)
 
     return f
 end

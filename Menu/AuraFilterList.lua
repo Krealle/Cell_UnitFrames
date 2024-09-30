@@ -547,7 +547,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     ---@param t table auraTable
     function widget:SetDBValue(t)
         widget.t = t
-        CreateAuraButtons(widget.frame, auraButtons, t, true, UpdateHeight)
+        CreateAuraButtons(widget.frame, auraButtons, t, false, UpdateHeight)
         UpdateHeight()
     end
 

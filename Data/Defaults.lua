@@ -181,7 +181,7 @@ Defaults.Colors = {
         overShield = { 1, 1, 1, 1 },
     },
     healAbsorb = {
-        texture = "Interface\\AddOns\\Cell\\Media\\shield.tga",
+        texture = "Interface\\AddOns\\Cell\\Media\\shield",
         color = { 1, 0.1, 0.1, 1 },
         overShield = { 1, 1, 1, 1 },
         invertColor = false,

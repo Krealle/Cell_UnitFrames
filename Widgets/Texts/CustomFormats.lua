@@ -328,10 +328,10 @@ function W.ProcessCustomTextFormat(textFormat, which)
         local maybeFunc = findTagFunction(tag, which)
 
         if maybeFunc then
-            if tag:find("abs") ~= nil then
-                hasAbsorb = true
-            elseif tag:find("healabs") ~= nil then
+            if tag:find("healabs") ~= nil then
                 hasHealAbsorb = true
+            elseif tag:find("abs") ~= nil then
+                hasAbsorb = true
             else
                 hasHealth = true
             end

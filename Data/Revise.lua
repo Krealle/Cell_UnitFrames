@@ -8,8 +8,10 @@ local DB = CUF.DB
 ---@param func fun(layout: UnitLayout, unit: Unit)
 local function IterateUnitLayouts(func)
     for _, layoutTable in pairs(CellDB.layouts) do
-        for unit, unitLayout in pairs(layoutTable.CUFUnits) do
-            func(unitLayout, unit)
+        if layoutTable.CUFUnits then
+            for unit, unitLayout in pairs(layoutTable.CUFUnits) do
+                func(unitLayout, unit)
+            end
         end
     end
 end

@@ -91,7 +91,8 @@ const.WIDGET_KIND = {
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
-    CLASS_BAR = "classBar"
+    CLASS_BAR = "classBar",
+    HEAL_ABSORB = "healAbsorb"
 }
 
 ---@enum OPTION_KIND
@@ -157,6 +158,7 @@ const.OPTION_KIND = {
     OVER_SHIELD             = "overShield",
     SHOW_DEAD_STATUS        = "showDeadStatus",
     CUSTOM_TEXTS            = "customTexts",
+    OVER_ABSORB_GLOW        = "overAbsorbGlow",
 }
 
 ---@enum AURA_OPTION_KIND

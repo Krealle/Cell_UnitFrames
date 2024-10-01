@@ -57,6 +57,7 @@ Widgets/Bars/PowerBar.lua
 Widgets/Bars/ShieldBar.lua
 Widgets/Bars/CastBar.lua
 Widgets/Bars/ClassBar.lua
+Widgets/Bars/HealAbsorb.lua
 
 Widgets/Icons/RaidIcon.lua
 Widgets/Icons/RoleIcon.lua

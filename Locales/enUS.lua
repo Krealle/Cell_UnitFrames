@@ -5,6 +5,9 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
+-- Forwards from Cell
+L.invertColor = L["Invert Color"]
+
 -- Tabs
 L.unitFramesTab = "Unit Frames"
 L.generalTab = "General"
@@ -140,6 +143,7 @@ L.restingIcon = "Resting Icon"
 L.castBar = "Cast Bar"
 L.classBar = "Class Bar"
 L.healthBar = "Health Bar"
+L.healAbsorb = "Heal Absorb"
 
 -- Misc
 L.Frame = "Frame"
@@ -207,6 +211,11 @@ L["def:short"] = "Displays the deficit as a shortvalue."
 L["def:per"] = "Displays the deficit as a percentage."
 L["def:per-short"] = "Displays the deficit as a percentage without decimals."
 
+L["healabs"] = "Displays the amount of heal absorbs."
+L["healabs:short"] = "Displays the amount of heal absorbs as a shortvalue."
+L["healabs:per"] = "Displays the amount of heal absorbs as a percentage."
+L["healabs:per-short"] = "Displays the amount of heal absorbs as a percentage without decimals."
+
 -- Colors
 L.color = "Color"
 L.stageZero = "Stage 0"
@@ -232,6 +241,7 @@ L.essence = "Essence"
 L.classResources = "Class Resources"
 L.useClassColorForPet = "Use Class Color for Pet"
 L.overShield = "Overshield"
+L.overAbsorb = "Overabsorb"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

@@ -59,6 +59,11 @@ These can be combined in any order to create the desired format.
 [def:short] - Displays the deficit as a shortvalue.
 [def:per] - Displays the deficit as a percentage.
 [def:per-short] - Displays the deficit as a percentage without decimals.
+
+[healabs] - Displays the amount of heal absorbs.
+[healabs:short] - Displays the amount of heal absorbs as a shortvalue.
+[healabs:per] - Displays the amount of heal absorbs as a percentage.
+[healabs:per-short] - Displays the amount of heal absorbs as a percentage without decimals.
 ```
 
 ## Issues / Feature Requests

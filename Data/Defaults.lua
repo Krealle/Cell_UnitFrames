@@ -116,6 +116,7 @@ Defaults.Options.fontWidth = {
 ---| "chi"
 ---| "runes"
 ---| "shieldBar"
+---| "healAbsorb"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -178,6 +179,12 @@ Defaults.Colors = {
         texture = "Interface\\Buttons\\WHITE8X8",
         color = { 1, 1, 0, 0.25 },
         overShield = { 1, 1, 1, 1 },
+    },
+    healAbsorb = {
+        texture = "Interface\\AddOns\\Cell\\Media\\shield",
+        color = { 1, 0.1, 0.1, 1 },
+        overAbsorb = { 1, 1, 1, 1 },
+        invertColor = false,
     }
 }
 
@@ -242,6 +249,12 @@ Defaults.ColorsMenuOrder = {
         { "texture",    "texture" },
         { "color",      "rgb" },
         { "overShield", "rgb" },
+    },
+    healAbsorb = {
+        { "texture",     "texture" },
+        { "color",       "rgb" },
+        { "overAbsorb",  "rgb" },
+        { "invertColor", "toggle" },
     }
 }
 
@@ -615,6 +628,11 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPLEFT",
         },
+    },
+    ---@type HealAbsorbWidgetTable
+    healAbsorb = {
+        enabled = false,
+        frameLevel = 10,
     }
 }
 
@@ -684,6 +702,7 @@ Defaults.Layouts = {
             readyCheckIcon = Defaults.Widgets.readyCheckIcon,
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
+            healAbsorb = Defaults.Widgets.healAbsorb,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -710,6 +729,7 @@ Defaults.Layouts = {
             readyCheckIcon = Defaults.Widgets.readyCheckIcon,
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
+            healAbsorb = Defaults.Widgets.healAbsorb,
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -763,6 +783,7 @@ Defaults.Layouts = {
             raidIcon = Defaults.Widgets.raidIcon,
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
+            healAbsorb = Defaults.Widgets.healAbsorb,
         },
         sameSizeAsPlayer = false,
         clickCast = false,

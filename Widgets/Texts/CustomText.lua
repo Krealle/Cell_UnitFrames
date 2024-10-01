@@ -42,11 +42,13 @@ function W.UpdateCustomTextWidget(button, unit, setting, which, subSetting, ...)
 
             if not subSetting or subSetting == const.OPTION_KIND.TEXT_FORMAT then
                 -- TODO: Abstract, for now it's fine
-                local formatFn, hasAbsorb, hasHealth = W.ProcessCustomTextFormat(textTable.textFormat, "health")
+                local formatFn, hasAbsorb, hasHealth, hasHealAbsorb = W.ProcessCustomTextFormat(textTable.textFormat,
+                    "health")
                 text._showingAbsorbs = hasAbsorb
                 text._showingHealth = hasHealth
-                text.SetValue = function(_, current, max, totalAbsorbs)
-                    text:SetText(formatFn(current, max, totalAbsorbs))
+                text._showingHealAbsorbs = hasHealAbsorb
+                text.SetValue = function(_, current, max, totalAbsorbs, healAbsorbs)
+                    text:SetText(formatFn(current, max, totalAbsorbs, healAbsorbs))
                 end
             end
             if not subSetting or subSetting == const.OPTION_KIND.HIDE_IF_FULL then
@@ -83,18 +85,20 @@ Handler:RegisterWidget(W.UpdateCustomTextWidget, const.WIDGET_KIND.CUSTOM_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event ("UNIT_HEALTH" | "UNIT_ABSORB_AMOUNT_CHANGED")?
+---@param event ("UNIT_HEALTH" | "UNIT_ABSORB_AMOUNT_CHANGED"|"UNIT_HEAL_ABSORB_AMOUNT_CHANGED")?
 local function Update(button, event)
     if not button.states.unit then return end
 
     local absorbEvent = event == "UNIT_ABSORB_AMOUNT_CHANGED"
     local healthEvent = event == "UNIT_HEALTH"
+    local healAbsorbEvent = event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED"
 
     button.widgets.customText:IterateTexts(function(text, enabled)
         if not enabled then return end
 
         if absorbEvent and (not text._showingAbsorbs) then return end
         if healthEvent and (not text._showingHealth) then return end
+        if healAbsorbEvent and (not text._showingHealAbsorbs) then return end
 
         text:UpdateValue()
     end)
@@ -102,7 +106,7 @@ end
 
 ---@param self CustomTextWidget
 local function UpdateEventListeners(self)
-    local healthEvents, absorbEvents, powerEvents
+    local healthEvents, absorbEvents, healAbsorbEvents
     self:IterateTexts(function(text, enabled)
         if not enabled then return end
 
@@ -111,6 +115,9 @@ local function UpdateEventListeners(self)
         end
         if text._showingHealth then
             healthEvents = true
+        end
+        if text._showingHealAbsorbs then
+            healAbsorbEvents = true
         end
     end)
 
@@ -124,6 +131,12 @@ local function UpdateEventListeners(self)
         self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
     else
         self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
+    end
+
+    if healAbsorbEvents then
+        self._owner:AddEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", Update)
+    else
+        self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", Update)
     end
 end
 

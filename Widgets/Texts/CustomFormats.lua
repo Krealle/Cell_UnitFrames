@@ -181,6 +181,19 @@ local valid_health_tags = {
     ["def:per-short"] = function(current, max, totalAbsorbs)
         return FormatPercentShortNoZeroes(max, (current - max))
     end,
+    -- Heal Absorbs
+    ["healabs"] = function(current, max, totalAbsorbs, healAbsorbs)
+        return FormatNumberNoZeroes(healAbsorbs)
+    end,
+    ["healabs:short"] = function(current, max, totalAbsorbs, healAbsorbs)
+        return FormatNumberShortNoZeroes(healAbsorbs)
+    end,
+    ["healabs:per"] = function(current, max, totalAbsorbs, healAbsorbs)
+        return FormatPercentNoZeroes(max, healAbsorbs)
+    end,
+    ["healabs:per-short"] = function(current, max, totalAbsorbs, healAbsorbs)
+        return FormatPercentShortNoZeroes(max, healAbsorbs)
+    end,
 }
 
 W.CustomHealtFormatsTooltip = {
@@ -211,6 +224,11 @@ W.CustomHealtFormatsTooltip = {
     "[def:short] - " .. L["def:short"],
     "[def:per] - " .. L["def:per"],
     "[def:per-short] - " .. L["def:per-short"],
+    "",
+    "[healabs] - " .. L["healabs"],
+    "[healabs:short] - " .. L["healabs:short"],
+    "[healabs:per] - " .. L["healabs:per"],
+    "[healabs:per-short] - " .. L["healabs:per-short"],
 }
 
 local valid_power_tags = {
@@ -297,6 +315,7 @@ function W.ProcessCustomTextFormat(textFormat, which)
     local lastEnd = 1
     local hasAbsorb = false
     local hasHealth = false
+    local hasHealAbsorb = false
 
     -- Process the text format and find all bracketed tags
     for bracketed in textFormat:gmatch("%b[]") do
@@ -309,7 +328,9 @@ function W.ProcessCustomTextFormat(textFormat, which)
         local maybeFunc = findTagFunction(tag, which)
 
         if maybeFunc then
-            if tag:find("abs") ~= nil then
+            if tag:find("healabs") ~= nil then
+                hasHealAbsorb = true
+            elseif tag:find("abs") ~= nil then
                 hasAbsorb = true
             else
                 hasHealth = true
@@ -330,13 +351,14 @@ function W.ProcessCustomTextFormat(textFormat, which)
     ---@param current number
     ---@param max number
     ---@param totalAbsorbs? number
+    ---@param healAbsorbs? number
     ---@return string
-    return function(current, max, totalAbsorbs)
+    return function(current, max, totalAbsorbs, healAbsorbs)
         local result = {}
 
         for i, element in ipairs(elements) do
             if type(element) == "function" then
-                local success, output = pcall(element, current, max, totalAbsorbs)
+                local success, output = pcall(element, current, max, totalAbsorbs, healAbsorbs)
                 if success then
                     result[i] = output
                 else
@@ -348,5 +370,5 @@ function W.ProcessCustomTextFormat(textFormat, which)
         end
 
         return Util:trim(table.concat(result))
-    end, hasAbsorb, hasHealth
+    end, hasAbsorb, hasHealth, hasHealAbsorb
 end

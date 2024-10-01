@@ -61,8 +61,8 @@ local function Update(button)
     end
 
     -- Preview
-    local healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
     if healAbsorb._isSelected then
+        local healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
         healAbsorb:Show()
         healAbsorb:SetValue(0.4, healthPercent)
         return
@@ -71,6 +71,7 @@ local function Update(button)
     local totalHealAbsorb = UnitGetTotalHealAbsorbs(unit)
     if totalHealAbsorb > 0 then
         local healAbsorbPercent = totalHealAbsorb / UnitHealthMax(unit)
+        local healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
         healAbsorb:Show()
         healAbsorb:SetValue(healAbsorbPercent, healthPercent)
         return

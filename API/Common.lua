@@ -16,6 +16,7 @@ local API = CUF.API
 --- ```
 ---@param name string Unit or frame name
 ---@return CUFUnitButton? unitFrame corresponding unit frame or nil if not found
+---@return string? lowerCaseUnitName lower case unit name
 function API:GetUnitFrame(name)
     if not API:ValidateParms("GetUnitFrame", { { name, "string", "name" } }) then return end
 
@@ -28,7 +29,9 @@ function API:GetUnitFrame(name)
         end
     end
 
-    return unitFrame
+    local lowerCaseUnitName = string.lower(name)
+
+    return unitFrame, lowerCaseUnitName
 end
 
 --- Returns all unit frames as an indexed table.

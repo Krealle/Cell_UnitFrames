@@ -42,11 +42,11 @@ end
 ---@param name string? Optional unit or frame name
 function API:DisableCustomPositioningForUnitFrames(name)
     if name ~= nil then
-        local unitFrame = API:GetUnitFrame(name)
+        local unitFrame, unitName = API:GetUnitFrame(name)
         if not unitFrame then return end
 
         unitFrame.__customPositioning = false
-        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "position", name)
+        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "position", unitName)
 
         return
     end

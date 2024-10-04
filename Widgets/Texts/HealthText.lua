@@ -102,6 +102,12 @@ local function Enable(self)
         self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
     end
 
+    if self._showingHealAbsorbs then
+        self._owner:AddEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
+    else
+        self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    end
+
     -- Full update
     self.Update(self._owner)
     self:Show()
@@ -273,8 +279,9 @@ end
 
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
-    local formatFn, hasAbsorb = W.ProcessCustomTextFormat(self.textFormat, "health")
+    local formatFn, hasAbsorb, hasHealAbsorb = W.ProcessCustomTextFormat(self.textFormat, "health")
     self._showingAbsorbs = hasAbsorb
+    self._showingHealAbsorbs = hasHealAbsorb
     self.SetValue = function(_, current, max, totalAbsorbs, healAbsorbs)
         self:SetText(formatFn(current, max, totalAbsorbs, healAbsorbs))
     end

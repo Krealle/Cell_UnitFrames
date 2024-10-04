@@ -12,6 +12,9 @@ local API = CUF.API
 --- Example usage:
 --- ```
 --- API:EnableCustomPositioningForUnitFrames("player")
+---
+--- or
+---
 --- API:EnableCustomPositioningForUnitFrames("CUF_Player")
 --- ```
 ---@param name string? Optional unit or frame name
@@ -37,6 +40,9 @@ end
 --- Example usage:
 --- ```
 --- API:DisableCustomPositioningForUnitFrames("player")
+---
+--- or
+---
 --- API:DisableCustomPositioningForUnitFrames("CUF_Player")
 --- ```
 ---@param name string? Optional unit or frame name
@@ -63,6 +69,9 @@ end
 --- Example usage:
 --- ```
 --- local isCustomEnabled = API:GetCustomPositioningStatusForUnit("player")
+---
+--- or
+---
 --- local isCustomEnabled = API:GetCustomPositioningStatusForUnit("CUF_Player")
 --- ```
 ---@param name string Unit or frame name
@@ -80,6 +89,9 @@ end
 --- Example usage:
 --- ```
 --- API:SetCustomUnitFramePoint("player", "TOPLEFT", MyFrame, "TOPLEFT", 0, 0)
+---
+--- or
+---
 --- API:SetCustomUnitFramePoint("CUF_Player", "TOPLEFT", MyFrame, "TOPLEFT", 0, 0)
 --- ```
 ---@param name string Unit or frame name
@@ -113,6 +125,9 @@ end
 --- Example usage:
 --- ```
 --- API:SetCustomUnitFrameSize("player", 200, 200)
+---
+--- or
+---
 --- API:SetCustomUnitFrameSize("CUF_Player", 200, 200)
 --- ```
 ---@param name string Unit or frame name

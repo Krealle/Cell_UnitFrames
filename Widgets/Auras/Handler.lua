@@ -19,7 +19,6 @@ local function ForEachAuraHelper(icons, func, _continuationToken, ...)
         local slot = select(i, ...)
         ---@class AuraData
         local auraData = GetAuraDataBySlot(icons._owner.states.unit, slot)
-        auraData.index = i
         auraData.refreshing = false
 
         func(icons, auraData)
@@ -196,7 +195,7 @@ local function UpdateAuraIcons(icons)
             auraData.applications,
             auraData.refreshing
         )
-        icons[icons._auraCount].index = auraData.index -- Tooltip
+        icons[icons._auraCount].auraInstanceID = auraInstanceID -- Tooltip
 
         icons[icons._auraCount]:PostUpdate(auraData)
     end

@@ -78,7 +78,13 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
                 if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-                GameTooltip:SetUnitAura(icons._owner.states.displayedUnit, self.index, icons.auraFilter)
+                if icons.id == "buffs" then
+                    GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        icons.auraFilter);
+                else
+                    GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        icons.auraFilter);
+                end
             end)
 
             icons[i]:SetScript("OnLeave", function()

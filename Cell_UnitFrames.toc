@@ -68,7 +68,6 @@ Widgets/Icons/RestingIcon.lua
 
 Widgets/Auras/Auras.lua
 Widgets/Auras/Updater.lua
-Widgets/Auras/Handler.lua
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

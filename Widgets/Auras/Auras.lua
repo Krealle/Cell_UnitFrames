@@ -78,7 +78,13 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
                 if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-                GameTooltip:SetUnitAura(icons._owner.states.displayedUnit, self.index, icons.auraFilter)
+                if icons.id == "buffs" then
+                    GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        icons.auraFilter);
+                else
+                    GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        icons.auraFilter);
+                end
             end)
 
             icons[i]:SetScript("OnLeave", function()
@@ -286,12 +292,187 @@ function Icon_PostUpdate(icon, auraDate)
 end
 
 -------------------------------------------------
+-- MARK: HandleAura
+-------------------------------------------------
+
+---@param icon CellAuraIcons
+---@param auraData AuraData
+---@return boolean show
+local function CheckFilter(icon, auraData)
+    --TODO: Filter prio?
+    local spellId = auraData.spellId
+
+    -- Blacklist / Whitelist Check
+    if icon.useBlacklist and icon.blacklist[spellId] then return false end
+    if icon.useWhitelist and not icon.whitelist[spellId] then return false end
+
+    -- Duration Check
+    local duration = auraData.duration
+    if icon.hideNoDuration and duration == 0 then return false end
+    if icon.minDuration and duration < icon.minDuration then return false end
+    if icon.maxDuration and duration > icon.maxDuration then return false end
+
+    -- Personal / Non-Personal Check
+    if icon.nonPersonal and auraData.sourceUnit ~= "player" then return true end
+    if icon.personal and auraData.sourceUnit == "player" then return true end
+
+    -- Source Unit Check
+    if icon.boss and auraData.isBossAura then return true end
+    if icon.castByPlayers and auraData.isFromPlayerOrPlayerPet then return true end
+    if icon.castByNPC and auraData.sourceUnit == "npc" then return true end
+
+    return false
+end
+
+---@param auraData AuraData
+---@param icon CellAuraIcons
+local function HandleAura(auraData, icon)
+    if not CheckFilter(icon, auraData) then return end
+
+    local auraInstanceID = auraData.auraInstanceID
+    local count = auraData.applications
+    local expirationTime = auraData.expirationTime or 0
+
+    if Cell.vars.iconAnimation == "duration" then
+        local timeIncreased = icon._auraCache[auraInstanceID] and
+            (expirationTime - icon._auraCache[auraInstanceID]["expirationTime"] >= 0.5) or false
+        local countIncreased = icon._auraCache[auraInstanceID] and
+            (count > icon._auraCache[auraInstanceID]["applications"]) or false
+        auraData.refreshing = timeIncreased or countIncreased
+    elseif Cell.vars.iconAnimation == "stack" then
+        auraData.refreshing = icon._auraCache[auraInstanceID] and
+            (count > icon._auraCache[auraInstanceID]["applications"]) or false
+    end
+
+    icon._auraCache[auraInstanceID] = auraData
+    table.insert(icon._auraInstanceIDs, auraData.auraInstanceID)
+end
+
+-------------------------------------------------
+-- MARK: UpdateAuraIcons
+-------------------------------------------------
+
+---@param icons CellAuraIcons
+local function UpdateAuraIcons(icons)
+    -- Preview
+    if icons._isSelected then
+        icons:ShowPreview()
+        icons:UpdateSize(icons._maxNum)
+        return
+    end
+
+    -- Reset
+    icons._auraCount = 0
+    wipe(icons._auraInstanceIDs)
+
+    -- Update aura cache
+    icons._owner:IterateAuras(icons.id, HandleAura, icons)
+
+    -- Sort
+    table.sort(icons._auraInstanceIDs, function(a, b)
+        local aData = icons._auraCache[a]
+        local bData = icons._auraCache[b]
+        if not aData or not bData then return false end
+
+        if icons.useWhitelist and icons.whiteListPriority then
+            local aIdx = icons.whitelist[aData.spellId]
+            local bIdx = icons.whitelist[bData.spellId]
+
+            if aIdx or bIdx then
+                if not aIdx and bIdx then return false end
+                if not bIdx then return true end
+                return aIdx < bIdx
+            end
+        end
+
+        return aData.expirationTime > bData.expirationTime
+    end)
+
+    -- Update icons
+    for i = 1, icons._maxNum do
+        local auraInstanceID = icons._auraInstanceIDs[i]
+        if not auraInstanceID then break end
+
+        local auraData = icons._auraCache[auraInstanceID]
+        local dispelType = auraData.isHarmful and (auraData.dispelName or "") or nil
+
+        icons._auraCount = icons._auraCount + 1
+        icons[icons._auraCount]:SetCooldown(
+            (auraData.expirationTime or 0) - auraData.duration,
+            auraData.duration,
+            dispelType,
+            auraData.icon,
+            auraData.applications,
+            auraData.refreshing
+        )
+        icons[icons._auraCount].auraInstanceID = auraInstanceID -- Tooltip
+
+        icons[icons._auraCount]:PostUpdate(auraData)
+    end
+
+    -- Resize
+    icons:UpdateSize(icons._auraCount)
+end
+
+-------------------------------------------------
+-- MARK: UpdateAuras
+-------------------------------------------------
+
+---@param button CUFUnitButton
+---@param buffsChanged boolean?
+---@param debuffsChanged boolean?
+---@param fullUpdate boolean?
+local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, fullUpdate)
+    if not button.widgets.buffs.enabled or not button:IsVisible() then return end
+
+    local previewMode = button._isSelected
+    if not buffsChanged and not previewMode then
+        if buffsChanged == nil then
+            -- This is nil when we are trying to do full update of this widget
+            -- So we queue an update to auras
+            button:UpdateAurasInternal()
+        end
+        return
+    end
+
+    if fullUpdate then
+        wipe(button.widgets.buffs._auraCache)
+    end
+
+    UpdateAuraIcons(button.widgets.buffs)
+end
+
+---@param button CUFUnitButton
+---@param buffsChanged boolean?
+---@param debuffsChanged boolean?
+---@param fullUpdate boolean?
+local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, fullUpdate)
+    if not button.widgets.debuffs.enabled or not button:IsVisible() then return end
+
+    local previewMode = button._isSelected
+    if not debuffsChanged and not previewMode then
+        if debuffsChanged == nil then
+            -- This is nil when we are trying to do full update of this widget
+            -- So we queue an update to auras
+            button:UpdateAurasInternal()
+        end
+        return
+    end
+
+    if fullUpdate then
+        wipe(button.widgets.debuffs._auraCache)
+    end
+
+    UpdateAuraIcons(button.widgets.debuffs)
+end
+
+-------------------------------------------------
 -- MARK: Update
 -------------------------------------------------
 
 ---@param self CellAuraIcons
 local function Enable(self)
-    self._owner:AddEventListener("UNIT_AURA", self.Update)
+    self._owner:RegisterAuraCallback(self.id, self.Update)
 
     self:Show()
     return true
@@ -299,14 +480,7 @@ end
 
 ---@param self CellAuraIcons
 local function Disable(self)
-    -- We don't want to remove the event listener if we still have one of the widgets enabled
-    if self._owner:IsVisible() then
-        if self._owner.widgets.buffs.enabled or self._owner.widgets.debuffs.enabled then
-            return
-        end
-    end
-
-    self._owner:RemoveEventListener("UNIT_AURA", self.Update)
+    self._owner:UnregisterAuraCallback(self.id, self.Update)
 end
 
 -------------------------------------------------
@@ -419,7 +593,11 @@ function W:CreateAuraIcons(button, type)
 
     auraIcons.Enable = Enable
     auraIcons.Disable = Disable
-    auraIcons.Update = U.UnitFrame_UpdateAuras
+    if type == "buffs" then
+        auraIcons.Update = UpdateAuras_Buffs
+    else
+        auraIcons.Update = UpdateAuras_Debuffs
+    end
 
     return auraIcons
 end

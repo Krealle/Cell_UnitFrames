@@ -181,3 +181,51 @@ HelpTip.ButtonStyle = {
     GotIt = 4,
     Next = 5,
 }
+
+-------------------------------------------------
+-- MARK: AuraUtil
+-------------------------------------------------
+
+---@class AuraData
+---@field refreshing boolean
+
+---@enum AuraUtil.AuraFilters
+AuraUtil.AuraFilters = {
+    Helpful = "HELPFUL",
+    Harmful = "HARMFUL",
+    Raid = "RAID",
+    IncludeNameplateOnly = "INCLUDE_NAME_PLATE_ONLY",
+    Player = "PLAYER",
+    Cancelable = "CANCELABLE",
+    NotCancelable = "NOT_CANCELABLE",
+    Maw = "MAW",
+}
+
+---@enum AuraUtil.DispellableDebuffTypes
+AuraUtil.DispellableDebuffTypes = {
+    Magic = true,
+    Curse = true,
+    Disease = true,
+    Poison = true
+}
+
+---@enum AuraUtil.AuraUpdateChangedType
+AuraUtil.AuraUpdateChangedType = {
+    None = 1,
+    Debuff = 2,
+    Buff = 3,
+    Dispel = 4
+}
+
+---@enum AuraUtil.UnitFrameDebuffType
+AuraUtil.UnitFrameDebuffType = {
+    BossDebuff = 1,
+    BossBuff = 2,
+    PriorityDebuff = 3,
+    NonBossRaidDebuff = 4,
+    NonBossDebuff = 5
+}
+
+---@param ... AuraUtil.AuraFilters
+---@return string
+function AuraUtil.CreateFilterString(...) end

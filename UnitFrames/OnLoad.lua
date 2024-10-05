@@ -15,12 +15,18 @@ local const = CUF.constants
 local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
 
+local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
+local ForEachAura = AuraUtil.ForEachAura
+
 -------------------------------------------------
 -- MARK: Aura tables
 -------------------------------------------------
 
 ---@param self CUFUnitButton
 local function ResetAuraTables(self)
+    wipe(self._auraBuffCache)
+    wipe(self._auraDebuffCache)
+
     if not self:HasWidget(const.WIDGET_KIND.BUFFS) then return end
     wipe(self.widgets.buffs._auraCache)
     wipe(self.widgets.debuffs._auraCache)
@@ -74,6 +80,239 @@ local function UnitFrame_UpdateInRange(self, ir, forceUpdate)
 end
 
 -------------------------------------------------
+-- MARK: Auras
+-------------------------------------------------
+
+--- Processes an aura and returns the type of aura
+--- Returns None if the aura shoulbe be ignored
+---@param aura AuraData
+---@param ignoreBuffs boolean
+---@param ignoreDebuffs boolean
+---@return AuraUtil.AuraUpdateChangedType
+local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
+    if aura == nil then
+        return AuraUtil.AuraUpdateChangedType.None;
+    end
+
+    if aura.isNameplateOnly then
+        return AuraUtil.AuraUpdateChangedType.None;
+    end
+
+    if aura.isHarmful and not ignoreDebuffs then
+        return AuraUtil.AuraUpdateChangedType.Debuff
+    elseif aura.isHelpful and not ignoreBuffs then
+        return AuraUtil.AuraUpdateChangedType.Buff
+    end
+
+    return AuraUtil.AuraUpdateChangedType.None;
+end
+
+--- Perform a full aura update for a unit
+---@param self CUFUnitButton
+---@param ignoreBuffs boolean
+---@param ignoreDebuffs boolean
+local function ParseAllAuras(self, ignoreBuffs, ignoreDebuffs)
+    wipe(self._auraBuffCache)
+    wipe(self._auraDebuffCache)
+
+    local batchCount = nil
+    local usePackedAura = true
+    local function HandleAura(aura)
+        local type = ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
+        if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
+            self._auraDebuffCache[aura.auraInstanceID] = aura
+        elseif type == AuraUtil.AuraUpdateChangedType.Buff then
+            self._auraBuffCache[aura.auraInstanceID] = aura
+        end
+    end
+
+    if not ignoreDebuffs then
+        ForEachAura(self.states.unit, AuraUtil.AuraFilters.Harmful, batchCount,
+            HandleAura,
+            usePackedAura)
+    end
+    if not ignoreBuffs then
+        ForEachAura(self.states.unit, AuraUtil.AuraFilters.Helpful, batchCount,
+            HandleAura,
+            usePackedAura)
+    end
+end
+
+--- Process UNIT_AURA events and update aura caches
+--- This function is called either on UNIT_AURA event or from UnitFrame_UpdateAll
+--- Will only trigger if auras are not ignored
+---@param self CUFUnitButton
+---@param event "UNIT_AURA"?
+---@param unit UnitToken?
+---@param unitAuraUpdateInfo UnitAuraUpdateInfo?
+local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
+    if self._ignoreBuffs and self._ignoreDebuffs then return end
+
+    local debuffsChanged = false
+    local buffsChanged = false
+    local fullUpdate = false
+
+    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate then
+        self:ParseAllAuras(self._ignoreBuffs, self._ignoreDebuffs)
+        debuffsChanged = true
+        buffsChanged = true
+        fullUpdate = true
+    else
+        if unitAuraUpdateInfo.addedAuras ~= nil then
+            for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
+                local type = ProcessAura(aura, self._ignoreBuffs, self._ignoreDebuffs)
+
+                if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
+                    self._auraDebuffCache[aura.auraInstanceID] = aura
+                    debuffsChanged = true
+                elseif type == AuraUtil.AuraUpdateChangedType.Buff then
+                    self._auraBuffCache[aura.auraInstanceID] = aura
+                    buffsChanged = true
+                end
+            end
+        end
+
+        if unitAuraUpdateInfo.updatedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
+                if self._auraDebuffCache[auraInstanceID] ~= nil then
+                    local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
+                    self._auraDebuffCache[auraInstanceID] = newAura
+                    debuffsChanged = true
+                elseif self._auraBuffCache[auraInstanceID] ~= nil then
+                    local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
+                    self._auraBuffCache[auraInstanceID] = newAura
+                    buffsChanged = true
+                end
+            end
+        end
+
+        if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
+                if self._auraDebuffCache[auraInstanceID] ~= nil then
+                    self._auraDebuffCache[auraInstanceID] = nil
+                    debuffsChanged = true
+                elseif self._auraBuffCache[auraInstanceID] ~= nil then
+                    self._auraBuffCache[auraInstanceID] = nil
+                    buffsChanged = true
+                end
+            end
+        end
+    end
+
+    self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, fullUpdate)
+end
+
+--- Triggers aura callbacks
+---@param self CUFUnitButton
+---@param buffsChanged boolean
+---@param debuffsChanged boolean
+---@param fullUpdate boolean
+local function TriggerAuraCallbacks(self, buffsChanged, debuffsChanged, fullUpdate)
+    --CUF:Log("TriggerAuraCallbacks", self.states.unit, buffsChanged, debuffsChanged, fullUpdate)
+    if not buffsChanged and not debuffsChanged and not fullUpdate then
+        return
+    end
+
+    if buffsChanged then
+        for _, callback in pairs(self._auraBuffCallbacks) do
+            callback(self, buffsChanged, debuffsChanged, fullUpdate)
+        end
+    end
+    if debuffsChanged then
+        for _, callback in pairs(self._auraDebuffCallbacks) do
+            callback(self, buffsChanged, debuffsChanged, fullUpdate)
+        end
+    end
+end
+
+--- Iterates over all auras of a specific type
+---@param self CUFUnitButton
+---@param type "buffs" | "debuffs"
+---@param fn fun(aura: AuraData, ...)
+local function IterateAuras(self, type, fn, ...)
+    if type == "buffs" then
+        for _, aura in pairs(self._auraBuffCache) do
+            fn(aura, ...)
+        end
+    elseif type == "debuffs" then
+        for _, aura in pairs(self._auraDebuffCache) do
+            fn(aura, ...)
+        end
+    end
+end
+
+--- Registers a callback for auras of a specific type
+--- This function will automatically add UNIT_AURA event listener if it is not already added
+---@param self CUFUnitButton
+---@param type "buffs" | "debuffs"
+---@param callback UnitAuraCallbackFn
+local function RegisterAuraCallback(self, type, callback)
+    local listenerActive = --[[ #self._auraCallbacks > 0 ]] #self._auraBuffCallbacks > 0 or
+        #self._auraDebuffCallbacks > 0
+    if not listenerActive then
+        self:AddEventListener("UNIT_AURA", self.UpdateAurasInternal)
+    end
+
+    --tinsert(self._auraCallbacks, { type = type, callback = callback })
+
+    if type == "buffs" then
+        tinsert(self._auraBuffCallbacks, callback)
+        self._ignoreBuffs = false
+    elseif type == "debuffs" then
+        tinsert(self._auraDebuffCallbacks, callback)
+        self._ignoreDebuffs = false
+    end
+
+    self:UpdateAurasInternal()
+end
+
+--- Unregisters a callback for auras of a specific type
+--- This function will automatically remove UNIT_AURA event listener if no more callbacks are registered
+---@param self CUFUnitButton
+---@param type "buffs" | "debuffs"
+---@param callback function
+local function UnregisterAuraCallback(self, type, callback)
+    if type == "buffs" then
+        if #self._auraBuffCallbacks == 1 then
+            wipe(self._auraBuffCallbacks)
+        else
+            for i, cb in ipairs(self._auraBuffCallbacks) do
+                if cb == callback then
+                    tremove(self._auraBuffCallbacks, i)
+                    break
+                end
+            end
+        end
+    elseif type == "debuffs" then
+        if #self._auraDebuffCallbacks == 1 then
+            wipe(self._auraDebuffCallbacks)
+        else
+            for i, cb in ipairs(self._auraDebuffCallbacks) do
+                if cb == callback then
+                    tremove(self._auraDebuffCallbacks, i)
+                    break
+                end
+            end
+        end
+    end
+
+    self._ignoreBuffs = #self._auraBuffCallbacks == 0
+    self._ignoreDebuffs = #self._auraDebuffCallbacks == 0
+
+    if self._ignoreBuffs then
+        wipe(self._auraBuffCache)
+    end
+    if self._ignoreDebuffs then
+        wipe(self._auraDebuffCache)
+    end
+
+    -- If no more callbacks are registered, remove the event listener
+    if self._ignoreBuffs and self._ignoreDebuffs then
+        self:RemoveEventListener("UNIT_AURA", self.UpdateAurasInternal)
+    end
+end
+
+-------------------------------------------------
 -- MARK: Update All
 -------------------------------------------------
 
@@ -85,6 +324,7 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
 
+    button:UpdateAurasInternal()
     button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
@@ -521,6 +761,23 @@ function CUFUnitButton_OnLoad(button)
 
     button.UpdateInRange = UnitFrame_UpdateInRange
 
+    -- Auras
+
+    button.IterateAuras = IterateAuras
+    button.ParseAllAuras = ParseAllAuras
+    button.UpdateAurasInternal = UpdateAurasInternal
+    button.TriggerAuraCallbacks = TriggerAuraCallbacks
+    button.RegisterAuraCallback = RegisterAuraCallback
+    button.UnregisterAuraCallback = UnregisterAuraCallback
+
+    button._auraBuffCache = {}
+    button._auraDebuffCache = {}
+    button._auraBuffCallbacks = {}
+    button._auraDebuffCallbacks = {}
+
+    button._ignoreBuffs = true
+    button._ignoreDebuffs = true
+
     -- script
     button:SetScript("OnAttributeChanged", UnitFrame_OnAttributeChanged) -- init
     button:HookScript("OnShow", UnitFrame_OnShow)
@@ -555,6 +812,12 @@ end
 ---@field name string
 ---@field __customPositioning boolean
 ---@field __customSize boolean
+---@field _auraBuffCache table<number, AuraData>
+---@field _auraDebuffCache table<number, AuraData>
+---@field _auraBuffCallbacks UnitAuraCallbackFn[]
+---@field _auraDebuffCallbacks UnitAuraCallbackFn[]
+---@field _ignoreBuffs boolean
+---@field _ignoreDebuffs boolean
 
 ---@class CUFUnitButton.States
 ---@field unit Unit
@@ -591,3 +854,4 @@ end
 ---@field unitLess boolean
 
 ---@alias EventCallbackFn fun(self: CUFUnitButton, event: WowEvent, unit: UnitToken, ...: any)
+---@alias UnitAuraCallbackFn fun(self: CUFUnitButton, buffsChanged: boolean, debuffsChanged: boolean, fullUpdate: boolean)

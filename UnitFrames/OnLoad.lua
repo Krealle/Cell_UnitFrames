@@ -247,13 +247,10 @@ end
 ---@param type "buffs" | "debuffs"
 ---@param callback UnitAuraCallbackFn
 local function RegisterAuraCallback(self, type, callback)
-    local listenerActive = --[[ #self._auraCallbacks > 0 ]] #self._auraBuffCallbacks > 0 or
-        #self._auraDebuffCallbacks > 0
+    local listenerActive = #self._auraBuffCallbacks > 0 or #self._auraDebuffCallbacks > 0
     if not listenerActive then
         self:AddEventListener("UNIT_AURA", self.UpdateAurasInternal)
     end
-
-    --tinsert(self._auraCallbacks, { type = type, callback = callback })
 
     if type == "buffs" then
         tinsert(self._auraBuffCallbacks, callback)

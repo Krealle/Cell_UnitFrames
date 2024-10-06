@@ -421,8 +421,9 @@ end
 ---@param button CUFUnitButton
 ---@param buffsChanged boolean?
 ---@param debuffsChanged boolean?
+---@param dispelsChanged boolean?
 ---@param fullUpdate boolean?
-local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, fullUpdate)
+local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     if not button.widgets.buffs.enabled or not button:IsVisible() then return end
 
     local previewMode = button._isSelected
@@ -445,8 +446,9 @@ end
 ---@param button CUFUnitButton
 ---@param buffsChanged boolean?
 ---@param debuffsChanged boolean?
+---@param dispelsChanged boolean?
 ---@param fullUpdate boolean?
-local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, fullUpdate)
+local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     if not button.widgets.debuffs.enabled or not button:IsVisible() then return end
 
     local previewMode = button._isSelected

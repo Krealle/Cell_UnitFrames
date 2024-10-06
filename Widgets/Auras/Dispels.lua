@@ -128,6 +128,7 @@ local function UpdateHighlightStyle(self, type)
 
     if type == "none" then
         self.highlight:Hide()
+        return
     elseif type == "gradient" then
         self.highlight:ClearAllPoints()
         self.highlight:SetAllPoints(self.parentHealthBar)
@@ -156,6 +157,7 @@ local function UpdateHighlightStyle(self, type)
         self.highlight:SetDrawLayer("ARTWORK", -7)
         self.highlight:SetBlendMode("ADD")
     end
+    self.highlight:Show()
 end
 
 ---@param self DispelsWidget

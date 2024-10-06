@@ -250,17 +250,18 @@ local function TriggerAuraCallbacks(self, buffsChanged, debuffsChanged, dispelsC
 end
 
 --- Iterates over all auras of a specific type
+--- Return true to stop iteration
 ---@param self CUFUnitButton
 ---@param type "buffs" | "debuffs"
----@param fn fun(aura: AuraData, ...)
+---@param fn fun(aura: AuraData, ...): true?
 local function IterateAuras(self, type, fn, ...)
     if type == "buffs" then
         for _, aura in pairs(self._auraBuffCache) do
-            fn(aura, ...)
+            if fn(aura, ...) then return end
         end
     elseif type == "debuffs" then
         for _, aura in pairs(self._auraDebuffCache) do
-            fn(aura, ...)
+            if fn(aura, ...) then return end
         end
     end
 end

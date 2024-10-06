@@ -88,13 +88,15 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         return
     end
 
+    -- TODO: Add prio? right now we just take first
     local foundDispel = false
     button:IterateAuras("debuffs", function(aura)
         if not dispels:ShouldShowDispel(aura) then return end
         foundDispel = true
         dispels:SetDispel(aura.dispelName)
+        return true
     end)
-    CUF:Log("FoundDispel:", foundDispel)
+    --CUF:Log("FoundDispel:", foundDispel)
 
     if not foundDispel then
         dispels:Hide()

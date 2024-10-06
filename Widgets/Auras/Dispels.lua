@@ -117,6 +117,7 @@ end
 
 ---@param self DispelsWidget
 local function Disable(self)
+    self._owner:UnregisterAuraCallback("debuffs", self.Update)
 end
 
 -------------------------------------------------

@@ -7,6 +7,7 @@ CUF.L = L
 
 -- Forwards from Cell
 L.invertColor = L["Invert Color"]
+L.dispels = L["Dispels"]
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"

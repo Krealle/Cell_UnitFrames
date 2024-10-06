@@ -17,6 +17,7 @@
 ---| ClassBarWidgetTable
 ---| CustomTextWidgetTable
 ---| HealAbsorbWidgetTable
+---| DispelsWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -35,6 +36,7 @@
 ---| ClassBarWidget
 ---| CustomTextWidget
 ---| HealAbsorbWidget
+---| DispelsWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -61,6 +63,7 @@
 ---@field classBar ClassBarWidget
 ---@field customText CustomTextWidget
 ---@field healAbsorb HealAbsorbWidget
+---@field dispels DispelsWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -204,6 +207,10 @@
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt
 ---@field duration BigFontOpt
+
+---@class DispelsWidgetTable
+---@field enabled boolean
+---@field frameLevel number
 
 -------------------------------------------------
 -- MARK: Bar Widgets

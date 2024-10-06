@@ -450,7 +450,12 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPRIGHT",
         },
-    }, -- MARK: Widgets (Icons)
+    },
+    ---@type DispelsWidgetTable
+    dispels = {
+        enabled = false,
+        frameLevel = 10,
+    },  -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {
         enabled = false,

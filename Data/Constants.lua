@@ -92,7 +92,8 @@ const.WIDGET_KIND = {
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
     CLASS_BAR = "classBar",
-    HEAL_ABSORB = "healAbsorb"
+    HEAL_ABSORB = "healAbsorb",
+    DISPELS = "dispels"
 }
 
 ---@enum OPTION_KIND

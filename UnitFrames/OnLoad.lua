@@ -185,11 +185,15 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
         if unitAuraUpdateInfo.updatedAuraInstanceIDs ~= nil then
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self._auraDebuffCache[auraInstanceID] ~= nil then
-                    local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID) --[[@as AuraData]]
-                    newAura.dispelName = I.CheckDebuffType(newAura.dispelName, newAura.spellId)
+                    local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
+                    if newAura then
+                        newAura.dispelName = I.CheckDebuffType(newAura.dispelName, newAura.spellId)
+                        dispelsChanged = newAura.dispelName ~= nil
+                    else
+                        dispelsChanged = self._auraDebuffCache[auraInstanceID] ~= nil
+                    end
                     self._auraDebuffCache[auraInstanceID] = newAura
                     debuffsChanged = true
-                    dispelsChanged = newAura.dispelName ~= nil
                 elseif self._auraBuffCache[auraInstanceID] ~= nil then
                     local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
                     self._auraBuffCache[auraInstanceID] = newAura

@@ -71,9 +71,15 @@ Handler:RegisterWidget(W.UpdateDispelsWidget, const.WIDGET_KIND.DISPELS)
 local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     local dispels = button.widgets.dispels
     if not dispels.enabled or not button:IsVisible() then return end
-    CUF:Log("DispelsUpdate", buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
-    local previewMode = button._isSelected
-    if not dispelsChanged and not previewMode then
+    --CUF:Log("DispelsUpdate", buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+
+    -- Preview
+    if button._isSelected then
+        dispels:PreviewMode()
+        return
+    end
+
+    if not dispelsChanged then
         if dispelsChanged == nil then
             -- This is nil when we are trying to do full update of this widget
             -- So we queue an update to auras
@@ -86,21 +92,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
     button:IterateAuras("debuffs", function(aura)
         if not dispels:ShouldShowDispel(aura) then return end
         foundDispel = true
-
-        local r, g, b = I.GetDebuffTypeColor(aura.dispelName)
-        CUF:Log("Found dispel:", aura.dispelName, "rgb:", r, g, b)
-
-        if dispels.highlightType == "entire" then
-            dispels.highlight:SetTexture(Cell.vars.whiteTexture)
-            dispels.highlight:SetVertexColor(r, g, b, 0.5)
-        elseif dispels.highlightType == "current" or dispels.highlightType == "current+" then
-            dispels.highlight:SetTexture(Cell.vars.texture)
-            dispels.highlight:SetVertexColor(r, g, b, 1)
-        elseif dispels.highlightType == "gradient" or dispels.highlightType == "gradient-half" then
-            dispels.highlight:SetTexture(Cell.vars.whiteTexture)
-            dispels.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
-        end
-        dispels:Show()
+        dispels:SetDispel(aura.dispelName)
     end)
     CUF:Log("FoundDispel:", foundDispel)
 
@@ -175,6 +167,53 @@ local function ShouldShowDispel(self, aura)
     return self.dispelTypes[dispelType]
 end
 
+---@param self DispelsWidget
+---@param type string
+local function SetDispel(self, type)
+    local r, g, b = I.GetDebuffTypeColor(type)
+    --CUF:Log("Found dispel:", type, "rgb:", r, g, b)
+
+    if self.highlightType == "entire" then
+        self.highlight:SetTexture(Cell.vars.whiteTexture)
+        self.highlight:SetVertexColor(r, g, b, 0.5)
+    elseif self.highlightType == "current" or self.highlightType == "current+" then
+        self.highlight:SetTexture(Cell.vars.texture)
+        self.highlight:SetVertexColor(r, g, b, 1)
+    elseif self.highlightType == "gradient" or self.highlightType == "gradient-half" then
+        self.highlight:SetTexture(Cell.vars.whiteTexture)
+        self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
+    end
+    self:Show()
+end
+
+---@param self DispelsWidget
+local function PreviewMode(self)
+    if self._isSelected then
+        self:Show()
+
+        local types = {}
+        for k, v in pairs(self.dispelTypes) do
+            if v then
+                tinsert(types, k)
+            end
+        end
+        local index = 0
+        self.elapsed = 1
+        self:SetScript("OnUpdate", function(_self, elapsed)
+            self.elapsed = self.elapsed + elapsed
+            if self.elapsed >= 1 then
+                self.elapsed = 0
+                index = index + 1
+                if index > #types then index = 1 end
+                self:SetDispel(types[index])
+            end
+        end)
+    else
+        self:Hide()
+        self:SetScript("OnUpdate", nil)
+    end
+end
+
 -------------------------------------------------
 -- MARK: CreateDispels
 -------------------------------------------------
@@ -182,6 +221,7 @@ end
 ---@param button CUFUnitButton
 function W:CreateDispels(button)
     ---@class DispelsWidget: Frame, BaseWidget
+    ---@field elapsed number
     local dispels = CreateFrame("Frame", button:GetName() .. "_DispelParent", button)
     button.widgets.dispels = dispels
 
@@ -199,12 +239,16 @@ function W:CreateDispels(button)
 
     dispels.highlight = dispels:CreateTexture(button:GetName() .. "_DispelHighlight")
 
+    dispels.SetDispel = SetDispel
+    dispels.PreviewMode = PreviewMode
     dispels.ShouldShowDispel = ShouldShowDispel
     dispels.UpdateHighlightStyle = UpdateHighlightStyle
 
     dispels.SetEnabled = W.SetEnabled
     dispels._SetIsSelected = W.SetIsSelected
     dispels.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+
+    dispels._OnIsSelected = PreviewMode
 
     dispels.Update = Update
     dispels.Enable = Enable

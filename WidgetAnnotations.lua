@@ -211,6 +211,13 @@
 ---@class DispelsWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
+---@field highlightType "entire" | "current" | "current+" | "gradient" | "gradient-half"
+---@field onlyShowDispellable boolean
+---@field curse boolean
+---@field disease boolean
+---@field magic boolean
+---@field poison boolean
+---@field bleed boolean
 
 -------------------------------------------------
 -- MARK: Bar Widgets

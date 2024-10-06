@@ -160,6 +160,13 @@ const.OPTION_KIND = {
     SHOW_DEAD_STATUS        = "showDeadStatus",
     CUSTOM_TEXTS            = "customTexts",
     OVER_ABSORB_GLOW        = "overAbsorbGlow",
+    HIGHLIGHT_TYPE          = "highlightType",
+    ONLY_SHOW_DISPELLABLE   = "onlyShowDispellable",
+    CURSE                   = "curse",
+    DISEASE                 = "disease",
+    MAGIC                   = "magic",
+    POISON                  = "poison",
+    BLEED                   = "bleed",
 }
 
 ---@enum AURA_OPTION_KIND

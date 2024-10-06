@@ -455,7 +455,14 @@ Defaults.Widgets = {
     dispels = {
         enabled = false,
         frameLevel = 10,
-    },  -- MARK: Widgets (Icons)
+        highlightType = "entire",
+        onlyShowDispellable = true,
+        curse = true,
+        disease = true,
+        magic = true,
+        poison = true,
+        bleed = true,
+    }, -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {
         enabled = false,

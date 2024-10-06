@@ -21,6 +21,7 @@ local Handler = CUF.Handler
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.DISPELS,
+    Builder.MenuOptions.DispelsOptions,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -29,10 +30,28 @@ menu:AddWidget(const.WIDGET_KIND.DISPELS,
 ---@param subSetting string?
 function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.dispels
-    --local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.HEAL_ABSORB, unit) --[[@as HealAbsorbWidgetTable]]
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.DISPELS, unit) --[[@as DispelsWidgetTable]]
 
-    if not setting or setting == const.OPTION_KIND.COLOR then
-        --widget:UpdateStyle()
+    if not setting or setting == const.OPTION_KIND.HIGHLIGHT_TYPE then
+        widget:UpdateHighlightStyle(styleTable.highlightType)
+    end
+    if not setting or setting == const.OPTION_KIND.ONLY_SHOW_DISPELLABLE then
+        widget.onlyShowDispellable = styleTable.onlyShowDispellable
+    end
+    if not setting
+        or setting == const.OPTION_KIND.CURSE
+        or setting == const.OPTION_KIND.DISEASE
+        or setting == const.OPTION_KIND.MAGIC
+        or setting == const.OPTION_KIND.POISON
+        or setting == const.OPTION_KIND.BLEED
+    then
+        widget.dispelTypes = {
+            Curse = styleTable.curse,
+            Disease = styleTable.disease,
+            Magic = styleTable.magic,
+            Poison = styleTable.poison,
+            Bleed = styleTable.bleed,
+        }
     end
 
     widget.Update(button)
@@ -65,7 +84,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
 
     local foundDispel = false
     button:IterateAuras("debuffs", function(aura)
-        if not aura.dispelName or (dispels.onlyShowDispellable and not I.CanDispel(aura.dispelName)) then return end
+        if not dispels:ShouldShowDispel(aura) then return end
         foundDispel = true
 
         local r, g, b = I.GetDebuffTypeColor(aura.dispelName)
@@ -145,6 +164,17 @@ local function UpdateHighlightStyle(self, type)
     end
 end
 
+---@param self DispelsWidget
+---@param aura AuraData
+---@return boolean
+local function ShouldShowDispel(self, aura)
+    local dispelType = aura.dispelName
+    if not dispelType then return false end
+    if self.onlyShowDispellable and not I.CanDispel(dispelType) then return false end
+
+    return self.dispelTypes[dispelType]
+end
+
 -------------------------------------------------
 -- MARK: CreateDispels
 -------------------------------------------------
@@ -163,11 +193,13 @@ function W:CreateDispels(button)
 
     dispels.highlightType = "current"
     dispels.onlyShowDispellable = true
+    dispels.dispelTypes = {}
 
     dispels:Hide()
 
     dispels.highlight = dispels:CreateTexture(button:GetName() .. "_DispelHighlight")
 
+    dispels.ShouldShowDispel = ShouldShowDispel
     dispels.UpdateHighlightStyle = UpdateHighlightStyle
 
     dispels.SetEnabled = W.SetEnabled

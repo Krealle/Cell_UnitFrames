@@ -53,6 +53,7 @@ Builder.MenuOptions = {
     NameFormat = 29,
     ShieldBarOptions = 30,
     CustomText = 31,
+    DispelsOptions = 32,
 }
 
 -------------------------------------------------
@@ -1790,6 +1791,59 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Dispels
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return DispelsOptions
+function Builder:CreateDispelsOptions(parent, widgetName)
+    ---@class DispelsOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "DispelsOptions"
+    f.optionHeight = 130
+
+    -- First Row
+    local highlightTypeItems = {
+        { L["None"],                                                               "none" },
+        { L["Gradient"] .. " - " .. L["Health Bar"] .. " (" .. L["Entire"] .. ")", "gradient" },
+        { L["Gradient"] .. " - " .. L["Health Bar"] .. " (" .. L["Half"] .. ")",   "gradient-half" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Entire"] .. ")",    "entire" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Current"] .. ")",   "current" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Current"] .. "+)",  "current+" },
+    }
+    local highLightType = self:CreateDropdown(f, widgetName, L["Highlight Type"], 250, highlightTypeItems,
+        const.OPTION_KIND.HIGHLIGHT_TYPE)
+    highLightType:SetPoint("TOPLEFT", 0, -5)
+
+    local dispellableByMe = self:CreateCheckBox(f, widgetName, L["dispellableByMe"],
+        const.OPTION_KIND.ONLY_SHOW_DISPELLABLE)
+    self:AnchorBelow(dispellableByMe, highLightType)
+
+    local curse = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Curse:0|t" .. L
+        ["Curse"], const.OPTION_KIND.CURSE)
+    self:AnchorBelowCB(curse, dispellableByMe)
+
+    local disease = self:CreateCheckBox(f, widgetName,
+        "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Disease:0|t" .. L["Disease"], const.OPTION_KIND.DISEASE)
+    self:AnchorRightOfCB(disease, curse)
+
+    local magic = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Magic:0|t" .. L
+        ["Magic"], const.OPTION_KIND.MAGIC)
+    self:AnchorRightOfCB(magic, disease)
+
+    local poison = self:CreateCheckBox(f, widgetName,
+        "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Poison:0|t" .. L["Poison"], const.OPTION_KIND.POISON)
+    self:AnchorBelowCB(poison, curse)
+
+    local bleed = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Bleed:0|t" .. L
+        ["Bleed"], const.OPTION_KIND.BLEED)
+    self:AnchorRightOfCB(bleed, poison)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1826,4 +1880,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
     [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,
     [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
+    [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
 }

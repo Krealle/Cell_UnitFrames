@@ -218,6 +218,10 @@
 ---@field magic boolean
 ---@field poison boolean
 ---@field bleed boolean
+---@field iconStyle "none" | "blizzard" | "rhombus"
+---@field orientation AuraOrientation
+---@field size number
+---@field position PositionOpt
 
 -------------------------------------------------
 -- MARK: Bar Widgets

@@ -22,6 +22,9 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.DISPELS,
     Builder.MenuOptions.DispelsOptions,
+    Builder.MenuOptions.Orientation,
+    Builder.MenuOptions.TrueSingleSizeOptions,
+    Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton

@@ -215,6 +215,16 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
     self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
 end
 
+--- Queues an aura update
+--- Used to prevent aura update spam
+--- Mostly relevant when full updating widgets since they will all ask for aura update
+---@param self CUFUnitButton
+local function QueueAuraUpdate(self)
+    if not self:IsVisible() then return end
+    if self._ignoreBuffs and self._ignoreDebuffs then return end
+    self._auraUpdateRequired = true
+end
+
 --- Triggers aura callbacks
 ---@param self CUFUnitButton
 ---@param buffsChanged boolean
@@ -335,7 +345,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
 
-    button:UpdateAurasInternal()
     button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
@@ -535,6 +544,11 @@ local function UnitFrame_OnTick(self)
     if self._updateRequired then
         self._updateRequired = nil
         UnitFrame_UpdateAll(self)
+    end
+
+    if self._auraUpdateRequired then
+        self._auraUpdateRequired = nil
+        self:UpdateAurasInternal()
     end
 end
 
@@ -776,6 +790,7 @@ function CUFUnitButton_OnLoad(button)
 
     button.IterateAuras = IterateAuras
     button.ParseAllAuras = ParseAllAuras
+    button.QueueAuraUpdate = QueueAuraUpdate
     button.UpdateAurasInternal = UpdateAurasInternal
     button.TriggerAuraCallbacks = TriggerAuraCallbacks
     button.RegisterAuraCallback = RegisterAuraCallback
@@ -811,6 +826,7 @@ end
 ---@field powerSize number
 ---@field _powerBarUpdateRequired boolean
 ---@field _updateRequired boolean
+---@field _auraUpdateRequired boolean
 ---@field __tickCount number
 ---@field __updateElapsed number
 ---@field __displayedGuid string?

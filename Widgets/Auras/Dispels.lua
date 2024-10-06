@@ -77,7 +77,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         if dispelsChanged == nil then
             -- This is nil when we are trying to do full update of this widget
             -- So we queue an update to auras
-            button:UpdateAurasInternal()
+            button:QueueAuraUpdate()
         end
         return
     end

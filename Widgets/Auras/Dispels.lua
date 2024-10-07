@@ -103,7 +103,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         if not dispels:ShouldShowDispel(aura) then return end
         foundDispel = true
 
-        dispels:SetDispel(aura.dispelName)
+        dispels:SetDispelHighlight(aura.dispelName)
         dispels:SetDispelIcon(aura.dispelName)
         dispels:Show()
 
@@ -154,21 +154,38 @@ end
 
 ---@param self DispelsWidget
 ---@param type string
-local function SetDispel(self, type)
+local function SetDispelHighlight_Entire(self, type)
     if not self.showHighlight then return end
     if self.activeType == type then return end
+
     self.activeType = type
 
     local r, g, b = I.GetDebuffTypeColor(type)
-    --CUF:Log("Found dispel:", type, "rgb:", r, g, b)
+    self.highlight:SetVertexColor(r, g, b, 0.5)
+end
 
-    if self.highlightType == "entire" then
-        self.highlight:SetVertexColor(r, g, b, 0.5)
-    elseif self.highlightType == "current" or self.highlightType == "current+" then
-        self.highlight:SetVertexColor(r, g, b, 1)
-    elseif self.highlightType == "gradient" or self.highlightType == "gradient-half" then
-        self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
-    end
+---@param self DispelsWidget
+---@param type string
+local function SetDispelHighlight_Current(self, type)
+    if not self.showHighlight then return end
+    if self.activeType == type then return end
+
+    self.activeType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    self.highlight:SetVertexColor(r, g, b, 1)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelHighlight_Gradient(self, type)
+    if not self.showHighlight then return end
+    if self.activeType == type then return end
+
+    self.activeType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
 end
 
 ---@param self DispelsWidget
@@ -183,21 +200,17 @@ local function SetDispelIcon(self, type)
 
     self.activeIconType = type
 
-    self.icons[type]:SetDispel(type)
+    self.icons[type]:SetDispel()
 end
 
 ---@param self DispelsWidget.Icon
----@param type string
-local function Dispels_SetDispel_Blizzard(self, type)
-    self:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\" .. type)
+local function SetDispelIcon_Blizzard(self)
     self:Show()
 end
 
 ---@param self DispelsWidget.Icon
----@param type string
-local function Dispels_SetDispel_Rhombus(self, type)
-    self:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\Rhombus")
-    self:SetVertexColor(I.GetDebuffTypeColor(type))
+local function SetDispelIcon_Rhombus(self)
+    self:SetVertexColor(I.GetDebuffTypeColor(self.type))
     self:Show()
 end
 
@@ -220,7 +233,7 @@ local function PreviewMode(self)
                 self.elapsed = 0
                 index = index + 1
                 if index > #types then index = 1 end
-                self:SetDispel(types[index])
+                self:SetDispelHighlight(types[index])
                 self:SetDispelIcon(types[index])
             end
         end)
@@ -237,7 +250,6 @@ end
 ---@param self DispelsWidget
 ---@param type string
 local function UpdateHighlightStyle(self, type)
-    self.highlightType = type
     self.showHighlight = type ~= "none"
     self.highlight:SetBlendMode("BLEND")
 
@@ -249,28 +261,33 @@ local function UpdateHighlightStyle(self, type)
         self.highlight:SetAllPoints(self.parentHealthBar)
         self.highlight:SetTexture(Cell.vars.whiteTexture)
         self.highlight:SetDrawLayer("ARTWORK", 0)
+        self.SetDispelHighlight = SetDispelHighlight_Gradient
     elseif type == "gradient-half" then
         self.highlight:ClearAllPoints()
         self.highlight:SetPoint("BOTTOMLEFT", self.parentHealthBar)
         self.highlight:SetPoint("TOPRIGHT", self.parentHealthBar, "RIGHT")
         self.highlight:SetTexture(Cell.vars.whiteTexture)
         self.highlight:SetDrawLayer("ARTWORK", 0)
+        self.SetDispelHighlight = SetDispelHighlight_Gradient
     elseif type == "entire" then
         self.highlight:ClearAllPoints()
         self.highlight:SetAllPoints(self.parentHealthBar)
         self.highlight:SetTexture(Cell.vars.whiteTexture)
         self.highlight:SetDrawLayer("ARTWORK", 0)
+        self.SetDispelHighlight = SetDispelHighlight_Entire
     elseif type == "current" then
         self.highlight:ClearAllPoints()
         self.highlight:SetAllPoints(self.parentHealthBar:GetStatusBarTexture())
         self.highlight:SetTexture(Cell.vars.texture)
         self.highlight:SetDrawLayer("ARTWORK", -7)
+        self.SetDispelHighlight = SetDispelHighlight_Current
     elseif type == "current+" then
         self.highlight:ClearAllPoints()
         self.highlight:SetAllPoints(self.parentHealthBar:GetStatusBarTexture())
         self.highlight:SetTexture(Cell.vars.texture)
         self.highlight:SetDrawLayer("ARTWORK", -7)
         self.highlight:SetBlendMode("ADD")
+        self.SetDispelHighlight = SetDispelHighlight_Current
     end
     self.highlight:Show()
 end
@@ -284,9 +301,11 @@ local function UpdateIconStyle(self, style)
 
     for _, icon in pairs(self.icons) do
         if style == "rhombus" then
-            icon.SetDispel = Dispels_SetDispel_Rhombus
-        elseif style == "blizzard" then -- blizzard
-            icon.SetDispel = Dispels_SetDispel_Blizzard
+            icon.SetDispel = SetDispelIcon_Rhombus
+            icon:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\Rhombus")
+        elseif style == "blizzard" then
+            icon.SetDispel = SetDispelIcon_Blizzard
+            icon:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\" .. icon.type)
             icon:SetVertexColor(1, 1, 1, 1)
         end
         icon:Hide()
@@ -350,14 +369,17 @@ function W:CreateDispels(button)
     for _, type in ipairs(DebuffTypes) do
         ---@class DispelsWidget.Icon: Texture
         local icon = dispels:CreateTexture(button:GetName() .. "_Dispel_" .. type, "ARTWORK")
-        icon.SetDispel = Dispels_SetDispel_Blizzard
         icon:Hide()
+
+        icon.type = type
+        icon.SetDispel = SetDispelIcon_Blizzard
+
         dispels.icons[type] = icon
     end
 
-    dispels.SetDispel = SetDispel
     dispels.SetDispelIcon = SetDispelIcon
     dispels.ShouldShowDispel = ShouldShowDispel
+    dispels.SetDispelHighlight = SetDispelHighlight_Current
 
     dispels.PreviewMode = PreviewMode
     dispels.UpdateIconSize = UpdateIconSize

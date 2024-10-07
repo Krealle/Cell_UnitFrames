@@ -463,7 +463,6 @@ Defaults.Widgets = {
         poison = true,
         bleed = true,
         iconStyle = "none",
-        orientation = "right-to-left",
         size = 12,
         position = {
             point = "BOTTOMRIGHT",

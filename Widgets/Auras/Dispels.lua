@@ -102,7 +102,11 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
     button:IterateAuras("debuffs", function(aura)
         if not dispels:ShouldShowDispel(aura) then return end
         foundDispel = true
+
         dispels:SetDispel(aura.dispelName)
+        dispels:SetDispelIcon(aura.dispelName)
+        dispels:Show()
+
         return true
     end)
     --CUF:Log("FoundDispel:", foundDispel)
@@ -167,9 +171,6 @@ local function SetDispel(self, type)
         self.highlight:SetTexture(Cell.vars.whiteTexture)
         self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
     end
-
-    self:Show()
-    self:SetDispelIcon(type)
 end
 
 ---@param self DispelsWidget
@@ -222,6 +223,7 @@ local function PreviewMode(self)
                 index = index + 1
                 if index > #types then index = 1 end
                 self:SetDispel(types[index])
+                self:SetDispelIcon(types[index])
             end
         end)
     else
@@ -278,15 +280,17 @@ end
 ---@param style string
 local function UpdateIconStyle(self, style)
     self.showIcons = style ~= "none"
+    -- Reset active icon, makes for a better preview mode
+    self.activeIconType = nil
+
     for _, icon in pairs(self.icons) do
         if style == "rhombus" then
             icon.SetDispel = Dispels_SetDispel_Rhombus
         elseif style == "blizzard" then -- blizzard
             icon.SetDispel = Dispels_SetDispel_Blizzard
             icon:SetVertexColor(1, 1, 1, 1)
-        else
-            icon:Hide()
         end
+        icon:Hide()
     end
 end
 

@@ -155,6 +155,7 @@ end
 ---@param self DispelsWidget
 ---@param type string
 local function SetDispel(self, type)
+    if not self.showHighlight then return end
     if self.activeType == type then return end
     self.activeType = type
 
@@ -237,6 +238,7 @@ end
 ---@param type string
 local function UpdateHighlightStyle(self, type)
     self.highlightType = type
+    self.showHighlight = type ~= "none"
     self.highlight:SetBlendMode("BLEND")
 
     if type == "none" then
@@ -333,6 +335,7 @@ function W:CreateDispels(button)
     dispels.onlyShowDispellable = true
     dispels.dispelTypes = {}
     dispels.showIcons = false
+    dispels.showHighlight = false
 
     dispels.activeType = nil
     dispels.activeIconType = nil

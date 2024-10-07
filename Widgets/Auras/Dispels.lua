@@ -22,7 +22,6 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.DISPELS,
     Builder.MenuOptions.DispelsOptions,
-    Builder.MenuOptions.Orientation,
     Builder.MenuOptions.TrueSingleSizeOptions,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.FrameLevel)
@@ -55,6 +54,13 @@ function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
             Poison = styleTable.poison,
             Bleed = styleTable.bleed,
         }
+    end
+
+    if not setting or setting == const.OPTION_KIND.ICON_STYLE then
+        widget.UpdateIconStyle(widget, styleTable.iconStyle)
+    end
+    if not setting or setting == const.OPTION_KIND.SIZE then
+        widget.UpdateIconSize(widget, styleTable.size)
     end
 
     widget.Update(button)
@@ -102,6 +108,13 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
     --CUF:Log("FoundDispel:", foundDispel)
 
     if not foundDispel then
+        if dispels.activeIconType then
+            dispels.icons[dispels.activeIconType]:Hide()
+        end
+
+        dispels.activeType = nil
+        dispels.activeIconType = nil
+
         dispels:Hide()
         return
     end
@@ -122,6 +135,103 @@ end
 
 -------------------------------------------------
 -- MARK: Functions
+-------------------------------------------------
+
+---@param self DispelsWidget
+---@param aura AuraData
+---@return boolean
+local function ShouldShowDispel(self, aura)
+    local dispelType = aura.dispelName
+    if not dispelType then return false end
+    if self.onlyShowDispellable and not I.CanDispel(dispelType) then return false end
+
+    return self.dispelTypes[dispelType]
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispel(self, type)
+    if self.activeType == type then return end
+    self.activeType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    --CUF:Log("Found dispel:", type, "rgb:", r, g, b)
+
+    if self.highlightType == "entire" then
+        self.highlight:SetTexture(Cell.vars.whiteTexture)
+        self.highlight:SetVertexColor(r, g, b, 0.5)
+    elseif self.highlightType == "current" or self.highlightType == "current+" then
+        self.highlight:SetTexture(Cell.vars.texture)
+        self.highlight:SetVertexColor(r, g, b, 1)
+    elseif self.highlightType == "gradient" or self.highlightType == "gradient-half" then
+        self.highlight:SetTexture(Cell.vars.whiteTexture)
+        self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
+    end
+
+    self:Show()
+    self:SetDispelIcon(type)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelIcon(self, type)
+    if not self.showIcons then return end
+
+    if self.activeIconType then
+        if self.activeIconType == type then return end
+        self.icons[self.activeIconType]:Hide()
+    end
+
+    self.activeIconType = type
+
+    self.icons[type]:SetDispel(type)
+end
+
+---@param self DispelsWidget.Icon
+---@param type string
+local function Dispels_SetDispel_Blizzard(self, type)
+    self:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\" .. type)
+    self:Show()
+end
+
+---@param self DispelsWidget.Icon
+---@param type string
+local function Dispels_SetDispel_Rhombus(self, type)
+    self:SetTexture("Interface\\AddOns\\Cell\\Media\\Debuffs\\Rhombus")
+    self:SetVertexColor(I.GetDebuffTypeColor(type))
+    self:Show()
+end
+
+---@param self DispelsWidget
+local function PreviewMode(self)
+    if self._isSelected then
+        self:Show()
+
+        local types = {}
+        for k, v in pairs(self.dispelTypes) do
+            if v then
+                tinsert(types, k)
+            end
+        end
+        local index = 0
+        self.elapsed = 1
+        self:SetScript("OnUpdate", function(_self, elapsed)
+            self.elapsed = self.elapsed + elapsed
+            if self.elapsed >= 1 then
+                self.elapsed = 0
+                index = index + 1
+                if index > #types then index = 1 end
+                self:SetDispel(types[index])
+            end
+        end)
+    else
+        self:Hide()
+        self:SetScript("OnUpdate", nil)
+    end
+end
+
+-------------------------------------------------
+-- MARK: Style Updaters
 -------------------------------------------------
 
 ---@param self DispelsWidget
@@ -165,66 +275,45 @@ local function UpdateHighlightStyle(self, type)
 end
 
 ---@param self DispelsWidget
----@param aura AuraData
----@return boolean
-local function ShouldShowDispel(self, aura)
-    local dispelType = aura.dispelName
-    if not dispelType then return false end
-    if self.onlyShowDispellable and not I.CanDispel(dispelType) then return false end
-
-    return self.dispelTypes[dispelType]
-end
-
----@param self DispelsWidget
----@param type string
-local function SetDispel(self, type)
-    local r, g, b = I.GetDebuffTypeColor(type)
-    --CUF:Log("Found dispel:", type, "rgb:", r, g, b)
-
-    if self.highlightType == "entire" then
-        self.highlight:SetTexture(Cell.vars.whiteTexture)
-        self.highlight:SetVertexColor(r, g, b, 0.5)
-    elseif self.highlightType == "current" or self.highlightType == "current+" then
-        self.highlight:SetTexture(Cell.vars.texture)
-        self.highlight:SetVertexColor(r, g, b, 1)
-    elseif self.highlightType == "gradient" or self.highlightType == "gradient-half" then
-        self.highlight:SetTexture(Cell.vars.whiteTexture)
-        self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
-    end
-    self:Show()
-end
-
----@param self DispelsWidget
-local function PreviewMode(self)
-    if self._isSelected then
-        self:Show()
-
-        local types = {}
-        for k, v in pairs(self.dispelTypes) do
-            if v then
-                tinsert(types, k)
-            end
+---@param style string
+local function UpdateIconStyle(self, style)
+    self.showIcons = style ~= "none"
+    for _, icon in pairs(self.icons) do
+        if style == "rhombus" then
+            icon.SetDispel = Dispels_SetDispel_Rhombus
+        elseif style == "blizzard" then -- blizzard
+            icon.SetDispel = Dispels_SetDispel_Blizzard
+            icon:SetVertexColor(1, 1, 1, 1)
+        else
+            icon:Hide()
         end
-        local index = 0
-        self.elapsed = 1
-        self:SetScript("OnUpdate", function(_self, elapsed)
-            self.elapsed = self.elapsed + elapsed
-            if self.elapsed >= 1 then
-                self.elapsed = 0
-                index = index + 1
-                if index > #types then index = 1 end
-                self:SetDispel(types[index])
-            end
-        end)
-    else
-        self:Hide()
-        self:SetScript("OnUpdate", nil)
+    end
+end
+
+---@param self DispelsWidget
+---@param size number
+local function UpdateIconSize(self, size)
+    for _, icon in pairs(self.icons) do
+        icon:SetSize(size, size)
+    end
+end
+
+---@param self DispelsWidget
+---@param styleTable DispelsWidgetTable
+local function UpdateIconPosition(self, styleTable)
+    local positionOpt = styleTable.position
+    for _, icon in pairs(self.icons) do
+        icon:ClearAllPoints()
+        icon:SetPoint(positionOpt.point, self._owner, positionOpt.relativePoint, positionOpt.offsetX, positionOpt
+            .offsetY)
     end
 end
 
 -------------------------------------------------
 -- MARK: CreateDispels
 -------------------------------------------------
+
+local DebuffTypes = { "Magic", "Curse", "Disease", "Poison", "Bleed" }
 
 ---@param button CUFUnitButton
 function W:CreateDispels(button)
@@ -242,16 +331,36 @@ function W:CreateDispels(button)
     dispels.highlightType = "current"
     dispels.onlyShowDispellable = true
     dispels.dispelTypes = {}
+    dispels.showIcons = false
+
+    dispels.activeType = nil
+    dispels.activeIconType = nil
 
     dispels:Hide()
 
     dispels.highlight = dispels:CreateTexture(button:GetName() .. "_DispelHighlight")
 
+    -- Icons
+    ---@type table<string, DispelsWidget.Icon>
+    dispels.icons = {}
+    for _, type in ipairs(DebuffTypes) do
+        ---@class DispelsWidget.Icon: Texture
+        local icon = dispels:CreateTexture(button:GetName() .. "_Dispel_" .. type, "ARTWORK")
+        icon.SetDispel = Dispels_SetDispel_Blizzard
+        icon:Hide()
+        dispels.icons[type] = icon
+    end
+
     dispels.SetDispel = SetDispel
-    dispels.PreviewMode = PreviewMode
+    dispels.SetDispelIcon = SetDispelIcon
     dispels.ShouldShowDispel = ShouldShowDispel
+
+    dispels.PreviewMode = PreviewMode
+    dispels.UpdateIconSize = UpdateIconSize
+    dispels.UpdateIconStyle = UpdateIconStyle
     dispels.UpdateHighlightStyle = UpdateHighlightStyle
 
+    dispels.SetPosition = UpdateIconPosition
     dispels.SetEnabled = W.SetEnabled
     dispels._SetIsSelected = W.SetIsSelected
     dispels.SetWidgetFrameLevel = W.SetWidgetFrameLevel

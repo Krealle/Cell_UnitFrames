@@ -217,14 +217,20 @@ end
 ---@param self DispelsWidget
 local function PreviewMode(self)
     if self._isSelected then
-        self:Show()
-
         local types = {}
         for k, v in pairs(self.dispelTypes) do
             if v then
                 tinsert(types, k)
             end
         end
+
+        -- No types to preview
+        if #types == 0 then
+            self:Hide()
+            self:SetScript("OnUpdate", nil)
+            return
+        end
+
         local index = 0
         self.elapsed = 1
         self:SetScript("OnUpdate", function(_self, elapsed)
@@ -237,6 +243,8 @@ local function PreviewMode(self)
                 self:SetDispelIcon(types[index])
             end
         end)
+
+        self:Show()
     else
         self:Hide()
         self:SetScript("OnUpdate", nil)

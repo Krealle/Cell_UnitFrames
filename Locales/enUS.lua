@@ -243,7 +243,7 @@ L.useClassColorForPet = "Use Class Color for Pet"
 L.overShield = "Overshield"
 L.overAbsorb = "Overabsorb"
 L.hostileUnits = 'Hostile Units'
-L.swapHealthAndLossColors = 'Swap Health and Heath Loss Colors'
+L.swapHealthAndLossColors = 'Swap Health and Health Loss Colors'
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

@@ -30,10 +30,16 @@ function U:UnitFrame_UpdateHealthColor(button)
     local barR, barG, barB
     local lossR, lossG, lossB
     local barA, lossA = 1, 1
+    local healthPct = button.states.healthPercent
 
     if Cell.loaded then
         barA = CellDB["appearance"]["barAlpha"]
         lossA = CellDB["appearance"]["lossAlpha"]
+    end
+
+    local swapHealthAndLossColors = CUF.DB.GetColors().hostileUnits.swapHealthAndLossColors and (UnitCanAttack('player', unit) or not UnitIsFriend('player', unit))
+    if healthPct ~= nil and swapHealthAndLossColors then
+        healthPct = 1 - healthPct
     end
 
     if not UnitIsConnected(unit) then
@@ -43,15 +49,20 @@ function U:UnitFrame_UpdateHealthColor(button)
         barR, barG, barB, barA = 0.5, 0, 1, 1
         lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
     elseif button.states.inVehicle then
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
+        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
             button.states.isDeadOrGhost or button.states.isDead, 0, 1, 0.2)
     else
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
+        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
             button.states.isDeadOrGhost or button.states.isDead, CUF.Util:GetUnitClassColor(button.states.unit))
     end
 
-    button.widgets.healthBar:SetStatusBarColor(barR, barG, barB, barA)
-    button.widgets.healthBarLoss:SetVertexColor(lossR, lossG, lossB, lossA)
+    if swapHealthAndLossColors then
+        button.widgets.healthBar:SetStatusBarColor(lossR, lossG, lossB, lossA)
+        button.widgets.healthBarLoss:SetVertexColor(barR, barG, barB, barA)
+    else
+        button.widgets.healthBar:SetStatusBarColor(barR, barG, barB, barA)
+        button.widgets.healthBarLoss:SetVertexColor(lossR, lossG, lossB, lossA)
+    end
 
     --[[ if Cell.loaded and CellDB["appearance"]["healPrediction"][2] then
         self.widgets.incomingHeal:SetVertexColor(CellDB["appearance"]["healPrediction"][3][1], CellDB["appearance"]["healPrediction"][3][2], CellDB["appearance"]["healPrediction"][3][3], CellDB["appearance"]["healPrediction"][3][4])

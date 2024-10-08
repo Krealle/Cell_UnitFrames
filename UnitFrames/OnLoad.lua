@@ -732,7 +732,7 @@ function CUFUnitButton_OnLoad(button)
         end
     end
 
-    ---@param widget Widget
+    ---@param widget Widget|PowerBarWidget
     function button:EnableWidget(widget)
         if not self:ShouldEnableWidget(widget) then return end
         if widget:Enable() then
@@ -740,7 +740,7 @@ function CUFUnitButton_OnLoad(button)
         end
     end
 
-    ---@param widget Widget
+    ---@param widget Widget|PowerBarWidget
     function button:DisableWidget(widget)
         widget._isEnabled = false
         if not widget:Disable() then
@@ -748,7 +748,7 @@ function CUFUnitButton_OnLoad(button)
         end
     end
 
-    ---@param widget Widget
+    ---@param widget Widget|PowerBarWidget
     function button:ShouldEnableWidget(widget)
         return self:IsVisible()
             and self.states.unit

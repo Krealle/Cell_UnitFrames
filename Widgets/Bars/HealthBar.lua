@@ -37,7 +37,8 @@ function U:UnitFrame_UpdateHealthColor(button)
         lossA = CellDB["appearance"]["lossAlpha"]
     end
 
-    local swapHealthAndLossColors = CUF.DB.GetColors().hostileUnits.swapHealthAndLossColors and (UnitCanAttack('player', unit) or not UnitIsFriend('player', unit))
+    local swapHealthAndLossColors = CUF.DB.GetColors().reaction.swapHostileHealthAndLossColors and
+    (UnitCanAttack('player', unit) or not UnitIsFriend('player', unit))
     if healthPct ~= nil and swapHealthAndLossColors then
         healthPct = 1 - healthPct
     end

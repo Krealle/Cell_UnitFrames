@@ -443,7 +443,25 @@ W:AddFormat("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumberShortNoZeroes(UnitGetTotalHealAbsorbs(unit))
 end, "Health")
 
--- This function takes a text format string and returns a function that can be called with current, max, totalAbsorbs
+-- Group
+W:AddFormat("group", "GROUP_ROSTER_UPDATE", function(unit)
+    local subgroup = Util:GetUnitSubgroup(unit)
+    if subgroup then
+        return FormatNumber(subgroup)
+    end
+    return ""
+end, "Group")
+
+W:AddFormat("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
+    if not IsInRaid() then return "" end
+    local subgroup = Util:GetUnitSubgroup(unit)
+    if subgroup then
+        return FormatNumber(subgroup)
+    end
+    return ""
+end, "Group")
+
+-- This function takes a text format string and returns a function that can be called with a UnitToken
 --
 -- Valid tags will be replaced with the corresponding function
 --

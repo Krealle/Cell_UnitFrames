@@ -334,6 +334,36 @@ function Util:ButtonIsMirrored(unit)
 end
 
 -------------------------------------------------
+-- MARK: Unit Info
+-------------------------------------------------
+
+---@param unit UnitToken
+---@return string name
+---@return string? nameWithServer
+function Util:GetUnitName(unit)
+    local name, server = UnitName(unit)
+
+    local nameWithServer
+    if server and server ~= "" then
+        nameWithServer = name .. "-" .. server
+    end
+
+    return name, nameWithServer
+end
+
+---@param unit UnitToken
+---@return number? subgroup
+function Util:GetUnitSubgroup(unit)
+    local name, nameWithServer = self:GetUnitName(unit)
+    for i = 1, GetNumGroupMembers() do
+        local rName, rank, subgroup = GetRaidRosterInfo(i)
+        if rName == name or rName == nameWithServer then
+            return subgroup
+        end
+    end
+end
+
+-------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------
 

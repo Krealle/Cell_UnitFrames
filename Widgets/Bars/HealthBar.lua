@@ -26,6 +26,7 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
     if fullUpdate then
         button.widgets.healthBar:UpdateColorOptions()
     end
+    if not button:IsVisible() then return end
     local unit = button.states.unit
     if not unit then return end
 

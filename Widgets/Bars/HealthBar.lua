@@ -127,6 +127,7 @@ end
 
 ---@param button CUFUnitButton
 local function UpdateHealth(button)
+    if not button:IsVisible() then return end
     UpdateUnitHealthState(button)
     local healthPercent = button.states.healthPercent
 
@@ -151,6 +152,7 @@ end
 
 ---@param button CUFUnitButton
 local function UpdateHealthMax(button)
+    if not button:IsVisible() then return end
     UpdateUnitHealthState(button)
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then

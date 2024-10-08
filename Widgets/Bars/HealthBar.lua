@@ -21,7 +21,11 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateHealthColor(button)
+---@param fullUpdate boolean?
+function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
+    if fullUpdate then
+        button.widgets.healthBar:UpdateColorOptions()
+    end
     local unit = button.states.unit
     if not unit then return end
 
@@ -182,6 +186,12 @@ local function Disable(self)
     return true
 end
 
+---@param self HealthBarWidget
+local function UpdateColorOptions(self)
+    self.swapHostileColors = CUF.DB.GetColors().reaction.swapHostileHealthAndLossColors
+    self.useDeathColor = CellDB["appearance"]["deathColor"][1]
+end
+
 -------------------------------------------------
 -- MARK: CreateHealthBar
 -------------------------------------------------
@@ -193,6 +203,9 @@ function W:CreateHealthBar(button)
     button.widgets.healthBar = healthBar
     healthBar._owner = button
     healthBar.enabled = true
+
+    healthBar.swapHostileColors = false
+    healthBar.useDeathColor = false
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
     healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
@@ -211,6 +224,8 @@ function W:CreateHealthBar(button)
     healthBar.Update = Update
     healthBar.Enable = Enable
     healthBar.Disable = Disable
+
+    healthBar.UpdateColorOptions = UpdateColorOptions
 
     --[[ -- dead texture
     local deadTex = healthBar:CreateTexture(nil, "OVERLAY")

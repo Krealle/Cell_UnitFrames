@@ -228,7 +228,7 @@ local function UpdateAppearance(kind)
     if not kind or kind == "color" or kind == "deathColor" or kind == "alpha" then
         ---@param button CUFUnitButton
         Util:IterateAllUnitButtons(function(button)
-            U:UnitFrame_UpdateHealthColor(button)
+            U:UnitFrame_UpdateHealthColor(button, true)
             button.widgets.powerBar.UpdatePowerType(button)
             button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
         end)
@@ -239,7 +239,7 @@ local function UpdateAppearance(kind)
         C_Timer.After(0.01, function()
             ---@param button CUFUnitButton
             Util:IterateAllUnitButtons(function(button)
-                U:UnitFrame_UpdateHealthColor(button)
+                U:UnitFrame_UpdateHealthColor(button, true)
                 button.widgets.powerBar.UpdatePowerType(button)
             end)
         end)

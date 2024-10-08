@@ -103,6 +103,11 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     if not kind or kind == "position" then
         U:UpdateUnitButtonPosition(unit, button)
     end
+
+    if kind == "powerFilter" and unit == const.UNIT.PLAYER then
+        button:DisableWidget(button.widgets.powerBar)
+        button:EnableWidget(button.widgets.powerBar)
+    end
 end
 
 -------------------------------------------------

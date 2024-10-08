@@ -2,13 +2,9 @@
 --
 -- See documentation for SetCustomUnitFrameSize here:
 -- https://github.com/Krealle/Cell_UnitFrames/blob/master/API/CustomAnchors.lua#L121
-
--- Wrap the snippet in to only run once, on the "LOADING_SCREEN_DISABLED" event
--- This is to ensure the plugin is fully loaded before running the snippet
--- Since Cell runs snippets before this plugin gets loaded.
-EventUtil.RegisterOnceFrameEventAndCallback("LOADING_SCREEN_DISABLED", function()
-    -- Check if CUF is loaded
-    local CUF = CUF
+local function SetCustomSizing()
+    -- Make sure CUF is actually loaded
+    local CUF = _G["CUF"]
     if not CUF then return end
 
     if (GetScreenWidth() * UIParent:GetEffectiveScale() <= 1228) then
@@ -16,4 +12,5 @@ EventUtil.RegisterOnceFrameEventAndCallback("LOADING_SCREEN_DISABLED", function(
     else
         CUF.API:SetCustomUnitFrameSize("player", 600, 100)
     end
-end)
+end
+Cell:RegisterCallback("CUF_FramesInitialized", "Snippet_SetCustomSizing", SetCustomSizing)

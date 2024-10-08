@@ -117,6 +117,7 @@ Defaults.Options.fontWidth = {
 ---| "runes"
 ---| "shieldBar"
 ---| "healAbsorb"
+---| "hostileUnits"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -185,6 +186,9 @@ Defaults.Colors = {
         color = { 1, 0.1, 0.1, 1 },
         overAbsorb = { 1, 1, 1, 1 },
         invertColor = false,
+    },
+    hostileUnits = {
+        swapHealthAndLossColors = false,
     }
 }
 
@@ -255,6 +259,9 @@ Defaults.ColorsMenuOrder = {
         { "color",       "rgb" },
         { "overAbsorb",  "rgb" },
         { "invertColor", "toggle" },
+    },
+    hostileUnits = {
+        { "swapHealthAndLossColors", "toggle" }
     }
 }
 

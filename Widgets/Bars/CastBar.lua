@@ -887,21 +887,26 @@ function W:CreateCastBar(button)
     background:SetAllPoints(statusBar)
     background:SetColorTexture(1, 1, 1, .5)
 
+    -- Frame for Texts & Spark to ensure they are above border
+    local topLevelFrame = CreateFrame("Frame", nil, statusBar)
+    topLevelFrame:SetAllPoints()
+    topLevelFrame:SetFrameLevel(statusBar:GetFrameLevel() + 2)
+
     ---@class SparkTexture: Texture
-    local spark = statusBar:CreateTexture(nil, "OVERLAY")
+    local spark = topLevelFrame:CreateTexture(nil, "OVERLAY")
     spark:SetWidth(2)
     spark:SetBlendMode("BLEND")
     spark:SetTexture("Interface\\Buttons\\WHITE8X8")
     spark.enabled = false
 
     ---@class TimerText: FontString
-    local timerText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local timerText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     timerText.SetFontStyle = SetFontStyle
     timerText.SetPosition = SetFontPosition
     timerText.format = const.CastBarTimerFormat.REMAINING
 
     ---@class SpellText: FontString
-    local spellText = statusBar:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local spellText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true

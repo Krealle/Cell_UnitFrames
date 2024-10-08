@@ -199,7 +199,7 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
                 if self._auraDebuffCache[auraInstanceID] ~= nil then
                     local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
                     if newAura then
-                        newAura.dispelName = I.CheckDebuffType(newAura.dispelName, newAura.spellId)
+                        newAura.dispelName = CheckDebuffType(newAura.dispelName, newAura.spellId)
                         dispelsChanged = newAura.dispelName ~= nil
                     else
                         dispelsChanged = self._auraDebuffCache[auraInstanceID] ~= nil

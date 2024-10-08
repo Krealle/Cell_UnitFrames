@@ -728,6 +728,7 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
+            dispels = Defaults.Widgets.dispels
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -755,6 +756,7 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
+            dispels = Defaults.Widgets.dispels
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -809,6 +811,7 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
+            dispels = Defaults.Widgets.dispels
         },
         sameSizeAsPlayer = false,
         clickCast = false,

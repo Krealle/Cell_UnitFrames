@@ -15,6 +15,8 @@ local U = CUF.uFuncs
 local UnitClassBase = function(unit)
     return select(2, UnitClass(unit))
 end
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
 
 -------------------------------------------------
 -- MARK: Button Update HealthBar
@@ -35,7 +37,7 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
     local barR, barG, barB
     local lossR, lossG, lossB
     local barA, lossA = 1, 1
-    local healthPct = button.states.healthPercent
+    local healthPct = button.states.healthPercent or UnitHealth(unit) / UnitHealthMax(unit)
 
     if Cell.loaded then
         barA = CellDB["appearance"]["barAlpha"]

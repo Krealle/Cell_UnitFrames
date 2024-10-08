@@ -199,7 +199,6 @@ end
 local function Enable(self)
     if not ShouldShowPowerBar(self._owner) then
         if self:IsVisible() then
-            ---@diagnostic disable-next-line: param-type-mismatch
             self._owner:DisableWidget(self)
         end
         return false

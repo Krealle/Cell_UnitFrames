@@ -92,7 +92,8 @@ const.WIDGET_KIND = {
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
     CLASS_BAR = "classBar",
-    HEAL_ABSORB = "healAbsorb"
+    HEAL_ABSORB = "healAbsorb",
+    DISPELS = "dispels"
 }
 
 ---@enum OPTION_KIND
@@ -159,6 +160,14 @@ const.OPTION_KIND = {
     SHOW_DEAD_STATUS        = "showDeadStatus",
     CUSTOM_TEXTS            = "customTexts",
     OVER_ABSORB_GLOW        = "overAbsorbGlow",
+    HIGHLIGHT_TYPE          = "highlightType",
+    ONLY_SHOW_DISPELLABLE   = "onlyShowDispellable",
+    CURSE                   = "curse",
+    DISEASE                 = "disease",
+    MAGIC                   = "magic",
+    POISON                  = "poison",
+    BLEED                   = "bleed",
+    ICON_STYLE              = "iconStyle",
 }
 
 ---@enum AURA_OPTION_KIND

@@ -421,8 +421,9 @@ end
 ---@param button CUFUnitButton
 ---@param buffsChanged boolean?
 ---@param debuffsChanged boolean?
+---@param dispelsChanged boolean?
 ---@param fullUpdate boolean?
-local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, fullUpdate)
+local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     if not button.widgets.buffs.enabled or not button:IsVisible() then return end
 
     local previewMode = button._isSelected
@@ -430,7 +431,7 @@ local function UpdateAuras_Buffs(button, buffsChanged, debuffsChanged, fullUpdat
         if buffsChanged == nil then
             -- This is nil when we are trying to do full update of this widget
             -- So we queue an update to auras
-            button:UpdateAurasInternal()
+            button:QueueAuraUpdate()
         end
         return
     end
@@ -445,8 +446,9 @@ end
 ---@param button CUFUnitButton
 ---@param buffsChanged boolean?
 ---@param debuffsChanged boolean?
+---@param dispelsChanged boolean?
 ---@param fullUpdate boolean?
-local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, fullUpdate)
+local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     if not button.widgets.debuffs.enabled or not button:IsVisible() then return end
 
     local previewMode = button._isSelected
@@ -454,7 +456,7 @@ local function UpdateAuras_Debuffs(button, buffsChanged, debuffsChanged, fullUpd
         if debuffsChanged == nil then
             -- This is nil when we are trying to do full update of this widget
             -- So we queue an update to auras
-            button:UpdateAurasInternal()
+            button:QueueAuraUpdate()
         end
         return
     end

@@ -8,6 +8,7 @@ local A = Cell.animations
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+local I = Cell.iFuncs
 
 local W = CUF.widgets
 local const = CUF.constants
@@ -99,6 +100,11 @@ local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
     end
 
     if aura.isHarmful and not ignoreDebuffs then
+        aura.dispelName = I.CheckDebuffType(aura.dispelName, aura.spellId)
+        if aura.dispelName ~= "" then
+            return AuraUtil.AuraUpdateChangedType.Dispel
+        end
+
         return AuraUtil.AuraUpdateChangedType.Debuff
     elseif aura.isHelpful and not ignoreBuffs then
         return AuraUtil.AuraUpdateChangedType.Buff
@@ -117,6 +123,7 @@ local function ParseAllAuras(self, ignoreBuffs, ignoreDebuffs)
 
     local batchCount = nil
     local usePackedAura = true
+    ---@param aura AuraData
     local function HandleAura(aura)
         local type = ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
         if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
@@ -150,12 +157,14 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
 
     local debuffsChanged = false
     local buffsChanged = false
+    local dispelsChanged = false
     local fullUpdate = false
 
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate then
         self:ParseAllAuras(self._ignoreBuffs, self._ignoreDebuffs)
         debuffsChanged = true
         buffsChanged = true
+        dispelsChanged = true
         fullUpdate = true
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
@@ -165,6 +174,7 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
                 if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
                     self._auraDebuffCache[aura.auraInstanceID] = aura
                     debuffsChanged = true
+                    dispelsChanged = type == AuraUtil.AuraUpdateChangedType.Dispel
                 elseif type == AuraUtil.AuraUpdateChangedType.Buff then
                     self._auraBuffCache[aura.auraInstanceID] = aura
                     buffsChanged = true
@@ -176,6 +186,12 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self._auraDebuffCache[auraInstanceID] ~= nil then
                     local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
+                    if newAura then
+                        newAura.dispelName = I.CheckDebuffType(newAura.dispelName, newAura.spellId)
+                        dispelsChanged = newAura.dispelName ~= nil
+                    else
+                        dispelsChanged = self._auraDebuffCache[auraInstanceID] ~= nil
+                    end
                     self._auraDebuffCache[auraInstanceID] = newAura
                     debuffsChanged = true
                 elseif self._auraBuffCache[auraInstanceID] ~= nil then
@@ -189,6 +205,7 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
         if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
                 if self._auraDebuffCache[auraInstanceID] ~= nil then
+                    dispelsChanged = self._auraDebuffCache[auraInstanceID].dispelName ~= nil
                     self._auraDebuffCache[auraInstanceID] = nil
                     debuffsChanged = true
                 elseif self._auraBuffCache[auraInstanceID] ~= nil then
@@ -199,15 +216,26 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
         end
     end
 
-    self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, fullUpdate)
+    self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+end
+
+--- Queues an aura update
+--- Used to prevent aura update spam
+--- Mostly relevant when full updating widgets since they will all ask for aura update
+---@param self CUFUnitButton
+local function QueueAuraUpdate(self)
+    if not self:IsVisible() then return end
+    if self._ignoreBuffs and self._ignoreDebuffs then return end
+    self._auraUpdateRequired = true
 end
 
 --- Triggers aura callbacks
 ---@param self CUFUnitButton
 ---@param buffsChanged boolean
 ---@param debuffsChanged boolean
+---@param dispelsChanged boolean
 ---@param fullUpdate boolean
-local function TriggerAuraCallbacks(self, buffsChanged, debuffsChanged, fullUpdate)
+local function TriggerAuraCallbacks(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
     --CUF:Log("TriggerAuraCallbacks", self.states.unit, buffsChanged, debuffsChanged, fullUpdate)
     if not buffsChanged and not debuffsChanged and not fullUpdate then
         return
@@ -215,28 +243,29 @@ local function TriggerAuraCallbacks(self, buffsChanged, debuffsChanged, fullUpda
 
     if buffsChanged then
         for _, callback in pairs(self._auraBuffCallbacks) do
-            callback(self, buffsChanged, debuffsChanged, fullUpdate)
+            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
         end
     end
     if debuffsChanged then
         for _, callback in pairs(self._auraDebuffCallbacks) do
-            callback(self, buffsChanged, debuffsChanged, fullUpdate)
+            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
         end
     end
 end
 
 --- Iterates over all auras of a specific type
+--- Return true to stop iteration
 ---@param self CUFUnitButton
 ---@param type "buffs" | "debuffs"
----@param fn fun(aura: AuraData, ...)
+---@param fn fun(aura: AuraData, ...): true?
 local function IterateAuras(self, type, fn, ...)
     if type == "buffs" then
         for _, aura in pairs(self._auraBuffCache) do
-            fn(aura, ...)
+            if fn(aura, ...) then return end
         end
     elseif type == "debuffs" then
         for _, aura in pairs(self._auraDebuffCache) do
-            fn(aura, ...)
+            if fn(aura, ...) then return end
         end
     end
 end
@@ -321,7 +350,6 @@ local function UnitFrame_UpdateAll(button)
     --UnitFrame_UpdateTarget(self)
     UnitFrame_UpdateInRange(button)
 
-    button:UpdateAurasInternal()
     button:UpdateWidgets()
 end
 U.UpdateAll = UnitFrame_UpdateAll
@@ -521,6 +549,11 @@ local function UnitFrame_OnTick(self)
     if self._updateRequired then
         self._updateRequired = nil
         UnitFrame_UpdateAll(self)
+    end
+
+    if self._auraUpdateRequired then
+        self._auraUpdateRequired = nil
+        self:UpdateAurasInternal()
     end
 end
 
@@ -762,6 +795,7 @@ function CUFUnitButton_OnLoad(button)
 
     button.IterateAuras = IterateAuras
     button.ParseAllAuras = ParseAllAuras
+    button.QueueAuraUpdate = QueueAuraUpdate
     button.UpdateAurasInternal = UpdateAurasInternal
     button.TriggerAuraCallbacks = TriggerAuraCallbacks
     button.RegisterAuraCallback = RegisterAuraCallback
@@ -797,6 +831,7 @@ end
 ---@field powerSize number
 ---@field _powerBarUpdateRequired boolean
 ---@field _updateRequired boolean
+---@field _auraUpdateRequired boolean
 ---@field __tickCount number
 ---@field __updateElapsed number
 ---@field __displayedGuid string?
@@ -851,4 +886,4 @@ end
 ---@field unitLess boolean
 
 ---@alias EventCallbackFn fun(self: CUFUnitButton, event: WowEvent, unit: UnitToken, ...: any)
----@alias UnitAuraCallbackFn fun(self: CUFUnitButton, buffsChanged: boolean, debuffsChanged: boolean, fullUpdate: boolean)
+---@alias UnitAuraCallbackFn fun(self: CUFUnitButton, buffsChanged: boolean, debuffsChanged: boolean, dispelsChanged: boolean, fullUpdate: boolean)

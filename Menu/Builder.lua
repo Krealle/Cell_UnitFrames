@@ -4,6 +4,7 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = CUF.L
 local F = Cell.funcs
+local I = Cell.iFuncs
 
 local Handler = CUF.Handler
 local const = CUF.constants
@@ -53,6 +54,8 @@ Builder.MenuOptions = {
     NameFormat = 29,
     ShieldBarOptions = 30,
     CustomText = 31,
+    DispelsOptions = 32,
+    TrueSingleSizeOptions = 33,
 }
 
 -------------------------------------------------
@@ -1019,6 +1022,25 @@ end
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
+---@return TrueSingleSizeOptions
+function Builder:CreateTrueSingleSizeOptions(parent, widgetName)
+    ---@class TrueSingleSizeOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+
+    f.sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 0, 100,
+        const.AURA_OPTION_KIND.SIZE)
+    f.sizeSlider:SetPoint("TOPLEFT", f)
+
+    f.sizeSlider.Set_DB = function(_which, _kind, value)
+        HandleWidgetOption(widgetName, const.AURA_OPTION_KIND.SIZE, value)
+    end
+
+    return f
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
 ---@param minVal number?
 ---@param maxVal number?
 ---@param path string?
@@ -1790,6 +1812,84 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Dispels
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return DispelsOptions
+function Builder:CreateDispelsOptions(parent, widgetName)
+    ---@class DispelsOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "DispelsOptions"
+    f.optionHeight = 185
+
+    -- First Row
+    local highlightTypeItems = {
+        { L["None"],                                                               "none" },
+        { L["Gradient"] .. " - " .. L["Health Bar"] .. " (" .. L["Entire"] .. ")", "gradient" },
+        { L["Gradient"] .. " - " .. L["Health Bar"] .. " (" .. L["Half"] .. ")",   "gradient-half" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Entire"] .. ")",    "entire" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Current"] .. ")",   "current" },
+        { L["Solid"] .. " - " .. L["Health Bar"] .. " (" .. L["Current"] .. "+)",  "current+" },
+    }
+    local highLightType = self:CreateDropdown(f, widgetName, L["Highlight Type"], 250, highlightTypeItems,
+        const.OPTION_KIND.HIGHLIGHT_TYPE)
+    highLightType:SetPoint("TOPLEFT", 0, -5)
+
+    -- Filter
+    local dispellableByMe = self:CreateCheckBox(f, widgetName, L["dispellableByMe"],
+        const.OPTION_KIND.ONLY_SHOW_DISPELLABLE)
+    self:AnchorBelow(dispellableByMe, highLightType)
+
+    local curse = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Curse:0|t" .. L
+        ["Curse"], const.OPTION_KIND.CURSE)
+    self:AnchorBelowCB(curse, dispellableByMe)
+
+    local disease = self:CreateCheckBox(f, widgetName,
+        "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Disease:0|t" .. L["Disease"], const.OPTION_KIND.DISEASE)
+    self:AnchorRightOfCB(disease, curse)
+
+    local magic = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Magic:0|t" .. L
+        ["Magic"], const.OPTION_KIND.MAGIC)
+    self:AnchorRightOfCB(magic, disease)
+
+    local poison = self:CreateCheckBox(f, widgetName,
+        "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Poison:0|t" .. L["Poison"], const.OPTION_KIND.POISON)
+    self:AnchorBelowCB(poison, curse)
+
+    local bleed = self:CreateCheckBox(f, widgetName, "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Bleed:0|t" .. L
+        ["Bleed"], const.OPTION_KIND.BLEED)
+    self:AnchorRightOfCB(bleed, poison)
+
+    -- Icon Style
+    local blizzard = ""
+    local blizzard_icon = "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\%s:0|t"
+
+    local rhombus = ""
+    local rhombus_icon = "|TInterface\\AddOns\\Cell\\Media\\Debuffs\\Rhombus:0:0:0:0:16:16:0:16:0:16:%s:%s:%s|t"
+
+    local types = { "Magic", "Curse", "Disease", "Poison", "Bleed" }
+    for _, t in pairs(types) do
+        blizzard = blizzard .. blizzard_icon:format(t) .. " "
+
+        local r, g, b = F:ConvertRGB_256(I.GetDebuffTypeColor(t))
+        rhombus = rhombus .. rhombus_icon:format(r, g, b) .. " "
+    end
+
+    local iconStyleItems = {
+        { L["None"], "none" },
+        { blizzard,  "blizzard" },
+        { rhombus,   "rhombus" },
+    }
+    local iconStyle = self:CreateDropdown(f, widgetName, L["Icon Style"], 250, iconStyleItems,
+        const.OPTION_KIND.ICON_STYLE)
+    self:AnchorBelow(iconStyle, poison)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1826,4 +1926,6 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
     [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,
     [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
+    [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
+    [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
 }

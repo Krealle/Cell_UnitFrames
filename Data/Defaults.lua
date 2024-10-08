@@ -455,6 +455,26 @@ Defaults.Widgets = {
             offsetX = 0,
             relativePoint = "TOPRIGHT",
         },
+    },
+    ---@type DispelsWidgetTable
+    dispels = {
+        enabled = false,
+        frameLevel = 10,
+        highlightType = "current",
+        onlyShowDispellable = true,
+        curse = true,
+        disease = true,
+        magic = true,
+        poison = true,
+        bleed = true,
+        iconStyle = "none",
+        size = 12,
+        position = {
+            point = "BOTTOMRIGHT",
+            offsetY = 4,
+            offsetX = -4,
+            relativePoint = "BOTTOMRIGHT",
+        },
     }, -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {

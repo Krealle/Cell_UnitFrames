@@ -380,10 +380,12 @@ end
 W.Formats = {}
 W.FormatsTooltips = {}
 
+---@alias FormatCategory "Health"|"Miscellaneous"|"Group"|"Classification"
+
 ---@param formatName string
 ---@param events string
 ---@param func fun(unit: UnitToken): string
----@param category ("Health"|"Miscellaneous")?
+---@param category FormatCategory?
 function W:AddFormat(formatName, events, func, category)
     self.Formats[formatName] = { events = events, func = func }
 
@@ -396,7 +398,7 @@ function W:AddFormat(formatName, events, func, category)
 end
 
 local allTooltips
----@param category ("Health"|"Miscellaneous")?
+---@param category FormatCategory?
 ---@return string[]
 function W:GetFormatTooltips(category)
     if category then
@@ -460,6 +462,13 @@ W:AddFormat("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
     end
     return ""
 end, "Group")
+
+-- Classification
+
+W:AddFormat("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
+    return Util:GetUnitClassification(unit, true)
+end, "Classification")
+
 
 -- This function takes a text format string and returns a function that can be called with a UnitToken
 --

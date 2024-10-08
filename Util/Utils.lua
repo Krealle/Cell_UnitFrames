@@ -363,6 +363,22 @@ function Util:GetUnitSubgroup(unit)
     end
 end
 
+local classifications = {
+    rare = L["Rare"],
+    rareelite = L["Rare Elite"],
+    elite = L["Elite"],
+    worldboss = L["Boss"],
+    --minus = L["Affix"],
+    --trivial = L["Trivial"],
+}
+function Util:GetUnitClassification(unit, localized)
+    local classification = UnitClassification(unit)
+    if localized then
+        return classifications[classification]
+    end
+    return classification
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

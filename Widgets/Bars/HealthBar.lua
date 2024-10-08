@@ -19,6 +19,7 @@ local UnitCanAttack = UnitCanAttack
 local UnitIsFriend = UnitIsFriend
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 
 -------------------------------------------------
 -- MARK: Button Update HealthBar
@@ -51,7 +52,7 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
     -- TODO: Revist this
     -- In general this entire widget should be improved
     local swapHealthAndLossColors
-    local deadOrGhost = button.states.isDeadOrGhost or button.states.isDead or healthPct == 0
+    local deadOrGhost = UnitIsDeadOrGhost(unit)
     if healthBar.swapHostileColors then
         if (not deadOrGhost or not healthBar.useDeathColor)
             and (UnitCanAttack("player", unit) or not UnitIsFriend("player", unit)) then

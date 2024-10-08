@@ -97,6 +97,9 @@ local function OnAddonLoaded(owner, loadedAddonName)
 
         CUF:Fire("AddonLoaded")
 
+        -- Use this to allow Cell snippets to manipulate functions before we start using them
+        Cell:Fire("CUF_AddonLoaded")
+
         return true
     end
 

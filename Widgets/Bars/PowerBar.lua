@@ -70,14 +70,17 @@ local function ShouldShowPowerBar(self)
         class = "VEHICLE"
     end
 
-    if class and Cell.vars.currentLayoutTable then
+    if class and Cell.vars.currentLayoutTable and self.states.unit == "player" then
         if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
             return Cell.vars.currentLayoutTable["powerFilters"][class]
         else
             if role then
                 return Cell.vars.currentLayoutTable["powerFilters"][class][role]
             else
-                return true -- show power if role not found
+                C_Timer.After(0.1, function()
+                    self:EnableWidget(self.widgets.powerBar)
+                end)
+                return false
             end
         end
     end

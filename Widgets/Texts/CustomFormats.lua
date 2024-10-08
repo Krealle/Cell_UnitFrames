@@ -378,40 +378,70 @@ end
 -------------------------------------------------
 
 W.Formats = {}
+W.FormatsTooltips = {}
 
 ---@param formatName string
 ---@param events string
 ---@param func fun(unit: UnitToken): string
-function W:AddFormat(formatName, events, func)
+---@param category ("Health"|"Miscellaneous")?
+function W:AddFormat(formatName, events, func, category)
     self.Formats[formatName] = { events = events, func = func }
+
+    local tooltip = string.format("[%s] - %s", formatName, L[formatName])
+    category = category or "Miscellaneous"
+    if not self.FormatsTooltips[category] then
+        self.FormatsTooltips[category] = {}
+    end
+    tinsert(self.FormatsTooltips[category], tooltip)
+end
+
+local allTooltips
+---@param category ("Health"|"Miscellaneous")?
+---@return string[]
+function W:GetFormatTooltips(category)
+    if category then
+        return self.FormatsTooltips[category]
+    end
+
+    if not allTooltips then
+        allTooltips = {}
+        for cat, tooltips in pairs(self.FormatsTooltips) do
+            tinsert(allTooltips, cat)
+            for _, tooltip in ipairs(tooltips) do
+                tinsert(allTooltips, tooltip)
+            end
+        end
+    end
+
+    return allTooltips
 end
 
 -- Health
 W:AddFormat("curhp", "UNIT_HEALTH", function(unit)
     return FormatNumber(UnitHealth(unit))
-end)
+end, "Health")
 W:AddFormat("curhp:short", "UNIT_HEALTH", function(unit)
     return FormatNumberShort(UnitHealth(unit))
-end)
+end, "Health")
 W:AddFormat("perhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     return FormatPercent(UnitHealthMax(unit), UnitHealth(unit))
-end)
+end, "Health")
 W:AddFormat("maxhp", "UNIT_MAXHEALTH", function(unit)
     return FormatNumber(UnitHealthMax(unit))
-end)
+end, "Health")
 W:AddFormat("defhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     return FormatNumberNoZeroes(UnitHealthMax(unit) - UnitHealth(unit))
-end)
+end, "Health")
 
 -- Absorbs
 W:AddFormat("abs:short", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumberShortNoZeroes(UnitGetTotalAbsorbs(unit))
-end)
+end, "Health")
 
 -- Heal Absorbs
 W:AddFormat("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumberShortNoZeroes(UnitGetTotalHealAbsorbs(unit))
-end)
+end, "Health")
 
 -- This function takes a text format string and returns a function that can be called with current, max, totalAbsorbs
 --
@@ -419,7 +449,7 @@ end)
 --
 -- Example usage:
 --
--- local preBuiltFunction = W.ProcessCustomTextFormat("[cur:per-short] | [cur:short]")
+-- local preBuiltFunction = W.GetCustomTextFormat("[cur:per-short] | [cur:short]")
 --
 -- local finalString = preBuiltFunction(100, 12600, 0)
 --

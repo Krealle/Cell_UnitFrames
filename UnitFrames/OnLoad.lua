@@ -84,6 +84,18 @@ end
 -- MARK: Auras
 -------------------------------------------------
 
+local debuffTypeCache = {}
+
+---@param dispelName string?
+---@param spellID number
+---@return string?
+local function CheckDebuffType(dispelName, spellID)
+    if not debuffTypeCache[spellID] then
+        debuffTypeCache[spellID] = I.CheckDebuffType(dispelName, spellID)
+    end
+    return debuffTypeCache[spellID]
+end
+
 --- Processes an aura and returns the type of aura
 --- Returns None if the aura shoulbe be ignored
 ---@param aura AuraData
@@ -100,7 +112,7 @@ local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
     end
 
     if aura.isHarmful and not ignoreDebuffs then
-        aura.dispelName = I.CheckDebuffType(aura.dispelName, aura.spellId)
+        aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
         if aura.dispelName ~= "" then
             return AuraUtil.AuraUpdateChangedType.Dispel
         end

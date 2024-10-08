@@ -372,3 +372,108 @@ function W.ProcessCustomTextFormat(textFormat, which)
         return Util:trim(table.concat(result))
     end, hasAbsorb, hasHealth, hasHealAbsorb
 end
+
+-------------------------------------------------
+-- MARK: CustomText
+-------------------------------------------------
+
+W.Formats = {}
+
+---@param formatName string
+---@param events string
+---@param func fun(unit: UnitToken): string
+function W:AddFormat(formatName, events, func)
+    self.Formats[formatName] = { events = events, func = func }
+end
+
+-- Health
+W:AddFormat("curhp", "UNIT_HEALTH", function(unit)
+    return FormatNumber(UnitHealth(unit))
+end)
+W:AddFormat("curhp:short", "UNIT_HEALTH", function(unit)
+    return FormatNumberShort(UnitHealth(unit))
+end)
+W:AddFormat("perhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
+    return FormatPercent(UnitHealthMax(unit), UnitHealth(unit))
+end)
+W:AddFormat("maxhp", "UNIT_MAXHEALTH", function(unit)
+    return FormatNumber(UnitHealthMax(unit))
+end)
+W:AddFormat("defhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
+    return FormatNumberNoZeroes(UnitHealthMax(unit) - UnitHealth(unit))
+end)
+
+-- Absorbs
+W:AddFormat("abs:short", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
+    return FormatNumberShortNoZeroes(UnitGetTotalAbsorbs(unit))
+end)
+
+-- Heal Absorbs
+W:AddFormat("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
+    return FormatNumberShortNoZeroes(UnitGetTotalHealAbsorbs(unit))
+end)
+
+-- This function takes a text format string and returns a function that can be called with current, max, totalAbsorbs
+--
+-- Valid tags will be replaced with the corresponding function
+--
+-- Example usage:
+--
+-- local preBuiltFunction = W.ProcessCustomTextFormat("[cur:per-short] | [cur:short]")
+--
+-- local finalString = preBuiltFunction(100, 12600, 0)
+--
+-- print(finalString) -- Output: 100% | 12.6k
+---@param textFormat string
+function W.GetCustomTextFormat(textFormat)
+    local elements = {}
+    local events = {}
+    local lastEnd = 1
+
+    -- Process the text format and find all bracketed tags
+    for bracketed in textFormat:gmatch("%b[]") do
+        local startPos, endPos = textFormat:find("%b[]", lastEnd)
+        if startPos > lastEnd then
+            table.insert(elements, textFormat:sub(lastEnd, startPos - 1))
+        end
+
+        local tag = bracketed:sub(2, -2)
+        local maybeFormat = W.Formats[tag]
+
+        if maybeFormat then
+            --CUF:DevAdd(maybeFormat, tag)
+
+            for _, event in pairs(strsplittable(" ", maybeFormat.events)) do
+                events[event] = true
+            end
+
+            table.insert(elements, maybeFormat.func)
+        else
+            table.insert(elements, function() return bracketed end)
+        end
+
+        lastEnd = endPos + 1
+    end
+
+    -- Add any remaining text after the last tag
+    if lastEnd <= #textFormat then
+        table.insert(elements, textFormat:sub(lastEnd))
+    end
+
+    ---@param unit UnitToken
+    ---@return string
+    return function(_, unit)
+        local result = {}
+
+        for i, element in ipairs(elements) do
+            local success, output = pcall(element, unit)
+            if success then
+                result[i] = output
+            else
+                result[i] = "n/a"
+            end
+        end
+
+        return Util:trim(table.concat(result))
+    end, events
+end

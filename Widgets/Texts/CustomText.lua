@@ -41,21 +41,13 @@ function W.UpdateCustomTextWidget(button, unit, setting, which, subSetting, ...)
             local textTable = styleTable.texts[which or ("text" .. index)]
 
             if not subSetting or subSetting == const.OPTION_KIND.TEXT_FORMAT then
-                -- TODO: Abstract, for now it's fine
-                local formatFn, hasAbsorb, hasHealth, hasHealAbsorb = W.ProcessCustomTextFormat(textTable.textFormat,
-                    "health")
-                text._showingAbsorbs = hasAbsorb
-                text._showingHealth = hasHealth
-                text._showingHealAbsorbs = hasHealAbsorb
-                text.SetValue = function(_, current, max, totalAbsorbs, healAbsorbs)
-                    text:SetText(formatFn(current, max, totalAbsorbs, healAbsorbs))
-                end
+                text:UpdateFormat(textTable.textFormat)
             end
             if not subSetting or subSetting == const.OPTION_KIND.HIDE_IF_FULL then
-                text.hideIfFull = textTable.hideIfFull
+                --text.hideIfFull = textTable.hideIfFull
             end
             if not subSetting or subSetting == const.OPTION_KIND.HIDE_IF_EMPTY then
-                text.hideIfEmpty = textTable.hideIfEmpty
+                --text.hideIfEmpty = textTable.hideIfEmpty
             end
             if not subSetting or subSetting == const.OPTION_KIND.FONT then
                 text:SetFontStyle(textTable)
@@ -87,18 +79,16 @@ Handler:RegisterWidget(W.UpdateCustomTextWidget, const.WIDGET_KIND.CUSTOM_TEXT)
 ---@param button CUFUnitButton
 ---@param event ("UNIT_HEALTH" | "UNIT_ABSORB_AMOUNT_CHANGED"|"UNIT_HEAL_ABSORB_AMOUNT_CHANGED")?
 local function Update(button, event)
-    if not button.states.unit then return end
+    local unit = button.states.unit
+    if not unit then return end
+    local customText = button.widgets.customText
 
-    local absorbEvent = event == "UNIT_ABSORB_AMOUNT_CHANGED"
-    local healthEvent = event == "UNIT_HEALTH"
-    local healAbsorbEvent = event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED"
+    --print("Update", event)
 
-    button.widgets.customText:IterateTexts(function(text, enabled)
+    customText:IterateTexts(function(text, enabled, idx)
         if not enabled then return end
-
-        if absorbEvent and (not text._showingAbsorbs) then return end
-        if healthEvent and (not text._showingHealth) then return end
-        if healAbsorbEvent and (not text._showingHealAbsorbs) then return end
+        --if not customText._textsToUpdate[idx] then return end
+        if event and not text._events[event] then return end
 
         text:UpdateValue()
     end)
@@ -106,37 +96,27 @@ end
 
 ---@param self CustomTextWidget
 local function UpdateEventListeners(self)
-    local healthEvents, absorbEvents, healAbsorbEvents
+    local newEventListeners = {}
     self:IterateTexts(function(text, enabled)
         if not enabled then return end
-
-        if text._showingAbsorbs then
-            absorbEvents = true
-        end
-        if text._showingHealth then
-            healthEvents = true
-        end
-        if text._showingHealAbsorbs then
-            healAbsorbEvents = true
+        for event, _ in pairs(text._events) do
+            newEventListeners[event] = true
         end
     end)
 
-    if healthEvents then
-        self._owner:AddEventListener("UNIT_HEALTH", Update)
-    else
-        self._owner:RemoveEventListener("UNIT_HEALTH", Update)
+    -- Remove no longer needed event listeners
+    for event, _ in pairs(self._activeEventListeners) do
+        if not newEventListeners[event] then
+            self._owner:RemoveEventListener(event, Update)
+            self._activeEventListeners[event] = nil
+        end
     end
-
-    if absorbEvents then
-        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
-    else
-        self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
-    end
-
-    if healAbsorbEvents then
-        self._owner:AddEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", Update)
-    else
-        self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", Update)
+    -- Add new event listeners
+    for event, _ in pairs(newEventListeners) do
+        if not self._activeEventListeners[event] then
+            self._owner:AddEventListener(event, Update)
+            self._activeEventListeners[event] = true
+        end
     end
 end
 
@@ -150,6 +130,7 @@ local function FullUpdate(self)
 
         text:UpdateTextColor()
         text:UpdateValue()
+        text:Show()
     end)
 
     UpdateEventListeners(self)
@@ -175,6 +156,21 @@ local function Disable(self)
     self:Hide()
 end
 
+---@param self CustomText
+---@param format string
+local function UpdateFormat(self, format)
+    if not format or format == "" then
+        self.FormatFunc = function() end
+        return
+    end
+    local formatFn, events = W.GetCustomTextFormat(format)
+
+    self.FormatFunc = formatFn
+    self._events = events
+
+    CUF:DevAdd(events, format)
+end
+
 -------------------------------------------------
 -- MARK: CreateCustomText
 -------------------------------------------------
@@ -182,7 +178,7 @@ end
 ---@param button CUFUnitButton
 function W:CreateCustomText(button)
     ---@class CustomTextWidget: Frame
-    ---@field [number] HealthTextWidget
+    ---@field [number] CustomText
     local customText = CreateFrame("Frame", button:GetName() .. "_CustomText", button)
     button.widgets.customText = customText
 
@@ -191,7 +187,10 @@ function W:CreateCustomText(button)
     customText._isSelected = false
     customText._owner = button
 
-    ---@param func fun(text: HealthTextWidget, enabled: boolean, index: number)
+    customText._textsToUpdate = {}
+    customText._activeEventListeners = {}
+
+    ---@param func fun(text: CustomText, enabled: boolean, index: number)
     function customText:IterateTexts(func)
         for i = 1, #self do
             local text = self[i]
@@ -200,8 +199,21 @@ function W:CreateCustomText(button)
     end
 
     for i = 1, 5 do
-        customText[i] = W:CreateHealthText(button, true)
-        customText[i]:SetParent(customText)
+        ---@class CustomText: TextWidget
+        local text = W.CreateBaseTextWidget(button, const.WIDGET_KIND.CUSTOM_TEXT)
+        text:SetParent(customText)
+        customText[i] = text
+
+        ---@type table<WowEvent, boolean>
+        text._events = {}
+
+        function text:UpdateValue()
+            text:SetText(text:FormatFunc(button.states.unit))
+        end
+
+        text.UpdateFormat = UpdateFormat
+        ---@param unit UnitToken
+        text.FormatFunc = function(_self, unit) end
     end
 
     customText.Update = Update

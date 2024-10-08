@@ -66,6 +66,24 @@ These can be combined in any order to create the desired format.
 [healabs:per-short] - Displays the amount of heal absorbs as a percentage without decimals.
 ```
 
+## Snippets
+
+This plugin fully supports Cell's snippet system!
+
+These two Callbacks can be used with `Cell:RegisterCallback()`
+
+`CUF_AddonLoaded` - Fired when the addon is fully loaded, before Frames & Widgets are initialized.
+
+`CUF_FramesInitialized` - Fired when all Frames & Widgets are initialized.
+
+Check out https://github.com/Krealle/Cell_UnitFrames/tree/master/Snippets for example usage.
+
+## API
+
+This plugin provides custom API that can be used to easily perform various actions.
+
+Check out https://github.com/Krealle/Cell_UnitFrames/tree/master/API for further documentation.
+
 ## Issues / Feature Requests
 
 Please report any issues or feature requests over on [GitHub](https://github.com/Krealle/Cell_UnitFrames/issues).

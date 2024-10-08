@@ -432,11 +432,21 @@ function Builder.CreateSetting_Auras(parent, which, kind)
 
         auraImportExportFrame.importBtn = Cell:CreateButton(auraImportExportFrame, L["Import"], "green", { 57, 18 })
         auraImportExportFrame.importBtn:SetPoint("TOPRIGHT", auraImportExportFrame.closeBtn, "TOPLEFT", P:Scale(1), 0)
-        auraImportExportFrame.importBtn:SetScript("OnClick", function()
-            -- replace old
-            wipe(auraImportExportFrame.parent.t)
+        auraImportExportFrame.importBtn:SetScript("OnClick", function(self)
+            local curIds = {}
+
+            if self.isAdditive then
+                for _, spellID in pairs(auraImportExportFrame.parent.t) do
+                    curIds[spellID] = true
+                end
+            else
+                wipe(auraImportExportFrame.parent.t)
+            end
+
             for _, id in pairs(auraImportExportFrame.data) do
-                tinsert(auraImportExportFrame.parent.t, id)
+                if not curIds[id] then
+                    tinsert(auraImportExportFrame.parent.t, id)
+                end
             end
             -- update list
             auraImportExportFrame.parent:SetDBValue(auraImportExportFrame.parent.t)
@@ -481,7 +491,8 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         end
     end)
 
-    widget.import = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Import"])
+    widget.import = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
+        L["Import"] .. " (" .. L.Override .. ")", L.OverrideImportTooltip)
     widget.import:SetPoint("BOTTOMRIGHT", widget.export, "BOTTOMLEFT", -1, 0)
     widget.import:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\import", { 15, 15 }, { "CENTER", 0, 0 })
     widget.import:SetScript("OnClick", function()
@@ -492,6 +503,26 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.importBtn:Show()
         auraImportExportFrame.importBtn:SetEnabled(false)
         auraImportExportFrame:ShowUp()
+        auraImportExportFrame.importBtn.isAdditive = false
+        -- hide editbox
+        if widget.frame.popupEditBox then
+            widget.frame.popupEditBox:Hide()
+        end
+    end)
+
+    widget.importAdditive = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
+        L["Import"] .. " (" .. L.Additive .. ")", L.AdditiveImportTooltip)
+    widget.importAdditive:SetPoint("BOTTOMRIGHT", widget.import, "BOTTOMLEFT", -1, 0)
+    widget.importAdditive:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\import", { 15, 15 }, { "CENTER", 0, 0 })
+    widget.importAdditive:SetScript("OnClick", function()
+        auraImportExportFrame.isImport = true
+        auraImportExportFrame.parent = widget
+        auraImportExportFrame.textArea:SetText("")
+        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() .. L["Spells"] .. ":|r 0")
+        auraImportExportFrame.importBtn:Show()
+        auraImportExportFrame.importBtn:SetEnabled(false)
+        auraImportExportFrame:ShowUp()
+        auraImportExportFrame.importBtn.isAdditive = true
         -- hide editbox
         if widget.frame.popupEditBox then
             widget.frame.popupEditBox:Hide()
@@ -500,7 +531,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
 
     widget.clear = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Clear"],
         "|cffffb5c5Ctrl+" .. L["Left-Click"])
-    widget.clear:SetPoint("BOTTOMRIGHT", widget.import, "BOTTOMLEFT", -1, 0)
+    widget.clear:SetPoint("BOTTOMRIGHT", widget.importAdditive, "BOTTOMLEFT", -1, 0)
     widget.clear:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\trash", { 15, 15 }, { "CENTER", 0, 0 })
     widget.clear:SetScript("OnClick", function(self, button)
         if button == "LeftButton" and IsControlKeyDown() then

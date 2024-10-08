@@ -84,6 +84,9 @@ L.WhiteListPriorityTooltip = [[Use priority sorting for Whitelist
 
 The priority goes from top of the list to the bottom]]
 
+L.OverrideImportTooltip = "Will override the current list"
+L.AdditiveImportTooltip = "Will add to the current list"
+
 -- Cast Bar
 L.Reverse = "Reverse"
 L.Spark = "Spark"
@@ -180,6 +183,8 @@ L.ShowDeadStatusTooltip = [[Show "Dead" instead of 0.]]
 
 L.CellEditMode = "Cell Frames"
 L.CellEditModeTip = "(Previews won't dynamically update)"
+L.Override = "Override"
+L.Additive = "Additive"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

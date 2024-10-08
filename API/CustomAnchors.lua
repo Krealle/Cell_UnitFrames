@@ -16,6 +16,10 @@ local API = CUF.API
 --- or
 ---
 --- API:EnableCustomPositioningForUnitFrames("CUF_Player")
+---
+--- or
+---
+--- API:EnableCustomPositioningForUnitFrames()
 --- ```
 ---@param name string? Optional unit or frame name
 function API:EnableCustomPositioningForUnitFrames(name)
@@ -44,6 +48,10 @@ end
 --- or
 ---
 --- API:DisableCustomPositioningForUnitFrames("CUF_Player")
+---
+--- or
+---
+--- API:DisableCustomPositioningForUnitFrames()
 --- ```
 ---@param name string? Optional unit or frame name
 function API:DisableCustomPositioningForUnitFrames(name)

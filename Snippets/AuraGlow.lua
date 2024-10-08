@@ -1,13 +1,15 @@
 -- Apply Glow to buffs with specific spellIDs
 --
 -- See documentation for Glow functions here:
--- https://github.com/Krealle/Cell_UnitFrames/blob/2ac6b435c5be1ee1f1749773bce6b279df1bc1d4/Util/Utils.lua#L498
+-- https://github.com/Krealle/Cell_UnitFrames/blob/master/Util/Utils.lua#L498
 --
 -- `auraData` arg being passed is in this format:
 -- https://warcraft.wiki.gg/wiki/API_C_UnitAuras.GetAuraDataByIndex
+local function AuraGlow()
+    -- Make sure CUF is actually loaded
+    local CUF = _G["CUF"]
+    if not CUF then return end
 
--- Run Snippet late to ensure addon is properly loaded
-EventUtil.RegisterOnceFrameEventAndCallback("LOADING_SCREEN_DISABLED", function()
     local Util = CUF.Util
 
     local function PostUpdate(icon, auraData)
@@ -31,4 +33,5 @@ EventUtil.RegisterOnceFrameEventAndCallback("LOADING_SCREEN_DISABLED", function(
             icon.PostUpdate = PostUpdate
         end
     end)
-end)
+end
+Cell:RegisterCallback("CUF_FramesInitialized", "Snippet_AuraGlow", AuraGlow)

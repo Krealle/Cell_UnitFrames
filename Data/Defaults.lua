@@ -138,6 +138,7 @@ Defaults.Colors = {
         neutral = { 0.85, 0.77, 0.36, 1 },
         pet = { 0.29, 0.69, 0.3, 1 },
         useClassColorForPet = false,
+        swapHostileHealthAndLossColors = false,
     },
     essence = {
         ["1"] = { 0.2, 0.57, 0.5, 1 },
@@ -185,6 +186,8 @@ Defaults.Colors = {
         color = { 1, 0.1, 0.1, 1 },
         overAbsorb = { 1, 1, 1, 1 },
         invertColor = false,
+    },
+    hostileUnits = {
     }
 }
 
@@ -203,11 +206,13 @@ Defaults.ColorsMenuOrder = {
         { "fullyCharged",     "rgb" }
     },
     reaction = {
-        { "friendly",            "rgb" },
-        { "hostile",             "rgb" },
-        { "neutral",             "rgb" },
-        { "pet",                 "rgb" },
-        { "useClassColorForPet", "toggle" },
+        { "friendly",                       "rgb" },
+        { "hostile",                        "rgb" },
+        { "neutral",                        "rgb" },
+        { "pet",                            "rgb" },
+        { "useClassColorForPet",            "toggle" },
+        { "hostileUnits",                   "seperator" },
+        { "swapHostileHealthAndLossColors", "toggle" }
     },
     essence = {
         { "1", "rgb" },
@@ -255,7 +260,7 @@ Defaults.ColorsMenuOrder = {
         { "color",       "rgb" },
         { "overAbsorb",  "rgb" },
         { "invertColor", "toggle" },
-    }
+    },
 }
 
 ---@type CustomTextWidgetTable

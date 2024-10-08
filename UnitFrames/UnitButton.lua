@@ -103,6 +103,11 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     if not kind or kind == "position" then
         U:UpdateUnitButtonPosition(unit, button)
     end
+
+    if kind == "powerFilter" and unit == const.UNIT.PLAYER then
+        button:DisableWidget(button.widgets.powerBar)
+        button:EnableWidget(button.widgets.powerBar)
+    end
 end
 
 -------------------------------------------------
@@ -223,7 +228,7 @@ local function UpdateAppearance(kind)
     if not kind or kind == "color" or kind == "deathColor" or kind == "alpha" then
         ---@param button CUFUnitButton
         Util:IterateAllUnitButtons(function(button)
-            U:UnitFrame_UpdateHealthColor(button)
+            U:UnitFrame_UpdateHealthColor(button, true)
             button.widgets.powerBar.UpdatePowerType(button)
             button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
         end)
@@ -234,7 +239,7 @@ local function UpdateAppearance(kind)
         C_Timer.After(0.01, function()
             ---@param button CUFUnitButton
             Util:IterateAllUnitButtons(function(button)
-                U:UnitFrame_UpdateHealthColor(button)
+                U:UnitFrame_UpdateHealthColor(button, true)
                 button.widgets.powerBar.UpdatePowerType(button)
             end)
         end)

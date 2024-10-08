@@ -15,25 +15,50 @@ local U = CUF.uFuncs
 local UnitClassBase = function(unit)
     return select(2, UnitClass(unit))
 end
+local UnitCanAttack = UnitCanAttack
+local UnitIsFriend = UnitIsFriend
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 
 -------------------------------------------------
 -- MARK: Button Update HealthBar
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function U:UnitFrame_UpdateHealthColor(button)
+---@param fullUpdate boolean?
+function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
+    if fullUpdate then
+        button.widgets.healthBar:UpdateColorOptions()
+    end
+    if not button:IsVisible() then return end
     local unit = button.states.unit
     if not unit then return end
+
+    local healthBar = button.widgets.healthBar
 
     button.states.class = UnitClassBase(unit) --! update class
 
     local barR, barG, barB
     local lossR, lossG, lossB
     local barA, lossA = 1, 1
+    local healthPct = button.states.healthPercent or UnitHealth(unit) / UnitHealthMax(unit)
 
     if Cell.loaded then
         barA = CellDB["appearance"]["barAlpha"]
         lossA = CellDB["appearance"]["lossAlpha"]
+    end
+
+    -- TODO: Revist this
+    -- In general this entire widget should be improved
+    local swapHealthAndLossColors
+    local deadOrGhost = UnitIsDeadOrGhost(unit)
+    if healthBar.swapHostileColors then
+        if (not deadOrGhost or not healthBar.useDeathColor)
+            and (UnitCanAttack("player", unit) or not UnitIsFriend("player", unit)) then
+            healthPct = 1 - healthPct
+            swapHealthAndLossColors = true
+        end
     end
 
     if not UnitIsConnected(unit) then
@@ -43,15 +68,20 @@ function U:UnitFrame_UpdateHealthColor(button)
         barR, barG, barB, barA = 0.5, 0, 1, 1
         lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
     elseif button.states.inVehicle then
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
-            button.states.isDeadOrGhost or button.states.isDead, 0, 1, 0.2)
+        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
+            deadOrGhost, 0, 1, 0.2)
     else
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(button.states.healthPercent,
-            button.states.isDeadOrGhost or button.states.isDead, CUF.Util:GetUnitClassColor(button.states.unit))
+        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
+            deadOrGhost, CUF.Util:GetUnitClassColor(button.states.unit))
     end
 
-    button.widgets.healthBar:SetStatusBarColor(barR, barG, barB, barA)
-    button.widgets.healthBarLoss:SetVertexColor(lossR, lossG, lossB, lossA)
+    if swapHealthAndLossColors then
+        healthBar:SetStatusBarColor(lossR, lossG, lossB, lossA)
+        button.widgets.healthBarLoss:SetVertexColor(barR, barG, barB, barA)
+    else
+        healthBar:SetStatusBarColor(barR, barG, barB, barA)
+        button.widgets.healthBarLoss:SetVertexColor(lossR, lossG, lossB, lossA)
+    end
 
     --[[ if Cell.loaded and CellDB["appearance"]["healPrediction"][2] then
         self.widgets.incomingHeal:SetVertexColor(CellDB["appearance"]["healPrediction"][3][1], CellDB["appearance"]["healPrediction"][3][2], CellDB["appearance"]["healPrediction"][3][3], CellDB["appearance"]["healPrediction"][3][4])
@@ -98,6 +128,7 @@ end
 
 ---@param button CUFUnitButton
 local function UpdateHealth(button)
+    if not button:IsVisible() then return end
     UpdateUnitHealthState(button)
     local healthPercent = button.states.healthPercent
 
@@ -122,6 +153,7 @@ end
 
 ---@param button CUFUnitButton
 local function UpdateHealthMax(button)
+    if not button:IsVisible() then return end
     UpdateUnitHealthState(button)
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then
@@ -170,6 +202,12 @@ local function Disable(self)
     return true
 end
 
+---@param self HealthBarWidget
+local function UpdateColorOptions(self)
+    self.swapHostileColors = CUF.DB.GetColors().reaction.swapHostileHealthAndLossColors
+    self.useDeathColor = CellDB["appearance"]["deathColor"][1]
+end
+
 -------------------------------------------------
 -- MARK: CreateHealthBar
 -------------------------------------------------
@@ -181,6 +219,9 @@ function W:CreateHealthBar(button)
     button.widgets.healthBar = healthBar
     healthBar._owner = button
     healthBar.enabled = true
+
+    healthBar.swapHostileColors = false
+    healthBar.useDeathColor = false
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
     healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
@@ -199,6 +240,8 @@ function W:CreateHealthBar(button)
     healthBar.Update = Update
     healthBar.Enable = Enable
     healthBar.Disable = Disable
+
+    healthBar.UpdateColorOptions = UpdateColorOptions
 
     --[[ -- dead texture
     local deadTex = healthBar:CreateTexture(nil, "OVERLAY")

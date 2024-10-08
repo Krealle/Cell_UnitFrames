@@ -67,6 +67,9 @@ local function OnCellInitialUpdateLayout(_layout)
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 
+    -- Callback used to make it easier for Cell snippets to know when the frames are initialized
+    Cell:Fire("CUF_FramesInitialized")
+
     Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end
 
@@ -96,6 +99,9 @@ local function OnAddonLoaded(owner, loadedAddonName)
         Cell:RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 
         CUF:Fire("AddonLoaded")
+
+        -- Use this to allow Cell snippets to manipulate functions before we start using them
+        Cell:Fire("CUF_AddonLoaded")
 
         return true
     end

@@ -100,7 +100,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
     -- TODO: Add prio? right now we just take first
     local foundDispel = false
     button:IterateAuras("debuffs", function(aura)
-        if not dispels:ShouldShowDispel(aura) then return end
+        if not dispels:ShouldShowDispel(aura.dispelName) then return end
         foundDispel = true
 
         dispels:SetDispelHighlight(aura.dispelName)
@@ -142,10 +142,9 @@ end
 -------------------------------------------------
 
 ---@param self DispelsWidget
----@param aura AuraData
+---@param dispelType string?
 ---@return boolean
-local function ShouldShowDispel(self, aura)
-    local dispelType = aura.dispelName
+local function ShouldShowDispel(self, dispelType)
     if not dispelType then return false end
     if self.onlyShowDispellable and not I.CanDispel(dispelType) then return false end
 

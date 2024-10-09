@@ -9,6 +9,8 @@ local L = CUF.L
 ---@class CUF.Util
 local Util = CUF.Util
 
+local const = CUF.constants
+
 -------------------------------------------------
 -- MARK: Prop Hunting
 -------------------------------------------------
@@ -737,6 +739,34 @@ function Util.FormatDuration(duration)
     else
         return tostring(duration)
     end
+end
+
+--- Function to fetch Blizzard's class color string
+--- @param className string
+--- @return string?
+function Util.GetClassColorCode(className)
+    local classColor = RAID_CLASS_COLORS[className:upper()]
+    if classColor then
+        return classColor.colorStr
+    end
+    return nil
+end
+
+--- Wrap a string with a predefined color code
+---@param string string
+---@param color FormatColorType
+---@return string
+function Util.ColorWrap(string, color)
+    ---@type string?
+    local colorCode = const.FormatColors[color]
+    if not colorCode then
+        colorCode = Util.GetClassColorCode(color)
+    end
+    if not colorCode then
+        return string
+    end
+
+    return string.format("|c%s%s|r", colorCode, string)
 end
 
 -------------------------------------------------

@@ -256,3 +256,50 @@ const.NameFormat = {
     FIRST_NAME_LAST_INITIAL = "firstNameLastInitial",
     FIRST_INITIAL_LAST_NAME = "firstInitialLastName",
 }
+
+---@alias FormatColorType
+---| "red"
+---| "green"
+---| "blue"
+---| "white"
+---| "black"
+---| "yellow"
+---| "cyan"
+---| "magenta"
+---| "orange"
+---| "purple"
+---| "gray"
+---| "pink"
+---| "brown"
+---| "gold"
+---| "WARRIOR"
+---| "PALADIN"
+---| "HUNTER"
+---| "ROGUE"
+---| "PRIEST"
+---| "DEATHKNIGHT"
+---| "SHAMAN"
+---| "MAGE"
+---| "WARLOCK"
+---| "MONK"
+---| "DRUID"
+---| "DEMONHUNTER"
+---| "EVOKER"
+
+---@enum FormatColors
+const.FormatColors = {
+    red = "ffff0000",
+    green = "ff00ff00",
+    blue = "ff0000ff",
+    white = "ffffffff",
+    black = "ff000000",
+    yellow = "ffffff00",
+    cyan = "ff00ffff",
+    magenta = "ffff00ff",
+    orange = "ffffa500",
+    purple = "ff800080",
+    gray = "ff808080",
+    pink = "ffffc0cb",
+    brown = "ffa52a2a",
+    gold = "ffffd700",
+}

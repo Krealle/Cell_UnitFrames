@@ -408,7 +408,15 @@ function W:GetFormatTooltips(category)
     if not allTooltips then
         allTooltips = {}
         for cat, tooltips in pairs(self.FormatsTooltips) do
-            tinsert(allTooltips, cat)
+            -- Add buffer between categories
+            if #allTooltips > 0 then
+                tinsert(allTooltips, "")
+            end
+
+            -- Color category titles
+            local catTitle = Util.ColorWrap(cat, "orange")
+            tinsert(allTooltips, catTitle)
+
             for _, tooltip in ipairs(tooltips) do
                 tinsert(allTooltips, tooltip)
             end

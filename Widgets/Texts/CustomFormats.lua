@@ -380,7 +380,7 @@ end
 W.Formats = {}
 W.FormatsTooltips = {}
 
----@alias FormatCategory "Health"|"Miscellaneous"|"Group"|"Classification"
+---@alias FormatCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"
 
 ---@param formatName string
 ---@param events string
@@ -547,6 +547,66 @@ W:AddFormat("perhealabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH"
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     return FormatPercentShortNoZeroes(maxhp, totalHealAbsorbs)
 end, "Health")
+
+-- Power
+W:AddFormat("curpp", "UNIT_POWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    return FormatNumber(power)
+end, "Power")
+W:AddFormat("curpp:short", "UNIT_POWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    return FormatNumberShort(power)
+end, "Power")
+W:AddFormat("perpp", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatPercent(maxPower, power)
+end, "Power")
+W:AddFormat("perpp:short", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatPercentShort(maxPower, power)
+end, "Power")
+
+W:AddFormat("maxpp", "UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatNumber(maxPower)
+end, "Power")
+W:AddFormat("maxpp:short", "UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatNumberShort(maxPower)
+end, "Power")
+
+W:AddFormat("defpp", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatNumber(maxPower - power)
+end, "Power")
+W:AddFormat("defpp:short", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatNumberShort(maxPower - power)
+end, "Power")
+W:AddFormat("perdefpp", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatPercent(maxPower, (maxPower - power))
+end, "Power")
+W:AddFormat("perdefpp:short", "UNIT_POWER UNIT_MAXPOWER", function(unit)
+    local powerType = UnitPowerType(unit)
+    local power = UnitPower(unit, powerType)
+    local maxPower = UnitPowerMax(unit, powerType)
+    return FormatPercentShort(maxPower, (maxPower - power))
+end, "Power")
 
 -- Group
 W:AddFormat("group", "GROUP_ROSTER_UPDATE", function(unit)

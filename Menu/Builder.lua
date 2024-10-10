@@ -860,7 +860,7 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
         f.formatEditBox:SetEnabled(enabled)
         if enabled then
             CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-                unpack(CUF.widgets:GetFormatTooltips("Health")))
+                unpack(CUF.widgets:GetTagTooltips("Health")))
         else
             CUF:ClearTooltips(f.formatEditBox)
         end
@@ -924,7 +924,7 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
         f.formatEditBox:SetEnabled(enabled)
         if enabled then
             CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-                unpack(CUF.widgets:GetFormatTooltips("Power")))
+                unpack(CUF.widgets:GetTagTooltips("Power")))
         else
             CUF:ClearTooltips(f.formatEditBox)
         end
@@ -1674,7 +1674,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     formatEditBox.Set_DB = Set_DB
     formatEditBox.Get_DB = Get_DB
     CUF:SetTooltips(formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-        unpack(CUF.widgets:GetFormatTooltips()))
+        unpack(CUF.widgets:GetTagTooltips()))
 
     -- Hide if
     local hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,

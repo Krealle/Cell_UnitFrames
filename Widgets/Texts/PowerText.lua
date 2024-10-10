@@ -128,7 +128,7 @@ end
 
 ---@param self PowerTextWidget
 local function SetPower_Custom(self)
-    local formatFn = W.GetCustomTextFormat(self.textFormat, "Power")
+    local formatFn = W.GetTagFunction(self.textFormat, "Power")
     self.SetValue = function(_, current, max)
         self:SetText(formatFn(nil, self._owner.states.unit))
     end

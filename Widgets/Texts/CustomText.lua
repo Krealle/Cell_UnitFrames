@@ -163,12 +163,12 @@ local function UpdateFormat(self, format)
         self.FormatFunc = function() end
         return
     end
-    local formatFn, events = W.GetCustomTextFormat(format)
+    local formatFn, events = W.GetTagFunction(format)
 
     self.FormatFunc = formatFn
     self._events = events
 
-    CUF:DevAdd(events, format)
+    --CUF:DevAdd(events, format)
 end
 
 -------------------------------------------------

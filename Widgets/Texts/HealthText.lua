@@ -280,7 +280,7 @@ end
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
     self.isCustom = true
-    local formatFn, events = W.GetCustomTextFormat(self.textFormat, "Health")
+    local formatFn, events = W.GetTagFunction(self.textFormat, "Health")
 
     local hasAbsorb, hasHealAbsorb = false, false
     for event, _ in pairs(events) do

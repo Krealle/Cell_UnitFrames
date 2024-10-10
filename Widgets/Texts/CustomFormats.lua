@@ -654,7 +654,8 @@ end, "Classification")
 --
 -- print(finalString) -- Output: 100% | 12.6k
 ---@param textFormat string
-function W.GetCustomTextFormat(textFormat)
+---@param categoryFilter FormatCategory?
+function W.GetCustomTextFormat(textFormat, categoryFilter)
     local elements = {}
     local events = {}
     local lastEnd = 1
@@ -669,7 +670,7 @@ function W.GetCustomTextFormat(textFormat)
         local tag = bracketed:sub(2, -2)
         local maybeFormat = W.Formats[tag]
 
-        if maybeFormat then
+        if maybeFormat and (not categoryFilter or maybeFormat.category == categoryFilter) then
             --CUF:DevAdd(maybeFormat, tag)
 
             for _, event in pairs(strsplittable(" ", maybeFormat.events)) do

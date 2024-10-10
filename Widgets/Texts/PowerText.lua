@@ -128,9 +128,9 @@ end
 
 ---@param self PowerTextWidget
 local function SetPower_Custom(self)
-    local formatFn = W.ProcessCustomTextFormat(self.textFormat, "power")
+    local formatFn = W.GetCustomTextFormat(self.textFormat)
     self.SetValue = function(_, current, max)
-        self:SetText(formatFn(current, max))
+        self:SetText(formatFn(nil, self._owner.states.unit))
     end
     self:UpdateValue() -- Fixes annoying race condition
 end

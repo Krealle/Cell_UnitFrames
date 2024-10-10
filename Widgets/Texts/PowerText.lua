@@ -92,7 +92,7 @@ end
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
-    self._owner:AddEventListener("UNIT_MAXPOWER", Update)
+    self._owner:RemoveEventListener("UNIT_MAXPOWER", Update)
 end
 
 -------------------------------------------------

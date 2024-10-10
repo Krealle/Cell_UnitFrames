@@ -397,6 +397,15 @@ function W:AddFormat(formatName, events, func, category)
     tinsert(self.FormatsTooltips[category], tooltip)
 end
 
+--- Creates a wrapper function that returns the input string
+---
+--- Used for non tag inputs
+---@param str string
+---@return fun(unit: UnitToken): string
+function W:CreateStringWrapFunction(str)
+    return function(unit) return str end
+end
+
 local allTooltips
 ---@param category FormatCategory?
 ---@return string[]
@@ -654,7 +663,7 @@ function W.GetCustomTextFormat(textFormat)
     for bracketed in textFormat:gmatch("%b[]") do
         local startPos, endPos = textFormat:find("%b[]", lastEnd)
         if startPos > lastEnd then
-            table.insert(elements, textFormat:sub(lastEnd, startPos - 1))
+            table.insert(elements, W:CreateStringWrapFunction(textFormat:sub(lastEnd, startPos - 1)))
         end
 
         local tag = bracketed:sub(2, -2)
@@ -669,7 +678,7 @@ function W.GetCustomTextFormat(textFormat)
 
             table.insert(elements, maybeFormat.func)
         else
-            table.insert(elements, function() return bracketed end)
+            table.insert(elements, W:CreateStringWrapFunction(bracketed))
         end
 
         lastEnd = endPos + 1
@@ -677,7 +686,7 @@ function W.GetCustomTextFormat(textFormat)
 
     -- Add any remaining text after the last tag
     if lastEnd <= #textFormat then
-        table.insert(elements, textFormat:sub(lastEnd))
+        table.insert(elements, W:CreateStringWrapFunction(textFormat:sub(lastEnd)))
     end
 
     ---@param unit UnitToken

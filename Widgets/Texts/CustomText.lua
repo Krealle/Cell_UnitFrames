@@ -77,7 +77,7 @@ Handler:RegisterWidget(W.UpdateCustomTextWidget, const.WIDGET_KIND.CUSTOM_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event ("UNIT_HEALTH" | "UNIT_ABSORB_AMOUNT_CHANGED"|"UNIT_HEAL_ABSORB_AMOUNT_CHANGED")?
+---@param event WowEvent?
 local function Update(button, event)
     local unit = button.states.unit
     if not unit then return end

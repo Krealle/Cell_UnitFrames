@@ -94,13 +94,33 @@ local function Update(button, event)
     end)
 end
 
+---@param self CustomText
+---@param elapsed number
+local function OnUpdate(self, elapsed)
+    self.elapsed = (self.elapsed or 0) + elapsed
+    if self.elapsed >= self._onUpdateTimer then
+        self:UpdateValue()
+        self.elapsed = 0
+    end
+end
+
 ---@param self CustomTextWidget
 local function UpdateEventListeners(self)
     local newEventListeners = {}
     self:IterateTexts(function(text, enabled)
-        if not enabled then return end
+        if not enabled then
+            text:SetScript("OnUpdate", nil)
+            return
+        end
+
         for event, _ in pairs(text._events) do
             newEventListeners[event] = true
+        end
+
+        if text._onUpdateTimer then
+            text:SetScript("OnUpdate", OnUpdate)
+        else
+            text:SetScript("OnUpdate", nil)
         end
     end)
 
@@ -163,10 +183,11 @@ local function UpdateFormat(self, format)
         self.FormatFunc = function() end
         return
     end
-    local formatFn, events = W.GetTagFunction(format)
+    local formatFn, events, onUpdateTimer = W.GetTagFunction(format)
 
     self.FormatFunc = formatFn
     self._events = events
+    self._onUpdateTimer = onUpdateTimer
 
     --CUF:DevAdd(events, format)
 end
@@ -200,12 +221,14 @@ function W:CreateCustomText(button)
 
     for i = 1, 5 do
         ---@class CustomText: TextWidget
+        ---@field elapsed number
         local text = W.CreateBaseTextWidget(button, const.WIDGET_KIND.CUSTOM_TEXT)
         text:SetParent(customText)
         customText[i] = text
 
         ---@type table<WowEvent, boolean>
         text._events = {}
+        text._onUpdateTimer = nil
 
         function text:UpdateValue()
             text:SetText(text:FormatFunc(button.states.unit))

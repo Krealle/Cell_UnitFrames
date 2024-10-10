@@ -11,6 +11,17 @@ local W = CUF.widgets
 
 local L = CUF.L
 
+---@class Tag
+---@field events string|number
+---@field func fun(unit: UnitToken)
+---@field category TagCategory
+
+---@type table<string, Tag>
+W.Tags = {}
+W.TagTooltips = {}
+
+---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"
+
 -------------------------------------------------
 -- MARK: Tags
 -------------------------------------------------
@@ -108,20 +119,16 @@ local function CombineFormats(format1, format2, seperator)
     return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
 end
 
-W.Tags = {}
-W.TagTooltips = {}
-
----@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"
-
 ---@param tagName string
----@param events string
+---@param events string|number
 ---@param func fun(unit: UnitToken): string
 ---@param category TagCategory?
 function W:AddTag(tagName, events, func, category)
+    category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
     local tooltip = string.format("[%s] - %s", tagName, L[tagName])
-    category = category or "Miscellaneous"
+
     if not self.TagTooltips[category] then
         self.TagTooltips[category] = {}
     end
@@ -390,6 +397,7 @@ function W.GetTagFunction(textFormat, categoryFilter)
     local elements = {}
     local events = {}
     local lastEnd = 1
+    local onUpdateTimer
 
     -- Process the text format and find all bracketed tags
     for bracketed in textFormat:gmatch("%b[]") do
@@ -402,8 +410,13 @@ function W.GetTagFunction(textFormat, categoryFilter)
         local maybeTag = W.Tags[tag]
 
         if maybeTag and (not categoryFilter or maybeTag.category == categoryFilter) then
-            for _, event in pairs(strsplittable(" ", maybeTag.events)) do
-                events[event] = true
+            local maybeEvents = maybeTag.events
+            if type(maybeEvents) == "string" then
+                for _, event in pairs(strsplittable(" ", maybeEvents)) do
+                    events[event] = true
+                end
+            else
+                onUpdateTimer = maybeEvents
             end
 
             table.insert(elements, maybeTag.func)
@@ -434,5 +447,5 @@ function W.GetTagFunction(textFormat, categoryFilter)
         end
 
         return Util:trim(table.concat(result))
-    end, events
+    end, events, onUpdateTimer
 end

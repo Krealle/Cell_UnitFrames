@@ -82,6 +82,7 @@ local function Enable(self)
 
     self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent, unitLess)
     self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update, unitLess)
+    self._owner:AddEventListener("UNIT_MAXPOWER", Update, unitLess)
     self:Show()
 
     return true
@@ -91,6 +92,7 @@ end
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
+    self._owner:AddEventListener("UNIT_MAXPOWER", Update)
 end
 
 -------------------------------------------------

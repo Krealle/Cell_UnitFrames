@@ -384,7 +384,10 @@ end
 -- Initialize unit buttons
 function U:InitUnitButtons()
     for _, unit in pairs(CUF.constants.UNIT) do
-        local button, unitFrame = CreateUnitButton(unit)
-        RegisterUnitButtonCallbacks(unit, button, unitFrame)
+        if unit == "boss" then
+        else
+            local button, unitFrame = CreateUnitButton(unit)
+            RegisterUnitButtonCallbacks(unit, button, unitFrame)
+        end
     end
 end

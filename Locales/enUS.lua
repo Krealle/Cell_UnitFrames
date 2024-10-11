@@ -57,6 +57,7 @@ L.player = "Player"
 L.pet = "Pet"
 L.focus = "Focus"
 L.target = "Target"
+L.boss = "Boss"
 
 -- Auras
 L.MaxDuration = "Maximum Duration"

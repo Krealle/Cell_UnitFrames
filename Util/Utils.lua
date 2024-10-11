@@ -149,8 +149,11 @@ end
 ---@param unitToIterate string?
 function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     for _, unit in pairs(CUF.constants.UNIT) do
-        if not unitToIterate or unitToIterate == unit then
-            func(CUF.unitButtons[unit], unit, ...)
+        if unit == "boss" then
+        else
+            if not unitToIterate or unitToIterate == unit then
+                func(CUF.unitButtons[unit], unit, ...)
+            end
         end
     end
 end

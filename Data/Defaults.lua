@@ -692,6 +692,7 @@ Defaults.Widgets = {
 ---@field anchorPosition ParentAnchor?
 ---@field barOrientation string
 ---@field powerFilter boolean
+---@field spacing number?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -829,4 +830,20 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         powerFilter = false,
     },
+    boss = {
+        enabled = false,
+        powerSize = 2,
+        spacing = 2,
+        size = { 100, 20 },
+        point = "BOTTOMLEFT",
+        position = { 1600, 800 },
+        widgets = {
+            nameText = Defaults.Widgets.nameText,
+            healthText = Defaults.Widgets.healthText,
+        },
+        tooltipPosition = { "BOTTOMLEFT", "BOTTOMLEFT", -3, 0, },
+        sameSizeAsPlayer = false,
+        clickCast = false,
+        barOrientation = "horizontal"
+    }
 }

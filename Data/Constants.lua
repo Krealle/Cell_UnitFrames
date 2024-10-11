@@ -22,6 +22,7 @@ const.UNIT = {
     FOCUS = "focus",
     PET = "pet",
     TARGET_TARGET = "targettarget",
+    BOSS = "boss",
 }
 
 ---@enum TitleCasedUnits

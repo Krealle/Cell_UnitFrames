@@ -116,7 +116,7 @@ function DB:Revise()
             layout.widgets.healthText.hideIfEmptyOrFull = nil
         end)
     end
-    if CUF_DB.version == 8 then
+    if CUF_DB.version < 9 then
         AddToChangelog("Custom Tag formats have been changed in a recent update. You may need to update your tags.")
     end
 

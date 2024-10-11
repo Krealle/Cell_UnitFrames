@@ -9,6 +9,8 @@ local L = CUF.L
 ---@class CUF.Util
 local Util = CUF.Util
 
+local const = CUF.constants
+
 -------------------------------------------------
 -- MARK: Prop Hunting
 -------------------------------------------------
@@ -334,6 +336,44 @@ function Util:ButtonIsMirrored(unit)
 end
 
 -------------------------------------------------
+-- MARK: Unit Info
+-------------------------------------------------
+
+---@param unit UnitToken
+---@return string name
+---@return string? nameWithServer
+function Util:GetUnitName(unit)
+    local name, server = UnitName(unit)
+
+    local nameWithServer
+    if server and server ~= "" then
+        nameWithServer = name .. "-" .. server
+    end
+
+    return name, nameWithServer
+end
+
+---@param unit UnitToken
+---@return number? subgroup
+function Util:GetUnitSubgroup(unit)
+    local name, nameWithServer = self:GetUnitName(unit)
+    for i = 1, GetNumGroupMembers() do
+        local rName, rank, subgroup = GetRaidRosterInfo(i)
+        if rName == name or rName == nameWithServer then
+            return subgroup
+        end
+    end
+end
+
+function Util:GetUnitClassification(unit, localized)
+    local classification = UnitClassification(unit)
+    if localized then
+        return L[classification]
+    end
+    return classification
+end
+
+-------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------
 
@@ -352,7 +392,7 @@ function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, te
 end
 
 ---@param parent Frame
----@param text string
+---@param text string?
 ---@param size { [1]: number, [2]: number }
 ---@param onClick? function
 ---@param buttonColor? "red"|"red-hover"|"green"|"green-hover"|"blue"|"blue-hover"|"yellow"|"yellow-hover"|"accent"|"accent-hover"|"chartreuse"|"magenta"|"transparent"|"transparent-white"|"transparent-light"|"transparent-accent"|"none"
@@ -691,6 +731,62 @@ function Util.FormatDuration(duration)
     else
         return tostring(duration)
     end
+end
+
+--- Function to fetch Blizzard's class color string
+--- @param className string
+--- @return string?
+function Util.GetClassColorCode(className)
+    local classColor = RAID_CLASS_COLORS[className:upper()]
+    if classColor then
+        return classColor.colorStr
+    end
+    return nil
+end
+
+--- Wrap a string with a predefined color code
+---@param string string
+---@param color FormatColorType
+---@return string
+function Util.ColorWrap(string, color)
+    ---@type string?
+    local colorCode = const.FormatColors[color]
+    if not colorCode then
+        colorCode = Util.GetClassColorCode(color)
+    end
+    if not colorCode then
+        return string
+    end
+
+    return string.format("|c%s%s|r", colorCode, string)
+end
+
+--- Converts an RGB color to a hex color used for string formatting
+---
+--- Returns an open color code without "|r" suffix
+---
+--- eg. "|cffFFFFFF"
+---@param r number|table
+---@param g number?
+---@param b number?
+---@return string
+function Util.RGBToOpenColorCode(r, g, b)
+    if type(r) == "table" then
+        r, g, b = unpack(r)
+    end
+
+    if not r then
+        return "|cffFFFFFF"
+    end
+
+    return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+end
+
+--- Shortens a string to a given length
+---@param str string
+---@param maxLength number
+function Util.ShortenString(str, maxLength)
+    return string.utf8sub(str, 1, maxLength)
 end
 
 -------------------------------------------------

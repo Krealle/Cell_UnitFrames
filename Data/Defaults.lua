@@ -278,8 +278,6 @@ Defaults.CustomText = {
         relativePoint = "CENTER",
     },
     font = Defaults.Options.smallFontOpt,
-    hideIfFull = false,
-    hideIfEmpty = false,
 }
 
 -------------------------------------------------

@@ -279,12 +279,22 @@ end
 
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
-    local formatFn, hasAbsorb, hasHealAbsorb = W.ProcessCustomTextFormat(self.textFormat, "health")
+    self.isCustom = true
+    local formatFn, events = W.GetTagFunction(self.textFormat, "Health")
+
+    local hasAbsorb, hasHealAbsorb = false, false
+    for event, _ in pairs(events) do
+        if event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+            hasAbsorb = true
+        elseif event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED" then
+            hasHealAbsorb = true
+        end
+    end
+
     self._showingAbsorbs = hasAbsorb
     self._showingHealAbsorbs = hasHealAbsorb
-    self.SetValue = function(_, current, max, totalAbsorbs, healAbsorbs)
-        self:SetText(formatFn(current, max, totalAbsorbs, healAbsorbs))
-    end
+
+    self.FormatFunc = formatFn
 end
 
 -------------------------------------------------
@@ -295,6 +305,7 @@ end
 ---@param self HealthTextWidget
 ---@param format HealthTextFormat
 local function HealthText_SetFormat(self, format)
+    self.isCustom = false
     if format == const.HealthTextFormat.PERCENTAGE then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage
@@ -338,7 +349,7 @@ local function HealthText_SetFormat(self, format)
         self._showingAbsorbs = true
         self.SetValue = SetHealth_Absorbs_Only_Percentage
     elseif format == const.HealthTextFormat.CUSTOM then
-        self.SetValue = SetHealth_Custom
+        self:SetHealth_Custom()
     end
 
     if not self.enabled then return end
@@ -373,14 +384,24 @@ function W:CreateHealthText(button, custom)
     healthText.hideIfFull = false
     healthText.hideIfEmpty = false
     healthText.showDeadStatus = false
+    healthText.isCustom = false
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
     ---@type fun(self: HealthTextWidget, current: number, max: number, totalAbsorbs: number, healAbsorbs: number)
     healthText.SetValue = SetHealth_Percentage
 
+    healthText.SetHealth_Custom = SetHealth_Custom
+    function healthText:SetValue_Custom()
+        healthText:SetText(healthText:FormatFunc(button.states.unit))
+    end
+
+    ---@param unit UnitToken
+    healthText.FormatFunc = function(_self, unit) end
+
     function healthText:UpdateValue()
-        local health, healthMax, totalAbsorbs, healAbsorbs = GetHealthInfo(self._owner.states.displayedUnit,
+        local unit = self._owner.states.displayedUnit
+        local health, healthMax, totalAbsorbs, healAbsorbs = GetHealthInfo(unit,
             self._showingAbsorbs,
             self._showingHealAbsorbs)
         if self.enabled and healthMax ~= 0 then
@@ -395,14 +416,18 @@ function W:CreateHealthText(button, custom)
                     return
                 end
 
-                if self.showDeadStatus and UnitIsDeadOrGhost(self._owner.states.displayedUnit) then
+                if self.showDeadStatus and UnitIsDeadOrGhost(unit) then
                     self:SetText(L["Dead"])
                     self:Show()
                     return
                 end
             end
 
-            self:SetValue(health, healthMax, totalAbsorbs, healAbsorbs)
+            if self.isCustom then
+                self:SetValue_Custom()
+            else
+                self:SetValue(health, healthMax, totalAbsorbs, healAbsorbs)
+            end
             self:Show()
         end
     end

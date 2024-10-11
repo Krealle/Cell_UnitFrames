@@ -10,6 +10,7 @@ local Handler = CUF.Handler
 local const = CUF.constants
 local DB = CUF.DB
 local Util = CUF.Util
+local W = CUF.widgets
 
 ---@class CUF.builder
 local Builder = CUF.Builder
@@ -860,7 +861,7 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
         f.formatEditBox:SetEnabled(enabled)
         if enabled then
             CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-                unpack(CUF.widgets.CustomHealtFormatsTooltip))
+                unpack(CUF.widgets:GetTagTooltips("Health")))
         else
             CUF:ClearTooltips(f.formatEditBox)
         end
@@ -924,7 +925,7 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
         f.formatEditBox:SetEnabled(enabled)
         if enabled then
             CUF:SetTooltips(f.formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-                unpack(CUF.widgets.CustomPowerFormatsTooltip))
+                unpack(CUF.widgets:GetTagTooltips("Power")))
         else
             CUF:ClearTooltips(f.formatEditBox)
         end
@@ -1669,25 +1670,31 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     enableCB.Get_DB = Get_DB
 
     -- Format
-    local formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
+    local formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 375, const.OPTION_KIND.TEXT_FORMAT)
     self:AnchorBelow(formatEditBox, textDropdown)
     formatEditBox.Set_DB = Set_DB
     formatEditBox.Get_DB = Get_DB
-    CUF:SetTooltips(formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-        unpack(CUF.widgets.CustomHealtFormatsTooltip))
 
-    -- Hide if
-    local hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
-        const.OPTION_KIND.HIDE_IF_EMPTY)
-    self:AnchorBelowCB(hideIfEmpty, formatEditBox)
-    local hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
-        const.OPTION_KIND.HIDE_IF_FULL)
-    self:AnchorRightOfCB(hideIfFull, hideIfEmpty)
+    ---@class TagHint: CellButton
+    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, nil, nil, nil, nil, nil, nil, nil,
+        L.TagHintButtonTooltip)
+    tagHint:SetPoint("LEFT", formatEditBox, "RIGHT", 5, 0)
+    tagHint.tex = tagHint:CreateTexture(nil, "ARTWORK")
+    tagHint.tex:SetAllPoints(tagHint)
+    tagHint.tex:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\info2.tga")
 
-    hideIfEmpty.Set_DB = Set_DB
-    hideIfEmpty.Get_DB = Get_DB
-    hideIfFull.Set_DB = Set_DB
-    hideIfFull.Get_DB = Get_DB
+    tagHint:SetScript("OnClick", function()
+        W.ShowTooltipFrame()
+        CUF.HelpTips:Acknowledge(tagHint, L.HelpTip_TagHintButton)
+    end)
+
+    CUF.HelpTips:Show(tagHint, {
+        text = L.HelpTip_TagHintButton,
+        dbKey = "tagHintButton_Builder",
+        buttonStyle = HelpTip.ButtonStyle.None,
+        alignment = HelpTip.Alignment.Center,
+        targetPoint = HelpTip.Point.LeftEdgeCenter,
+    })
 
     -- Color
     local items = {
@@ -1698,7 +1705,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     ---@type CellDropdown
     local colorDropdown = Cell:CreateDropdown(parent, 200)
     colorDropdown:SetLabel(L["Color"])
-    self:AnchorBelow(colorDropdown, hideIfEmpty)
+    self:AnchorBelow(colorDropdown, formatEditBox)
 
     local colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
         Set_DB(widgetName, "color.rgb", { r, g, b })
@@ -1765,8 +1772,6 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 
         -- Format
         formatEditBox:SetText(widgetTable.textFormat)
-        hideIfEmpty:SetChecked(widgetTable.hideIfEmpty)
-        hideIfFull:SetChecked(widgetTable.hideIfFull)
 
         -- Color
         colorDropdown:SetSelectedValue(widgetTable.color.type)

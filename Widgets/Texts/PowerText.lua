@@ -82,6 +82,7 @@ local function Enable(self)
 
     self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent, unitLess)
     self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update, unitLess)
+    self._owner:AddEventListener("UNIT_MAXPOWER", Update, unitLess)
     self:Show()
 
     return true
@@ -91,6 +92,7 @@ end
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
+    self._owner:RemoveEventListener("UNIT_MAXPOWER", Update)
 end
 
 -------------------------------------------------
@@ -126,9 +128,9 @@ end
 
 ---@param self PowerTextWidget
 local function SetPower_Custom(self)
-    local formatFn = W.ProcessCustomTextFormat(self.textFormat, "power")
+    local formatFn = W.GetTagFunction(self.textFormat, "Power")
     self.SetValue = function(_, current, max)
-        self:SetText(formatFn(current, max))
+        self:SetText(formatFn(nil, self._owner.states.unit))
     end
     self:UpdateValue() -- Fixes annoying race condition
 end
@@ -177,8 +179,14 @@ function W:CreatePowerText(button)
     powerText.SetValue = SetPower_Percentage
 
     function powerText:UpdateValue()
-        local powerMax = UnitPowerMax(button.states.unit)
-        local power = UnitPower(button.states.unit)
+        local unit = button.states.unit
+        local powerMax = UnitPowerMax(unit)
+        local power = UnitPower(unit)
+
+        if UnitIsDeadOrGhost(unit) then
+            self:Hide()
+            return
+        end
 
         if self.hideIfEmptyOrFull and (power == 0 or power == powerMax) then
             self:Hide()

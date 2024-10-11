@@ -568,8 +568,7 @@ W:AddTag("group", "GROUP_ROSTER_UPDATE", function(unit)
     if subgroup then
         return FormatNumber(subgroup)
     end
-    return ""
-end, "Group")
+end, "Group", "1-8")
 
 W:AddTag("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
     if not IsInRaid() then return "" end
@@ -577,22 +576,24 @@ W:AddTag("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
     if subgroup then
         return FormatNumber(subgroup)
     end
-    return ""
-end, "Group")
+end, "Group", "1-8")
 
 -- Classification
 W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
-end, "Classification")
+end, "Classification", (L.rare .. ", " .. L.rareelite .. ", " .. L.elite .. ", " .. L.worldboss))
 
 -- Name
 for type, lenght in pairs(nameLenghts) do
+    local normalExample = Util.ShortenString("Sylvanas Windrunner", lenght)
+    local abbrevExample = Util.ShortenString("S. Windrunner", lenght)
+
     W:AddTag("name:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
         if unitName then
             return Util.ShortenString(unitName, lenght)
         end
-    end, "Name")
+    end, "Name", normalExample)
 
     W:AddTag("name:abbrev:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
@@ -600,14 +601,14 @@ for type, lenght in pairs(nameLenghts) do
             local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
             return Util.ShortenString(abbreveated, lenght)
         end
-    end, "Name")
+    end, "Name", abbrevExample)
 
     W:AddTag("target:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
         if unitName then
             return Util.ShortenString(unitName, lenght)
         end
-    end, "Target")
+    end, "Target", normalExample)
 
     W:AddTag("target:abbrev:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
@@ -615,7 +616,7 @@ for type, lenght in pairs(nameLenghts) do
             local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
             return Util.ShortenString(abbreveated, lenght)
         end
-    end, "Target")
+    end, "Target", abbrevExample)
 end
 
 W:AddTag("name", "UNIT_NAME_UPDATE", function(unit)
@@ -623,13 +624,13 @@ W:AddTag("name", "UNIT_NAME_UPDATE", function(unit)
     if unitName then
         return unitName
     end
-end, "Name")
+end, "Name", "Sylvanas Windrunner")
 W:AddTag("name:abbrev", "UNIT_NAME_UPDATE", function(unit)
     local unitName = UnitName(unit)
     if unitName then
         return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
-end, "Name")
+end, "Name", "S. Windrunner")
 
 -- Target
 W:AddTag("target", "UNIT_TARGET", function(unit)
@@ -637,13 +638,13 @@ W:AddTag("target", "UNIT_TARGET", function(unit)
     if targetName then
         return targetName
     end
-end, "Target")
+end, "Target", "Sylvanas Windrunner")
 W:AddTag("target:abbrev", "UNIT_TARGET", function(unit)
     local unitName = UnitName(unit .. "target")
     if unitName then
         return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
-end, "Target")
+end, "Target", "S. Windrunner")
 
 -- Colors
 W:AddTag("classcolor", "UNIT_NAME_UPDATE UNIT_FACTION", function(unit)

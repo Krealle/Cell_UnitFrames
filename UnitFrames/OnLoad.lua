@@ -311,25 +311,17 @@ end
 ---@param callback function
 local function UnregisterAuraCallback(self, type, callback)
     if type == "buffs" then
-        if #self._auraBuffCallbacks == 1 then
-            wipe(self._auraBuffCallbacks)
-        else
-            for i, cb in ipairs(self._auraBuffCallbacks) do
-                if cb == callback then
-                    tremove(self._auraBuffCallbacks, i)
-                    break
-                end
+        for i, cb in ipairs(self._auraBuffCallbacks) do
+            if cb == callback then
+                tremove(self._auraBuffCallbacks, i)
+                break
             end
         end
     elseif type == "debuffs" then
-        if #self._auraDebuffCallbacks == 1 then
-            wipe(self._auraDebuffCallbacks)
-        else
-            for i, cb in ipairs(self._auraDebuffCallbacks) do
-                if cb == callback then
-                    tremove(self._auraDebuffCallbacks, i)
-                    break
-                end
+        for i, cb in ipairs(self._auraDebuffCallbacks) do
+            if cb == callback then
+                tremove(self._auraDebuffCallbacks, i)
+                break
             end
         end
     end

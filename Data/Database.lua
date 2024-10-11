@@ -58,6 +58,9 @@ end
 -- Returns active layout table
 ---@return UnitLayoutTable
 function DB.CurrentLayoutTable()
+    if CUF.vars.isMenuOpen and DB.GetMasterLayout(true) == "CUFLayoutMasterNone" then
+        return DB.SelectedLayoutTable()
+    end
     return DB.GetLayoutTable(DB.GetMasterLayout())
 end
 
@@ -126,6 +129,7 @@ end
 ---@param layout string
 function DB.SetMasterLayout(layout)
     CUF_DB.masterLayout = layout
+    CUF:Fire("UpdateUnitButtons")
 end
 
 --- Sets the color of a specific color type

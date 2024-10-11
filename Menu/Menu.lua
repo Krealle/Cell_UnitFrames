@@ -73,6 +73,7 @@ function menu:LoadLayoutDB(layout)
     menu:ShowMenu()
     CUF:Fire("LoadPageDB", CUF.vars.selectedUnit, CUF.vars.selectedWidget)
     CUF:Fire("UpdateVisibility")
+    CUF:Fire("UpdateUnitButtons")
 end
 
 -------------------------------------------------
@@ -305,6 +306,8 @@ function menu:CreateMenu()
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()
+        CUF.vars.selectedLayout = Cell.vars.currentLayout
+        CUF:Fire("UpdateUnitButtons")
     end)
 end
 

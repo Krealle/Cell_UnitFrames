@@ -1670,7 +1670,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     enableCB.Get_DB = Get_DB
 
     -- Format
-    local formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
+    local formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 375, const.OPTION_KIND.TEXT_FORMAT)
     self:AnchorBelow(formatEditBox, textDropdown)
     formatEditBox.Set_DB = Set_DB
     formatEditBox.Get_DB = Get_DB
@@ -1678,7 +1678,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     ---@class TagHint: CellButton
     local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, nil, nil, nil, nil, nil, nil, nil,
         L.TagHintButtonTooltip)
-    self:AnchorRight(tagHint, formatEditBox)
+    tagHint:SetPoint("LEFT", formatEditBox, "RIGHT", 5, 0)
     tagHint.tex = tagHint:CreateTexture(nil, "ARTWORK")
     tagHint.tex:SetAllPoints(tagHint)
     tagHint.tex:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\info2.tga")
@@ -1692,8 +1692,8 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
         text = L.HelpTip_TagHintButton,
         dbKey = "tagHintButton_Builder",
         buttonStyle = HelpTip.ButtonStyle.None,
-        alignment = HelpTip.Alignment.Right,
-        targetPoint = HelpTip.Point.BottomEdgeCenter,
+        alignment = HelpTip.Alignment.Center,
+        targetPoint = HelpTip.Point.LeftEdgeCenter,
     })
 
     -- Color

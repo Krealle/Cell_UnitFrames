@@ -162,7 +162,7 @@ function W:GetTagTooltips(category)
 end
 
 local tooltipFrame
-function W.ShowTooltips()
+function W.ShowTooltipFrame()
     if not tooltipFrame then
         tooltipFrame = CUF:CreateFrame("CUF_CustomTags_Tooltip", CUF.mainFrame, 900, 500)
 

@@ -1676,7 +1676,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     formatEditBox.Get_DB = Get_DB
 
     ---@class TagHint: CellButton
-    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, W.ShowTooltips, nil, nil, nil, nil, nil, nil,
+    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, W.ShowTooltipFrame, nil, nil, nil, nil, nil, nil,
         L.TagHintButtonTooltip
     )
     self:AnchorRight(tagHint, formatEditBox)

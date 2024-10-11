@@ -31,6 +31,15 @@ local nameLenghts = {
     long = 20,
 }
 
+local UnitName = UnitName
+local UnitPower = UnitPower
+local UnitHealth = UnitHealth
+local UnitPowerMax = UnitPowerMax
+local UnitPowerType = UnitPowerType
+local UnitHealthMax = UnitHealthMax
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
+local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
+
 -------------------------------------------------
 -- MARK: Formatting Functions
 -------------------------------------------------

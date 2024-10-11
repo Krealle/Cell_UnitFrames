@@ -179,8 +179,14 @@ function W:CreatePowerText(button)
     powerText.SetValue = SetPower_Percentage
 
     function powerText:UpdateValue()
-        local powerMax = UnitPowerMax(button.states.unit)
-        local power = UnitPower(button.states.unit)
+        local unit = button.states.unit
+        local powerMax = UnitPowerMax(unit)
+        local power = UnitPower(unit)
+
+        if UnitIsDeadOrGhost(unit) then
+            self:Hide()
+            return
+        end
 
         if self.hideIfEmptyOrFull and (power == 0 or power == powerMax) then
             self:Hide()

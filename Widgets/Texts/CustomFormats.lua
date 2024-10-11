@@ -219,7 +219,8 @@ function W.ShowTooltips()
         end)
     end
 
-    tooltipFrame:SetPoint("CENTER", UIParent, "CENTER")
+    tooltipFrame:ClearAllPoints()
+    tooltipFrame:SetPoint("CENTER", UIParent)
     tooltipFrame:Show()
 end
 

@@ -149,7 +149,7 @@ function W:GetTagTooltips(category)
             end
 
             -- Color category titles
-            local catTitle = Util.ColorWrap(cat, "orange")
+            local catTitle = Util.ColorWrap(cat, "WARLOCK")
             tinsert(allTooltips, catTitle)
 
             for _, tooltip in ipairs(tooltips) do
@@ -234,7 +234,9 @@ function W:AddTag(tagName, events, func, category)
     category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
-    local tooltip = string.format("[%s] - %s", tagName, L["tag_" .. tagName])
+    local tooltip = string.format(Util.ColorWrap("[", "gold") .. "%s" .. Util.ColorWrap("]", "gold") .. " - %s",
+        Util.ColorWrap(tagName, "orange"),
+        L["tag_" .. tagName])
 
     if not self.TagTooltips[category] then
         self.TagTooltips[category] = {}

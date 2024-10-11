@@ -234,7 +234,7 @@ function W:AddTag(tagName, events, func, category)
     category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
-    local tooltip = string.format("[%s] - %s", tagName, L[tagName])
+    local tooltip = string.format("[%s] - %s", tagName, L["tag_" .. tagName])
 
     if not self.TagTooltips[category] then
         self.TagTooltips[category] = {}

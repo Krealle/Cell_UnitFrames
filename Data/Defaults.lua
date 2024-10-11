@@ -691,6 +691,7 @@ Defaults.Widgets = {
 ---@field anchorToParent boolean?
 ---@field anchorPosition ParentAnchor?
 ---@field barOrientation string
+---@field powerFilter boolean
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -704,6 +705,7 @@ Defaults.Layouts = {
         hideBlizzardCastBar = false,
         clickCast = false,
         barOrientation = "horizontal",
+        powerFilter = false,
     },
     target = {
         enabled = false,
@@ -732,6 +734,7 @@ Defaults.Layouts = {
         clickCast = false,
         mirrorPlayer = false,
         barOrientation = "horizontal",
+        powerFilter = false,
     },
     focus = {
         enabled = false,
@@ -767,6 +770,7 @@ Defaults.Layouts = {
         sameSizeAsPlayer = false,
         clickCast = false,
         barOrientation = "horizontal",
+        powerFilter = false,
     },
     targettarget = {
         enabled = false,
@@ -791,6 +795,7 @@ Defaults.Layouts = {
             offsetY = 0
         },
         barOrientation = "horizontal",
+        powerFilter = false,
     },
     pet = {
         enabled = false,
@@ -822,5 +827,6 @@ Defaults.Layouts = {
             offsetY = -5
         },
         barOrientation = "horizontal",
+        powerFilter = false,
     },
 }

@@ -174,6 +174,7 @@ local tooltipFrame
 function W.ShowTooltipFrame()
     if not tooltipFrame then
         tooltipFrame = CUF:CreateFrame("CUF_CustomTags_Tooltip", CUF.mainFrame, 900, 500)
+        tooltipFrame:SetFrameStrata("HIGH")
 
         tooltipFrame:SetMovable(true)
         tooltipFrame:RegisterForDrag("LeftButton")

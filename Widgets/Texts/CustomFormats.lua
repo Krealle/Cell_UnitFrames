@@ -20,7 +20,7 @@ local L = CUF.L
 W.Tags = {}
 W.TagTooltips = {}
 
----@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"
+---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"|"Color"|"Name"
 ---@alias CustomTagFunc fun(unit: UnitToken): string?
 
 -------------------------------------------------
@@ -395,6 +395,14 @@ end, "Group")
 W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
 end, "Classification")
+
+-- Name
+W:AddTag("name", "UNIT_NAME_UPDATE", function(unit)
+    local unitName = UnitName(unit)
+    if unitName then
+        return unitName
+    end
+end, "Name")
 
 -- Target
 W:AddTag("target", "UNIT_TARGET", function(unit)

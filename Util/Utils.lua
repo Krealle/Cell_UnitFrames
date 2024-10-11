@@ -451,6 +451,68 @@ function CUF:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, h
     return Cell:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
 end
 
+--- Create a pop up frame with a header and a text area
+---@param title string?
+---@param width number
+---@param ... string
+function CUF:CreateInformationPopupFrame(title, width, ...)
+    local f = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+    f:EnableMouse(true)
+    f:SetMovable(true)
+    f:SetFrameStrata("HIGH")
+    f:SetFrameLevel(1)
+    f:SetClampedToScreen(true)
+    f:SetClampRectInsets(0, 0, 20, 0)
+    f:SetWidth(width)
+    f:SetPoint("CENTER")
+    f:Hide()
+    Cell:StylizeFrame(f)
+
+    -- header
+    local header = CreateFrame("Frame", nil, f, "BackdropTemplate")
+    f.header = header
+    header:EnableMouse(true)
+    header:SetClampedToScreen(true)
+    header:RegisterForDrag("LeftButton")
+    header:SetScript("OnDragStart", function()
+        f:StartMoving()
+    end)
+    header:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    header:SetPoint("LEFT")
+    header:SetPoint("RIGHT")
+    header:SetPoint("BOTTOM", f, "TOP", 0, -1)
+    header:SetHeight(20)
+    Cell:StylizeFrame(header, { 0.115, 0.115, 0.115, 1 })
+
+    header.text = header:CreateFontString(nil, "OVERLAY", const.FONTS.CLASS_TITLE)
+    header.text:SetText("Cell UnitFrames - " .. (title or L.Info))
+    header.text:SetPoint("CENTER", header)
+
+    header.closeBtn = Cell:CreateButton(header, "×", "red", { 20, 20 }, false, false, "CELL_FONT_SPECIAL",
+        "CELL_FONT_SPECIAL")
+    header.closeBtn:SetPoint("TOPRIGHT")
+    header.closeBtn:SetScript("OnClick", function() f:Hide() end)
+
+    local content = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    content:SetScale(1)
+    content:SetPoint("TOP", header, "BOTTOM", 0, -10)
+    content:SetWidth(f:GetWidth() - 30)
+    content:SetJustifyH("CENTER")
+    content:SetSpacing(5)
+
+    local txt = ""
+    for _, line in ipairs({ ... }) do
+        txt = txt .. line .. "\n"
+    end
+
+    content:SetText(txt)
+
+    -- update height
+    f:SetHeight(content:GetStringHeight() + 20 + 5)
+
+    return f
+end
+
 ---@param frame Frame
 ---@param anchor "ANCHOR_TOP" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_RIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_CURSOR"
 ---@param x number

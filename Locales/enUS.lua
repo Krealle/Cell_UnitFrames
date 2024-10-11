@@ -187,6 +187,7 @@ L.Override = "Override"
 L.Additive = "Additive"
 L.PowerFilter = "Power Filter"
 L.PowerFilterTooltip = "Enable to use 'Power Bar Filters' from Cell"
+L.Info = "Info"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

@@ -121,8 +121,6 @@
 ---@field color ColorOpt
 ---@field position PositionOpt
 ---@field font SmallFontOpt
----@field hideIfFull boolean
----@field hideIfEmpty boolean
 
 ---@class CustomTextMainWidgetTable
 ---@field enabled boolean

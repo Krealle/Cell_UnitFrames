@@ -1676,19 +1676,6 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     CUF:SetTooltips(formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
         unpack(CUF.widgets:GetTagTooltips()))
 
-    -- Hide if
-    local hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
-        const.OPTION_KIND.HIDE_IF_EMPTY)
-    self:AnchorBelowCB(hideIfEmpty, formatEditBox)
-    local hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
-        const.OPTION_KIND.HIDE_IF_FULL)
-    self:AnchorRightOfCB(hideIfFull, hideIfEmpty)
-
-    hideIfEmpty.Set_DB = Set_DB
-    hideIfEmpty.Get_DB = Get_DB
-    hideIfFull.Set_DB = Set_DB
-    hideIfFull.Get_DB = Get_DB
-
     -- Color
     local items = {
         { L["Class Color"],  const.ColorType.CLASS_COLOR },
@@ -1698,7 +1685,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     ---@type CellDropdown
     local colorDropdown = Cell:CreateDropdown(parent, 200)
     colorDropdown:SetLabel(L["Color"])
-    self:AnchorBelow(colorDropdown, hideIfEmpty)
+    self:AnchorBelow(colorDropdown, formatEditBox)
 
     local colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
         Set_DB(widgetName, "color.rgb", { r, g, b })
@@ -1765,8 +1752,6 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 
         -- Format
         formatEditBox:SetText(widgetTable.textFormat)
-        hideIfEmpty:SetChecked(widgetTable.hideIfEmpty)
-        hideIfFull:SetChecked(widgetTable.hideIfFull)
 
         -- Color
         colorDropdown:SetSelectedValue(widgetTable.color.type)

@@ -790,6 +790,13 @@ function Util.RGBToOpenColorCode(r, g, b)
     return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
+--- Shortens a string to a given length
+---@param str string
+---@param maxLength number
+function Util.ShortenString(str, maxLength)
+    return string.utf8sub(str, 1, maxLength)
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

@@ -43,12 +43,6 @@ function W.UpdateCustomTextWidget(button, unit, setting, which, subSetting, ...)
             if not subSetting or subSetting == const.OPTION_KIND.TEXT_FORMAT then
                 text:UpdateFormat(textTable.textFormat)
             end
-            if not subSetting or subSetting == const.OPTION_KIND.HIDE_IF_FULL then
-                --text.hideIfFull = textTable.hideIfFull
-            end
-            if not subSetting or subSetting == const.OPTION_KIND.HIDE_IF_EMPTY then
-                --text.hideIfEmpty = textTable.hideIfEmpty
-            end
             if not subSetting or subSetting == const.OPTION_KIND.FONT then
                 text:SetFontStyle(textTable)
                 text:SetFontColor(textTable)
@@ -83,8 +77,6 @@ local function Update(button, event)
     local unit = button.states.unit
     if not unit then return end
     local customText = button.widgets.customText
-
-    --print("Update", event)
 
     customText:IterateActiveTexts(function(text)
         if event and not text._events[event] then return end
@@ -185,8 +177,6 @@ local function UpdateFormat(self, format)
     self.FormatFunc = formatFn
     self._events = events
     self._onUpdateTimer = onUpdateTimer
-
-    --CUF:DevAdd(events, format)
 end
 
 -------------------------------------------------

@@ -13,7 +13,7 @@ local L = CUF.L
 
 ---@class Tag
 ---@field events string|number
----@field func fun(unit: UnitToken)
+---@field func CustomTagFunc
 ---@field category TagCategory
 
 ---@type table<string, Tag>
@@ -21,6 +21,7 @@ W.Tags = {}
 W.TagTooltips = {}
 
 ---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"
+---@alias CustomTagFunc fun(unit: UnitToken): string?
 
 -------------------------------------------------
 -- MARK: Tags
@@ -121,7 +122,7 @@ end
 
 ---@param tagName string
 ---@param events string|number
----@param func fun(unit: UnitToken): string
+---@param func CustomTagFunc
 ---@param category TagCategory?
 function W:AddTag(tagName, events, func, category)
     category = category or "Miscellaneous"
@@ -135,13 +136,30 @@ function W:AddTag(tagName, events, func, category)
     tinsert(self.TagTooltips[category], tooltip)
 end
 
---- Creates a wrapper function that returns the input string
+--- Generic for getting a tag function to the given tag
 ---
---- Used for non tag inputs
----@param str string
----@return fun(unit: UnitToken): string
-function W:CreateStringWrapFunction(str)
-    return function(unit) return str end
+--- Functions an easy way to create wrapper functions that can be used with the tag system
+--- eg. for adding prefixes or wrapping string tags (non valid tag functions)
+---@param tag string|function
+---@param prefix string? if present will create a wrapper function that prepends the prefix to the tag
+---@return CustomTagFunc
+function W:WrapTagFunction(tag, prefix)
+    if type(tag) ~= "function" then
+        return function(_) return tag end
+    end
+
+    -- Wrap the tag function to include the prefix if the tag function
+    -- returns a string
+    if prefix then
+        return function(unit)
+            local result = tag(unit)
+            if result then
+                return prefix .. tag(unit)
+            end
+        end
+    end
+
+    return tag
 end
 
 local allTooltips
@@ -379,6 +397,13 @@ W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
 end, "Classification")
 
+-- Target
+W:AddTag("target", "UNIT_TARGET", function(unit)
+    local targetName = UnitName(unit .. "target")
+    if targetName then
+        return targetName
+    end
+end, "Target")
 
 -- This function takes a text format string and returns a function that can be called with a UnitToken
 --
@@ -403,10 +428,17 @@ function W.GetTagFunction(textFormat, categoryFilter)
     for bracketed in textFormat:gmatch("%b[]") do
         local startPos, endPos = textFormat:find("%b[]", lastEnd)
         if startPos > lastEnd then
-            table.insert(elements, W:CreateStringWrapFunction(textFormat:sub(lastEnd, startPos - 1)))
+            table.insert(elements, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
         end
 
-        local tag = bracketed:sub(2, -2)
+        local tagContent = bracketed:sub(2, -2)                 -- Strip the square brackets
+        local prefix, tag = tagContent:match("^(.-)>%s*(%S+)$") -- Split on the first ">"
+
+        -- If there's no ">", treat the whole thing as the tag (no prefix)
+        if not prefix then
+            tag = tagContent
+        end
+
         local maybeTag = W.Tags[tag]
 
         if maybeTag and (not categoryFilter or maybeTag.category == categoryFilter) then
@@ -419,9 +451,9 @@ function W.GetTagFunction(textFormat, categoryFilter)
                 onUpdateTimer = maybeEvents
             end
 
-            table.insert(elements, maybeTag.func)
+            table.insert(elements, W:WrapTagFunction(maybeTag.func, prefix))
         else
-            table.insert(elements, W:CreateStringWrapFunction(bracketed))
+            table.insert(elements, W:WrapTagFunction(bracketed))
         end
 
         lastEnd = endPos + 1
@@ -429,7 +461,7 @@ function W.GetTagFunction(textFormat, categoryFilter)
 
     -- Add any remaining text after the last tag
     if lastEnd <= #textFormat then
-        table.insert(elements, W:CreateStringWrapFunction(textFormat:sub(lastEnd)))
+        table.insert(elements, W:WrapTagFunction(textFormat:sub(lastEnd)))
     end
 
     ---@param unit UnitToken
@@ -440,7 +472,7 @@ function W.GetTagFunction(textFormat, categoryFilter)
         for i, element in ipairs(elements) do
             local success, output = pcall(element, unit)
             if success then
-                result[i] = output
+                result[i] = output or ""
             else
                 result[i] = "n/a"
             end

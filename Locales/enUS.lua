@@ -185,6 +185,8 @@ L.CellEditMode = "Cell Frames"
 L.CellEditModeTip = "(Previews won't dynamically update)"
 L.Override = "Override"
 L.Additive = "Additive"
+L.PowerFilter = "Power Filter"
+L.PowerFilterTooltip = "Enable to use 'Power Bar Filters' from Cell"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

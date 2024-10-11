@@ -392,7 +392,6 @@ W:AddTag("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
 end, "Group")
 
 -- Classification
-
 W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
 end, "Classification")
@@ -419,7 +418,8 @@ end, "Target")
 ---@param textFormat string
 ---@param categoryFilter TagCategory?
 function W.GetTagFunction(textFormat, categoryFilter)
-    local elements = {}
+    ---@type CustomTagFunc[]
+    local tagFuncs = {}
     local events = {}
     local lastEnd = 1
     local onUpdateTimer
@@ -428,7 +428,7 @@ function W.GetTagFunction(textFormat, categoryFilter)
     for bracketed in textFormat:gmatch("%b[]") do
         local startPos, endPos = textFormat:find("%b[]", lastEnd)
         if startPos > lastEnd then
-            table.insert(elements, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
+            table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
         end
 
         local tagContent = bracketed:sub(2, -2)                 -- Strip the square brackets
@@ -451,9 +451,9 @@ function W.GetTagFunction(textFormat, categoryFilter)
                 onUpdateTimer = maybeEvents
             end
 
-            table.insert(elements, W:WrapTagFunction(maybeTag.func, prefix))
+            table.insert(tagFuncs, W:WrapTagFunction(maybeTag.func, prefix))
         else
-            table.insert(elements, W:WrapTagFunction(bracketed))
+            table.insert(tagFuncs, W:WrapTagFunction(bracketed))
         end
 
         lastEnd = endPos + 1
@@ -461,23 +461,22 @@ function W.GetTagFunction(textFormat, categoryFilter)
 
     -- Add any remaining text after the last tag
     if lastEnd <= #textFormat then
-        table.insert(elements, W:WrapTagFunction(textFormat:sub(lastEnd)))
+        table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd)))
     end
 
     ---@param unit UnitToken
     ---@return string
     return function(_, unit)
-        local result = {}
+        local result = ""
 
-        for i, element in ipairs(elements) do
-            local success, output = pcall(element, unit)
-            if success then
-                result[i] = output or ""
-            else
-                result[i] = "n/a"
+        for i = 1, #tagFuncs do
+            local output = tagFuncs[i](unit)
+
+            if output and output ~= "" then
+                result = result .. output
             end
         end
 
-        return Util:trim(table.concat(result))
+        return result
     end, events, onUpdateTimer
 end

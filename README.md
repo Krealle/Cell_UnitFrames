@@ -4,7 +4,9 @@
 
 [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/vollmerino)
 
-Plugin for the amazing AddOn [Cell](https://www.curseforge.com/wow/addons/cell) that adds various unit frames.
+Plugin for the amazing AddOn **[Cell](https://www.curseforge.com/wow/addons/cell)** that adds various unit frames.
+
+Simply head into the **Layouts** tab in **Cell** to start customizing your frames.
 
 ## Units currently available
 
@@ -16,59 +18,39 @@ Plugin for the amazing AddOn [Cell](https://www.curseforge.com/wow/addons/cell) 
 
 ## Features
 
-The widget/indicator system differs from the original Cell, and as such won't support native indicators.
+The widget/indicator system differs from the original **Cell**, and as such won't support native indicators.
 
 Most of the common indicators are supported, but it's still a work in progress.
 
 ### Custom Formats
 
-**Health Text** and **Power Text** supports custom formats, expressed as tags.
+**Health Text**, **Power Text** and **Custom Text** supports custom formats, expressed as tags.
 
 These can be combined in any order to create the desired format.
 
-- `[cur:short] | [cur:per]` to produce `120k | 100.00%`.
-- `[cur]/[max]` to produce `80000/120000`.
+- `[curhp:short] | [curhp:per]` to produce `120k | 100.00%`.
+- `[curhp]/[maxhp]` to produce `80000/120000`.
 
-#### Valid Tags
+There is also support for conditional prefixes and suffixes. Simply add a `>` or `<` before or after the tag and the text preceding or following the tag will be used as the prefix or suffix respectively. Only showing when the tag is active.
 
-```
-[cur] - Displays the current amount.
-[cur:short] - Displays the current amount as a shortvalue.
-[cur:per] - Displays the current amount as a percentage.
-[cur:per-short] - Displays the current amount as a percentage without decimals.
+- ` [target< «] [name]` to produce `Sylvanas Windrunner « Bob`.
+- `[name] [» >target]` to produce `Bob » Sylvanas Windrunner`.
 
-[max] - Displays the maximum amount.
-[max:short] - Displays the maximum amount as a shortvalue.
+Write **`/cuf tags`** in the chat to see a list of all available tags.
 
-[abs] - Displays the amount of absorbs.
-[abs:short] - Displays the amount of absorbs as a shortvalue.
-[abs:per] - Displays the absorbs as a percentage.
-[abs:per-short] - Displays the absorbs as a percentage without decimals.
+Feel like a useful tag is missing, or simply have a niche request? Feel free to make a feature request or even a PR!
 
-[cur:abs] - Displays the current amount and absorbs.
-[cur:abs-short] - Displays the current amount and absorbs as shortvalues.
-[cur:abs:per] - Displays the current amount and absorbs as percentages.
-[cur:abs:per-short] - Displays the current amount and absorbs as percentages without decimals.
+You can also create your own custom tags on the fly via snippets.
 
-[cur:abs:merge] - Displays the sum of the current amount and absorbs.
-[cur:abs:merge:short] - Displays the sum of the current amount and absorbs as a shortvalue.
-[cur:abs:merge:per] - Displays the sum of the current amount and absorbs as a percentage.
-[cur:abs:merge:per-short] - Displays the sum of the current amount and absorbs as a percentage without decimals.
+Check out https://github.com/Krealle/Cell_UnitFrames/blob/master/Snippets/AddCustomTag.lua for an example.
 
-[def] - Displays the deficit.
-[def:short] - Displays the deficit as a shortvalue.
-[def:per] - Displays the deficit as a percentage.
-[def:per-short] - Displays the deficit as a percentage without decimals.
+## Click-Casting
 
-[healabs] - Displays the amount of heal absorbs.
-[healabs:short] - Displays the amount of heal absorbs as a shortvalue.
-[healabs:per] - Displays the amount of heal absorbs as a percentage.
-[healabs:per-short] - Displays the amount of heal absorbs as a percentage without decimals.
-```
+Click-Casting is fully supported, and can be toggled on/off on a per-unit basis.
 
 ## Snippets
 
-This plugin fully supports Cell's snippet system!
+This plugin fully supports **Cell**'s snippet system!
 
 These two Callbacks can be used with `Cell:RegisterCallback()`
 

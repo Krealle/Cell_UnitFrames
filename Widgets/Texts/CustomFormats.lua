@@ -154,8 +154,9 @@ end
 --- eg. for adding prefixes or wrapping string tags (non valid tag functions)
 ---@param tag string|function
 ---@param prefix string? if present will create a wrapper function that prepends the prefix to the tag
+---@param suffix string? if present will create a wrapper function that appends the suffix to the tag
 ---@return CustomTagFunc
-function W:WrapTagFunction(tag, prefix)
+function W:WrapTagFunction(tag, prefix, suffix)
     if type(tag) ~= "function" then
         return function(_) return tag end
     end
@@ -163,10 +164,27 @@ function W:WrapTagFunction(tag, prefix)
     -- Wrap the tag function to include the prefix if the tag function
     -- returns a string
     if prefix then
+        -- Check if we also have a suffix to append
+        if suffix then
+            return function(unit)
+                local result = tag(unit)
+                if result then
+                    return prefix .. tag(unit) .. suffix
+                end
+            end
+        end
+
         return function(unit)
             local result = tag(unit)
             if result then
                 return prefix .. tag(unit)
+            end
+        end
+    elseif suffix then
+        return function(unit)
+            local result = tag(unit)
+            if result then
+                return tag(unit) .. suffix
             end
         end
     end
@@ -230,12 +248,17 @@ function W.GetTagFunction(textFormat, categoryFilter)
             table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
         end
 
-        local tagContent = bracketed:sub(2, -2)                 -- Strip the square brackets
-        local prefix, tag = tagContent:match("^(.-)>%s*(%S+)$") -- Split on the first ">"
+        local tagContent = bracketed:sub(2, -2)
 
-        -- If there's no ">", treat the whole thing as the tag (no prefix)
-        if not prefix then
+        local prefix, tag = string.split(">", tagContent)
+        if not tag then
             tag = tagContent
+            prefix = nil
+        end
+
+        local maybeSuffixedTag, suffix = string.split("<", tag)
+        if suffix then
+            tag = maybeSuffixedTag
         end
 
         local maybeTag = W.Tags[tag]
@@ -250,7 +273,7 @@ function W.GetTagFunction(textFormat, categoryFilter)
                 onUpdateTimer = maybeEvents
             end
 
-            table.insert(tagFuncs, W:WrapTagFunction(maybeTag.func, prefix))
+            table.insert(tagFuncs, W:WrapTagFunction(maybeTag.func, prefix, suffix))
         else
             table.insert(tagFuncs, W:WrapTagFunction(bracketed))
         end

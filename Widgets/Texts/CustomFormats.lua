@@ -199,6 +199,7 @@ function W.ShowTooltips()
         local tagText = settingsFrame.scrollFrame.content:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
         tagText:SetPoint("TOPLEFT", 5, -5)
         tagText:SetJustifyH("LEFT")
+        tagText:SetSpacing(5)
 
         local text
         for _, tip in ipairs(W:GetTagTooltips()) do

@@ -769,6 +769,27 @@ function Util.ColorWrap(string, color)
     return string.format("|c%s%s|r", colorCode, string)
 end
 
+--- Converts an RGB color to a hex color used for string formatting
+---
+--- Returns an open color code with "|r" suffix
+---
+--- eg. "|cffFFFFFF"
+---@param r number|table
+---@param g number?
+---@param b number?
+---@return string
+function Util.RGBToOpenColorCode(r, g, b)
+    if type(r) == "table" then
+        r, g, b = unpack(r)
+    end
+
+    if not r then
+        return "|cffFFFFFF"
+    end
+
+    return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

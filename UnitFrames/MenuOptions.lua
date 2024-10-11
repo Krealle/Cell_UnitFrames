@@ -69,6 +69,8 @@ local function AddLoadPageDB(unitPage)
 
         unitPage.barOrientationDropdown:SetSelectedValue(pageDB.barOrientation)
 
+        unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
+
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unitPage.id .. "_LoadPageDB", LoadPageDB)
@@ -207,6 +209,17 @@ local function AddUnitsToMenu()
                         end
                     end)
                 unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
+
+                ---@type CheckButton
+                unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
+                    L.PowerFilter,
+                    function(checked)
+                        CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
+                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                            CUF:Fire("UpdateUnitButtons", unit)
+                        end
+                    end, L.PowerFilterTooltip)
+                unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
 
                 AddLoadPageDB(unitPage)
                 return unitPage

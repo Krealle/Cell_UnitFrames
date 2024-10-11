@@ -191,6 +191,11 @@ L.ValidTags = "Valid Tags"
 L.TagHintButtonTooltip = "Click to see available tags"
 L.TagTooltipsTitle = "Available Tags"
 
+L.rare = "Rare"
+L.rareelite = "Rare Elite"
+L.elite = "Elite"
+L.worldboss = "Boss"
+
 L["tag_curhp"] = "Displays the current HP."
 L["tag_curhp:short"] = "Displays the current HP as a shortvalue."
 L["tag_perhp"] = "Displays the current HP as a percentage."

@@ -404,6 +404,16 @@ W:AddTag("target", "UNIT_TARGET", function(unit)
     end
 end, "Target")
 
+-- Colors
+W:AddTag("classcolor", "UNIT_NAME_UPDATE UNIT_FACTION", function(unit)
+    local r, g, b = Util:GetUnitClassColor(unit)
+    return Util.RGBToOpenColorCode(r, g, b)
+end, "Color")
+W:AddTag("classcolor:target", "UNIT_TARGET", function(unit)
+    local r, g, b = Util:GetUnitClassColor(unit .. "target")
+    return Util.RGBToOpenColorCode(r, g, b)
+end, "Color")
+
 -- This function takes a text format string and returns a function that can be called with a UnitToken
 --
 -- Valid tags will be replaced with the corresponding function

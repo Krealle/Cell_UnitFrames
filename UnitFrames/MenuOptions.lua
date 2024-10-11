@@ -220,7 +220,7 @@ local function AddUnitsToMenu()
                         function(value)
                             CUF.DB.SelectedLayoutTable()[unit].spacing = value
                             if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-spacing")
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "spacing", unit)
                             end
                         end)
                     unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 30, 0)

@@ -763,7 +763,7 @@ end
 
 --- Converts an RGB color to a hex color used for string formatting
 ---
---- Returns an open color code with "|r" suffix
+--- Returns an open color code without "|r" suffix
 ---
 --- eg. "|cffFFFFFF"
 ---@param r number|table

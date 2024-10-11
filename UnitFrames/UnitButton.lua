@@ -349,6 +349,7 @@ local function CreateUnitButton(unit, index)
     button.name = name
     -- Used for unitN buttons where we need to reference the base unit
     button._baseUnit = unit
+    button._unit = unitN
 
     if index then
         CUF.unitButtons[unit][unitN] = button

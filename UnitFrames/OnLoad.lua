@@ -854,7 +854,8 @@ end
 ---@field _auraDebuffCallbacks UnitAuraCallbackFn[]
 ---@field _ignoreBuffs boolean
 ---@field _ignoreDebuffs boolean
----@field _baseUnit Unit
+---@field _baseUnit Unit Base unit without N eg. 'boss'
+---@field _unit UnitToken Unit with N eg. 'boss1'
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

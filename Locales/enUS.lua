@@ -188,6 +188,8 @@ L.Additive = "Additive"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"
+L.TagHintButtonTooltip = "Click to see available tags"
+L.TagTooltipsTitle = "Available Tags"
 
 L["curhp"] = "Displays the current amount."
 L["curhp:short"] = "Displays the current amount as a shortvalue."

@@ -1,9 +1,12 @@
 ---@diagnostic disable: inject-field, undefined-field
 ---@class CUF
 local CUF = select(2, ...)
+local addonName = select(1, ...)
 
 ---@class CUF.database
 local DB = CUF.DB
+
+local L = CUF.L
 
 ---@param func fun(layout: UnitLayout, unit: Unit)
 local function IterateUnitLayouts(func)
@@ -14,6 +17,23 @@ local function IterateUnitLayouts(func)
             end
         end
     end
+end
+
+local changelog = {}
+local function AddToChangelog(text)
+    text = (#changelog + 1) .. ". " .. text
+    if #changelog > 0 then
+        text = "\n" .. text
+    end
+    tinsert(changelog, text)
+end
+
+local function ShowChangelog()
+    if #changelog == 0 then return end
+
+    local version = C_AddOns.GetAddOnMetadata(addonName, "version")
+    local changelogsFrame = CUF:CreateInformationPopupFrame(L.NewVersion .. ": " .. version, 400, unpack(changelog))
+    changelogsFrame:Show()
 end
 
 function DB:Revise()
@@ -96,4 +116,9 @@ function DB:Revise()
             layout.widgets.healthText.hideIfEmptyOrFull = nil
         end)
     end
+    if CUF_DB.version == 8 then
+        AddToChangelog("Custom Tag formats have been changed in a recent update. You may need to update your tags.")
+    end
+
+    ShowChangelog()
 end

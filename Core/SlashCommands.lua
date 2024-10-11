@@ -26,13 +26,16 @@ function SlashCmdList.CUF(msg, editbox)
             CUF.DB.SetHelpTip(tip, false)
         end
         CUF:Print("All Help Tips have been reset, reload to see them again")
+    elseif command == "tags" then
+        CUF.widgets:ShowTooltipFrame()
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
             "/cuf dev - toggle debug mode" .. "\n" ..
             "/cuf edit - toggle edit mode" .. "\n" ..
             "/cuf restore <automatic|manual> - restore a backup" .. "\n" ..
-            "/cuf resettips - reset all help tips"
+            "/cuf resettips - reset all help tips" .. "\n" ..
+            "/cuf tags - show available tags"
         )
     end
 end

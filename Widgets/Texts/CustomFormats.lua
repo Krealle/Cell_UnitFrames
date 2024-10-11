@@ -10,6 +10,7 @@ local Util = CUF.Util
 local W = CUF.widgets
 
 local L = CUF.L
+local const = CUF.constants
 
 ---@class Tag
 ---@field events string|number
@@ -22,6 +23,13 @@ W.TagTooltips = {}
 
 ---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"|"Color"|"Name"
 ---@alias CustomTagFunc fun(unit: UnitToken): string?
+
+local nameLenghts = {
+    veryshort = 5,
+    short = 10,
+    medium = 15,
+    long = 20,
+}
 
 -------------------------------------------------
 -- MARK: Tags
@@ -397,10 +405,48 @@ W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
 end, "Classification")
 
 -- Name
+for type, lenght in pairs(nameLenghts) do
+    W:AddTag("name:" .. type, "UNIT_NAME_UPDATE", function(unit)
+        local unitName = UnitName(unit)
+        if unitName then
+            return Util.ShortenString(unitName, lenght)
+        end
+    end, "Name")
+
+    W:AddTag("name:abbrev:" .. type, "UNIT_NAME_UPDATE", function(unit)
+        local unitName = UnitName(unit)
+        if unitName then
+            local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
+            return Util.ShortenString(abbreveated, lenght)
+        end
+    end, "Name")
+
+    W:AddTag("target:" .. type, "UNIT_TARGET", function(unit)
+        local unitName = UnitName(unit .. "target")
+        if unitName then
+            return Util.ShortenString(unitName, lenght)
+        end
+    end, "Target")
+
+    W:AddTag("target:abbrev:" .. type, "UNIT_TARGET", function(unit)
+        local unitName = UnitName(unit .. "target")
+        if unitName then
+            local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
+            return Util.ShortenString(abbreveated, lenght)
+        end
+    end, "Target")
+end
+
 W:AddTag("name", "UNIT_NAME_UPDATE", function(unit)
     local unitName = UnitName(unit)
     if unitName then
         return unitName
+    end
+end, "Name")
+W:AddTag("name:abbrev", "UNIT_NAME_UPDATE", function(unit)
+    local unitName = UnitName(unit)
+    if unitName then
+        return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
 end, "Name")
 
@@ -409,6 +455,12 @@ W:AddTag("target", "UNIT_TARGET", function(unit)
     local targetName = UnitName(unit .. "target")
     if targetName then
         return targetName
+    end
+end, "Target")
+W:AddTag("target:abbrev", "UNIT_TARGET", function(unit)
+    local unitName = UnitName(unit .. "target")
+    if unitName then
+        return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
 end, "Target")
 

@@ -323,10 +323,17 @@ CUF:RegisterCallback("UpdateClickCasting", "UpdateClickCasting", U.UpdateClickCa
 -------------------------------------------------
 
 ---@param unit Unit
+---@param index number? unitN index
 ---@return CUFUnitButton
 ---@return CUFUnitFrame CUFUnitFrame
-local function CreateUnitButton(unit)
+local function CreateUnitButton(unit, index)
     local name = CUF.constants.TITLE_CASED_UNITS[unit]
+
+    local unitN = unit
+    if index then
+        unitN = unit .. index
+        name = name .. index
+    end
 
     ---@class CUFUnitFrame: Frame
     local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", CUF.mainFrame, "SecureFrameTemplate")
@@ -335,15 +342,19 @@ local function CreateUnitButton(unit)
         "CUF_" .. name,
         frame,
         "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
-    button:SetAttribute("unit", unit)
+    button:SetAttribute("unit", unitN)
     button:SetPoint("TOPLEFT")
     button:SetClampedToScreen(true)
 
     button.name = name
-
     -- Used for unitN buttons where we need to reference the base unit
     button._baseUnit = unit
-    CUF.unitButtons[unit] = button
+
+    if index then
+        CUF.unitButtons[unit][unitN] = button
+    else
+        CUF.unitButtons[unit] = button
+    end
 
     return button, frame
 end

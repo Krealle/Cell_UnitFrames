@@ -232,13 +232,18 @@ end
 ---@param events string|number
 ---@param func CustomTagFunc
 ---@param category TagCategory?
-function W:AddTag(tagName, events, func, category)
+---@param example string?
+function W:AddTag(tagName, events, func, category, example)
     category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
     local tooltip = string.format(Util.ColorWrap("[", "gold") .. "%s" .. Util.ColorWrap("]", "gold") .. " - %s",
         Util.ColorWrap(tagName, "orange"),
         L["tag_" .. tagName])
+
+    if example then
+        tooltip = tooltip .. " " .. Util.ColorWrap(example, "orange")
+    end
 
     if not self.TagTooltips[category] then
         self.TagTooltips[category] = {}

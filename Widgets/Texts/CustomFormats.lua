@@ -217,6 +217,12 @@ function W.ShowTooltipFrame()
             settingsFrame.scrollFrame:SetContentHeight(tagText:GetStringHeight() + 10)
             settingsFrame.scrollFrame:ResetScroll()
         end)
+
+        tooltipFrame:SetScript("OnShow", function() tooltipFrame:RegisterEvent("PLAYER_REGEN_DISABLED") end)
+        tooltipFrame:SetScript("OnHide", function() tooltipFrame:UnregisterEvent("PLAYER_REGEN_DISABLED") end)
+        tooltipFrame:SetScript("OnEvent", function(self, event)
+            if event == "PLAYER_REGEN_DISABLED" then self:Hide() end
+        end)
     end
 
     tooltipFrame:ClearAllPoints()

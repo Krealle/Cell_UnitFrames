@@ -69,7 +69,11 @@ local function AddLoadPageDB(unitPage)
 
         unitPage.barOrientationDropdown:SetSelectedValue(pageDB.barOrientation)
 
-        unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
+        if pageId == "boss" then
+            unitPage.spacingSlider:SetValue(pageDB.spacing)
+        else
+            unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
+        end
 
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
@@ -210,16 +214,28 @@ local function AddUnitsToMenu()
                     end)
                 unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
 
-                ---@type CheckButton
-                unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
-                    L.PowerFilter,
-                    function(checked)
-                        CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
-                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                            CUF:Fire("UpdateUnitButtons", unit)
-                        end
-                    end, L.PowerFilterTooltip)
-                unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
+                if unit == "boss" then
+                    ---@type CellSlider
+                    unitPage.spacingSlider = Cell:CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
+                        function(value)
+                            CUF.DB.SelectedLayoutTable()[unit].spacing = value
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-spacing")
+                            end
+                        end)
+                    unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 30, 0)
+                else
+                    ---@type CheckButton
+                    unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
+                        L.PowerFilter,
+                        function(checked)
+                            CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                CUF:Fire("UpdateUnitButtons", unit)
+                            end
+                        end, L.PowerFilterTooltip)
+                    unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
+                end
 
                 AddLoadPageDB(unitPage)
                 return unitPage

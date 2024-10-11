@@ -313,3 +313,4 @@ L.HelpTip_EditModeToggle = "Click here to position Unit Frames"
 L.HelpTip_EditModeOverlay = [[Drag to reposition the Unit Frame.
 
 Click for more options.]]
+L.HelpTip_TagHintButton = "Click here to see available tags"

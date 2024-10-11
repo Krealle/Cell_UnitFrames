@@ -1676,13 +1676,25 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     formatEditBox.Get_DB = Get_DB
 
     ---@class TagHint: CellButton
-    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, W.ShowTooltipFrame, nil, nil, nil, nil, nil, nil,
-        L.TagHintButtonTooltip
-    )
+    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, nil, nil, nil, nil, nil, nil, nil,
+        L.TagHintButtonTooltip)
     self:AnchorRight(tagHint, formatEditBox)
     tagHint.tex = tagHint:CreateTexture(nil, "ARTWORK")
     tagHint.tex:SetAllPoints(tagHint)
     tagHint.tex:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\info2.tga")
+
+    tagHint:SetScript("OnClick", function()
+        W.ShowTooltipFrame()
+        CUF.HelpTips:Acknowledge(tagHint, L.HelpTip_TagHintButton)
+    end)
+
+    CUF.HelpTips:Show(tagHint, {
+        text = L.HelpTip_TagHintButton,
+        dbKey = "tagHintButton_Builder",
+        buttonStyle = HelpTip.ButtonStyle.None,
+        alignment = HelpTip.Alignment.Right,
+        targetPoint = HelpTip.Point.BottomEdgeCenter,
+    })
 
     -- Color
     local items = {

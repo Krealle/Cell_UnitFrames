@@ -340,6 +340,9 @@ local function CreateUnitButton(unit)
     button:SetClampedToScreen(true)
 
     button.name = name
+
+    -- Used for unitN buttons where we need to reference the base unit
+    button._baseUnit = unit
     CUF.unitButtons[unit] = button
 
     return button, frame

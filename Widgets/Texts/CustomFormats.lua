@@ -165,9 +165,6 @@ local tooltipFrame
 function W.ShowTooltips()
     if not tooltipFrame then
         tooltipFrame = CUF:CreateFrame("CUF_CustomTags_Tooltip", CUF.mainFrame, 900, 500)
-        tooltipFrame:SetPoint("CENTER", UIParent, "CENTER")
-
-        tooltipFrame:SetClampedToScreen(true)
 
         tooltipFrame:SetMovable(true)
         tooltipFrame:RegisterForDrag("LeftButton")
@@ -213,12 +210,16 @@ function W.ShowTooltips()
         end
         tagText:SetText(text)
 
+        tooltipFrame:SetWidth(tagText:GetStringWidth() + 25)
+        settingsFrame:SetWidth(tooltipFrame:GetWidth() - 10)
+
         C_Timer.After(0.1, function()
-            settingsFrame.scrollFrame:SetContentHeight(tagText:GetStringHeight() + 20)
+            settingsFrame.scrollFrame:SetContentHeight(tagText:GetStringHeight() + 10)
             settingsFrame.scrollFrame:ResetScroll()
         end)
     end
 
+    tooltipFrame:SetPoint("CENTER", UIParent, "CENTER")
     tooltipFrame:Show()
 end
 

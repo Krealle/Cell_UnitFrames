@@ -400,7 +400,7 @@ function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, te
 end
 
 ---@param parent Frame
----@param text string
+---@param text string?
 ---@param size { [1]: number, [2]: number }
 ---@param onClick? function
 ---@param buttonColor? "red"|"red-hover"|"green"|"green-hover"|"blue"|"blue-hover"|"yellow"|"yellow-hover"|"accent"|"accent-hover"|"chartreuse"|"magenta"|"transparent"|"transparent-white"|"transparent-light"|"transparent-accent"|"none"

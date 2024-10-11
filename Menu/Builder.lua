@@ -10,6 +10,7 @@ local Handler = CUF.Handler
 local const = CUF.constants
 local DB = CUF.DB
 local Util = CUF.Util
+local W = CUF.widgets
 
 ---@class CUF.builder
 local Builder = CUF.Builder
@@ -1673,8 +1674,15 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     self:AnchorBelow(formatEditBox, textDropdown)
     formatEditBox.Set_DB = Set_DB
     formatEditBox.Get_DB = Get_DB
-    CUF:SetTooltips(formatEditBox, "ANCHOR_TOPLEFT", 0, 3, L.ValidTags,
-        unpack(CUF.widgets:GetTagTooltips()))
+
+    ---@class TagHint: CellButton
+    local tagHint = CUF:CreateButton(parent, nil, { 20, 20 }, W.ShowTooltips, nil, nil, nil, nil, nil, nil,
+        L.TagHintButtonTooltip
+    )
+    self:AnchorRight(tagHint, formatEditBox)
+    tagHint.tex = tagHint:CreateTexture(nil, "ARTWORK")
+    tagHint.tex:SetAllPoints(tagHint)
+    tagHint.tex:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\info2.tga")
 
     -- Color
     local items = {

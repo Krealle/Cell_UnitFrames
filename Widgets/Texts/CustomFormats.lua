@@ -129,6 +129,100 @@ local function CombineFormats(format1, format2, seperator)
 end
 
 -------------------------------------------------
+-- MARK: Tooltips
+-------------------------------------------------
+
+local allTooltips
+---@param category TagCategory?
+---@return string[]
+function W:GetTagTooltips(category)
+    if category then
+        return self.TagTooltips[category]
+    end
+
+    if not allTooltips then
+        allTooltips = {}
+        for cat, tooltips in pairs(self.TagTooltips) do
+            -- Add buffer between categories
+            if #allTooltips > 0 then
+                tinsert(allTooltips, "")
+            end
+
+            -- Color category titles
+            local catTitle = Util.ColorWrap(cat, "orange")
+            tinsert(allTooltips, catTitle)
+
+            for _, tooltip in ipairs(tooltips) do
+                tinsert(allTooltips, tooltip)
+            end
+        end
+    end
+
+    return allTooltips
+end
+
+local tooltipFrame
+function W.ShowTooltips()
+    if not tooltipFrame then
+        tooltipFrame = CUF:CreateFrame("CUF_CustomTags_Tooltip", CUF.mainFrame, 900, 500)
+        tooltipFrame:SetPoint("CENTER", UIParent, "CENTER")
+
+        tooltipFrame:SetClampedToScreen(true)
+
+        tooltipFrame:SetMovable(true)
+        tooltipFrame:RegisterForDrag("LeftButton")
+
+        tooltipFrame:SetScript("OnDragStart", function()
+            tooltipFrame:StartMoving()
+        end)
+        tooltipFrame:SetScript("OnDragStop", function()
+            tooltipFrame:StopMovingOrSizing()
+        end)
+
+        local title = tooltipFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CLASS_TITLE)
+        title:SetPoint("TOP", 0, -10)
+        title:SetText(L.TagTooltipsTitle)
+        title:SetTextScale(1.5)
+
+        local closeBtn = Cell:CreateButton(tooltipFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+            "CELL_FONT_SPECIAL")
+        closeBtn:SetPoint("TOPRIGHT", -5, -1)
+        closeBtn:SetScript("OnClick", function() tooltipFrame:Hide() end)
+
+        ---@class TooltipFrame.settingsFrame: Frame
+        ---@field scrollFrame CellScrollFrame
+        local settingsFrame = CUF:CreateFrame("CUF_Menu_UnitFrame_Widget", tooltipFrame,
+            tooltipFrame:GetWidth() - 10, 450, true, true)
+        settingsFrame:SetPoint("TOPLEFT", tooltipFrame, "TOPLEFT", 0, -40)
+
+        Cell:CreateScrollFrame(settingsFrame)
+        settingsFrame.scrollFrame:SetScrollStep(50)
+
+
+        local tagText = settingsFrame.scrollFrame.content:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        tagText:SetPoint("TOPLEFT", 5, -5)
+        tagText:SetJustifyH("LEFT")
+
+        local text
+        for _, tip in ipairs(W:GetTagTooltips()) do
+            if not text then
+                text = tip
+            else
+                text = text .. "\n" .. tip
+            end
+        end
+        tagText:SetText(text)
+
+        C_Timer.After(0.1, function()
+            settingsFrame.scrollFrame:SetContentHeight(tagText:GetStringHeight() + 20)
+            settingsFrame.scrollFrame:ResetScroll()
+        end)
+    end
+
+    tooltipFrame:Show()
+end
+
+-------------------------------------------------
 -- MARK: Main Functions
 -------------------------------------------------
 
@@ -190,35 +284,6 @@ function W:WrapTagFunction(tag, prefix, suffix)
     end
 
     return tag
-end
-
-local allTooltips
----@param category TagCategory?
----@return string[]
-function W:GetTagTooltips(category)
-    if category then
-        return self.TagTooltips[category]
-    end
-
-    if not allTooltips then
-        allTooltips = {}
-        for cat, tooltips in pairs(self.TagTooltips) do
-            -- Add buffer between categories
-            if #allTooltips > 0 then
-                tinsert(allTooltips, "")
-            end
-
-            -- Color category titles
-            local catTitle = Util.ColorWrap(cat, "orange")
-            tinsert(allTooltips, catTitle)
-
-            for _, tooltip in ipairs(tooltips) do
-                tinsert(allTooltips, tooltip)
-            end
-        end
-    end
-
-    return allTooltips
 end
 
 -- This function takes a text format string and returns a function that can be called with a UnitToken

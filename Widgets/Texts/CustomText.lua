@@ -61,6 +61,7 @@ function W.UpdateCustomTextWidget(button, unit, setting, which, subSetting, ...)
             end
             if not subSetting or subSetting == const.OPTION_KIND.ENABLED then
                 text.enabled = textTable.enabled
+                text:Enable()
             end
         end)
     end
@@ -85,9 +86,7 @@ local function Update(button, event)
 
     --print("Update", event)
 
-    customText:IterateTexts(function(text, enabled, idx)
-        if not enabled then return end
-        --if not customText._textsToUpdate[idx] then return end
+    customText:IterateActiveTexts(function(text)
         if event and not text._events[event] then return end
 
         text:UpdateValue()
@@ -107,12 +106,7 @@ end
 ---@param self CustomTextWidget
 local function UpdateEventListeners(self)
     local newEventListeners = {}
-    self:IterateTexts(function(text, enabled)
-        if not enabled then
-            text:SetScript("OnUpdate", nil)
-            return
-        end
-
+    self:IterateActiveTexts(function(text)
         for event, _ in pairs(text._events) do
             newEventListeners[event] = true
         end
@@ -143,14 +137,14 @@ end
 ---@param self CustomTextWidget
 local function FullUpdate(self)
     self:IterateTexts(function(text, enabled, index)
-        if not enabled then
-            text:Hide()
+        if not enabled or not text._validFormat then
+            text:Disable()
             return
         end
+        text:Enable()
 
         text:UpdateTextColor()
         text:UpdateValue()
-        text:Show()
     end)
 
     UpdateEventListeners(self)
@@ -166,12 +160,12 @@ end
 
 ---@param self CustomTextWidget
 local function Disable(self)
-    self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", Update)
-    self._owner:RemoveEventListener("UNIT_HEALTH", Update)
-
-    self:IterateTexts(function(text, enabled)
-        text:Hide()
+    wipe(self.activeTexts)
+    self:IterateTexts(function(text)
+        text:Disable()
     end)
+
+    UpdateEventListeners(self)
 
     self:Hide()
 end
@@ -181,10 +175,13 @@ end
 local function UpdateFormat(self, format)
     if not format or format == "" then
         self.FormatFunc = function() end
+        self._validFormat = false
+        self:Disable()
         return
     end
     local formatFn, events, onUpdateTimer = W.GetTagFunction(format)
 
+    self._validFormat = true
     self.FormatFunc = formatFn
     self._events = events
     self._onUpdateTimer = onUpdateTimer
@@ -211,11 +208,48 @@ function W:CreateCustomText(button)
     customText._textsToUpdate = {}
     customText._activeEventListeners = {}
 
+    ---@type CustomText[]
+    customText.activeTexts = {}
+
     ---@param func fun(text: CustomText, enabled: boolean, index: number)
     function customText:IterateTexts(func)
         for i = 1, #self do
             local text = self[i]
             func(text, text.enabled, i)
+        end
+    end
+
+    ---@param func fun(text: CustomText)
+    function customText:IterateActiveTexts(func)
+        for i = 1, #self.activeTexts do
+            local text = self.activeTexts[i]
+            func(text)
+        end
+    end
+
+    ---@param text CustomText
+    function customText:EnableText(text)
+        if not text.enabled or not text._validFormat then return end
+
+        -- Check if it's already added
+        for _, txt in pairs(customText.activeTexts) do
+            if txt._index == text._index then return end
+        end
+
+        tinsert(customText.activeTexts, text)
+        text:Show()
+    end
+
+    ---@param text CustomText
+    function customText:DisableText(text)
+        text:Hide()
+        text:SetScript("OnUpdate", nil)
+
+        for i, txt in ipairs(customText.activeTexts) do
+            if txt._index == text._index then
+                table.remove(customText.activeTexts, i)
+                return
+            end
         end
     end
 
@@ -225,6 +259,11 @@ function W:CreateCustomText(button)
         local text = W.CreateBaseTextWidget(button, const.WIDGET_KIND.CUSTOM_TEXT)
         text:SetParent(customText)
         customText[i] = text
+        text._index = i
+        text._validFormat = false
+
+        text.Enable = function() customText:EnableText(text) end
+        text.Disable = function() customText:DisableText(text) end
 
         ---@type table<WowEvent, boolean>
         text._events = {}

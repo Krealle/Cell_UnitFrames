@@ -32,7 +32,7 @@ local nameLenghts = {
 }
 
 -------------------------------------------------
--- MARK: Tags
+-- MARK: Formatting Functions
 -------------------------------------------------
 
 -- Formats a percent value with decimals
@@ -128,6 +128,10 @@ local function CombineFormats(format1, format2, seperator)
     return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
 end
 
+-------------------------------------------------
+-- MARK: Main Functions
+-------------------------------------------------
+
 ---@param tagName string
 ---@param events string|number
 ---@param func CustomTagFunc
@@ -198,6 +202,87 @@ function W:GetTagTooltips(category)
 
     return allTooltips
 end
+
+-- This function takes a text format string and returns a function that can be called with a UnitToken
+--
+-- Valid tags will be replaced with the corresponding function
+--
+-- Example usage:
+--
+-- local preBuiltFunction = W.GetTagFunction("[cur:per-short] | [cur:short]")
+--
+-- local finalString = preBuiltFunction(self, unit)
+--
+-- print(finalString) -- Output: 100% | 12.6k
+---@param textFormat string
+---@param categoryFilter TagCategory?
+function W.GetTagFunction(textFormat, categoryFilter)
+    ---@type CustomTagFunc[]
+    local tagFuncs = {}
+    local events = {}
+    local lastEnd = 1
+    local onUpdateTimer
+
+    -- Process the text format and find all bracketed tags
+    for bracketed in textFormat:gmatch("%b[]") do
+        local startPos, endPos = textFormat:find("%b[]", lastEnd)
+        if startPos > lastEnd then
+            table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
+        end
+
+        local tagContent = bracketed:sub(2, -2)                 -- Strip the square brackets
+        local prefix, tag = tagContent:match("^(.-)>%s*(%S+)$") -- Split on the first ">"
+
+        -- If there's no ">", treat the whole thing as the tag (no prefix)
+        if not prefix then
+            tag = tagContent
+        end
+
+        local maybeTag = W.Tags[tag]
+
+        if maybeTag and (not categoryFilter or maybeTag.category == categoryFilter) then
+            local maybeEvents = maybeTag.events
+            if type(maybeEvents) == "string" then
+                for _, event in pairs(strsplittable(" ", maybeEvents)) do
+                    events[event] = true
+                end
+            else
+                onUpdateTimer = maybeEvents
+            end
+
+            table.insert(tagFuncs, W:WrapTagFunction(maybeTag.func, prefix))
+        else
+            table.insert(tagFuncs, W:WrapTagFunction(bracketed))
+        end
+
+        lastEnd = endPos + 1
+    end
+
+    -- Add any remaining text after the last tag
+    if lastEnd <= #textFormat then
+        table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd)))
+    end
+
+    ---@param unit UnitToken
+    ---@return string
+    return function(_, unit)
+        local result = ""
+
+        for i = 1, #tagFuncs do
+            local output = tagFuncs[i](unit)
+
+            if output and output ~= "" then
+                result = result .. output
+            end
+        end
+
+        return result
+    end, events, onUpdateTimer
+end
+
+-------------------------------------------------
+-- MARK: Tags
+-------------------------------------------------
 
 -- Health
 W:AddTag("curhp", "UNIT_HEALTH", function(unit)
@@ -473,80 +558,3 @@ W:AddTag("classcolor:target", "UNIT_TARGET", function(unit)
     local r, g, b = Util:GetUnitClassColor(unit .. "target")
     return Util.RGBToOpenColorCode(r, g, b)
 end, "Color")
-
--- This function takes a text format string and returns a function that can be called with a UnitToken
---
--- Valid tags will be replaced with the corresponding function
---
--- Example usage:
---
--- local preBuiltFunction = W.GetTagFunction("[cur:per-short] | [cur:short]")
---
--- local finalString = preBuiltFunction(self, unit)
---
--- print(finalString) -- Output: 100% | 12.6k
----@param textFormat string
----@param categoryFilter TagCategory?
-function W.GetTagFunction(textFormat, categoryFilter)
-    ---@type CustomTagFunc[]
-    local tagFuncs = {}
-    local events = {}
-    local lastEnd = 1
-    local onUpdateTimer
-
-    -- Process the text format and find all bracketed tags
-    for bracketed in textFormat:gmatch("%b[]") do
-        local startPos, endPos = textFormat:find("%b[]", lastEnd)
-        if startPos > lastEnd then
-            table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd, startPos - 1)))
-        end
-
-        local tagContent = bracketed:sub(2, -2)                 -- Strip the square brackets
-        local prefix, tag = tagContent:match("^(.-)>%s*(%S+)$") -- Split on the first ">"
-
-        -- If there's no ">", treat the whole thing as the tag (no prefix)
-        if not prefix then
-            tag = tagContent
-        end
-
-        local maybeTag = W.Tags[tag]
-
-        if maybeTag and (not categoryFilter or maybeTag.category == categoryFilter) then
-            local maybeEvents = maybeTag.events
-            if type(maybeEvents) == "string" then
-                for _, event in pairs(strsplittable(" ", maybeEvents)) do
-                    events[event] = true
-                end
-            else
-                onUpdateTimer = maybeEvents
-            end
-
-            table.insert(tagFuncs, W:WrapTagFunction(maybeTag.func, prefix))
-        else
-            table.insert(tagFuncs, W:WrapTagFunction(bracketed))
-        end
-
-        lastEnd = endPos + 1
-    end
-
-    -- Add any remaining text after the last tag
-    if lastEnd <= #textFormat then
-        table.insert(tagFuncs, W:WrapTagFunction(textFormat:sub(lastEnd)))
-    end
-
-    ---@param unit UnitToken
-    ---@return string
-    return function(_, unit)
-        local result = ""
-
-        for i = 1, #tagFuncs do
-            local output = tagFuncs[i](unit)
-
-            if output and output ~= "" then
-                result = result .. output
-            end
-        end
-
-        return result
-    end, events, onUpdateTimer
-end

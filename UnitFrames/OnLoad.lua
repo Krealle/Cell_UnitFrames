@@ -377,17 +377,22 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
-    if self.states.unit == const.UNIT.TARGET then
+    if self._baseUnit == const.UNIT.TARGET then
         self:AddEventListener("PLAYER_TARGET_CHANGED", UnitFrame_UpdateAll, true)
     end
-    if self.states.unit == const.UNIT.FOCUS then
+    if self._baseUnit == const.UNIT.FOCUS then
         self:AddEventListener("PLAYER_FOCUS_CHANGED", UnitFrame_UpdateAll, true)
     end
-    if self.states.unit == const.UNIT.PET then
+    if self._baseUnit == const.UNIT.PET then
         self:AddEventListener("UNIT_PET", function(button, event, unit)
             if unit ~= const.UNIT.PLAYER then return end
             UnitFrame_UpdateAll(button)
         end, true)
+    end
+    if self._baseUnit == const.UNIT.BOSS then
+        -- Blizzard updates Boss Frames on these event, so we do the same
+        self:AddEventListener("INSTANCE_ENCOUNTER_ENGAGE_UNIT", UnitFrame_UpdateAll, true)
+        self:AddEventListener("UNIT_TARGETABLE_CHANGED", UnitFrame_UpdateAll)
     end
 
     local success, result = pcall(UnitFrame_UpdateAll, self)

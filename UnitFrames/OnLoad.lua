@@ -602,7 +602,10 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
             self.states.unit = value
             self.states.displayedUnit = value
 
-            W:AssignWidgets(self, value)
+            if not self.__widgetsInit then
+                W:AssignWidgets(self, self._baseUnit)
+                self.__widgetsInit = true
+            end
             ResetAuraTables(self)
         end
     end
@@ -623,6 +626,8 @@ function CUFUnitButton_OnLoad(button)
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
+
+    button.__widgetsInit = false
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)

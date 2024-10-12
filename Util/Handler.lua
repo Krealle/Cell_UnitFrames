@@ -98,6 +98,14 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
     Util:IterateAllUnitButtons(
         function(button)
             button._isSelected = button._baseUnit == selectedUnit and CUF.vars.isMenuOpen
+            if button._previewUnit then
+                if button._isSelected then
+                    button:SetAttribute("unit", button._previewUnit)
+                else
+                    button:SetAttribute("unit", button._unit)
+                end
+            end
+
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
                     local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout

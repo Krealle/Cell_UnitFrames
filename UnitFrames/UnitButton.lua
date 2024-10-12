@@ -423,7 +423,7 @@ function U:InitUnitButtons()
             for i = 1, MAX_BOSS_FRAMES do
                 local button, unitFrame = CreateUnitButton(unit, i)
                 RegisterUnitButtonCallbacks(unit, button, unitFrame)
-                button:SetAttribute("unit", "player")
+                button._previewUnit = "player"
             end
         else
             local button, unitFrame = CreateUnitButton(unit)

@@ -861,6 +861,7 @@ end
 ---@field _ignoreDebuffs boolean
 ---@field _baseUnit Unit Base unit without N eg. 'boss'
 ---@field _unit UnitToken Unit with N eg. 'boss1'
+---@field _previewUnit UnitToken
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

@@ -54,6 +54,21 @@ function U:UpdateUnitButtonPosition(unit, button)
 
         PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
     else
+        -- Anchor 'child' buttons to 'parent' button
+        local unitN = tonumber(string.match(button._unit, "%d+"))
+        if unitN then
+            if unitN > 1 then
+                local parent = CUF.unitButtons[unit][unit .. unitN - 1]
+                if not parent then
+                    CUF:Warn("Parent button not found for child button", button:GetName())
+                    return
+                end
+
+                PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -unitLayout.spacing or 0)
+                return
+            end
+        end
+
         local x, y
         if unit == const.UNIT.TARGET and unitLayout.mirrorPlayer then
             x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
@@ -100,7 +115,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         end
     end
 
-    if not kind or kind == "position" then
+    if not kind or kind == "position" or kind == "spacing" then
         U:UpdateUnitButtonPosition(unit, button)
     end
 

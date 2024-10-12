@@ -223,7 +223,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
     --I.UpdateActionsOrientation(button, orientation)
 
     if button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then
-        W.UpdateShieldBarWidget(button, button.states.unit)
+        W.UpdateShieldBarWidget(button, button._baseUnit)
     end
     if button:HasWidget(const.WIDGET_KIND.HEAL_ABSORB) then
         button.widgets.healAbsorb:SetOrientation(orientation)

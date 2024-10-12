@@ -21,7 +21,7 @@ local const = CUF.constants
 W.Tags = {}
 W.TagTooltips = {}
 
----@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"|"Color"|"Name"
+---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"|"Color"|"Name"|"Status"
 ---@alias CustomTagFunc fun(unit: UnitToken): string?
 
 local nameLenghts = {
@@ -33,6 +33,7 @@ local nameLenghts = {
 
 local UnitName = UnitName
 local UnitPower = UnitPower
+local UnitIsAFK = UnitIsAFK
 local UnitHealth = UnitHealth
 local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
@@ -397,7 +398,7 @@ end
 -- MARK: Tags
 -------------------------------------------------
 
--- Health
+-- MARK: Health
 W:AddTag("curhp", "UNIT_HEALTH", function(unit)
     return FormatNumber(UnitHealth(unit))
 end, "Health", "35000")
@@ -435,7 +436,7 @@ W:AddTag("perdefhp:short", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     return FormatPercentShortNoZeroes(maxhp, (current - maxhp))
 end, "Health", "-20%")
 
--- Absorbs
+-- MARK: Absorbs
 W:AddTag("abs", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumber(UnitGetTotalAbsorbs(unit))
 end, "Health", "25000")
@@ -453,7 +454,7 @@ W:AddTag("perabs:short", "UNIT_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(u
     return FormatPercentShortNoZeroes(maxhp, totalAbsorbs)
 end, "Health", "50%")
 
--- Combine
+-- MARK: Combine
 W:AddTag("curhp:abs", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
@@ -477,7 +478,7 @@ W:AddTag("perhp:perabs:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CH
     return CombineFormats(FormatPercentShort(maxhp, curhp), FormatPercentShortNoZeroes(maxhp, totalAbsorbs))
 end, "Health", "75% + 15%")
 
--- Merge
+-- MARK: Merge
 W:AddTag("curhp:abs:merge", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
@@ -501,7 +502,7 @@ W:AddTag("perhp:perabs:merge:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMO
     return FormatPercentShort(maxhp, (curhp + totalAbsorbs))
 end, "Health", "90%")
 
--- Heal Absorbs
+-- MARK: Heal Absorbs
 W:AddTag("healabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumber(UnitGetTotalHealAbsorbs(unit))
 end, "Health", "20000")
@@ -519,7 +520,7 @@ W:AddTag("perhealabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", f
     return FormatPercentShortNoZeroes(maxhp, totalHealAbsorbs)
 end, "Health", "40%")
 
--- Power
+-- MARK: Power
 W:AddTag("curpp", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)
     local powerType = UnitPowerType(unit)
     local power = UnitPower(unit, powerType)
@@ -579,7 +580,7 @@ W:AddTag("perdefpp:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER"
     return FormatPercentShortNoZeroes(maxPower, (power - maxPower))
 end, "Power", "-20%")
 
--- Group
+-- MARK: Group
 W:AddTag("group", "GROUP_ROSTER_UPDATE", function(unit)
     local subgroup = Util:GetUnitSubgroup(unit)
     if subgroup then
@@ -595,12 +596,12 @@ W:AddTag("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
     end
 end, "Group", "1-8")
 
--- Classification
+-- MARK: Classification
 W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
 end, "Classification", (L.rare .. ", " .. L.rareelite .. ", " .. L.elite .. ", " .. L.worldboss))
 
--- Name
+-- MARK: Name
 for type, lenght in pairs(nameLenghts) do
     local normalExample = Util.ShortenString("Sylvanas Windrunner", lenght)
     local abbrevExample = Util.ShortenString("S. Windrunner", lenght)
@@ -649,7 +650,7 @@ W:AddTag("name:abbrev", "UNIT_NAME_UPDATE", function(unit)
     end
 end, "Name", "S. Windrunner")
 
--- Target
+-- MARK: Target
 W:AddTag("target", "UNIT_TARGET", function(unit)
     local targetName = UnitName(unit .. "target")
     if targetName then
@@ -663,7 +664,7 @@ W:AddTag("target:abbrev", "UNIT_TARGET", function(unit)
     end
 end, "Target", "S. Windrunner")
 
--- Colors
+-- MARK: Colors
 W:AddTag("classcolor", "UNIT_NAME_UPDATE UNIT_FACTION", function(unit)
     local r, g, b = Util:GetUnitClassColor(unit)
     return Util.RGBToOpenColorCode(r, g, b)
@@ -672,3 +673,15 @@ W:AddTag("classcolor:target", "UNIT_TARGET", function(unit)
     local r, g, b = Util:GetUnitClassColor(unit .. "target")
     return Util.RGBToOpenColorCode(r, g, b)
 end, "Color")
+
+-- MARK: Status
+W:AddTag("afk", "PLAYER_FLAGS_CHANGED", function(unit)
+    if UnitIsAFK(unit) then
+        return L.AFK
+    end
+end, "Status")
+W:AddTag("dead", "PLAYER_FLAGS_CHANGED UNIT_FLAGS", function(unit)
+    if UnitIsDead(unit) then
+        return L["Dead"]
+    end
+end, "Status")

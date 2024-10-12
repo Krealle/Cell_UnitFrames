@@ -12,6 +12,8 @@ local W = CUF.widgets
 local const = CUF.constants
 local Util = CUF.Util
 
+local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
+
 -------------------------------------------------
 -- MARK: Button Position
 -------------------------------------------------
@@ -418,7 +420,7 @@ function U:InitUnitButtons()
     for _, unit in pairs(CUF.constants.UNIT) do
         if unit == "boss" then
             CUF.unitButtons.boss = {}
-            for i = 1, 5 do
+            for i = 1, MAX_BOSS_FRAMES do
                 local button, unitFrame = CreateUnitButton(unit, i)
                 RegisterUnitButtonCallbacks(unit, button, unitFrame)
                 button:SetAttribute("unit", "player")

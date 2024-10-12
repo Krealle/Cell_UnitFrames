@@ -342,7 +342,7 @@ local function CreateUnitButton(unit, index)
         "CUF_" .. name,
         frame,
         "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
-    button:SetAttribute("unit", unitN)
+
     button:SetPoint("TOPLEFT")
     button:SetClampedToScreen(true)
 
@@ -350,6 +350,8 @@ local function CreateUnitButton(unit, index)
     -- Used for unitN buttons where we need to reference the base unit
     button._baseUnit = unit
     button._unit = unitN
+
+    button:SetAttribute("unit", unitN)
 
     if index then
         CUF.unitButtons[unit][unitN] = button
@@ -400,6 +402,12 @@ end
 function U:InitUnitButtons()
     for _, unit in pairs(CUF.constants.UNIT) do
         if unit == "boss" then
+            CUF.unitButtons.boss = {}
+            for i = 1, 5 do
+                local button, unitFrame = CreateUnitButton(unit, i)
+                RegisterUnitButtonCallbacks(unit, button, unitFrame)
+                button:SetAttribute("unit", "player")
+            end
         else
             local button, unitFrame = CreateUnitButton(unit)
             RegisterUnitButtonCallbacks(unit, button, unitFrame)

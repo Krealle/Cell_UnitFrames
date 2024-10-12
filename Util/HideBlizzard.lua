@@ -1,6 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
+
 -- stolen from cell, which is stolen from elvui
 local hiddenParent = CreateFrame("Frame", nil, _G.UIParent)
 hiddenParent:SetAllPoints()
@@ -61,5 +63,10 @@ function CUF:HideBlizzardUnitFrame(unit)
         HideFrame(_G.FocusFrame)
     elseif unit == "pet" and _G.PetFrame then
         HideFrame(_G.PetFrame)
+    elseif unit == "boss" then
+        HideFrame(_G.BossTargetFrameContainer)
+        for i = 1, MAX_BOSS_FRAMES do
+            HideFrame(_G["Boss" .. i .. "TargetFrame"])
+        end
     end
 end

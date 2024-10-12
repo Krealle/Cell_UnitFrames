@@ -150,6 +150,9 @@ end
 function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     for _, unit in pairs(CUF.constants.UNIT) do
         if unit == "boss" then
+            for _, button in pairs(CUF.unitButtons.boss) do
+                func(button, unit, ...)
+            end
         else
             if not unitToIterate or unitToIterate == unit then
                 func(CUF.unitButtons[unit], unit, ...)

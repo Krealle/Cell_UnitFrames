@@ -612,6 +612,9 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
                 self.__widgetsInit = true
             end
             ResetAuraTables(self)
+
+            self._updateRequired = true
+            self._auraUpdateRequired = true
         end
     end
 end

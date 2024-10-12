@@ -679,6 +679,8 @@ Defaults.Widgets_Boss.debuffs.orientation = CUF.constants.AURA_ORIENTATION.LEFT_
 Defaults.Widgets_Boss.debuffs.filter.blacklist = {}
 Defaults.Widgets_Boss.debuffs.filter.boss = true
 Defaults.Widgets_Boss.debuffs.filter.castByNPC = true
+Defaults.Widgets_Boss.debuffs.filter.personal = false
+Defaults.Widgets_Boss.debuffs.filter.nonPersonal = false
 
 Defaults.Widgets_Boss.buffs.position = {
     point = "BOTTOMLEFT",

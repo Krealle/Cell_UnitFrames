@@ -120,6 +120,7 @@ local function Disable(self)
     self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
 end
 
 -------------------------------------------------

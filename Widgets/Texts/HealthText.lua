@@ -70,14 +70,14 @@ Handler:RegisterWidget(W.UpdateHealthTextWidget, const.WIDGET_KIND.HEALTH_TEXT)
 
 ---@param button CUFUnitButton
 local function UpdateFrequent(button)
-    if not button.states.displayedUnit then return end
+    if not button:IsVisible() then return end
     button.widgets.healthText:UpdateValue()
 end
 
 -- Called on full updates
 ---@param button CUFUnitButton
 local function Update(button)
-    if not button.states.displayedUnit then return end
+    if not button:IsVisible() then return end
 
     local healthText = button.widgets.healthText
     if not healthText.enabled then return end
@@ -120,6 +120,7 @@ local function Disable(self)
     self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
 end
 
 -------------------------------------------------
@@ -134,8 +135,8 @@ end
 ---@return number totalAbsorbs
 ---@return number totalHealAbsorbs
 local function GetHealthInfo(unit, absorbs, healAbsorbs)
-    local health = UnitHealth(unit)
-    local healthMax = UnitHealthMax(unit)
+    local health = UnitHealth(unit) or 0
+    local healthMax = UnitHealthMax(unit) or 0
     local totalAbsorbs = absorbs and UnitGetTotalAbsorbs(unit) or 0
     local healAborbs = healAbsorbs and UnitGetTotalHealAbsorbs(unit) or 0
     return health, healthMax, totalAbsorbs, healAborbs
@@ -279,7 +280,6 @@ end
 
 ---@param self HealthTextWidget
 local function SetHealth_Custom(self)
-    self.isCustom = true
     local formatFn, events = W.GetTagFunction(self.textFormat, "Health")
 
     local hasAbsorb, hasHealAbsorb = false, false
@@ -294,7 +294,9 @@ local function SetHealth_Custom(self)
     self._showingAbsorbs = hasAbsorb
     self._showingHealAbsorbs = hasHealAbsorb
 
-    self.FormatFunc = formatFn
+    self.SetValue = function()
+        self:SetText(formatFn(nil, self._owner.states.unit))
+    end
 end
 
 -------------------------------------------------
@@ -305,7 +307,6 @@ end
 ---@param self HealthTextWidget
 ---@param format HealthTextFormat
 local function HealthText_SetFormat(self, format)
-    self.isCustom = false
     if format == const.HealthTextFormat.PERCENTAGE then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage
@@ -384,7 +385,6 @@ function W:CreateHealthText(button, custom)
     healthText.hideIfFull = false
     healthText.hideIfEmpty = false
     healthText.showDeadStatus = false
-    healthText.isCustom = false
 
     healthText.SetFormat = HealthText_SetFormat
     healthText.SetTextFormat = HealthText_SetTextFormat
@@ -392,44 +392,40 @@ function W:CreateHealthText(button, custom)
     healthText.SetValue = SetHealth_Percentage
 
     healthText.SetHealth_Custom = SetHealth_Custom
-    function healthText:SetValue_Custom()
-        healthText:SetText(healthText:FormatFunc(button.states.unit))
-    end
 
     ---@param unit UnitToken
     healthText.FormatFunc = function(_self, unit) end
 
     function healthText:UpdateValue()
+        if not self.enabled then return end
+
         local unit = self._owner.states.displayedUnit
         local health, healthMax, totalAbsorbs, healAbsorbs = GetHealthInfo(unit,
             self._showingAbsorbs,
             self._showingHealAbsorbs)
-        if self.enabled and healthMax ~= 0 then
-            if self.hideIfFull and health == healthMax then
+
+        if healthMax == 0 then return end
+
+        if self.hideIfFull and health == healthMax then
+            self:Hide()
+            return
+        end
+
+        if health == 0 then
+            if self.hideIfEmpty then
                 self:Hide()
                 return
             end
 
-            if health == 0 then
-                if self.hideIfEmpty then
-                    self:Hide()
-                    return
-                end
-
-                if self.showDeadStatus and UnitIsDeadOrGhost(unit) then
-                    self:SetText(L["Dead"])
-                    self:Show()
-                    return
-                end
+            if self.showDeadStatus and UnitIsDeadOrGhost(unit) then
+                self:SetText(L["Dead"])
+                self:Show()
+                return
             end
-
-            if self.isCustom then
-                self:SetValue_Custom()
-            else
-                self:SetValue(health, healthMax, totalAbsorbs, healAbsorbs)
-            end
-            self:Show()
         end
+
+        self:SetValue(health, healthMax, totalAbsorbs, healAbsorbs)
+        self:Show()
     end
 
     healthText.Update = Update

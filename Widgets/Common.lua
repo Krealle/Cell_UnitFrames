@@ -30,6 +30,16 @@ function W.SetPosition(widget, styleTable)
         styleTable.position.offsetY)
 end
 
+---@param widget Widget
+---@param styleTable WidgetTable
+function W.SetRelativePosition(widget, styleTable)
+    widget:ClearAllPoints()
+    widget:SetPoint(styleTable.position.point, widget:GetParent(),
+        styleTable.position.relativePoint,
+        styleTable.position.offsetX,
+        styleTable.position.offsetY)
+end
+
 -- Set `_isSelected` property for the widget and call `_OnIsSelected` if it exists
 ---@param widget Widget
 ---@param val boolean

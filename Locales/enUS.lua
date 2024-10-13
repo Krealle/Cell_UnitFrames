@@ -201,6 +201,8 @@ L.rareelite = "Rare Elite"
 L.elite = "Elite"
 L.worldboss = "Boss"
 
+L.AFK = "AFK"
+
 L["tag_curhp"] = "Displays the current HP."
 L["tag_curhp:short"] = "Displays the current HP as a shortvalue."
 L["tag_perhp"] = "Displays the current HP as a percentage."
@@ -276,6 +278,9 @@ L["tag_target:abbrev:long"] = "Displays the name of the unit's target with abbre
 
 L["tag_classcolor"] = "Set the text color to the class color of the unit."
 L["tag_classcolor:target"] = "Set the text color to the class color of the unit's target."
+
+L["tag_afk"] = "Displays 'AFK' if the unit is AFK."
+L["tag_dead"] = "Displays 'Dead' if the unit is dead."
 
 -- Colors
 L.color = "Color"

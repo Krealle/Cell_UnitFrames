@@ -66,7 +66,11 @@ function U:UpdateUnitButtonPosition(unit, button)
                     return
                 end
 
-                PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -unitLayout.spacing or 0)
+                if unitLayout.growthDirection == "down" then
+                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -unitLayout.spacing or 0)
+                else
+                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, unitLayout.spacing or 0)
+                end
                 return
             end
         end
@@ -117,7 +121,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         end
     end
 
-    if not kind or kind == "position" or kind == "spacing" then
+    if not kind or kind == "position" or kind == "spacing" or kind == "growthDirection" then
         U:UpdateUnitButtonPosition(unit, button)
     end
 

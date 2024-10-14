@@ -190,6 +190,9 @@ L.PowerFilter = "Power Filter"
 L.PowerFilterTooltip = "Enable to use 'Power Bar Filters' from Cell"
 L.Info = "Info"
 L.NewVersion = "New Version"
+L.GrowthDirection = "Growth Direction"
+L.Downwards = "Downwards"
+L.Upwards = "Upwards"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

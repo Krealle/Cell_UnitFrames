@@ -744,6 +744,7 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field barOrientation string
 ---@field powerFilter boolean
 ---@field spacing number?
+---@field growthDirection "up"|"down"?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -890,6 +891,7 @@ Defaults.Layouts = {
         sameSizeAsPlayer = false,
         clickCast = false,
         barOrientation = "horizontal",
+        growthDirection = "down",
         widgets = {
             nameText = Defaults.Widgets.nameText,
             healthText = Defaults.Widgets.healthText,

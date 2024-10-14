@@ -71,6 +71,7 @@ local function AddLoadPageDB(unitPage)
 
         if pageId == "boss" then
             unitPage.spacingSlider:SetValue(pageDB.spacing)
+            unitPage.growthDirectionDropdown:SetSelectedValue(pageDB.growthDirection)
         else
             unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
         end
@@ -224,6 +225,29 @@ local function AddUnitsToMenu()
                             end
                         end)
                     unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 30, 0)
+
+                    ---@type CellDropdown
+                    unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                    unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, 0, -55)
+                    unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
+                    unitPage.growthDirectionDropdown:SetItems({
+                        {
+                            ["text"] = L.Downwards,
+                            ["value"] = "down",
+                            ["onClick"] = function()
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "down"
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
+                            end,
+                        },
+                        {
+                            ["text"] = L.Upwards,
+                            ["value"] = "up",
+                            ["onClick"] = function()
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "up"
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
+                            end,
+                        },
+                    })
 
                     if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
                         CUF.HelpTips:Show(unitPage.spacingSlider, {

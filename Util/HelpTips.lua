@@ -22,7 +22,6 @@ HelpTips.Acknowledge = HelpTip.Acknowledge ---@type fun(self: CUF.HelpTips, pare
 local function HandleAcknowledge(frame)
     DB.SetHelpTip(frame.info.dbKey, true)
     frame.acknowledged = true
-    frame:Close()
 end
 
 ---@param parent Frame

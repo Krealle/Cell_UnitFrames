@@ -21,11 +21,8 @@ local function OnCellInitialUpdateLayout(_layout)
 
     -- Hide Blizzard Unit Frames
     for _, unit in pairs(CUF.constants.UNIT) do
-        if unit == "boss" then
-        else
-            if CUF.DB.CurrentLayoutTable()[unit].enabled then
-                CUF:HideBlizzardUnitFrame(unit)
-            end
+        if CUF.DB.CurrentLayoutTable()[unit].enabled then
+            CUF:HideBlizzardUnitFrame(unit)
         end
     end
 

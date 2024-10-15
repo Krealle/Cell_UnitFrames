@@ -485,7 +485,6 @@ Defaults.Widgets = {
         hideInCombat = false,
         numPerLine = 5,
         maxIcons = 5,
-        clickable = false,
         spacing = {
             horizontal = 0,
             vertical = 0,

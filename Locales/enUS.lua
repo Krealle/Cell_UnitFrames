@@ -189,8 +189,6 @@ L.PowerFilter = "Power Filter"
 L.PowerFilterTooltip = "Enable to use 'Power Bar Filters' from Cell"
 L.Info = "Info"
 L.NewVersion = "New Version"
-L.Clickable = "Clickable"
-L.TotemsClickableTooltip = "This will enable right clicking to destroy the totem."
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

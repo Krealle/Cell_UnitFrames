@@ -1910,10 +1910,6 @@ function Builder:CreateTotemOptions(parent, widgetName)
     f.maxIconsSlider:SetLabel("Max Totems")
     f.maxIconsSlider:UpdateMinMaxValues(1, 5)
 
-    f.clickable = self:CreateCheckBox(f, widgetName, L.Clickable, const.OPTION_KIND.CLICKABLE,
-        L.TotemsClickableTooltip)
-    self:AnchorRightOfCB(f.clickable, f.showAnimation)
-
     return f
 end
 

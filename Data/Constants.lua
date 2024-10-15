@@ -168,8 +168,7 @@ const.OPTION_KIND = {
     MAGIC                   = "magic",
     POISON                  = "poison",
     BLEED                   = "bleed",
-    ICON_STYLE              = "iconStyle",
-    CLICKABLE               = "clickable"
+    ICON_STYLE              = "iconStyle"
 }
 
 ---@enum AURA_OPTION_KIND

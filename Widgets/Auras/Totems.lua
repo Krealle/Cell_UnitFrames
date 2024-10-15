@@ -68,7 +68,11 @@ function W.UpdateTotemsWidgets(button, unit, setting, subSetting)
         totems:SetMaxNum(styleTable.maxIcons)
     end
 
-    button.widgets.combatIcon.Update(button)
+    if totems._isSelected then
+        totems:ShowPreview()
+    else
+        totems.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdateTotemsWidgets, const.WIDGET_KIND.TOTEMS)
@@ -123,6 +127,63 @@ local function Totems_ShowTooltip(self, show, hideInCombat)
     end
 end
 
+---@param self TotemsWidget
+---@param val boolean
+local function SetIsSelected(self, val)
+    if self._isSelected ~= val then
+        if val then
+            self:ShowPreview()
+        else
+            self:HidePreview()
+            self:_Update()
+        end
+    end
+    self._isSelected = val
+end
+
+-------------------------------------------------
+-- MARK: Preview Helpers
+-------------------------------------------------
+
+local placeHolderTextures = {
+    136098, 135127, 136100, 136070, 136108
+}
+
+---@param self TotemsWidget
+local function Totems_ShowPreview(self)
+    for idx, totem in ipairs(self) do
+        totem:Hide() -- Clear any existing cooldowns
+
+        totem.preview:SetScript("OnUpdate", function(_self, elapsed)
+            _self.elapsedTime = (_self.elapsedTime or 0) + elapsed
+            if _self.elapsedTime >= 10 then
+                _self.elapsedTime = 0
+                totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
+            end
+        end)
+
+        totem.preview:SetScript("OnShow", function()
+            totem.preview.elapsedTime = 0
+            totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
+        end)
+
+        totem:Show()
+        totem.preview:Show()
+    end
+
+    self:UpdateSize(self._maxNum)
+end
+
+---@param self TotemsWidget
+local function Totems_HidePreview(self)
+    for _, totem in ipairs(self) do
+        totem.preview:SetScript("OnUpdate", nil)
+        totem.preview:SetScript("OnShow", nil)
+
+        totem:Hide()
+    end
+end
+
 -------------------------------------------------
 -- MARK: Update
 -------------------------------------------------
@@ -163,6 +224,8 @@ end
 local function Update(button, event)
     if not button:IsVisible() then return end
 
+    -- Preview
+    if button.widgets.totems._isSelected then return end
     button.widgets.totems:_Update()
 end
 
@@ -208,9 +271,12 @@ function W:CreateTotems(button)
     totems._maxNum = MAX_TOTEMS
     totems.activeTotems = 0
 
-    --[[ function totems:_OnIsSelected()
-        self.Update(self._owner)
-    end ]]
+    for _, totem in ipairs(totems) do
+        ---@class TotemPreview: Frame
+        totem.preview = CreateFrame("Frame", nil, totem)
+        totem.preview:Hide()
+        totem.preview.elapsedTime = 0
+    end
 
     totems._Update = Totems_Update
 
@@ -223,9 +289,12 @@ function W:CreateTotems(button)
     totems.ShowTooltip = Totems_ShowTooltip
 
     totems.SetEnabled = W.SetEnabled
-    totems._SetIsSelected = W.SetIsSelected
+    totems._SetIsSelected = SetIsSelected
     totems.SetPosition = W.SetRelativePosition
     totems.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+
+    totems.ShowPreview = Totems_ShowPreview
+    totems.HidePreview = Totems_HidePreview
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.TOTEMS, W.CreateTotems)

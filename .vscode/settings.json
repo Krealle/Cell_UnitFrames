@@ -38,6 +38,7 @@
     "SetRaidTargetIconTexture",
     "PlayerCastingBarFrame",
     "CellLayoutsPreviewButton",
-    "EventUtil"
+    "EventUtil",
+    "MAX_BOSS_FRAMES"
   ]
 }

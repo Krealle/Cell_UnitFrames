@@ -85,6 +85,11 @@ end
 ---@param button CUFUnitButton
 ---@param unit Unit
 function W:AssignWidgets(button, unit)
+    -- Unit passed will be 'bossN', we need 'boss'
+    if strfind(unit, "boss") then
+        unit = "boss"
+    end
+
     for widgetName, _ in pairs(CUF.Defaults.Layouts[unit].widgets) do
         W:CreateWidget(button, widgetName)
     end

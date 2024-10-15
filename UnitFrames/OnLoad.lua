@@ -377,17 +377,22 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
-    if self.states.unit == const.UNIT.TARGET then
+    if self._baseUnit == const.UNIT.TARGET then
         self:AddEventListener("PLAYER_TARGET_CHANGED", UnitFrame_UpdateAll, true)
     end
-    if self.states.unit == const.UNIT.FOCUS then
+    if self._baseUnit == const.UNIT.FOCUS then
         self:AddEventListener("PLAYER_FOCUS_CHANGED", UnitFrame_UpdateAll, true)
     end
-    if self.states.unit == const.UNIT.PET then
+    if self._baseUnit == const.UNIT.PET then
         self:AddEventListener("UNIT_PET", function(button, event, unit)
             if unit ~= const.UNIT.PLAYER then return end
             UnitFrame_UpdateAll(button)
         end, true)
+    end
+    if self._baseUnit == const.UNIT.BOSS then
+        -- Blizzard updates Boss Frames on these event, so we do the same
+        self:AddEventListener("INSTANCE_ENCOUNTER_ENGAGE_UNIT", UnitFrame_UpdateAll, true)
+        self:AddEventListener("UNIT_TARGETABLE_CHANGED", UnitFrame_UpdateAll)
     end
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
@@ -602,8 +607,14 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
             self.states.unit = value
             self.states.displayedUnit = value
 
-            W:AssignWidgets(self, value)
+            if not self.__widgetsInit then
+                W:AssignWidgets(self, self._baseUnit)
+                self.__widgetsInit = true
+            end
             ResetAuraTables(self)
+
+            self._updateRequired = true
+            self._auraUpdateRequired = true
         end
     end
 end
@@ -623,6 +634,8 @@ function CUFUnitButton_OnLoad(button)
     button.widgets = {}
     ---@diagnostic disable-next-line: missing-fields
     button.states = {}
+
+    button.__widgetsInit = false
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)
@@ -854,6 +867,9 @@ end
 ---@field _auraDebuffCallbacks UnitAuraCallbackFn[]
 ---@field _ignoreBuffs boolean
 ---@field _ignoreDebuffs boolean
+---@field _baseUnit Unit Base unit without N eg. 'boss'
+---@field _unit UnitToken Unit with N eg. 'boss1'
+---@field _previewUnit UnitToken
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

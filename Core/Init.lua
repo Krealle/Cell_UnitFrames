@@ -39,4 +39,5 @@ CUF.vars = {}
 
 ---@class CUF.unitButtons
 ---@field [Unit] CUFUnitButton
+---@field boss table<string, CUFUnitButton>
 CUF.unitButtons = {}

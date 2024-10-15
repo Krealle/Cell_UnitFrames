@@ -22,6 +22,7 @@ const.UNIT = {
     FOCUS = "focus",
     PET = "pet",
     TARGET_TARGET = "targettarget",
+    BOSS = "boss",
 }
 
 ---@enum TitleCasedUnits
@@ -32,6 +33,7 @@ const.TITLE_CASED_UNITS = {
     ["focus"] = "Focus",
     ["pet"] = "Pet",
     ["targettarget"] = "TargetTarget",
+    ["boss"] = "Boss",
 }
 
 ---@enum PowerColorType

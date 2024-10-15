@@ -57,6 +57,7 @@ L.player = "Player"
 L.pet = "Pet"
 L.focus = "Focus"
 L.target = "Target"
+L.boss = "Boss"
 
 -- Auras
 L.MaxDuration = "Maximum Duration"
@@ -190,6 +191,9 @@ L.PowerFilter = "Power Filter"
 L.PowerFilterTooltip = "Enable to use 'Power Bar Filters' from Cell"
 L.Info = "Info"
 L.NewVersion = "New Version"
+L.GrowthDirection = "Growth Direction"
+L.Downwards = "Downwards"
+L.Upwards = "Upwards"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"
@@ -324,3 +328,4 @@ L.HelpTip_EditModeOverlay = [[Drag to reposition the Unit Frame.
 
 Click for more options.]]
 L.HelpTip_TagHintButton = "Click here to see available tags"
+L.HelpTip_BossFramePreview = "When editing %s frames, they will display the %s."

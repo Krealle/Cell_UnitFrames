@@ -12,6 +12,8 @@ local W = CUF.widgets
 local const = CUF.constants
 local Util = CUF.Util
 
+local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
+
 -------------------------------------------------
 -- MARK: Button Position
 -------------------------------------------------
@@ -54,6 +56,25 @@ function U:UpdateUnitButtonPosition(unit, button)
 
         PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
     else
+        -- Anchor 'child' buttons to 'parent' button
+        local unitN = tonumber(string.match(button._unit, "%d+"))
+        if unitN then
+            if unitN > 1 then
+                local parent = CUF.unitButtons[unit][unit .. unitN - 1]
+                if not parent then
+                    CUF:Warn("Parent button not found for child button", button:GetName())
+                    return
+                end
+
+                if unitLayout.growthDirection == "down" then
+                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -unitLayout.spacing or 0)
+                else
+                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, unitLayout.spacing or 0)
+                end
+                return
+            end
+        end
+
         local x, y
         if unit == const.UNIT.TARGET and unitLayout.mirrorPlayer then
             x, y = -layout[const.UNIT.PLAYER].position[1], layout[const.UNIT.PLAYER].position[2]
@@ -100,7 +121,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         end
     end
 
-    if not kind or kind == "position" then
+    if not kind or kind == "position" or kind == "spacing" or kind == "growthDirection" then
         U:UpdateUnitButtonPosition(unit, button)
     end
 
@@ -206,7 +227,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
     --I.UpdateActionsOrientation(button, orientation)
 
     if button:HasWidget(const.WIDGET_KIND.SHIELD_BAR) then
-        W.UpdateShieldBarWidget(button, button.states.unit)
+        W.UpdateShieldBarWidget(button, button._baseUnit)
     end
     if button:HasWidget(const.WIDGET_KIND.HEAL_ABSORB) then
         button.widgets.healAbsorb:SetOrientation(orientation)
@@ -323,10 +344,17 @@ CUF:RegisterCallback("UpdateClickCasting", "UpdateClickCasting", U.UpdateClickCa
 -------------------------------------------------
 
 ---@param unit Unit
+---@param index number? unitN index
 ---@return CUFUnitButton
 ---@return CUFUnitFrame CUFUnitFrame
-local function CreateUnitButton(unit)
+local function CreateUnitButton(unit, index)
     local name = CUF.constants.TITLE_CASED_UNITS[unit]
+
+    local unitN = unit
+    if index then
+        unitN = unit .. index
+        name = name .. index
+    end
 
     ---@class CUFUnitFrame: Frame
     local frame = CreateFrame("Frame", "CUF_" .. name .. "_Frame", CUF.mainFrame, "SecureFrameTemplate")
@@ -335,12 +363,22 @@ local function CreateUnitButton(unit)
         "CUF_" .. name,
         frame,
         "CUFUnitButtonTemplate") --[[@as CUFUnitButton]]
-    button:SetAttribute("unit", unit)
+
     button:SetPoint("TOPLEFT")
     button:SetClampedToScreen(true)
 
     button.name = name
-    CUF.unitButtons[unit] = button
+    -- Used for unitN buttons where we need to reference the base unit
+    button._baseUnit = unit
+    button._unit = unitN
+
+    button:SetAttribute("unit", unitN)
+
+    if index then
+        CUF.unitButtons[unit][unitN] = button
+    else
+        CUF.unitButtons[unit] = button
+    end
 
     return button, frame
 end
@@ -384,7 +422,16 @@ end
 -- Initialize unit buttons
 function U:InitUnitButtons()
     for _, unit in pairs(CUF.constants.UNIT) do
-        local button, unitFrame = CreateUnitButton(unit)
-        RegisterUnitButtonCallbacks(unit, button, unitFrame)
+        if unit == "boss" then
+            CUF.unitButtons.boss = {}
+            for i = 1, MAX_BOSS_FRAMES do
+                local button, unitFrame = CreateUnitButton(unit, i)
+                RegisterUnitButtonCallbacks(unit, button, unitFrame)
+                button._previewUnit = "player"
+            end
+        else
+            local button, unitFrame = CreateUnitButton(unit)
+            RegisterUnitButtonCallbacks(unit, button, unitFrame)
+        end
     end
 end

@@ -69,7 +69,12 @@ local function AddLoadPageDB(unitPage)
 
         unitPage.barOrientationDropdown:SetSelectedValue(pageDB.barOrientation)
 
-        unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
+        if pageId == "boss" then
+            unitPage.spacingSlider:SetValue(pageDB.spacing)
+            unitPage.growthDirectionDropdown:SetSelectedValue(pageDB.growthDirection)
+        else
+            unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
+        end
 
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
@@ -210,16 +215,61 @@ local function AddUnitsToMenu()
                     end)
                 unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
 
-                ---@type CheckButton
-                unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
-                    L.PowerFilter,
-                    function(checked)
-                        CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
-                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                            CUF:Fire("UpdateUnitButtons", unit)
-                        end
-                    end, L.PowerFilterTooltip)
-                unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
+                if unit == "boss" then
+                    ---@type CellSlider
+                    unitPage.spacingSlider = Cell:CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
+                        function(value)
+                            CUF.DB.SelectedLayoutTable()[unit].spacing = value
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "spacing", unit)
+                            end
+                        end)
+                    unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 30, 0)
+
+                    ---@type CellDropdown
+                    unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                    unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, 0, -55)
+                    unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
+                    unitPage.growthDirectionDropdown:SetItems({
+                        {
+                            ["text"] = L.Downwards,
+                            ["value"] = "down",
+                            ["onClick"] = function()
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "down"
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
+                            end,
+                        },
+                        {
+                            ["text"] = L.Upwards,
+                            ["value"] = "up",
+                            ["onClick"] = function()
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "up"
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
+                            end,
+                        },
+                    })
+
+                    if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
+                        CUF.HelpTips:Show(unitPage.spacingSlider, {
+                            text = format(L.HelpTip_BossFramePreview, L.Boss, L.player),
+                            dbKey = "bossFramePreview",
+                            buttonStyle = HelpTip.ButtonStyle.GotIt,
+                            alignment = HelpTip.Alignment.Left,
+                            targetPoint = HelpTip.Point.LeftEdgeCenter,
+                        }, CUF.unitButtons.boss.boss1)
+                    end
+                else
+                    ---@type CheckButton
+                    unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
+                        L.PowerFilter,
+                        function(checked)
+                            CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                CUF:Fire("UpdateUnitButtons", unit)
+                            end
+                        end, L.PowerFilterTooltip)
+                    unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
+                end
 
                 AddLoadPageDB(unitPage)
                 return unitPage

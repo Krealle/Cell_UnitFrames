@@ -97,7 +97,15 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
     local isCorrectLayout = CUF.vars.selectedLayout == DB.GetMasterLayout()
     Util:IterateAllUnitButtons(
         function(button)
-            button._isSelected = button.states.unit == selectedUnit and CUF.vars.isMenuOpen
+            button._isSelected = button._baseUnit == selectedUnit and CUF.vars.isMenuOpen
+            if button._previewUnit then
+                if button._isSelected and button:GetAttribute("unit") ~= button._previewUnit then
+                    button:SetAttribute("unit", button._previewUnit)
+                elseif not button._isSelected and button:GetAttribute("unit") ~= button._unit then
+                    button:SetAttribute("unit", button._unit)
+                end
+            end
+
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
                     local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout

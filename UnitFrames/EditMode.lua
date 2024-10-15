@@ -249,7 +249,9 @@ local colors = {
 
 ---@param button CUFUnitButton
 ---@param unit Unit
-local function CreateOverlayBox(button, unit)
+---@param unitN number?
+---@param parentButton CUFUnitButton?
+local function CreateOverlayBox(button, unit, unitN, parentButton)
     ---@class CUFOverlayBox: CellButton
     local overlay = CUF:CreateButton(UIParent, "", { 1, 1 },
         function() ShowPositioningPopup(unit) end, "accent")
@@ -261,7 +263,11 @@ local function CreateOverlayBox(button, unit)
 
     local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
     label:SetPoint("CENTER")
-    label:SetText(L[unit])
+    label:SetText(L[unit] .. (unitN or ""))
+
+    if parentButton then
+        button = parentButton
+    end
 
     -- Register mouse and movable
     overlay:RegisterForDrag("LeftButton")
@@ -324,7 +330,8 @@ local function CreateOverlayBox(button, unit)
         button:SetMovable(false)
     end)
 
-    overlays[unit] = overlay
+    local overlayUnit = unit .. (unitN or "")
+    overlays[overlayUnit] = overlay
     return overlay
 end
 
@@ -348,6 +355,20 @@ end
 --- Play the fade in animation and show the overlays
 local function ShowOverlays()
     for _, unit in pairs(CUF.constants.UNIT) do
+        if unit == "boss" then
+            local mainBossFrame = CUF.unitButtons.boss["boss1"]
+            for i = 1, 5 do
+                local overlay = overlays[unit .. i] or
+                    CreateOverlayBox(CUF.unitButtons.boss[unit .. i], unit, i, mainBossFrame)
+
+                overlay.fadeIn:Play()
+                if overlay.fadeIn:IsPlaying() then
+                    overlay.fadeIn:Stop()
+                end
+            end
+            return
+        end
+
         local overlay = overlays[unit] or CreateOverlayBox(CUF.unitButtons[unit], unit)
 
         if unit == "player" then

@@ -689,6 +689,57 @@ Defaults.Widgets = {
     },
 }
 
+-- Boss Widgets
+Defaults.Widgets_Boss = {
+    ---@type AuraWidgetTable
+    buffs = Util:CopyDeep(Defaults.Widgets.buffs),
+    ---@type AuraWidgetTable
+    debuffs = Util:CopyDeep(Defaults.Widgets.debuffs),
+    ---@type CastBarWidgetTable
+    castBar = Util:CopyDeep(Defaults.Widgets.castBar),
+}
+
+Defaults.Widgets_Boss.debuffs.position = {
+    point = "LEFT",
+    relativePoint = "RIGHT",
+    offsetX = 0,
+    offsetY = 0,
+}
+Defaults.Widgets_Boss.debuffs.orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT
+Defaults.Widgets_Boss.debuffs.filter.blacklist = {}
+Defaults.Widgets_Boss.debuffs.filter.boss = true
+Defaults.Widgets_Boss.debuffs.filter.castByNPC = true
+Defaults.Widgets_Boss.debuffs.filter.personal = false
+Defaults.Widgets_Boss.debuffs.filter.nonPersonal = false
+
+Defaults.Widgets_Boss.buffs.position = {
+    point = "BOTTOMLEFT",
+    relativePoint = "TOPLEFT",
+    offsetX = 0,
+    offsetY = 8,
+}
+Defaults.Widgets_Boss.buffs.filter.blacklist = {}
+Defaults.Widgets_Boss.buffs.filter.whitelist = {}
+Defaults.Widgets_Boss.buffs.filter.boss = true
+Defaults.Widgets_Boss.buffs.filter.castByNPC = true
+Defaults.Widgets_Boss.buffs.filter.castByPlayers = true
+Defaults.Widgets_Boss.buffs.maxIcons = 5
+
+Defaults.Widgets_Boss.castBar.position = {
+    point = "BOTTOMRIGHT",
+    relativePoint = "BOTTOMLEFT",
+    offsetX = -5,
+    offsetY = 0,
+}
+Defaults.Widgets_Boss.castBar.size = {
+    width = 150,
+    height = 20,
+}
+Defaults.Widgets_Boss.castBar.timer.size = 12
+Defaults.Widgets_Boss.castBar.timer.offsetY = 0
+Defaults.Widgets_Boss.castBar.spell.size = 12
+Defaults.Widgets_Boss.castBar.spell.offsetX = 0
+
 -------------------------------------------------
 -- MARK: Units
 -------------------------------------------------
@@ -722,6 +773,8 @@ Defaults.Widgets = {
 ---@field anchorPosition ParentAnchor?
 ---@field barOrientation string
 ---@field powerFilter boolean
+---@field spacing number?
+---@field growthDirection "up"|"down"?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -859,4 +912,27 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         powerFilter = false,
     },
+    boss = {
+        enabled = false,
+        powerSize = 4,
+        spacing = 50,
+        size = { 160, 40 },
+        position = { 600, 300 },
+        sameSizeAsPlayer = false,
+        clickCast = false,
+        barOrientation = "horizontal",
+        growthDirection = "down",
+        widgets = {
+            nameText = Defaults.Widgets.nameText,
+            healthText = Defaults.Widgets.healthText,
+            powerText = Defaults.Widgets.powerText,
+            levelText = Defaults.Widgets.levelText,
+            customText = Defaults.Widgets.customText,
+            raidIcon = Defaults.Widgets.raidIcon,
+            shieldBar = Defaults.Widgets.shieldBar,
+            buffs = Defaults.Widgets_Boss.buffs,
+            debuffs = Defaults.Widgets_Boss.debuffs,
+            castBar = Defaults.Widgets_Boss.castBar,
+        },
+    }
 }

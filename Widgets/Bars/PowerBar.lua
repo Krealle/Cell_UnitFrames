@@ -70,7 +70,7 @@ local function ShouldShowPowerBar(self)
         class = "VEHICLE"
     end
 
-    if CUF.DB.CurrentLayoutTable()[self.states.unit].powerFilter then
+    if CUF.DB.CurrentLayoutTable()[self._baseUnit].powerFilter then
         if class and Cell.vars.currentLayoutTable and self.states.unit == "player" then
             if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
                 return Cell.vars.currentLayoutTable["powerFilters"][class]

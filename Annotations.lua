@@ -56,6 +56,8 @@
 ---@class CellSlider: Slider
 ---@field afterValueChangedFn function
 ---@field currentEditBox Frame
+---@field SetLabel fun(self: CellSlider, text: string)
+---@field UpdateMinMaxValues fun(self: CellSlider, min: number, max: number)
 
 ---@class CellUnknowFrame: Frame
 ---@field title FontString
@@ -85,6 +87,10 @@
 
 ---@class CellButton: Button
 ---@field SetTextColor fun(self: CellButton, r: number, g: number, b: number, a: number)
+
+---@class CellSizeOpt
+---@field [1] number
+---@field [2] number
 
 -------------------------------------------------
 -- MARK: CUF Frames

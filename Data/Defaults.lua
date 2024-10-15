@@ -473,6 +473,36 @@ Defaults.Widgets = {
             offsetX = -4,
             relativePoint = "BOTTOMRIGHT",
         },
+    },
+    ---@type TotemsWidgetTable
+    totems = {
+        enabled = false,
+        frameLevel = 10,
+        orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        showDuration = true,
+        showAnimation = true,
+        showTooltip = true,
+        hideInCombat = false,
+        numPerLine = 4,
+        maxIcons = 4,
+        spacing = {
+            horizontal = 0,
+            vertical = 0,
+        },
+        font = {
+            stacks = Defaults.Options.auraStacksFontOpt,
+            duration = Defaults.Options.auraDurationFontOpt,
+        },
+        size = {
+            width = 40,
+            height = 40,
+        },
+        position = {
+            point = "TOPLEFT",
+            offsetY = -30,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
     }, -- MARK: Widgets (Icons)
     ---@type RaidIconWidgetTable
     raidIcon = {
@@ -656,7 +686,7 @@ Defaults.Widgets = {
     healAbsorb = {
         enabled = false,
         frameLevel = 10,
-    }
+    },
 }
 
 -------------------------------------------------

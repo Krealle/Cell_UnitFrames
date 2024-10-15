@@ -148,6 +148,7 @@ L.castBar = "Cast Bar"
 L.classBar = "Class Bar"
 L.healthBar = "Health Bar"
 L.healAbsorb = "Heal Absorb"
+L.totems = "Totems"
 
 -- Misc
 L.Frame = "Frame"

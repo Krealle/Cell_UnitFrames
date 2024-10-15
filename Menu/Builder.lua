@@ -1909,6 +1909,7 @@ function Builder:CreateTotemOptions(parent, widgetName)
 
     f.maxIconsSlider:SetLabel("Max Totems")
     f.maxIconsSlider:UpdateMinMaxValues(1, 5)
+    f.numPerLineSlider:UpdateMinMaxValues(2, 5)
 
     return f
 end

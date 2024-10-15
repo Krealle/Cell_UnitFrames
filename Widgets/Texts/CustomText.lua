@@ -76,10 +76,16 @@ Handler:RegisterWidget(W.UpdateCustomTextWidget, const.WIDGET_KIND.CUSTOM_TEXT)
 local function Update(button, event)
     local unit = button.states.unit
     if not unit then return end
+
     local customText = button.widgets.customText
 
+    if not event then
+        customText:FullUpdate()
+        return
+    end
+
     customText:IterateActiveTexts(function(text)
-        if event and not text._events[event] then return end
+        if not text._events[event] then return end
 
         text:UpdateValue()
     end)
@@ -139,7 +145,7 @@ local function FullUpdate(self)
         text:UpdateValue()
     end)
 
-    UpdateEventListeners(self)
+    self:UpdateEventListeners()
 end
 
 ---@param self CustomTextWidget
@@ -157,7 +163,7 @@ local function Disable(self)
         text:Disable()
     end)
 
-    UpdateEventListeners(self)
+    self:UpdateEventListeners()
 
     self:Hide()
 end
@@ -272,6 +278,7 @@ function W:CreateCustomText(button)
     customText.Enable = Enable
     customText.Disable = Disable
     customText.FullUpdate = FullUpdate
+    customText.UpdateEventListeners = UpdateEventListeners
 
     -- Implement common methods
     customText.SetEnabled = W.SetEnabled

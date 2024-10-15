@@ -151,8 +151,6 @@ local function Totems_Update(self)
         end
     end
 
-    CUF:Log("Totems activeTotems:", self.activeTotems)
-
     self:UpdateSize(self.activeTotems)
 end
 

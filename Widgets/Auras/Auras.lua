@@ -102,6 +102,10 @@ end
 ---@param icons CellAuraIcons
 ---@param maxNum number
 local function Icons_SetMaxNum(icons, maxNum)
+    -- Prevent setting a higher than valid maxNum
+    if maxNum > #icons then
+        maxNum = #icons
+    end
     icons._maxNum = maxNum
 end
 

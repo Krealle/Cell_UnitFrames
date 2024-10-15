@@ -237,6 +237,7 @@
 ---@field spacing SpacingOpt
 ---@field size SizeOpt
 ---@field hideInCombat boolean
+---@field clickable boolean
 
 -------------------------------------------------
 -- MARK: Bar Widgets

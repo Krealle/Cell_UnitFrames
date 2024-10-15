@@ -56,6 +56,8 @@
 ---@class CellSlider: Slider
 ---@field afterValueChangedFn function
 ---@field currentEditBox Frame
+---@field SetLabel fun(self: CellSlider, text: string)
+---@field UpdateMinMaxValues fun(self: CellSlider, min: number, max: number)
 
 ---@class CellUnknowFrame: Frame
 ---@field title FontString

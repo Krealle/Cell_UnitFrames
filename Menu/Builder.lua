@@ -57,6 +57,7 @@ Builder.MenuOptions = {
     CustomText = 31,
     DispelsOptions = 32,
     TrueSingleSizeOptions = 33,
+    TotemOptions = 34
 }
 
 -------------------------------------------------
@@ -1895,6 +1896,28 @@ function Builder:CreateDispelsOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Totems
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return TotemOptions
+function Builder:CreateTotemOptions(parent, widgetName)
+    ---@class TotemOptions: AuraIconOptions
+    local f = self:CreateAuraIconOptions(parent, widgetName)
+    f.id = "TotemOptions"
+
+    f.maxIconsSlider:SetLabel("Max Totems")
+    f.maxIconsSlider:UpdateMinMaxValues(1, 5)
+
+    f.clickable = self:CreateCheckBox(f, widgetName, L.Clickable, const.OPTION_KIND.CLICKABLE,
+        L.TotemsClickableTooltip)
+    self:AnchorRightOfCB(f.clickable, f.showAnimation)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1933,4 +1956,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
     [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
     [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
+    [Builder.MenuOptions.TotemOptions] = Builder.CreateTotemOptions,
 }

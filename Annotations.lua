@@ -86,6 +86,10 @@
 ---@class CellButton: Button
 ---@field SetTextColor fun(self: CellButton, r: number, g: number, b: number, a: number)
 
+---@class CellSizeOpt
+---@field [1] number
+---@field [2] number
+
 -------------------------------------------------
 -- MARK: CUF Frames
 -------------------------------------------------

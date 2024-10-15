@@ -15,6 +15,7 @@ Simply head into the **Layouts** tab in **Cell** to start customizing your frame
 - **TargetTarget**
 - **Focus**
 - **Pet**
+- **Boss**
 
 ## Features
 

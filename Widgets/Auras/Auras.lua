@@ -6,7 +6,6 @@ local F = Cell.funcs
 local I = Cell.iFuncs
 local P = Cell.pixelPerfectFuncs
 
-
 local const = CUF.constants
 local Handler = CUF.Handler
 local menu = CUF.Menu
@@ -249,20 +248,26 @@ local placeHolderTextures = {
 
 ---@param icons CellAuraIcons
 local function Icons_ShowPreview(icons)
+    local iconIdx = 0
     for idx, icon in ipairs(icons) do
         icon:Hide() -- Clear any existing cooldowns
+
+        iconIdx = iconIdx + 1
+        if iconIdx > #placeHolderTextures then
+            iconIdx = 1
+        end
 
         icon.preview:SetScript("OnUpdate", function(self, elapsed)
             self.elapsedTime = (self.elapsedTime or 0) + elapsed
             if self.elapsedTime >= 10 then
                 self.elapsedTime = 0
-                icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, (idx % 3 == 0))
+                icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[iconIdx], idx, (idx % 3 == 0))
             end
         end)
 
         icon.preview:SetScript("OnShow", function()
             icon.preview.elapsedTime = 0
-            icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, (idx % 3 == 0))
+            icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[iconIdx], idx, (idx % 3 == 0))
         end)
 
         icon:Show()
@@ -494,13 +499,14 @@ end
 ---@return CellAuraIcons auraIcons
 function W:CreateAuraIcons(button, type)
     ---@class CellAuraIcons
-    local auraIcons = I.CreateAura_Icons(button:GetName() .. "_" .. Util:ToTitleCase(type), button, 10)
+    local auraIcons = I.CreateAura_Icons(button:GetName() .. "_" .. Util:ToTitleCase(type), button,
+        CUF.Defaults.Values.maxAuraIcons)
 
     auraIcons.enabled = false
     auraIcons.id = type
     auraIcons._owner = button
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
-    auraIcons._maxNum = 10
+    auraIcons._maxNum = CUF.Defaults.Values.maxAuraIcons
     auraIcons._isSelected = false
 
     ---@type table<number, AuraData>

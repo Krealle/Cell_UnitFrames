@@ -11,6 +11,7 @@ local const = CUF.constants
 local DB = CUF.DB
 local Util = CUF.Util
 local W = CUF.widgets
+local Defaults = CUF.Defaults
 
 ---@class CUF.builder
 local Builder = CUF.Builder
@@ -1162,7 +1163,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.orientationDropdown = self:CreateOrientationOptions(f, widgetName)
     self:AnchorRight(f.orientationDropdown, f.extraAnchorDropdown)
 
-    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], nil, 1, 10,
+    f.maxIconsSlider = self:CreateSlider(f, widgetName, L["Max Icons"], nil, 1, Defaults.Values.maxAuraIcons,
         const.AURA_OPTION_KIND.MAX_ICONS)
     self:AnchorBelow(f.maxIconsSlider, f.anchorOptions.sliderY)
 
@@ -1170,7 +1171,7 @@ function Builder:CreateAuraIconOptions(parent, widgetName)
     f.sizeOptions = self:CreateSizeOptions(f, widgetName)
     Builder:AnchorBelow(f.sizeOptions, f.extraAnchorDropdown)
 
-    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], nil, 2, 10,
+    f.numPerLineSlider = self:CreateSlider(f, widgetName, L["Per Row"], nil, 2, Defaults.Values.maxAuraIcons,
         const.AURA_OPTION_KIND.NUM_PER_LINE)
     self:AnchorBelow(f.numPerLineSlider, f.maxIconsSlider)
 

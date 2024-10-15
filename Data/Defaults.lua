@@ -9,6 +9,11 @@ local Util = CUF.Util
 
 ---@class CUF.defaults
 local Defaults = CUF.Defaults
+
+Defaults.Values = {
+    maxAuraIcons = 20
+}
+
 Defaults.Options = {}
 Defaults.Filters = {
     buffs = {

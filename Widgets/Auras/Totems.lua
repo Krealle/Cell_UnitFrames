@@ -154,18 +154,20 @@ local function Totems_ShowPreview(self)
     for idx, totem in ipairs(self) do
         totem:Hide() -- Clear any existing cooldowns
 
-        totem.preview:SetScript("OnUpdate", function(_self, elapsed)
-            _self.elapsedTime = (_self.elapsedTime or 0) + elapsed
-            if _self.elapsedTime >= 10 then
-                _self.elapsedTime = 0
-                totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
-            end
-        end)
+        if idx <= self._maxNum then
+            totem.preview:SetScript("OnUpdate", function(_self, elapsed)
+                _self.elapsedTime = (_self.elapsedTime or 0) + elapsed
+                if _self.elapsedTime >= 10 then
+                    _self.elapsedTime = 0
+                    totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
+                end
+            end)
 
-        totem.preview:SetScript("OnShow", function()
-            totem.preview.elapsedTime = 0
-            totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
-        end)
+            totem.preview:SetScript("OnShow", function()
+                totem.preview.elapsedTime = 0
+                totem:SetCooldown(GetTime(), 10, nil, placeHolderTextures[idx], idx, false)
+            end)
+        end
 
         totem:Show()
         totem.preview:Show()

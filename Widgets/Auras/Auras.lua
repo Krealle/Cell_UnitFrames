@@ -252,26 +252,29 @@ local function Icons_ShowPreview(icons)
     for idx, icon in ipairs(icons) do
         icon:Hide() -- Clear any existing cooldowns
 
-        iconIdx = iconIdx + 1
-        if iconIdx > #placeHolderTextures then
-            iconIdx = 1
-        end
-
-        icon.preview:SetScript("OnUpdate", function(self, elapsed)
-            self.elapsedTime = (self.elapsedTime or 0) + elapsed
-            if self.elapsedTime >= 10 then
-                self.elapsedTime = 0
-                icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[iconIdx], idx, (idx % 3 == 0))
+        if idx <= icons._maxNum then
+            iconIdx = iconIdx + 1
+            if iconIdx > #placeHolderTextures then
+                iconIdx = 1
             end
-        end)
 
-        icon.preview:SetScript("OnShow", function()
-            icon.preview.elapsedTime = 0
-            icon:SetCooldown(GetTime(), 10, nil, placeHolderTextures[iconIdx], idx, (idx % 3 == 0))
-        end)
+            local tex = placeHolderTextures[iconIdx]
+            icon.preview:SetScript("OnUpdate", function(self, elapsed)
+                self.elapsedTime = (self.elapsedTime or 0) + elapsed
+                if self.elapsedTime >= 10 then
+                    self.elapsedTime = 0
+                    icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+                end
+            end)
 
-        icon:Show()
-        icon.preview:Show()
+            icon.preview:SetScript("OnShow", function()
+                icon.preview.elapsedTime = 0
+                icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+            end)
+
+            icon:Show()
+            icon.preview:Show()
+        end
     end
 
     icons:UpdateSize(icons._maxNum)
@@ -362,7 +365,6 @@ local function UpdateAuraIcons(icons)
     -- Preview
     if icons._isSelected then
         icons:ShowPreview()
-        icons:UpdateSize(icons._maxNum)
         return
     end
 

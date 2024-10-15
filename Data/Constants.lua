@@ -93,7 +93,8 @@ const.WIDGET_KIND = {
     CAST_BAR = "castBar",
     CLASS_BAR = "classBar",
     HEAL_ABSORB = "healAbsorb",
-    DISPELS = "dispels"
+    DISPELS = "dispels",
+    TOTEMS = "totems"
 }
 
 ---@enum OPTION_KIND
@@ -167,7 +168,7 @@ const.OPTION_KIND = {
     MAGIC                   = "magic",
     POISON                  = "poison",
     BLEED                   = "bleed",
-    ICON_STYLE              = "iconStyle",
+    ICON_STYLE              = "iconStyle"
 }
 
 ---@enum AURA_OPTION_KIND

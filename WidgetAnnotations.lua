@@ -18,6 +18,7 @@
 ---| CustomTextWidgetTable
 ---| HealAbsorbWidgetTable
 ---| DispelsWidgetTable
+---| TotemsWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -37,6 +38,7 @@
 ---| CustomTextWidget
 ---| HealAbsorbWidget
 ---| DispelsWidget
+---| TotemsWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -64,6 +66,7 @@
 ---@field customText CustomTextWidget
 ---@field healAbsorb HealAbsorbWidget
 ---@field dispels DispelsWidget
+---@field totems TotemsWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -219,6 +222,21 @@
 ---@field iconStyle "none" | "blizzard" | "rhombus"
 ---@field size number
 ---@field position PositionOpt
+
+---@class TotemsWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field showDuration boolean
+---@field numPerLine number
+---@field showAnimation boolean
+---@field showTooltip boolean
+---@field maxIcons number
+---@field font AuraFontOpt
+---@field orientation AuraOrientation
+---@field position PositionOpt
+---@field spacing SpacingOpt
+---@field size SizeOpt
+---@field hideInCombat boolean
 
 -------------------------------------------------
 -- MARK: Bar Widgets

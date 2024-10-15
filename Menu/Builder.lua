@@ -57,6 +57,7 @@ Builder.MenuOptions = {
     CustomText = 31,
     DispelsOptions = 32,
     TrueSingleSizeOptions = 33,
+    TotemOptions = 34
 }
 
 -------------------------------------------------
@@ -1895,6 +1896,24 @@ function Builder:CreateDispelsOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Totems
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return TotemOptions
+function Builder:CreateTotemOptions(parent, widgetName)
+    ---@class TotemOptions: AuraIconOptions
+    local f = self:CreateAuraIconOptions(parent, widgetName)
+    f.id = "TotemOptions"
+
+    f.maxIconsSlider:UpdateMinMaxValues(1, 5)
+    f.numPerLineSlider:UpdateMinMaxValues(2, 5)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -1933,4 +1952,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
     [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
     [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
+    [Builder.MenuOptions.TotemOptions] = Builder.CreateTotemOptions,
 }

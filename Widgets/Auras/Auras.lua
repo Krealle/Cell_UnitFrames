@@ -648,16 +648,16 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field spacingX number
 ---@field spacingY number
 ---@field _SetSize function
----@field SetSize function
+---@field SetSize fun(icons: CellAuraIcons, width: number, height: number) Icons_SetSize
 ---@field _Hide function
----@field Hide function
----@field UpdateSize fun(icons: any, numAuras: any) Icons_UpdateSize
----@field SetOrientation fun(icons: any, orientation: any) Icons_SetOrientation
----@field SetSpacing fun(icons: any, spacing: any) Icons_SetSpacing
----@field SetNumPerLine fun(icons: any, numPerLine: any) Icons_SetNumPerLine
----@field ShowDuration fun(icons: any, show: any) Icons_ShowDuration
----@field ShowStack fun(icons: any, show: any) Icons_ShowStack
----@field ShowAnimation fun(icons: any, show: any) Icons_ShowAnimation
+---@field Hide fun(icons: CellAuraIcons, hideAll: boolean?) Icons_Hide
+---@field UpdateSize fun(icons: CellAuraIcons, numAuras: number) Icons_UpdateSize
+---@field SetOrientation fun(icons: CellAuraIcons, orientation: AuraOrientation) Icons_SetOrientation
+---@field SetSpacing fun(icons: CellAuraIcons, spacing: CellSizeOpt) Icons_SetSpacing
+---@field SetNumPerLine fun(icons: CellAuraIcons, numPerLine: number) Icons_SetNumPerLine
+---@field ShowDuration fun(icons: CellAuraIcons, show: boolean) Icons_ShowDuration
+---@field ShowStack fun(icons: CellAuraIcons, show: boolean) Icons_ShowStack
+---@field ShowAnimation fun(icons: CellAuraIcons, show: boolean) Icons_ShowAnimation
 ---@field UpdatePixelPerfect function
 ---@field [number] CellAuraIcon
 ---@field hidePersonal boolean

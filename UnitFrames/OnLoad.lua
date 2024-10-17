@@ -165,6 +165,7 @@ end
 ---@param unit UnitToken?
 ---@param unitAuraUpdateInfo UnitAuraUpdateInfo?
 local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
+    self._auraUpdateRequired = nil
     if self._ignoreBuffs and self._ignoreDebuffs then return end
 
     local debuffsChanged = false
@@ -355,6 +356,9 @@ local function UnitFrame_UpdateAll(button)
     UnitFrame_UpdateInRange(button)
 
     button:UpdateWidgets()
+
+    -- Aura widgets will queue an update, but we want it to happen immediately
+    button:UpdateAurasInternal()
 end
 U.UpdateAll = UnitFrame_UpdateAll
 
@@ -561,7 +565,6 @@ local function UnitFrame_OnTick(self)
     end
 
     if self._auraUpdateRequired then
-        self._auraUpdateRequired = nil
         self:UpdateAurasInternal()
     end
 end

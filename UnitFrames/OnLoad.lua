@@ -349,6 +349,10 @@ end
 
 ---@param button CUFUnitButton
 local function UnitFrame_UpdateAll(button)
+    -- This function may be called from various sources, so we reset the update flag
+    -- to prevent it from running too much
+    button._updateRequired = nil
+
     if not button:IsVisible() then return end
 
     U:UnitFrame_UpdateHealthColor(button)
@@ -525,7 +529,6 @@ local function UnitFrame_OnTick(self)
                 -- NOTE: displayed unit entity changed
                 F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
                 self.__displayedGuid = displayedGuid
-                self._updateRequired = true
                 self._powerBarUpdateRequired = true
             end
 
@@ -560,7 +563,6 @@ local function UnitFrame_OnTick(self)
     UnitFrame_UpdateInRange(self)
 
     if self._updateRequired then
-        self._updateRequired = nil
         UnitFrame_UpdateAll(self)
     end
 

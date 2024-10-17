@@ -424,13 +424,9 @@ local function Update(button)
     local castBar = button.widgets.castBar
     if not castBar then return end
 
-    if not castBar.enabled then
-        castBar:ResetAttributes()
-        return
-    end
+    castBar:ResetAttributes()
 
-    if castBar.casting or castBar.channeling or castBar.empowering then
-        castBar:UpdateElements()
+    if not castBar.enabled then
         return
     end
 

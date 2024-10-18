@@ -322,7 +322,7 @@ function U.UpdateClickCasting(noReload, onlyqueued, which)
             if CUF.DB.CurrentLayoutTable()[unit].clickCast then
                 F:UpdateClickCastings(noReload, onlyqueued)
                 local snippet = F:GetBindingSnippet()
-                CUF:DevAdd(snippet, "snippet")
+                --CUF:DevAdd(snippet, "snippet")
                 F:UpdateClickCastOnFrame(button, snippet)
             else
                 ClearClickCastings(button)

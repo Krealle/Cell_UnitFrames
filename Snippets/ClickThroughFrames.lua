@@ -25,6 +25,8 @@ local function ClickThroughFrames()
                 if self.elapsed < 0.1 then return end
                 self.elapsed = 0
 
+                if InCombatLockdown() then return end
+
                 -- Check if a modifier key is pressed
                 if IsShiftKeyDown() or IsControlKeyDown() or IsAltKeyDown() then
                     -- Make the frame clickable

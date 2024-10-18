@@ -729,8 +729,8 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return OrientationOptions
 function Builder:CreateOrientationOptions(parent, widgetName)
-    local orientationItems = { const.AURA_ORIENTATION.RIGHT_TO_LEFT, const.AURA_ORIENTATION.LEFT_TO_RIGHT,
-        const.AURA_ORIENTATION.BOTTOM_TO_TOP, const.AURA_ORIENTATION.TOP_TO_BOTTOM }
+    local orientationItems = { const.GROWTH_ORIENTATION.RIGHT_TO_LEFT, const.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
+        const.GROWTH_ORIENTATION.BOTTOM_TO_TOP, const.GROWTH_ORIENTATION.TOP_TO_BOTTOM }
 
     ---@class OrientationOptions: CUFDropdown, OptionsFrame
     return self:CreateDropdown(parent, widgetName, "Orientation", nil, orientationItems, const.OPTION_KIND.ORIENTATION)

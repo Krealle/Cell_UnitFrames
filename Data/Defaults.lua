@@ -372,7 +372,7 @@ Defaults.Widgets = {
     ---@type AuraWidgetTable
     buffs = {
         enabled = false,
-        orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
         showStack = true,
         showDuration = true,
         showAnimation = true,
@@ -417,7 +417,7 @@ Defaults.Widgets = {
     ---@type AuraWidgetTable
     debuffs = {
         enabled = false,
-        orientation = CUF.constants.AURA_ORIENTATION.RIGHT_TO_LEFT,
+        orientation = CUF.constants.GROWTH_ORIENTATION.RIGHT_TO_LEFT,
         showStack = true,
         showDuration = true,
         showAnimation = true,
@@ -483,7 +483,7 @@ Defaults.Widgets = {
     totems = {
         enabled = false,
         frameLevel = 10,
-        orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT,
+        orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
         showDuration = true,
         showAnimation = true,
         showTooltip = true,
@@ -710,7 +710,7 @@ Defaults.Widgets_Boss.debuffs.position = {
     offsetX = 0,
     offsetY = 0,
 }
-Defaults.Widgets_Boss.debuffs.orientation = CUF.constants.AURA_ORIENTATION.LEFT_TO_RIGHT
+Defaults.Widgets_Boss.debuffs.orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT
 Defaults.Widgets_Boss.debuffs.filter.blacklist = {}
 Defaults.Widgets_Boss.debuffs.filter.boss = true
 Defaults.Widgets_Boss.debuffs.filter.castByNPC = true

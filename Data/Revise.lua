@@ -119,6 +119,17 @@ function DB:Revise()
     if CUF_DB.version < 9 then
         AddToChangelog("Custom Tag formats have been changed in a recent update. You may need to update your tags.")
     end
+    if CUF_DB.version < 11 then
+        IterateUnitLayouts(function(layout, unit)
+            if unit == "boss" and layout.growthDirection then
+                if layout.growthDirection == "up" then
+                    layout.growthDirection = CUF.constants.GROWTH_ORIENTATION.BOTTOM_TO_TOP
+                elseif layout.growthDirection == "down" then
+                    layout.growthDirection = CUF.constants.GROWTH_ORIENTATION.TOP_TO_BOTTOM
+                end
+            end
+        end)
+    end
 
     ShowChangelog()
 end

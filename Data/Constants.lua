@@ -209,8 +209,8 @@ const.AURA_OPTION_KIND = {
     WHITE_LIST_PRIORITY = "whiteListPriority",
 }
 
----@enum AuraOrientation
-const.AURA_ORIENTATION = {
+---@enum GrowthOrientation
+const.GROWTH_ORIENTATION = {
     RIGHT_TO_LEFT = "right-to-left",
     LEFT_TO_RIGHT = "left-to-right",
     TOP_TO_BOTTOM = "top-to-bottom",

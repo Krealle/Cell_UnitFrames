@@ -66,11 +66,18 @@ function U:UpdateUnitButtonPosition(unit, button)
                     return
                 end
 
-                if unitLayout.growthDirection == "down" then
-                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -unitLayout.spacing or 0)
+                local spacing = unitLayout.spacing or 0
+
+                if unitLayout.growthDirection == const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
+                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -spacing)
+                elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
+                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, spacing)
+                elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
+                    PixelUtil.SetPoint(button, "LEFT", parent, "RIGHT", spacing, 0)
                 else
-                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, unitLayout.spacing or 0)
+                    PixelUtil.SetPoint(button, "RIGHT", parent, "LEFT", -spacing, 0)
                 end
+
                 return
             end
         end

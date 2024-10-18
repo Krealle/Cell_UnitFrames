@@ -184,7 +184,7 @@
 ---@field font AuraFontOpt
 ---@field showStack boolean
 ---@field filter FilterOpt
----@field orientation AuraOrientation
+---@field orientation GrowthOrientation
 ---@field position PositionOpt
 ---@field spacing SpacingOpt
 ---@field size SizeOpt
@@ -232,7 +232,7 @@
 ---@field showTooltip boolean
 ---@field maxIcons number
 ---@field font AuraFontOpt
----@field orientation AuraOrientation
+---@field orientation GrowthOrientation
 ---@field position PositionOpt
 ---@field spacing SpacingOpt
 ---@field size SizeOpt

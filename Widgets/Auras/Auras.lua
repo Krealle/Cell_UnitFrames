@@ -664,7 +664,7 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field _Hide function
 ---@field Hide fun(icons: CellAuraIcons, hideAll: boolean?) Icons_Hide
 ---@field UpdateSize fun(icons: CellAuraIcons, numAuras: number) Icons_UpdateSize
----@field SetOrientation fun(icons: CellAuraIcons, orientation: AuraOrientation) Icons_SetOrientation
+---@field SetOrientation fun(icons: CellAuraIcons, orientation: GrowthOrientation) Icons_SetOrientation
 ---@field SetSpacing fun(icons: CellAuraIcons, spacing: CellSizeOpt) Icons_SetSpacing
 ---@field SetNumPerLine fun(icons: CellAuraIcons, numPerLine: number) Icons_SetNumPerLine
 ---@field ShowDuration fun(icons: CellAuraIcons, show: boolean) Icons_ShowDuration

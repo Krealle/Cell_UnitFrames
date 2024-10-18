@@ -230,24 +230,17 @@ local function AddUnitsToMenu()
                     unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 117)
                     unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, 0, -55)
                     unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
-                    unitPage.growthDirectionDropdown:SetItems({
-                        {
-                            ["text"] = L.Downwards,
-                            ["value"] = "down",
+
+                    for _, orientation in pairs(CUF.constants.GROWTH_ORIENTATION) do
+                        unitPage.growthDirectionDropdown:AddItem({
+                            ["text"] = L[orientation],
+                            ["value"] = orientation,
                             ["onClick"] = function()
-                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "down"
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = orientation
                                 CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
                             end,
-                        },
-                        {
-                            ["text"] = L.Upwards,
-                            ["value"] = "up",
-                            ["onClick"] = function()
-                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = "up"
-                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
-                            end,
-                        },
-                    })
+                        })
+                    end
 
                     if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
                         CUF.HelpTips:Show(unitPage.spacingSlider, {

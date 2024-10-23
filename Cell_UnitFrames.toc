@@ -40,6 +40,7 @@ Menu/Menu.lua
 Menu/ImportExport.lua
 Menu/GeneralTab.lua
 Menu/UnitFramesTab.lua
+Menu/WidgetsTab.lua
 Menu/ColorTab.lua
 
 Widgets/Common.lua

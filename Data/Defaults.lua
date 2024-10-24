@@ -691,11 +691,11 @@ Defaults.Widgets = {
     healAbsorb = {
         enabled = false,
         frameLevel = 10,
-    },
+    }, -- MARK: Widgets (Misc)
     ---@type FaderWidgetTable
     fader = {
-        enabled = false,
-        range = false,
+        enabled = true,
+        range = true,
         combat = false,
         hover = false,
         target = false,
@@ -802,7 +802,7 @@ Defaults.Layouts = {
         powerSize = 2,
         size = { 200, 40 },
         position = { -300, -250 },
-        widgets = Defaults.Widgets,
+        widgets = Util:CopyDeep(Defaults.Widgets),
         hideBlizzardCastBar = false,
         clickCast = false,
         barOrientation = "horizontal",
@@ -960,3 +960,6 @@ Defaults.Layouts = {
         },
     }
 }
+
+Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.enabled = false
+Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.range = false

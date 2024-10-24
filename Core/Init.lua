@@ -33,6 +33,7 @@ CUF.API = {}
 ---@field isMenuOpen boolean
 ---@field isRetail boolean
 ---@field selectedTab string
+---@field selectedSubTab string
 ---@field inEditMode boolean
 ---@field customPositioning boolean
 CUF.vars = {}

@@ -34,53 +34,6 @@ local function ResetAuraTables(self)
 end
 
 -------------------------------------------------
--- MARK: Update InRange
--------------------------------------------------
-
-local DEFAULT_HARM_SPELLS = {
-    ["WARLOCK"] = 234153, -- Drain Life
-    ["EVOKER"] = 361469,  -- Living Flame
-}
-
----@param self CUFUnitButton
----@param ir boolean?
----@param forceUpdate boolean?
-local function UnitFrame_UpdateInRange(self, ir, forceUpdate)
-    local unit = self.states.displayedUnit
-    if not unit then return end
-
-    local inRange = F:IsInRange(unit)
-
-    -- Hack to circumvent override issue with C_Spell.IsSpellInRange and override spells
-    if not inRange and UnitCanAttack("player", unit) then
-        local overrideSpell = DEFAULT_HARM_SPELLS[UnitClassBase("player")]
-        if overrideSpell then
-            inRange = C_Spell.IsSpellInRange(overrideSpell, unit) or false
-        end
-    end
-
-    self.states.inRange = inRange
-    if Cell.loaded then
-        if self.states.inRange ~= self.states.wasInRange or forceUpdate then
-            if inRange then
-                if CELL_FADE_OUT_HEALTH_PERCENT then
-                    if not self.states.healthPercent or self.states.healthPercent < CELL_FADE_OUT_HEALTH_PERCENT then
-                        A:FrameFadeIn(self, 0.25, self:GetAlpha(), 1)
-                    else
-                        A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB.appearance.outOfRangeAlpha)
-                    end
-                else
-                    A:FrameFadeIn(self, 0.25, self:GetAlpha(), 1)
-                end
-            else
-                A:FrameFadeOut(self, 0.25, self:GetAlpha(), CellDB.appearance.outOfRangeAlpha)
-            end
-        end
-        self.states.wasInRange = inRange
-    end
-end
-
--------------------------------------------------
 -- MARK: Auras
 -------------------------------------------------
 
@@ -357,7 +310,6 @@ local function UnitFrame_UpdateAll(button)
 
     U:UnitFrame_UpdateHealthColor(button)
     --UnitFrame_UpdateTarget(self)
-    UnitFrame_UpdateInRange(button)
 
     button:UpdateWidgets()
 
@@ -567,8 +519,6 @@ local function UnitFrame_OnTick(self)
     end
 
     self.__tickCount = e
-
-    UnitFrame_UpdateInRange(self)
 
     if self._updateRequired or self.alwaysUpdate then
         UnitFrame_UpdateAll(self)
@@ -819,8 +769,6 @@ function CUFUnitButton_OnLoad(button)
             and not widget._isEnabled
     end
 
-    button.UpdateInRange = UnitFrame_UpdateInRange
-
     -- Auras
 
     button.IterateAuras = IterateAuras
@@ -908,8 +856,6 @@ end
 ---@field powerType number
 ---@field powerMax number
 ---@field power number
----@field inRange boolean
----@field wasInRange boolean
 ---@field isLeader boolean
 ---@field isAssistant boolean
 ---@field readyCheckStatus ("ready" | "waiting" | "notready")?

@@ -276,11 +276,6 @@ local function UpdateAppearance(kind)
             end)
         end)
     end
-    if not kind or kind == "outOfRangeAlpha" then
-        Util:IterateAllUnitButtons(function(button)
-            button:UpdateInRange(nil, true)
-        end)
-    end
 end
 CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)
 

@@ -691,7 +691,19 @@ Defaults.Widgets = {
     healAbsorb = {
         enabled = false,
         frameLevel = 10,
-    },
+    }, -- MARK: Widgets (Misc)
+    ---@type FaderWidgetTable
+    fader = {
+        enabled = true,
+        range = true,
+        combat = false,
+        hover = false,
+        target = false,
+        unitTarget = false,
+        fadeDuration = 0.25,
+        maxAlpha = 1,
+        minAlpha = 0.35,
+    }
 }
 
 -- Boss Widgets
@@ -790,7 +802,7 @@ Defaults.Layouts = {
         powerSize = 2,
         size = { 200, 40 },
         position = { -300, -250 },
-        widgets = Defaults.Widgets,
+        widgets = Util:CopyDeep(Defaults.Widgets),
         hideBlizzardCastBar = false,
         clickCast = false,
         barOrientation = "horizontal",
@@ -817,7 +829,8 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels
+            dispels = Defaults.Widgets.dispels,
+            fader = Defaults.Widgets.fader
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -846,7 +859,8 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels
+            dispels = Defaults.Widgets.dispels,
+            fader = Defaults.Widgets.fader
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -872,6 +886,7 @@ Defaults.Layouts = {
             powerText = Defaults.Widgets.powerText,
             levelText = Defaults.Widgets.levelText,
             raidIcon = Defaults.Widgets.raidIcon,
+            fader = Defaults.Widgets.fader
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -904,7 +919,8 @@ Defaults.Layouts = {
             shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels
+            dispels = Defaults.Widgets.dispels,
+            fader = Defaults.Widgets.fader
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -940,6 +956,10 @@ Defaults.Layouts = {
             buffs = Defaults.Widgets_Boss.buffs,
             debuffs = Defaults.Widgets_Boss.debuffs,
             castBar = Defaults.Widgets_Boss.castBar,
+            fader = Defaults.Widgets.fader
         },
     }
 }
+
+Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.enabled = false
+Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.range = false

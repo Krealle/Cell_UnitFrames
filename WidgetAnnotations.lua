@@ -19,6 +19,7 @@
 ---| HealAbsorbWidgetTable
 ---| DispelsWidgetTable
 ---| TotemsWidgetTable
+---| FaderWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -39,6 +40,7 @@
 ---| HealAbsorbWidget
 ---| DispelsWidget
 ---| TotemsWidget
+---| FaderWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -67,6 +69,7 @@
 ---@field healAbsorb HealAbsorbWidget
 ---@field dispels DispelsWidget
 ---@field totems TotemsWidget
+---@field fader FaderWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -292,6 +295,21 @@
 ---@class HealAbsorbWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
+
+-------------------------------------------------
+-- MARK: Misc Widgets
+-------------------------------------------------
+
+---@class FaderWidgetTable
+---@field enabled boolean
+---@field range boolean
+---@field combat boolean
+---@field hover boolean
+---@field target boolean
+---@field unitTarget boolean
+---@field fadeDuration number
+---@field maxAlpha number
+---@field minAlpha number
 
 -------------------------------------------------
 -- MARK: Generic Options

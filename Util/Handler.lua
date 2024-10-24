@@ -109,7 +109,9 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
                     local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout
-                    button.widgets[widget]:_SetIsSelected(isSelected)
+                    if button.widgets[widget]._SetIsSelected then
+                        button.widgets[widget]:_SetIsSelected(isSelected)
+                    end
                 end
             end
         end)
@@ -124,6 +126,7 @@ end
 function Handler.LoadPageDB(page, subPage)
     if not CUF.vars.isMenuOpen then return end
     if CUF.vars.selectedTab ~= "unitFramesTab" then return end
+    if CUF.vars.selectedSubTab ~= "Widgets" then return end
 
     -- Both params are only present when LoadLayoutDB is called
     if not page or not subPage then

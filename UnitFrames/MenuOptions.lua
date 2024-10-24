@@ -275,7 +275,7 @@ local function AddUnitsToMenu()
                                 if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
                                     CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "alwaysUpdate", unit)
                                 end
-                            end, L.UpdateOnOnUpdateCycle, L.AlwaysUpdateUnitFrameTooltip)
+                            end, L.AlwaysUpdate, format(L.AlwaysUpdateUnitFrameTooltip, "0.25"))
                         unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.powerFilterCB, 0, -30)
                     end
                 end

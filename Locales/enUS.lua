@@ -196,8 +196,8 @@ L.Downwards = "Downwards"
 L.Upwards = "Upwards"
 
 L.AlwaysUpdate = "Always Update"
-L.UpdateOnOnUpdateCycle = "Update on OnUpdate cycle"
-L.AlwaysUpdateUnitFrameTooltip = "Can help with issues where the Unit Frame is not updating correctly."
+L.AlwaysUpdateUnitFrameTooltip = [[Forces an update every %ss
+Can help with issues where the Unit Frame is not updating correctly]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

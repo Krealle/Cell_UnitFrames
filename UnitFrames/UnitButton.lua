@@ -136,6 +136,10 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         button:DisableWidget(button.widgets.powerBar)
         button:EnableWidget(button.widgets.powerBar)
     end
+
+    if not kind or kind == "alwaysUpdate" then
+        button.alwaysUpdate = layout[unit].alwaysUpdate
+    end
 end
 
 -------------------------------------------------

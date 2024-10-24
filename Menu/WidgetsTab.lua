@@ -48,6 +48,7 @@ function WidgetsTab:ShowTab(unit)
 
     self.window:Show()
     self.LoadWidgetList(unit)
+    Menu:UpdateSelectedPages(CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 end
 
 function WidgetsTab:HideTab()

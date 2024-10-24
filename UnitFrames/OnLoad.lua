@@ -385,7 +385,7 @@ local function UnitFrame_RegisterEvents(self)
     --self:RegisterEvent("PLAYER_FLAGS_CHANGED")  -- afk
     --self:RegisterEvent("ZONE_CHANGED_NEW_AREA") --? update status text
 
-    if self._baseUnit == const.UNIT.TARGET then
+    if self._baseUnit == const.UNIT.TARGET or self._baseUnit == const.UNIT.TARGET_TARGET then
         self:AddEventListener("PLAYER_TARGET_CHANGED", UnitFrame_UpdateAll, true)
     end
     if self._baseUnit == const.UNIT.FOCUS then
@@ -395,6 +395,13 @@ local function UnitFrame_RegisterEvents(self)
         self:AddEventListener("UNIT_PET", function(button, event, unit)
             if unit ~= const.UNIT.PLAYER then return end
             UnitFrame_UpdateAll(button)
+        end, true)
+    end
+    if self._baseUnit == const.UNIT.TARGET_TARGET then
+        self:AddEventListener("UNIT_TARGET", function(button, event, unit, ...)
+            if unit == "target" then
+                UnitFrame_UpdateAll(button)
+            end
         end, true)
     end
     if self._baseUnit == const.UNIT.BOSS then
@@ -530,6 +537,7 @@ local function UnitFrame_OnTick(self)
                 F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
                 self.__displayedGuid = displayedGuid
                 self._powerBarUpdateRequired = true
+                self._updateRequired = true
             end
 
             local guid = UnitGUID(self.states.unit)
@@ -562,7 +570,7 @@ local function UnitFrame_OnTick(self)
 
     UnitFrame_UpdateInRange(self)
 
-    if self._updateRequired then
+    if self._updateRequired or self.alwaysUpdate then
         UnitFrame_UpdateAll(self)
     end
 
@@ -875,6 +883,7 @@ end
 ---@field _baseUnit Unit Base unit without N eg. 'boss'
 ---@field _unit UnitToken Unit with N eg. 'boss1'
 ---@field _previewUnit UnitToken
+---@field alwaysUpdate boolean
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

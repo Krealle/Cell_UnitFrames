@@ -400,7 +400,7 @@ local CellAnchorFrameNames = {
     CellQuickAssistAnchorFrame = { name = "Quick Assist Frame" },
 }
 
-local cellPopup
+local cellPopup, HideCellEditModePopup
 
 local function GetAnchorFrame()
     if not cellPopup then return end
@@ -426,6 +426,18 @@ local function UpdateCellEditModePopup()
         x, y = unpack(Cell.vars.currentLayoutTable[key].position)
     else
         x, y = unpack(CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
+    end
+
+    -- Disable Cell frame positioning if data is invalid
+    -- Also print out some debug info to help with narrowing issues
+    if not x or not y or type(x) ~= "number" or type(y) ~= "number" then
+        CUF:Warn("Cell frame positioning disabled, due to invalid data.",
+            "\nDebug info - frame:",
+            Util.ColorWrap((cellPopup.frameDropdown:GetSelected() or "n/a"), "gold"),
+            "key:", key, "x:", x, "y:", y)
+
+        HideCellEditModePopup()
+        return
     end
 
     cellPopup.xPosSlider:SetValue(x)
@@ -519,7 +531,7 @@ local function ShowCellEditModePopup()
     CUF:RegisterCallback("UpdateLayout", "UpdateCellEditModePopup", UpdateCellEditModePopup)
 end
 
-local function HideCellEditModePopup()
+HideCellEditModePopup = function()
     if cellPopup then
         cellPopup:Hide()
         CUF:UnregisterCallback("UpdateLayout", "UpdateCellEditModePopup")

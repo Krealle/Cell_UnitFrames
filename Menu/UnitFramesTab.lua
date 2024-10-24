@@ -161,7 +161,8 @@ function unitFramesTab:InitTabs()
                 idx = 1
                 prevAnchor = tabButton
 
-                self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
+                self.unitTabRows = self.unitTabRows + 1
+                --self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
                 self.tabPane:SetHeight(self.tabPane:GetHeight() + self.paneHeight)
             else
                 tabButton:SetPoint("TOPLEFT", prevButton, "TOPRIGHT", -1, 0)
@@ -191,6 +192,9 @@ function unitFramesTab:SetTab(which)
     CUF.vars.selectedSubTab = which
     self.selectedTab = self.tabs[which]
     self.selectedTab:ShowTab(CUF.vars.selectedUnit)
+
+    self.window:SetHeight(self.unitHeight + self.selectedTab.height + (self.paneHeight * (self.unitTabRows + 2)))
+    Menu.window:SetHeight(self.window:GetHeight() + Menu.paneHeight + Menu.paneBuffer)
 end
 
 unitFramesTab.AddTab = Menu.AddTab
@@ -203,6 +207,7 @@ function unitFramesTab:Create()
     CUF:Log("|cff00ccffCreate UnitFramesTab|r")
 
     local windowHeight = self.unitHeight + 400 + (self.paneHeight * 2)
+    self.unitTabRows = 1
 
     local sectionWidth = Menu.tabAnchor:GetWidth()
 

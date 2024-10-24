@@ -22,7 +22,7 @@ WidgetsTab.widgetPages = {}
 WidgetsTab.listButtons = {}
 WidgetsTab.widgetsToAdd = {}
 WidgetsTab.id = "Widgets"
-WidgetsTab.height = 390
+WidgetsTab.height = 400
 WidgetsTab.paneHeight = 17
 
 unitFramesTab:AddTab(WidgetsTab)
@@ -33,7 +33,6 @@ unitFramesTab:AddTab(WidgetsTab)
 
 ---@param unit Unit
 function WidgetsTab:ShowTab(unit)
-    --CUF:Log("|cff00ccffShow generalTab|r")
     if not self.window then
         self:Create()
 
@@ -53,7 +52,6 @@ end
 
 function WidgetsTab:HideTab()
     if not self.window or not self.window:IsShown() then return end
-    --CUF:Log("|cff00ccffHide generalTab|r")
     self.window:Hide()
 
     -- Reset selected widget to hide previews
@@ -205,20 +203,18 @@ CUF:RegisterCallback("UpdateWidget", "WidgetsTab_UpdateWidgetListEnabled", Widge
 
 -- Create
 function WidgetsTab:Create()
-    --CUF:Log("|cff00ccffCreate generalTab|r")
-
     local sectionWidth = unitFramesTab.tabAnchor:GetWidth()
 
     self.window = CUF:CreateFrame("CUF_Menu_UnitFrame_Widget", unitFramesTab.window,
         sectionWidth,
-        self.height, true)
+        self.height - 10, true)
     self.window:SetPoint("TOPLEFT", unitFramesTab.tabAnchor, "TOPLEFT")
 
     -- settings frame
     ---@class UnitsFramesTab.settingsFrame: Frame
     ---@field scrollFrame CellScrollFrame
     self.settingsFrame = CUF:CreateFrame("CUF_Menu_UnitFrame_Widget_Settings", self.window,
-        sectionWidth, self.height, true, true)
+        sectionWidth, self.height - 10, true, true)
     self.settingsFrame:SetPoint("TOPLEFT")
 
     Cell:CreateScrollFrame(self.settingsFrame)

@@ -110,6 +110,7 @@ end
 ---@field Create function
 ---@field ShowTab function
 ---@field HideTab function
+---@field height number
 
 --- Initialize tabs buttons and adds them to the tab pane
 function menu:InitTabs()

@@ -780,6 +780,7 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field powerFilter boolean
 ---@field spacing number?
 ---@field growthDirection GrowthOrientation?
+---@field alwaysUpdate boolean?
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -884,6 +885,7 @@ Defaults.Layouts = {
         },
         barOrientation = "horizontal",
         powerFilter = false,
+        alwaysUpdate = true,
     },
     pet = {
         enabled = false,

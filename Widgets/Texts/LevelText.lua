@@ -39,13 +39,30 @@ Handler:RegisterWidget(W.UpdateLevelTextWidget, const.WIDGET_KIND.LEVEL_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-local function Update(button)
+---@param event WowEvent?
+local function Update(button, event, ...)
     local unit = button.states.unit
     if not unit then return end
 
     if not button.widgets.levelText.enabled then return end
 
-    local level = tostring(UnitLevel(unit))
+    local level = UnitEffectiveLevel(unit) ---@type number|string
+
+    -- UnitLevel can return outdated value, so if we have a value from the event
+    -- We use that instead
+    if event == "PLAYER_LEVEL_UP" then
+        local newLevel = ...
+        if newLevel and newLevel > level then
+            level = newLevel
+        end
+    elseif event == "PLAYER_LEVEL_CHANGED" then
+        local _, newLevel = ...
+        if newLevel and newLevel > level then
+            level = newLevel
+        end
+    end
+
+    level = tostring(UnitLevel(unit))
     if level == "-1" then
         level = "??"
     end
@@ -57,11 +74,22 @@ end
 local function Enable(self)
     self:Show()
 
+    -- Unsure which event is most accurate, so we listen to both
+    if self._owner._baseUnit == "player" then
+        self._owner:AddEventListener("PLAYER_LEVEL_CHANGED", Update, true)
+        self._owner:AddEventListener("PLAYER_LEVEL_UP", Update, true)
+    else
+        self._owner:AddEventListener("UNIT_LEVEL", Update)
+    end
+
     return true
 end
 
 ---@param self LevelTextWidget
 local function Disable(self)
+    self._owner:RemoveEventListener("PLAYER_LEVEL_CHANGED", Update)
+    self._owner:RemoveEventListener("PLAYER_LEVEL_UP", Update)
+    self._owner:RemoveEventListener("UNIT_LEVEL", Update)
 end
 
 -------------------------------------------------

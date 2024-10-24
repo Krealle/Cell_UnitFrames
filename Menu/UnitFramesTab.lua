@@ -71,6 +71,7 @@ function unitFramesTab:ShowTab()
     end
 
     self.window:Show()
+    self.selectedTab:ShowTab()
 
     Menu:LoadLayoutDB(CUF.vars.selectedLayout)
 
@@ -81,6 +82,7 @@ function unitFramesTab:HideTab()
     if not unitFramesTab:IsShown() then return end
     CUF:Log("|cff00ccffHide unitFramesTab|r")
     self.window:Hide()
+    self.selectedTab:HideTab()
     Menu:HideLayoutTitle()
 end
 

@@ -48,7 +48,7 @@ function unitFramesTab:SetUnitPage(unit)
     if self.selectedTab then
         self.selectedTab:ShowTab(unit)
     end
-    CUF.Menu:UpdateSelectedPages(unit)
+    Menu:UpdateSelectedPages(unit)
 end
 
 function unitFramesTab:ShowTab()
@@ -61,7 +61,7 @@ function unitFramesTab:ShowTab()
         self.unitPageButtons[1]:Click()
         self.tabButtons[1]:Click()
 
-        CUF.Menu:UpdateSelectedPages(CUF.vars.selectedUnit, CUF.vars.selectedWidget)
+        Menu:UpdateSelectedPages(CUF.vars.selectedUnit, CUF.vars.selectedWidget)
 
         self.init = true
 
@@ -82,9 +82,6 @@ function unitFramesTab:HideTab()
     CUF:Log("|cff00ccffHide unitFramesTab|r")
     self.window:Hide()
     Menu:HideLayoutTitle()
-
-    -- Reset selected widget to hide previews
-    Handler.UpdateSelected()
 end
 
 -------------------------------------------------
@@ -191,6 +188,7 @@ function unitFramesTab:SetTab(which)
         self.selectedTab:HideTab()
     end
 
+    CUF.vars.selectedSubTab = which
     self.selectedTab = self.tabs[which]
     self.selectedTab:ShowTab(CUF.vars.selectedUnit)
 end

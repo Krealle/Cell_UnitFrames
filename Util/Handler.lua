@@ -126,6 +126,7 @@ end
 function Handler.LoadPageDB(page, subPage)
     if not CUF.vars.isMenuOpen then return end
     if CUF.vars.selectedTab ~= "unitFramesTab" then return end
+    if CUF.vars.selectedSubTab ~= "Widgets" then return end
 
     -- Both params are only present when LoadLayoutDB is called
     if not page or not subPage then

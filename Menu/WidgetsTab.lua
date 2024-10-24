@@ -6,6 +6,7 @@ local F = Cell.funcs
 local L = CUF.L
 
 local Builder = CUF.Builder
+local Handler = CUF.Handler
 
 ---@class CUF.Menu
 local Menu = CUF.Menu
@@ -46,12 +47,16 @@ function WidgetsTab:ShowTab(unit)
     end
 
     self.window:Show()
+    self.LoadWidgetList(unit)
 end
 
 function WidgetsTab:HideTab()
     if not self.window or not self.window:IsShown() then return end
     --CUF:Log("|cff00ccffHide generalTab|r")
     self.window:Hide()
+
+    -- Reset selected widget to hide previews
+    Handler.UpdateSelected()
 end
 
 function WidgetsTab:IsShown()
@@ -78,7 +83,7 @@ function WidgetsTab:SetWidget(widget)
         self.settingsFrame.scrollFrame:ResetScroll()
     end)
 
-    CUF.Menu:UpdateSelectedPages(nil, widget)
+    Menu:UpdateSelectedPages(nil, widget)
 end
 
 -------------------------------------------------

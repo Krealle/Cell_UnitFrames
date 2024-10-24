@@ -109,7 +109,9 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
             for _, widget in pairs(const.WIDGET_KIND) do
                 if button:HasWidget(widget) then
                     local isSelected = widget == selectedWidget and button._isSelected and isCorrectLayout
-                    button.widgets[widget]:_SetIsSelected(isSelected)
+                    if button.widgets[widget]._SetIsSelected then
+                        button.widgets[widget]:_SetIsSelected(isSelected)
+                    end
                 end
             end
         end)

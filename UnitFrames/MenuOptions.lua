@@ -76,6 +76,10 @@ local function AddLoadPageDB(unitPage)
             unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
         end
 
+        if pageId == "targettarget" then
+            unitPage.alwaysUpdateCB:SetChecked(pageDB.alwaysUpdate)
+        end
+
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unitPage.id .. "_LoadPageDB", LoadPageDB)
@@ -262,6 +266,18 @@ local function AddUnitsToMenu()
                             end
                         end, L.PowerFilterTooltip)
                     unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
+
+                    if unit == "targettarget" then
+                        unitPage.alwaysUpdateCB = Cell:CreateCheckButton(unitPage.frame,
+                            L.AlwaysUpdate,
+                            function(checked)
+                                CUF.DB.SelectedLayoutTable()[unit].alwaysUpdate = checked
+                                if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                    CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "alwaysUpdate", unit)
+                                end
+                            end, L.UpdateOnOnUpdateCycle, L.AlwaysUpdateUnitFrameTooltip)
+                        unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.powerFilterCB, 0, -30)
+                    end
                 end
 
                 AddLoadPageDB(unitPage)

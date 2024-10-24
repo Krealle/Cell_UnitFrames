@@ -569,7 +569,7 @@ local function UnitFrame_OnTick(self)
 
     UnitFrame_UpdateInRange(self)
 
-    if self._updateRequired then
+    if self._updateRequired or self.alwaysUpdate then
         UnitFrame_UpdateAll(self)
     end
 
@@ -882,6 +882,7 @@ end
 ---@field _baseUnit Unit Base unit without N eg. 'boss'
 ---@field _unit UnitToken Unit with N eg. 'boss1'
 ---@field _previewUnit UnitToken
+---@field alwaysUpdate boolean
 
 ---@class CUFUnitButton.States
 ---@field unit Unit

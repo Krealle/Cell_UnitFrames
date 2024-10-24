@@ -537,6 +537,7 @@ local function UnitFrame_OnTick(self)
                 F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
                 self.__displayedGuid = displayedGuid
                 self._powerBarUpdateRequired = true
+                self._updateRequired = true
             end
 
             local guid = UnitGUID(self.states.unit)

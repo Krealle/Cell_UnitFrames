@@ -73,7 +73,7 @@ Widgets/Auras/Updater.lua
 Widgets/Auras/Dispels.lua
 Widgets/Auras/Totems.lua
 
-Widgets/Fader.lua
+Widgets/Misc/Fader.lua
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

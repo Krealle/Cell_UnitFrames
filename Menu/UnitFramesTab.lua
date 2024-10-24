@@ -89,7 +89,6 @@ end
 -------------------------------------------------
 
 function unitFramesTab:InitUnits()
-    --CUF:Log("menuWindow - InitUnits")
     local prevButton
     local prevAnchor
     local idx = 1
@@ -141,7 +140,6 @@ unitFramesTab.tabButtons = {}
 
 --- Initialize tabs buttons and adds them to the tab pane
 function unitFramesTab:InitTabs()
-    --CUF:Log("menu - InitUnits")
     local prevButton
     local prevAnchor
     local idx = 1
@@ -204,8 +202,6 @@ unitFramesTab.AddTab = Menu.AddTab
 -------------------------------------------------
 
 function unitFramesTab:Create()
-    CUF:Log("|cff00ccffCreate UnitFramesTab|r")
-
     local windowHeight = self.unitHeight + 400 + (self.paneHeight * 2)
     self.unitTabRows = 1
 

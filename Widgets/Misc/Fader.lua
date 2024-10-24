@@ -123,14 +123,12 @@ local function Update(button, event, unit)
 
     local fader = button.widgets.fader
 
-    --CUF:Log("Fader - Update enabled", fader.enabled, event, unit, "optCount", fader.optCount)
     if not fader.enabled or fader.optCount == 0 then
         button:SetAlpha(1)
         return
     end
 
     local shouldFadeIn = fader:ShouldFadeIn(event, unit)
-    --CUF:Log("shouldShow", shouldFadeIn)
     if shouldFadeIn then
         if fader.isFadedIn ~= shouldFadeIn then
             fader.isFadedIn = true

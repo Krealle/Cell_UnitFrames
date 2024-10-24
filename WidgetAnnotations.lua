@@ -296,6 +296,10 @@
 ---@field enabled boolean
 ---@field frameLevel number
 
+-------------------------------------------------
+-- MARK: Misc Widgets
+-------------------------------------------------
+
 ---@class FaderWidgetTable
 ---@field enabled boolean
 ---@field range boolean

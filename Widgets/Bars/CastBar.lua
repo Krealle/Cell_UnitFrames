@@ -881,7 +881,7 @@ function W:CreateCastBar(button)
 
     local background = statusBar:CreateTexture(nil, "BACKGROUND")
     background:SetAllPoints(statusBar)
-    background:SetColorTexture(1, 1, 1, .5)
+    background:SetColorTexture(1, 1, 1, 1)
 
     -- Frame for Texts & Spark to ensure they are above border
     local topLevelFrame = CreateFrame("Frame", nil, statusBar)

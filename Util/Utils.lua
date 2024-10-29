@@ -308,6 +308,59 @@ local function utf8len(s)
     return len
 end
 
+-- functions identically to string.sub except that i and j are UTF-8 characters
+-- instead of bytes
+local function utf8sub(s, i, j)
+    -- argument defaults
+    j = j or -1
+
+    -- argument checking
+    if type(s) ~= "string" then
+        error("bad argument #1 to 'utf8sub' (string expected, got " .. type(s) .. ")")
+    end
+    if type(i) ~= "number" then
+        error("bad argument #2 to 'utf8sub' (number expected, got " .. type(i) .. ")")
+    end
+    if type(j) ~= "number" then
+        error("bad argument #3 to 'utf8sub' (number expected, got " .. type(j) .. ")")
+    end
+
+    local pos       = 1
+    local bytes     = s:len()
+    local len       = 0
+
+    -- only set l if i or j is negative
+    local l         = (i >= 0 and j >= 0) or s:utf8len()
+    local startChar = (i >= 0) and i or l + i + 1
+    local endChar   = (j >= 0) and j or l + j + 1
+
+    -- can't have start before end!
+    if startChar > endChar then
+        return ""
+    end
+
+    -- byte offsets to pass to string.sub
+    local startByte, endByte = 1, bytes
+
+    while pos <= bytes do
+        len = len + 1
+
+        if len == startChar then
+            startByte = pos
+        end
+
+        pos = pos + utf8charbytes(s, pos)
+
+        if len == endChar then
+            endByte = pos - 1
+            break
+        end
+    end
+
+    return s:sub(startByte, endByte)
+end
+
+
 -------------------------------------------------
 -- MARK: Util
 -------------------------------------------------
@@ -325,16 +378,16 @@ function Util.UpdateTextWidth(fs, text, widthTable, relativeTo)
         local percent = widthTable.value or 0.75
         local width = relativeTo:GetWidth() - 2
         for i = utf8len(text), 0, -1 do
-            fs:SetText(string.utf8sub(text, 1, i))
+            fs:SetText(utf8sub(text, 1, i))
             if fs:GetWidth() / width <= percent then
                 break
             end
         end
     elseif widthTable.type == "length" then
         if string.len(text) == utf8len(text) then -- en
-            fs:SetText(string.utf8sub(text, 1, widthTable.value))
+            fs:SetText(utf8sub(text, 1, widthTable.value))
         else                                      -- non-en
-            fs:SetText(string.utf8sub(text, 1, widthTable.auxValue))
+            fs:SetText(utf8sub(text, 1, widthTable.auxValue))
         end
     end
 end
@@ -1001,7 +1054,7 @@ end
 ---@param str string
 ---@param maxLength number
 function Util.ShortenString(str, maxLength)
-    return string.utf8sub(str, 1, maxLength)
+    return utf8sub(str, 1, maxLength)
 end
 
 -------------------------------------------------

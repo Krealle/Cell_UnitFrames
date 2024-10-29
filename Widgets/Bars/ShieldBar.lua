@@ -83,7 +83,7 @@ local function Update(button)
     -- Preview
     if shieldBar._isSelected then
         shieldBar:Show()
-        shieldBar:SetValue(0.4)
+        shieldBar:SetValue(0.4, unit)
         return
     end
 
@@ -91,7 +91,7 @@ local function Update(button)
     if totalAbsorbs > 0 then
         local shieldPercent = totalAbsorbs / UnitHealthMax(unit)
         shieldBar:Show()
-        shieldBar:SetValue(shieldPercent)
+        shieldBar:SetValue(shieldPercent, unit)
         return
     end
 
@@ -122,7 +122,8 @@ end
 
 ---@param bar ShieldBarWidget
 ---@param percent number
-local function ShieldBar_SetValue(bar, percent)
+---@param unit UnitToken
+local function ShieldBar_SetValue(bar, percent, unit)
     percent = math.min(percent, 1)
 
     local maxWidth
@@ -134,11 +135,7 @@ local function ShieldBar_SetValue(bar, percent)
     local barWidth = maxWidth * percent
 
     if bar.currentPoint == "healthBar" then
-        local healthPercent = bar._owner.states.healthPercent
-        if not healthPercent then
-            local unit = bar._owner.states.unit
-            healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
-        end
+        local healthPercent = UnitHealth(unit) / UnitHealthMax(unit)
         local ratio = 1 - healthPercent
 
         if percent > ratio then

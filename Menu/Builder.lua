@@ -1384,7 +1384,7 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     ---@class CastBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarOptions"
-    f.optionHeight = 165
+    f.optionHeight = 185
 
     -- Title
     f.title = self:CreateOptionTitle(f, "General")
@@ -1403,6 +1403,15 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
 
     f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor, const.OPTION_KIND.USE_CLASS_COLOR)
     self:AnchorRightOfCB(f.classColorCB, f.reverseCB)
+
+    f.onlyShowInterruptableCB = self:CreateCheckBox(f, widgetName, L.OnlyShowInterruptableCast,
+        const.OPTION_KIND.ONLY_SHOW_INTERRUPT)
+    self:AnchorBelowCB(f.onlyShowInterruptableCB, f.reverseCB)
+
+    local function LoadPageDB()
+        f.onlyShowInterruptableCB:SetEnabled(CUF.vars.selectedUnit ~= const.UNIT.PLAYER)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "CheckBox_CastBarGeneralOptions_OnlyShowInterruptableCast")
 
     return f
 end

@@ -136,6 +136,28 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
     return textureDropdown
 end
 
+---- Create a texture dropdown
+---@param which Defaults.Colors.Types
+---@param colorName string
+---@param colorTable table<string, RGBAOpt>
+---@param parent Frame
+---@param percent boolean
+---@return CUF.ColorSection.Slider
+local function CreateSlider(which, colorName, colorTable, parent, percent)
+    ---@class CUF.ColorSection.Slider: CellSlider
+    local slider = Cell:CreateSlider(L[colorName], parent, 0, 100, 141, 1, function(value)
+        DB.SetColor(which, colorName, value / 100)
+        CUF:Fire("UpdateAppearance", "color")
+    end, nil, percent)
+    slider.id = colorName
+    slider.type = "slider"
+
+    local val = colorTable[colorName] * (percent and 100 or 1) --[[@as number]]
+    slider:SetValue(val)
+
+    return slider
+end
+
 ---@param which Defaults.Colors.Types
 ---@param colorName string
 ---@param colorTable table<string, RGBAOpt>
@@ -241,6 +263,10 @@ function ColorTab:CreateSections()
                 element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
                 gridLayout.firstInRow = element
                 baseHeight = baseHeight + element:GetHeight() + sectionGap
+            elseif colorType == "newline" then
+                gridLayout.currentColumn = 0
+                gridLayout.currentRow = gridLayout.currentRow + 1
+                gridLayout.currentColumnWidth = 0
             elseif colorType == "texture" then
                 element = CreateTextureDropdown(which, colorName, colorTable, section)
                 gridLayout.currentColumn = 1
@@ -259,6 +285,31 @@ function ColorTab:CreateSections()
                 gridLayout.firstInRow = element
 
                 baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
+
+                tinsert(section.dropdowns, element)
+            elseif colorType == "slider-percent" then
+                element = CreateSlider(which, colorName, colorTable, section, true)
+                gridLayout.currentColumn = 1
+                gridLayout.currentColumnWidth = section:GetWidth()
+
+                if gridLayout.currentRow > 1 then
+                    gridLayout.currentRow = gridLayout.currentRow + 1
+                end
+
+                -- Start of a new row
+                if not gridLayout.firstInRow then
+                    element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                    baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
+                else
+                    if gridLayout.firstInRow.type == "slider" then
+                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 4.5)
+                        baseHeight = baseHeight + element:GetHeight() * 3 + sectionGap * 3
+                    else
+                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                        baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
+                    end
+                end
+                gridLayout.firstInRow = element
 
                 tinsert(section.dropdowns, element)
             elseif colorType == "rgb" or colorType == "toggle" then

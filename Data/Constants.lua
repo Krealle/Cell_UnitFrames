@@ -307,3 +307,11 @@ const.FormatColors = {
     brown = "ffa52a2a",
     gold = "ffffd700",
 }
+
+---@enum UnitButtonColorType
+const.UnitButtonColorType = {
+    CELL = "cell",
+    CLASS_COLOR = "class_color",
+    CLASS_COLOR_DARK = "class_color_dark",
+    CUSTOM = "custom",
+}

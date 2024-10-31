@@ -8,6 +8,13 @@ CUF.L = L
 -- Forwards from Cell
 L.invertColor = L["Invert Color"]
 L.dispels = L["Dispels"]
+L.barColor = L["Health Bar Color"]
+L.lossColor = L["Health Loss Color"]
+L.useFullColor = L["Enable Full Health Color"]
+L.useDeathColor = L["Enable Death Color"]
+L.barAlpha = L["Health Bar Alpha"]
+L.lossAlpha = L["Health Loss Alpha"]
+L.backgroundAlpha = L["Background Alpha"]
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"
@@ -50,6 +57,8 @@ L.BackupOverwrite = [[This will overwrite your previous backup:
 %s]]
 L.RestoreBackupPopup = [[Restore this backup?
 %s]]
+L.ColorTypeTooltip = [[|cFFFFD700Cell|r - Uses the appearance settings from |cFFFFD700Cell|r.
+Custom Unit Frame colors can be changed in the |cFFFFD700Colors|r tab.]]
 
 -- Units
 L.targettarget = "TargetTarget"
@@ -327,6 +336,8 @@ L.overShield = "Overshield"
 L.overAbsorb = "Overabsorb"
 L.hostileUnits = "Hostile Units"
 L.swapHostileHealthAndLossColors = "Swap Health and Health Loss Colors"
+L.deathColor = "Death Color"
+L.fullColor = "Full Color"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"
@@ -342,3 +353,7 @@ L.HelpTip_EditModeOverlay = [[Drag to reposition the Unit Frame.
 Click for more options.]]
 L.HelpTip_TagHintButton = "Click here to see available tags"
 L.HelpTip_BossFramePreview = "When editing %s frames, they will display the %s."
+
+-- Aliases
+-- !!DO NOT ADD TO CURSEFORGE!!
+L.unitFrames = L.UnitFrames

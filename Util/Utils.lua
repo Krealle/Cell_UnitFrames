@@ -541,6 +541,57 @@ function Util:ButtonIsMirrored(unit)
     return DB.CurrentLayoutTable()[unit].mirrorPlayer
 end
 
+---@param colorType UnitButtonColorType
+---@param percent number
+---@param isDeadOrGhost boolean
+---@param r number
+---@param g number
+---@param b number
+---@return number barR
+---@return number barG
+---@return number barB
+---@return number lossR
+---@return number lossG
+---@return number lossB
+function Util:GetHealthBarColor(colorType, percent, isDeadOrGhost, r, g, b)
+    if colorType == const.UnitButtonColorType.CELL then
+        return F:GetHealthBarColor(percent, isDeadOrGhost, r, g, b)
+    end
+
+    local barR, barG, barB, lossR, lossG, lossB
+    percent = percent or 1
+
+    local colors = DB.GetColors().unitFrames
+
+    -- bar
+    if percent == 1 and colors.useFullColor then
+        barR, barG, barB = unpack(colors.fullColor)
+    else
+        if colorType == const.UnitButtonColorType.CLASS_COLOR then
+            barR, barG, barB = r, g, b
+        elseif colorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
+            barR, barG, barB = r * 0.2, g * 0.2, b * 0.2
+        else
+            barR, barG, barB = unpack(colors.barColor)
+        end
+    end
+
+    -- loss
+    if isDeadOrGhost and colors.useDeathColor then
+        barR, barG, barB = unpack(colors.deathColor)
+    else
+        if colorType == const.UnitButtonColorType.CLASS_COLOR then
+            lossR, lossG, lossB = r, g, b
+        elseif colorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
+            lossR, lossG, lossB = r * 0.2, g * 0.2, b * 0.2
+        else
+            lossR, lossG, lossB = unpack(colors.lossColor)
+        end
+    end
+
+    return barR, barG, barB, lossR, lossG, lossB
+end
+
 -------------------------------------------------
 -- MARK: Unit Info
 -------------------------------------------------

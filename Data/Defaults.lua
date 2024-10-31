@@ -122,6 +122,7 @@ Defaults.Options.fontWidth = {
 ---| "runes"
 ---| "shieldBar"
 ---| "healAbsorb"
+---| "unitFrames"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -192,8 +193,17 @@ Defaults.Colors = {
         overAbsorb = { 1, 1, 1, 1 },
         invertColor = false,
     },
-    hostileUnits = {
-    }
+    unitFrames = {
+        barColor = { 0.06, 0.07, 0.07, 1 },
+        lossColor = { 0.52, 0.21, 0.19, 1 },
+        fullColor = { 0.2, 0.2, 1, 1 },
+        deathColor = { 0.47, 0.47, 0.47, 1 },
+        useFullColor = false,
+        useDeathColor = false,
+        barAlpha = 1,
+        lossAlpha = 1,
+        backgroundAlpha = 1,
+    },
 }
 
 Defaults.ColorsMenuOrder = {
@@ -266,6 +276,20 @@ Defaults.ColorsMenuOrder = {
         { "overAbsorb",  "rgb" },
         { "invertColor", "toggle" },
     },
+    unitFrames = {
+        { "barColor",        "rgb" },
+        { "",                "newline" },
+        { "lossColor",       "rgb" },
+        { "",                "newline" },
+        { "fullColor",       "rgb" },
+        { "useFullColor",    "toggle" },
+        { "",                "newline" },
+        { "deathColor",      "rgb" },
+        { "useDeathColor",   "toggle" },
+        { "barAlpha",        "slider-percent" },
+        { "lossAlpha",       "slider-percent" },
+        { "backgroundAlpha", "slider-percent" },
+    }
 }
 
 ---@type CustomTextWidgetTable
@@ -793,6 +817,7 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field spacing number?
 ---@field growthDirection GrowthOrientation?
 ---@field alwaysUpdate boolean?
+---@field colorType UnitButtonColorType
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -807,6 +832,7 @@ Defaults.Layouts = {
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     },
     target = {
         enabled = false,
@@ -837,6 +863,7 @@ Defaults.Layouts = {
         mirrorPlayer = false,
         barOrientation = "horizontal",
         powerFilter = false,
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     },
     focus = {
         enabled = false,
@@ -874,6 +901,7 @@ Defaults.Layouts = {
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     },
     targettarget = {
         enabled = false,
@@ -901,6 +929,7 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         powerFilter = false,
         alwaysUpdate = true,
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     },
     pet = {
         enabled = false,
@@ -934,6 +963,7 @@ Defaults.Layouts = {
         },
         barOrientation = "horizontal",
         powerFilter = false,
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     },
     boss = {
         enabled = false,
@@ -958,6 +988,7 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets_Boss.castBar,
             fader = Defaults.Widgets.fader
         },
+        colorType = CUF.constants.UnitButtonColorType.CELL,
     }
 }
 

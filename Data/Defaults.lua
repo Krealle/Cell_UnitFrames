@@ -636,6 +636,7 @@ Defaults.Widgets = {
         enabled = false,
         useClassColor = true,
         frameLevel = 10,
+        onlyShowInterrupt = false,
         position = {
             point = "TOPLEFT",
             offsetY = -30,

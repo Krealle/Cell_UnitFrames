@@ -56,6 +56,9 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     end
 
     if widget.enabled and button:IsVisible() then
+        widget.overShieldGlow:Hide()
+        widget.overShieldGlowReverse:Hide()
+
         widget.Update(button)
     end
 end
@@ -78,6 +81,7 @@ local function Update(button)
     end
     if not shieldBar.showOverShield or shieldBar.currentPoint ~= "healthBar" then
         shieldBar.overShieldGlow:Hide()
+        shieldBar.overShieldGlowReverse:Hide()
     end
 
     -- Preview
@@ -149,9 +153,14 @@ local function ShieldBar_SetValue(bar, percent, unit)
         end
 
         if bar.showOverShield and ratio == 0 then
-            bar.overShieldGlow:Show()
+            if bar.reverseFill then
+                bar.overShieldGlowReverse:Show()
+            else
+                bar.overShieldGlow:Show()
+            end
         else
             bar.overShieldGlow:Hide()
+            bar.overShieldGlowReverse:Hide()
         end
     end
 
@@ -165,7 +174,7 @@ end
 ---@param bar ShieldBarWidget
 ---@param anchorPoint string?
 local function Repoint(bar, anchorPoint)
-    local point = anchorPoint or bar.currentPoint
+    local point = anchorPoint or bar.currentPoint --[[@as FramePoint]]
     if bar.currentAnchorPoint == point then return end
     bar.currentAnchorPoint = point
 
@@ -190,6 +199,12 @@ local function Repoint(bar, anchorPoint)
             bar.overShieldGlow:SetPoint("BOTTOMRIGHT")
             F:RotateTexture(bar.overShieldGlow, 0)
             bar.overShieldGlow:SetWidth(4)
+
+            bar.overShieldGlowReverse:ClearAllPoints()
+            bar.overShieldGlowReverse:SetPoint("TOPLEFT")
+            bar.overShieldGlowReverse:SetPoint("BOTTOMLEFT")
+            F:RotateTexture(bar.overShieldGlowReverse, 0)
+            bar.overShieldGlowReverse:SetWidth(4)
         else
             bar:SetPoint("LEFT", bar.parentHealthBarLoss, "LEFT", 0, 0)
             bar:SetPoint("RIGHT", bar.parentHealthBarLoss, "RIGHT", 0, 0)
@@ -200,6 +215,12 @@ local function Repoint(bar, anchorPoint)
             bar.overShieldGlow:SetPoint("TOPRIGHT")
             F:RotateTexture(bar.overShieldGlow, 90)
             bar.overShieldGlow:SetHeight(4)
+
+            bar.overShieldGlowReverse:ClearAllPoints()
+            bar.overShieldGlowReverse:SetPoint("BOTTOMLEFT")
+            bar.overShieldGlowReverse:SetPoint("BOTTOMRIGHT")
+            F:RotateTexture(bar.overShieldGlowReverse, 90)
+            bar.overShieldGlowReverse:SetHeight(4)
         end
     end
 end
@@ -238,6 +259,11 @@ function W:CreateShieldBar(button)
     overShieldGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
     overShieldGlow:Hide()
     shieldBar.overShieldGlow = overShieldGlow
+
+    local overShieldGlowReverse = shieldBar:CreateTexture(nil, "ARTWORK", nil, -4)
+    overShieldGlowReverse:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overShieldGlowReverse:Hide()
+    shieldBar.overShieldGlowReverse = overShieldGlowReverse
 
     function shieldBar:UpdateStyle()
         local colors = DB.GetColors().shieldBar

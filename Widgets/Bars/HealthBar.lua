@@ -11,6 +11,10 @@ local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
 
+local Util = CUF.Util
+local const = CUF.constants
+local DB = CUF.DB
+
 --! AI followers, wrong value returned by UnitClassBase
 local UnitClassBase = function(unit)
     return select(2, UnitClass(unit))
@@ -41,13 +45,7 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
 
     local barR, barG, barB
     local lossR, lossG, lossB
-    local barA, lossA = 1, 1
     local healthPct = button.states.healthPercent or UnitHealth(unit) / UnitHealthMax(unit)
-
-    if Cell.loaded then
-        barA = CellDB["appearance"]["barAlpha"]
-        lossA = CellDB["appearance"]["lossAlpha"]
-    end
 
     -- TODO: Revist this
     -- In general this entire widget should be improved
@@ -61,6 +59,7 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
         end
     end
 
+    local barA, lossA = healthBar.barA, healthBar.lossA
     if not UnitIsConnected(unit) then
         barR, barG, barB = 0.4, 0.4, 0.4
         lossR, lossG, lossB = 0.4, 0.4, 0.4
@@ -68,10 +67,10 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
         barR, barG, barB, barA = 0.5, 0, 1, 1
         lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
     elseif button.states.inVehicle then
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
+        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.colorType, healthPct,
             deadOrGhost, 0, 1, 0.2)
     else
-        barR, barG, barB, lossR, lossG, lossB = F:GetHealthBarColor(healthPct,
+        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.colorType, healthPct,
             deadOrGhost, CUF.Util:GetUnitClassColor(button.states.unit))
     end
 
@@ -204,8 +203,18 @@ end
 
 ---@param self HealthBarWidget
 local function UpdateColorOptions(self)
-    self.swapHostileColors = CUF.DB.GetColors().reaction.swapHostileHealthAndLossColors
-    self.useDeathColor = CellDB["appearance"]["deathColor"][1]
+    local colors = DB.GetColors()
+    self.swapHostileColors = colors.reaction.swapHostileHealthAndLossColors
+
+    if self._owner.colorType == const.UnitButtonColorType.CELL then
+        self.barA = CellDB["appearance"]["barAlpha"]
+        self.lossA = CellDB["appearance"]["lossAlpha"]
+        self.useDeathColor = CellDB["appearance"]["deathColor"][1]
+    else
+        self.barA = colors.unitFrames.barAlpha
+        self.lossA = colors.unitFrames.lossAlpha
+        self.useDeathColor = colors.unitFrames.useDeathColor
+    end
 end
 
 -------------------------------------------------
@@ -219,6 +228,8 @@ function W:CreateHealthBar(button)
     button.widgets.healthBar = healthBar
     healthBar._owner = button
     healthBar.enabled = true
+    healthBar.barA = 1
+    healthBar.lossA = 1
 
     healthBar.swapHostileColors = false
     healthBar.useDeathColor = false

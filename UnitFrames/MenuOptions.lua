@@ -80,6 +80,8 @@ local function AddLoadPageDB(unitPage)
             unitPage.alwaysUpdateCB:SetChecked(pageDB.alwaysUpdate)
         end
 
+        unitPage.colorTypeDropdown:SetSelectedValue(pageDB.colorType)
+
         unitPage.enabledCB:SetChecked(pageDB.enabled)
     end
     CUF:RegisterCallback("LoadPageDB", "Units_" .. unitPage.id .. "_LoadPageDB", LoadPageDB)
@@ -279,6 +281,50 @@ local function AddUnitsToMenu()
                         unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.powerFilterCB, 0, -30)
                     end
                 end
+
+                -- TODO: Tooltip and Locale
+                ---@type CellDropdown
+                unitPage.colorTypeDropdown = Cell:CreateDropdown(unitPage.frame, 141)
+                unitPage.colorTypeDropdown:SetPoint("TOPLEFT", unitPage.heightSlider, 0, -55)
+                unitPage.colorTypeDropdown:SetLabel(L["Health Bar Color"])
+                unitPage.colorTypeDropdown:SetItems({
+                    {
+                        ["text"] = L["Cell"],
+                        ["value"] = CUF.constants.UnitButtonColorType.CELL,
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].colorType = CUF.constants.UnitButtonColorType.CELL
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "colorType", unit)
+                        end,
+                    },
+                    {
+                        ["text"] = L["Class Color"],
+                        ["value"] = CUF.constants.UnitButtonColorType.CLASS_COLOR,
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].colorType = CUF.constants.UnitButtonColorType.CLASS_COLOR
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "colorType", unit)
+                        end,
+                    },
+                    {
+                        ["text"] = L["Class Color (dark)"],
+                        ["value"] = CUF.constants.UnitButtonColorType.CLASS_COLOR_DARK,
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].colorType = CUF.constants.UnitButtonColorType
+                                .CLASS_COLOR_DARK
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "colorType", unit)
+                        end,
+                    },
+                    {
+                        ["text"] = L["Custom Color"],
+                        ["value"] = CUF.constants.UnitButtonColorType.CUSTOM,
+                        ["onClick"] = function()
+                            CUF.DB.SelectedLayoutTable()[unit].colorType = CUF.constants.UnitButtonColorType.CUSTOM
+                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "colorType", unit)
+                        end,
+                    },
+                })
+
+                CUF:SetTooltips(unitPage.colorTypeDropdown, "ANCHOR_TOPLEFT", 0, 3, L["Health Bar Color"],
+                    L.ColorTypeTooltip)
 
                 AddLoadPageDB(unitPage)
                 return unitPage

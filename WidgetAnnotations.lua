@@ -268,6 +268,7 @@
 ---@field border BorderOpt
 ---@field icon CastBarIconOpt
 ---@field useClassColor boolean
+---@field onlyShowInterrupt boolean
 
 ---@class CastBarSparkOpt
 ---@field enabled boolean

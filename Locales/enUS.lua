@@ -123,6 +123,8 @@ L.Zoom = "Zoom"
 L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
 L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"
 
+L.OnlyShowInterruptableCast = "Only show interruptable casts"
+
 -- Name Format
 L.NameFormats = "Name Formats"
 

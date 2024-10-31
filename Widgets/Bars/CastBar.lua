@@ -81,6 +81,9 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SPELL_WIDTH then
         castBar.spellText.width = styleTable.spellWidth
     end
+    if not setting or setting == const.OPTION_KIND.ONLY_SHOW_INTERRUPT then
+        castBar.onlyShowInterrupt = styleTable.onlyShowInterrupt
+    end
 
     castBar.Update(button)
 end
@@ -214,7 +217,7 @@ function CastStart(button, event, unit, castGUID)
         event = (numStages and numStages > 0) and "UNIT_SPELLCAST_EMPOWER_START" or "UNIT_SPELLCAST_CHANNEL_START"
     end
 
-    if not name then
+    if (not name) or (castBar.onlyShowInterrupt and notInterruptible) then
         castBar:ResetAttributes()
         castBar:Hide()
 
@@ -278,11 +281,18 @@ function CastUpdate(button, event, unit, castID, spellID)
         return
     end
 
-    local name, startTime, endTime, _
+    local name, startTime, endTime, _, notInterruptible
     if (event == "UNIT_SPELLCAST_DELAYED") then
-        name, _, _, startTime, endTime = UnitCastingInfo(unit)
+        name, _, _, startTime, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
     else
-        name, _, _, startTime, endTime = UnitChannelInfo(unit)
+        name, _, _, startTime, endTime, _, notInterruptible = UnitChannelInfo(unit)
+    end
+
+    if castBar.onlyShowInterrupt and notInterruptible then
+        castBar:ResetAttributes()
+        castBar:Hide()
+
+        return
     end
 
     if (not name) then return end
@@ -843,6 +853,7 @@ function W:CreateCastBar(button)
     castBar.interruptibleColor = { 1, 1, 0, 0.25 }
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
     castBar.useClassColor = false
+    castBar.onlyShowInterrupt = false
 
     -- Number of stages in current empower
     castBar.NumStages = 0

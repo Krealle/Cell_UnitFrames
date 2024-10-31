@@ -67,10 +67,12 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
         barR, barG, barB, barA = 0.5, 0, 1, 1
         lossR, lossG, lossB, lossA = barR * 0.2, barG * 0.2, barB * 0.2, 1
     elseif button.states.inVehicle then
-        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.colorType, healthPct,
+        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.healthBarColorType,
+            button.healthLossColorType, healthPct,
             deadOrGhost, 0, 1, 0.2)
     else
-        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.colorType, healthPct,
+        barR, barG, barB, lossR, lossG, lossB = Util:GetHealthBarColor(button.healthBarColorType,
+            button.healthLossColorType, healthPct,
             deadOrGhost, CUF.Util:GetUnitClassColor(button.states.unit))
     end
 
@@ -206,7 +208,7 @@ local function UpdateColorOptions(self)
     local colors = DB.GetColors()
     self.swapHostileColors = colors.reaction.swapHostileHealthAndLossColors
 
-    if self._owner.colorType == const.UnitButtonColorType.CELL then
+    if self._owner.healthBarColorType == const.UnitButtonColorType.CELL then
         self.barA = CellDB["appearance"]["barAlpha"]
         self.lossA = CellDB["appearance"]["lossAlpha"]
         self.useDeathColor = CellDB["appearance"]["deathColor"][1]

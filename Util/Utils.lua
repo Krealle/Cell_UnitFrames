@@ -541,7 +541,8 @@ function Util:ButtonIsMirrored(unit)
     return DB.CurrentLayoutTable()[unit].mirrorPlayer
 end
 
----@param colorType UnitButtonColorType
+---@param healthBarColorType UnitButtonColorType
+---@param healthLossColorType UnitButtonColorType
 ---@param percent number
 ---@param isDeadOrGhost boolean
 ---@param r number
@@ -553,8 +554,8 @@ end
 ---@return number lossR
 ---@return number lossG
 ---@return number lossB
-function Util:GetHealthBarColor(colorType, percent, isDeadOrGhost, r, g, b)
-    if colorType == const.UnitButtonColorType.CELL then
+function Util:GetHealthBarColor(healthBarColorType, healthLossColorType, percent, isDeadOrGhost, r, g, b)
+    if healthBarColorType == const.UnitButtonColorType.CELL then
         return F:GetHealthBarColor(percent, isDeadOrGhost, r, g, b)
     end
 
@@ -567,9 +568,9 @@ function Util:GetHealthBarColor(colorType, percent, isDeadOrGhost, r, g, b)
     if percent == 1 and colors.useFullColor then
         barR, barG, barB = unpack(colors.fullColor)
     else
-        if colorType == const.UnitButtonColorType.CLASS_COLOR then
+        if healthBarColorType == const.UnitButtonColorType.CLASS_COLOR then
             barR, barG, barB = r, g, b
-        elseif colorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
+        elseif healthBarColorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
             barR, barG, barB = r * 0.2, g * 0.2, b * 0.2
         else
             barR, barG, barB = unpack(colors.barColor)
@@ -578,11 +579,11 @@ function Util:GetHealthBarColor(colorType, percent, isDeadOrGhost, r, g, b)
 
     -- loss
     if isDeadOrGhost and colors.useDeathColor then
-        barR, barG, barB = unpack(colors.deathColor)
+        lossR, lossG, lossB = unpack(colors.deathColor)
     else
-        if colorType == const.UnitButtonColorType.CLASS_COLOR then
+        if healthLossColorType == const.UnitButtonColorType.CLASS_COLOR then
             lossR, lossG, lossB = r, g, b
-        elseif colorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
+        elseif healthLossColorType == const.UnitButtonColorType.CLASS_COLOR_DARK then
             lossR, lossG, lossB = r * 0.2, g * 0.2, b * 0.2
         else
             lossR, lossG, lossB = unpack(colors.lossColor)

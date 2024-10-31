@@ -600,7 +600,8 @@ function CUFUnitButton_OnLoad(button)
     button.states = {}
 
     button.__widgetsInit = false
-    button.colorType = const.UnitButtonColorType.CELL
+    button.healthBarColorType = const.UnitButtonColorType.CELL
+    button.healthLossColorType = const.UnitButtonColorType.CELL
 
     -- ping system
     Mixin(button, PingableType_UnitFrameMixin)

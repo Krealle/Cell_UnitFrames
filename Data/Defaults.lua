@@ -817,7 +817,8 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field spacing number?
 ---@field growthDirection GrowthOrientation?
 ---@field alwaysUpdate boolean?
----@field colorType UnitButtonColorType
+---@field healthBarColorType UnitButtonColorType
+---@field healthLossColorType UnitButtonColorType
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -832,7 +833,8 @@ Defaults.Layouts = {
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
     target = {
         enabled = false,
@@ -863,7 +865,8 @@ Defaults.Layouts = {
         mirrorPlayer = false,
         barOrientation = "horizontal",
         powerFilter = false,
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
     focus = {
         enabled = false,
@@ -901,7 +904,8 @@ Defaults.Layouts = {
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
     targettarget = {
         enabled = false,
@@ -929,7 +933,8 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         powerFilter = false,
         alwaysUpdate = true,
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
     pet = {
         enabled = false,
@@ -963,7 +968,8 @@ Defaults.Layouts = {
         },
         barOrientation = "horizontal",
         powerFilter = false,
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
     boss = {
         enabled = false,
@@ -988,7 +994,8 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets_Boss.castBar,
             fader = Defaults.Widgets.fader
         },
-        colorType = CUF.constants.UnitButtonColorType.CELL,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     }
 }
 

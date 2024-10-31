@@ -143,7 +143,8 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     end
 
     if not kind or kind == "colorType" then
-        button.colorType = layout[unit].colorType
+        button.healthBarColorType = layout[unit].healthBarColorType
+        button.healthLossColorType = layout[unit].healthLossColorType
         U:UnitFrame_UpdateHealthColor(button, true)
     end
 end
@@ -268,7 +269,7 @@ local function UpdateAppearance(kind)
         Util:IterateAllUnitButtons(function(button)
             U:UnitFrame_UpdateHealthColor(button, true)
             button.widgets.powerBar.UpdatePowerType(button)
-            if button.colorType == const.UnitButtonColorType.CELL then
+            if button.healthBarColorType == const.UnitButtonColorType.CELL then
                 button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
             else
                 button:SetBackdropColor(0, 0, 0, DB.GetColors().unitFrames.backgroundAlpha)

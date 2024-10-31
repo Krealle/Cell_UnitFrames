@@ -356,10 +356,11 @@ local function UnitFrame_RegisterEvents(self)
             end
         end, true)
     end
-    if self._baseUnit == const.UNIT.BOSS then
-        -- Blizzard updates Boss Frames on these event, so we do the same
+
+    if self._baseUnit ~= const.UNIT.PLAYER then
         self:AddEventListener("INSTANCE_ENCOUNTER_ENGAGE_UNIT", UnitFrame_UpdateAll, true)
         self:AddEventListener("UNIT_TARGETABLE_CHANGED", UnitFrame_UpdateAll)
+        self:AddEventListener("UNIT_FACTION", UnitFrame_UpdateAll)
     end
 
     local success, result = pcall(UnitFrame_UpdateAll, self)

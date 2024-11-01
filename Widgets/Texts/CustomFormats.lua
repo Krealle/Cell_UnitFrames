@@ -57,12 +57,12 @@ end
 
 -- Formats a percent value with decimals
 --
--- Returns an empty string if cur is 0 or nil
+-- Returns an nil if cur is 0 or nil
 ---@param max number
 ---@param cur number
----@return string
+---@return string?
 local function FormatPercentNoZeroes(max, cur)
-    if not cur or cur == 0 then return "" end
+    if not cur or cur == 0 then return end
 
     return string.format("%.2f%%", (cur / max * 100))
 end
@@ -79,12 +79,12 @@ end
 
 -- Formats a percent value without decimals
 --
--- Returns an empty string if cur is 0 or nil
+-- Returns an nil if cur is 0 or nil
 ---@param max number
 ---@param cur number
----@return string
+---@return string?
 local function FormatPercentShortNoZeroes(max, cur)
-    if not cur or cur == 0 then return "" end
+    if not cur or cur == 0 then return end
 
     return string.format("%d%%", (cur / max * 100))
 end
@@ -98,11 +98,11 @@ end
 
 -- Format a number using tostring
 --
--- Returns an empty string if the number is 0
+-- Returns nil if the number is 0 or nil
 ---@param num number
----@return string
+---@return string?
 local function FormatNumberNoZeroes(num)
-    if not num or num == 0 then return "" end
+    if not num or num == 0 then return end
     return FormatNumber(num)
 end
 
@@ -119,9 +119,11 @@ end
 --
 -- eg. 12.3k, 12.3M or 12.3B
 --
--- Returns an empty string if the number is 0 or nil
+-- Returns nil if the number is 0 or nil
+---@param num number
+---@return string?
 local function FormatNumberShortNoZeroes(num)
-    if not num or num == 0 then return "" end
+    if not num or num == 0 then return end
     return FormatNumberShort(num)
 end
 
@@ -129,11 +131,11 @@ end
 --
 -- Will return the first format if the second is empty
 ---@param format1 string
----@param format2 string
+---@param format2 string?
 ---@param seperator? string Default: "+"
 ---@return string
 local function CombineFormats(format1, format2, seperator)
-    if format2 == "" then return format1 end
+    if not format2 then return format1 end
 
     return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
 end
@@ -438,7 +440,7 @@ end, "Health", "-20%")
 
 -- MARK: Absorbs
 W:AddTag("abs", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumber(UnitGetTotalAbsorbs(unit))
+    return FormatNumberNoZeroes(UnitGetTotalAbsorbs(unit))
 end, "Health", "25000")
 W:AddTag("abs:short", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumberShortNoZeroes(UnitGetTotalAbsorbs(unit))
@@ -504,7 +506,7 @@ end, "Health", "90%")
 
 -- MARK: Heal Absorbs
 W:AddTag("healabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumber(UnitGetTotalHealAbsorbs(unit))
+    return FormatNumberNoZeroes(UnitGetTotalHealAbsorbs(unit))
 end, "Health", "20000")
 W:AddTag("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     return FormatNumberShortNoZeroes(UnitGetTotalHealAbsorbs(unit))

@@ -76,13 +76,13 @@ function ImportExport:CreateImportExportFrame(which, importFn, exportFn, verifyF
     -- close
     local closeBtn = Cell:CreateButton(importExportFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
-    closeBtn:SetPoint("TOPRIGHT", P:Scale(-5), P:Scale(-1))
+    closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() importExportFrame:Hide() end)
 
     -- import
     local importBtn = Cell:CreateButton(importExportFrame, L["Import"], "green", { 57, 18 })
     importBtn:Hide()
-    importBtn:SetPoint("TOPRIGHT", closeBtn, "TOPLEFT", P:Scale(1), 0)
+    importBtn:SetPoint("TOPRIGHT", closeBtn, "TOPLEFT", 1, 0)
     importBtn:SetScript("OnClick", function()
         -- lower frame level
         importExportFrame:SetFrameLevel(Menu.window:GetFrameLevel() + 20)
@@ -144,8 +144,8 @@ function ImportExport:CreateImportExportFrame(which, importFn, exportFn, verifyF
         end
     end)
     Cell:StylizeFrame(textArea.scrollFrame, { 0, 0, 0, 0 }, Cell:GetAccentColorTable())
-    textArea:SetPoint("TOPLEFT", P:Scale(5), P:Scale(-20))
-    textArea:SetPoint("BOTTOMRIGHT", P:Scale(-5), P:Scale(5))
+    textArea:SetPoint("TOPLEFT", 5, -20)
+    textArea:SetPoint("BOTTOMRIGHT", -5, 5)
 
     -- highlight text
     textArea.eb:SetScript("OnEditFocusGained", function() textArea.eb:HighlightText() end)

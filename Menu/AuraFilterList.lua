@@ -431,7 +431,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.closeBtn:SetScript("OnClick", function() auraImportExportFrame:Hide() end)
 
         auraImportExportFrame.importBtn = Cell:CreateButton(auraImportExportFrame, L["Import"], "green", { 57, 18 })
-        auraImportExportFrame.importBtn:SetPoint("TOPRIGHT", auraImportExportFrame.closeBtn, "TOPLEFT", P:Scale(1), 0)
+        auraImportExportFrame.importBtn:SetPoint("TOPRIGHT", auraImportExportFrame.closeBtn, "TOPLEFT", 1, 0)
         auraImportExportFrame.importBtn:SetScript("OnClick", function(self)
             local curIds = {}
 

@@ -113,7 +113,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
             width, height = unpack(layout[unit].size)
         end
 
-        P:Size(button, width, height)
+        button:SetSize(width, height)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
@@ -215,29 +215,29 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
     if orientation == "horizontal" then
         -- update healthBarLoss
-        P:ClearPoints(healthBarLoss)
-        P:Point(healthBarLoss, "TOPRIGHT", healthBar)
-        P:Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        healthBarLoss:ClearAllPoints()
+        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
+        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
         -- update powerBarLoss
-        P:ClearPoints(powerBarLoss)
-        P:Point(powerBarLoss, "TOPRIGHT", powerBar)
-        P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        powerBarLoss:ClearAllPoints()
+        powerBarLoss:SetPoint("TOPRIGHT", powerBar)
+        powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
     else -- vertical / vertical_health
-        P:ClearPoints(healthBarLoss)
-        P:Point(healthBarLoss, "TOPRIGHT", healthBar)
-        P:Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+        healthBarLoss:ClearAllPoints()
+        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
+        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
 
         if orientation == "vertical" then
             -- update powerBarLoss
-            P:ClearPoints(powerBarLoss)
-            P:Point(powerBarLoss, "TOPRIGHT", powerBar)
-            P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
+            powerBarLoss:ClearAllPoints()
+            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
+            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
         else -- vertical_health
             -- update powerBarLoss
-            P:ClearPoints(powerBarLoss)
-            P:Point(powerBarLoss, "TOPRIGHT", powerBar)
-            P:Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+            powerBarLoss:ClearAllPoints()
+            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
+            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
         end
     end
 

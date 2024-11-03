@@ -37,7 +37,7 @@ local function CreatePositioningPopup()
 
     local closeBtn = Cell:CreateButton(positioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
-    closeBtn:SetPoint("TOPRIGHT", P:Scale(-5), P:Scale(-1))
+    closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() positioningPopup:Hide() end)
 
     local title = positioningPopup:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS")
@@ -475,7 +475,7 @@ local function CreateCellEditModePopup()
 
     local closeBtn = Cell:CreateButton(cellPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
-    closeBtn:SetPoint("TOPRIGHT", P:Scale(-5), P:Scale(-1))
+    closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() cellPopup:Hide() end)
 
     local title = cellPopup:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS")

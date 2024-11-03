@@ -62,8 +62,8 @@ end
 ---@param styleTable WidgetTable
 local function Icons_SetPosition(self, styleTable)
     local position = styleTable.position
-    P:ClearPoints(self)
-    P:Point(self, position.point, self:GetParent(), position.relativePoint, position.offsetX, position.offsetY)
+    self:ClearAllPoints()
+    self:SetPoint(position.point, self:GetParent(), position.relativePoint, position.offsetX, position.offsetY)
 end
 
 ---@param icons CellAuraIcons

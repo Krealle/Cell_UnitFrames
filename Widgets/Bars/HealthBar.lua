@@ -238,8 +238,8 @@ function W:CreateHealthBar(button)
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
     healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
-    healthBar:SetPoint("TOPLEFT", button, "TOPLEFT", P:Scale(1), P:Scale(-1))
-    healthBar:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", P:Scale(-1), P:Scale(1))
+    healthBar:SetPoint("TOPLEFT", button, "TOPLEFT", 1, -1)
+    healthBar:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
 
     -- smooth
     Mixin(healthBar, SmoothStatusBarMixin)

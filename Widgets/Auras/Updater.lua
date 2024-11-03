@@ -29,7 +29,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         auras:SetOrientation(styleTable.orientation)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SIZE then
-        P:Size(auras, styleTable.size.width, styleTable.size.height)
+        auras:SetSize(styleTable.size.width, styleTable.size.height)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SHOW_DURATION then
         auras:ShowDuration(styleTable.showDuration)

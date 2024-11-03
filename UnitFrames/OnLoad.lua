@@ -617,14 +617,15 @@ function CUFUnitButton_OnLoad(button)
     end
 
     -- backdrop
-    button:SetBackdrop({
-        bgFile = Cell.vars.whiteTexture,
-        edgeFile = Cell.vars.whiteTexture,
-        edgeSize = P:Scale(
-            CELL_BORDER_SIZE)
-    })
-    button:SetBackdropColor(0, 0, 0, 1)
-    button:SetBackdropBorderColor(unpack(CELL_BORDER_COLOR))
+    if CELL_BORDER_SIZE > 0 then
+        button:SetBackdrop({
+            bgFile = Cell.vars.whiteTexture,
+            edgeFile = Cell.vars.whiteTexture,
+            edgeSize = CELL_BORDER_SIZE
+        })
+        button:SetBackdropColor(0, 0, 0, 1)
+        button:SetBackdropBorderColor(unpack(CELL_BORDER_COLOR))
+    end
 
     -- Widgets
     W:CreateHealthBar(button)

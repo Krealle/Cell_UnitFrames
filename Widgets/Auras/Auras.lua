@@ -4,13 +4,13 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 local I = Cell.iFuncs
-local P = Cell.pixelPerfectFuncs
 
 local const = CUF.constants
 local Handler = CUF.Handler
 local menu = CUF.Menu
 local Builder = CUF.Builder
 local Util = CUF.Util
+local P = CUF.PixelPerfect
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -62,8 +62,8 @@ end
 ---@param styleTable WidgetTable
 local function Icons_SetPosition(self, styleTable)
     local position = styleTable.position
-    self:ClearAllPoints()
-    self:SetPoint(position.point, self:GetParent(), position.relativePoint, position.offsetX, position.offsetY)
+    P.ClearPoints(self)
+    P.Point(self, position.point, self:GetParent(), position.relativePoint, position.offsetX, position.offsetY)
 end
 
 ---@param icons CellAuraIcons

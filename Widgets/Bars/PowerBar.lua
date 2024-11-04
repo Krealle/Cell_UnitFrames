@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 ---@type LibGroupInfo
 local LGI = LibStub:GetLibrary("LibGroupInfo")
 
@@ -11,6 +10,7 @@ local LGI = LibStub:GetLibrary("LibGroupInfo")
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+local P = CUF.PixelPerfect
 
 -------------------------------------------------
 -- MARK: Layout Update PowerBar
@@ -100,18 +100,21 @@ local function ShowPowerBar(self)
     powerBar:Show()
     self.widgets.powerBarLoss:Show()
 
-    healthBar:ClearAllPoints()
-    powerBar:ClearAllPoints()
+    P.ClearPoints(healthBar)
+    P.ClearPoints(powerBar)
     if self.orientation == "horizontal" or self.orientation == "vertical_health" then
-        healthBar:SetPoint("TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        healthBar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, self.powerSize + CELL_BORDER_SIZE * 2)
-        powerBar:SetPoint("TOPLEFT", healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
-        powerBar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+        P.Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P.Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
+            self.powerSize + CELL_BORDER_SIZE * 2)
+        P.Point(powerBar, "TOPLEFT", healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
+        P.Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
     else
-        healthBar:SetPoint("TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        healthBar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -(self.powerSize + CELL_BORDER_SIZE * 2), CELL_BORDER_SIZE)
-        powerBar:SetPoint("TOPLEFT", healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
-        powerBar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+        P.Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P.Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT",
+            -(self.powerSize + CELL_BORDER_SIZE * 2),
+            CELL_BORDER_SIZE)
+        P.Point(powerBar, "TOPLEFT", healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
+        P.Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
     end
 
     if self:IsVisible() then
@@ -127,9 +130,9 @@ local function HidePowerBar(self)
     self.widgets.powerBar:Hide()
     self.widgets.powerBarLoss:Hide()
 
-    self.widgets.healthBar:ClearAllPoints()
-    self.widgets.healthBar:SetPoint("TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-    self.widgets.healthBar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
+    P.ClearPoints(self.widgets.healthBar)
+    P.Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+    P.Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
 end
 
 -------------------------------------------------
@@ -233,8 +236,8 @@ function W:CreatePowerBar(button)
     powerBar._owner = button
     powerBar.enabled = true
 
-    powerBar:SetPoint("TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
-    powerBar:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+    P.Point(powerBar, "TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
+    P.Point(powerBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
 
     powerBar:SetStatusBarTexture(Cell.vars.texture)
     powerBar:GetStatusBarTexture():SetDrawLayer("ARTWORK", -7)

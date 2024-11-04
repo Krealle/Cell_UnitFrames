@@ -79,12 +79,12 @@ function PixelPerfect.GetPositionRelativeToScreenCenter(frame)
     local normX = math.floor(PixelPerfect.GetNearestPixelSize(frameX))
     local normY = math.floor(PixelPerfect.GetNearestPixelSize(frameY))
 
-    local uiCenterX, uiCenterY = UIParent:GetCenter()
+    local physicalScreenWidth, physicalScreenHeight = GetPhysicalScreenSize()
 
     local scale = PixelPerfect.Scale(1)
 
-    local relativeX = normX - (uiCenterX * scale)
-    local relativeY = normY - (uiCenterY * scale)
+    local relativeX = normX - ((physicalScreenWidth / 2) * scale)
+    local relativeY = normY - ((physicalScreenHeight / 2) * scale)
 
     return relativeX, relativeY
 end

@@ -215,29 +215,29 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
     if orientation == "horizontal" then
         -- update healthBarLoss
-        healthBarLoss:ClearAllPoints()
-        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
-        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        P.ClearPoints(healthBarLoss)
+        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
         -- update powerBarLoss
-        powerBarLoss:ClearAllPoints()
-        powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-        powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        P.ClearPoints(powerBarLoss)
+        P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+        P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
     else -- vertical / vertical_health
-        healthBarLoss:ClearAllPoints()
-        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
-        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+        P.ClearPoints(healthBarLoss)
+        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
 
         if orientation == "vertical" then
             -- update powerBarLoss
-            powerBarLoss:ClearAllPoints()
-            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
+            P.ClearPoints(powerBarLoss)
+            P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
         else -- vertical_health
             -- update powerBarLoss
-            powerBarLoss:ClearAllPoints()
-            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+            P.ClearPoints(powerBarLoss)
+            P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
         end
     end
 

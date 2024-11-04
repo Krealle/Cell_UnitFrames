@@ -38,6 +38,7 @@ CUF.PixelPerfect = {}
 ---@field selectedSubTab string
 ---@field inEditMode boolean
 ---@field customPositioning boolean
+---@field useScaling boolean
 CUF.vars = {}
 
 ---@class CUF.unitButtons

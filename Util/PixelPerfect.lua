@@ -7,6 +7,42 @@ local P = Cell.pixelPerfectFuncs
 ---@class CUF.PixelPerfect
 local PixelPerfect = CUF.PixelPerfect
 
+--- Debug
+
+---@return string
+function PixelPerfect.DebugInfo()
+    local physicalScreenWidth, physicalScreenHeight = GetPhysicalScreenSize()
+    local UIParentWidth, UIParentHeight = UIParent:GetSize()
+    local UIParentScale = UIParent:GetEffectiveScale()
+
+    local CellScale = CellDB["appearance"]["scale"] or -1
+
+    local info = string.format(
+        [[Screen size: %d x %d
+    UIParent size: %d x %d
+    UIParent effective scale: %.6f
+    GetPixelScale: %.6f
+    Cell.Scale: %.3f
+    Cell.GetPixelPerfectScale: %.6f | Cell.GetEffectiveScale: %.6f
+    Cell.Scale(1): %.3f
+    Cell.Scale(0.1): %.3f
+    Cell.Scale(220): %.3f
+        ]],
+        physicalScreenWidth, physicalScreenHeight,
+        UIParentWidth, UIParentHeight,
+        UIParentScale,
+        PixelPerfect.GetPixelScale(),
+        CellScale,
+        P:GetPixelPerfectScale(),
+        P:GetEffectiveScale(),
+        P:Scale(1),
+        P:Scale(0.1),
+        P:Scale(220)
+    )
+
+    return info
+end
+
 ---@return number
 function PixelPerfect.GetPixelScale()
     local width, height = GetPhysicalScreenSize()

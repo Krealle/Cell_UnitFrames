@@ -2,6 +2,7 @@
 local CUF = select(2, ...)
 
 local Debug = CUF.Debug
+local P = CUF.PixelPerfect
 
 SLASH_CUF1 = "/cuf"
 function SlashCmdList.CUF(msg, editbox)
@@ -28,6 +29,8 @@ function SlashCmdList.CUF(msg, editbox)
         CUF:Print("All Help Tips have been reset, reload to see them again")
     elseif command == "tags" then
         CUF.widgets:ShowTooltipFrame()
+    elseif command == "pixel" then
+        CUF:Print(CUF.PixelPerfect.DebugInfo())
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..

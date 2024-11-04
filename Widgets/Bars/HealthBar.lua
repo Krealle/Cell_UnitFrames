@@ -3,8 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
-local B = Cell.bFuncs
+local P = CUF.PixelPerfect
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -238,16 +237,16 @@ function W:CreateHealthBar(button)
 
     healthBar:SetStatusBarTexture(Cell.vars.texture)
     healthBar:SetFrameLevel(button:GetFrameLevel() + 1)
-    healthBar:SetPoint("TOPLEFT", button, "TOPLEFT", 1, -1)
-    healthBar:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+    P.Point(healthBar, "TOPLEFT", button, "TOPLEFT", 1, -1)
+    P.Point(healthBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
 
     -- smooth
     Mixin(healthBar, SmoothStatusBarMixin)
 
     local healthBarLoss = healthBar:CreateTexture(button:GetName() .. "_HealthBarLoss", "ARTWORK", nil, -7)
     button.widgets.healthBarLoss = healthBarLoss
-    healthBarLoss:SetPoint("TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
-    healthBarLoss:SetPoint("BOTTOMRIGHT")
+    P.Point(healthBarLoss, "TOPLEFT", healthBar:GetStatusBarTexture(), "TOPRIGHT")
+    P.Point(healthBarLoss, "BOTTOMRIGHT")
     healthBarLoss:SetTexture(Cell.vars.texture)
 
     healthBar.Update = Update

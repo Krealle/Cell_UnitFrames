@@ -3,8 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
-local A = Cell.animations
+local P = CUF.PixelPerfect
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
@@ -621,7 +620,7 @@ function CUFUnitButton_OnLoad(button)
         button:SetBackdrop({
             bgFile = Cell.vars.whiteTexture,
             edgeFile = Cell.vars.whiteTexture,
-            edgeSize = CELL_BORDER_SIZE
+            edgeSize = P.Scale(CELL_BORDER_SIZE)
         })
         button:SetBackdropColor(0, 0, 0, 1)
         button:SetBackdropBorderColor(unpack(CELL_BORDER_COLOR))

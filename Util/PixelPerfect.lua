@@ -14,13 +14,17 @@ function PixelPerfect.DebugInfo()
     local physicalScreenWidth, physicalScreenHeight = GetPhysicalScreenSize()
     local UIParentWidth, UIParentHeight = UIParent:GetSize()
     local UIParentScale = UIParent:GetEffectiveScale()
+    local UIParentCenterX, UIParentCenterY = UIParent:GetCenter()
+    local relativeScale = 1 / UIParent:GetEffectiveScale()
 
     local CellScale = CellDB["appearance"]["scale"] or -1
 
     local info = string.format(
         [[Screen size: %d x %d
     UIParent size: %d x %d
+    UIParent center: %d x %d
     UIParent effective scale: %.6f
+    Relative scale: %.6f
     GetPixelScale: %.6f
     Cell.Scale: %.3f
     Cell.GetPixelPerfectScale: %.6f | Cell.GetEffectiveScale: %.6f
@@ -30,7 +34,9 @@ function PixelPerfect.DebugInfo()
         ]],
         physicalScreenWidth, physicalScreenHeight,
         UIParentWidth, UIParentHeight,
+        UIParentCenterX, UIParentCenterY,
         UIParentScale,
+        relativeScale,
         PixelPerfect.GetPixelScale(),
         CellScale,
         P:GetPixelPerfectScale(),

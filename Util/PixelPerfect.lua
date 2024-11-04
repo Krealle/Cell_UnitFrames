@@ -37,11 +37,18 @@ end
 ---@param frame Frame
 ---@return number, number
 function PixelPerfect.GetPositionRelativeToScreenCenter(frame)
+    -- Get the center of the frame and normalize the coords
+    -- We need to round the coords to reduce any small pixel discrepancies
     local frameX, frameY = frame:GetCenter()
-    local width, height = GetPhysicalScreenSize()
+    local normX = math.floor(PixelPerfect.GetNearestPixelSize(frameX))
+    local normY = math.floor(PixelPerfect.GetNearestPixelSize(frameY))
 
-    local relativeX = PixelPerfect.GetNearestPixelSize(frameX - (width / 2))
-    local relativeY = PixelPerfect.GetNearestPixelSize(frameY - (height / 2))
+    local uiCenterX, uiCenterY = UIParent:GetCenter()
+
+    local scale = PixelPerfect.Scale(1)
+
+    local relativeX = normX - (uiCenterX * scale)
+    local relativeY = normY - (uiCenterY * scale)
 
     return relativeX, relativeY
 end

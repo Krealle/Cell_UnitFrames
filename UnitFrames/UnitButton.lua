@@ -288,6 +288,14 @@ local function UpdateAppearance(kind)
             end)
         end)
     end
+    if kind == "scale" and CUF.vars.useScaling then
+        -- Full update for everything
+        -- Needs to be delayed
+        C_Timer.After(0.1, function()
+            CUF.PixelPerfect.SetPixelScale(CUF.mainFrame)
+            CUF:Fire("UpdateUnitButtons")
+        end)
+    end
 end
 CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)
 

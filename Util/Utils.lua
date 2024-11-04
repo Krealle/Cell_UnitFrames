@@ -3,6 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
+local P = Cell.pixelPerfectFuncs
 local DB = CUF.DB
 local L = CUF.L
 
@@ -795,45 +796,6 @@ function Util.SetIconZoom(icon, zoomLevel)
     local offset = (1 - scale) / 2
 
     icon:SetTexCoord(offset, offset + scale, offset, offset + scale)
-end
-
--------------------------------------------------
--- MARK: Pixel Perfect
--------------------------------------------------
-
----@return number
-function Util.GetPixelScale()
-    local width, height = GetPhysicalScreenSize()
-    if height then
-        return 768 / height
-    else
-        return 1
-    end
-end
-
----@param frame Frame
-function Util.SetPixelScale(frame)
-    frame:SetScale(Util.GetPixelScale())
-end
-
---- Calculates the nearest pixel size of a number
----@param number number
----@return number
-function Util.GetNearestPixelSize(number)
-    return PixelUtil.GetNearestPixelSize(number, 1)
-end
-
---- Calculates the relative position of a frame to the center of the UIParent
----@param frame Frame
----@return number, number
-function Util.GetPositionRelativeToScreenCenter(frame)
-    local frameX, frameY = frame:GetCenter()
-    local width, height = GetPhysicalScreenSize()
-
-    local relativeX = Util.GetNearestPixelSize(frameX - (width / 2))
-    local relativeY = Util.GetNearestPixelSize(frameY - (height / 2))
-
-    return relativeX, relativeY
 end
 
 -------------------------------------------------

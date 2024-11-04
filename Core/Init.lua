@@ -24,6 +24,8 @@ CUF.Debug = {}
 CUF.Builder = {}
 ---@class CUF.API
 CUF.API = {}
+---@class CUF.PixelPerfect
+CUF.PixelPerfect = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string

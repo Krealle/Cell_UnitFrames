@@ -50,12 +50,12 @@ function U:UpdateUnitButtonPosition(unit, button)
     local layout = CUF.DB.CurrentLayoutTable()
     local unitLayout = layout[unit]
 
-    button:ClearAllPoints()
+    P.ClearPoints(button)
     if unitLayout.anchorToParent then
         local parent = CUF.unitButtons[unitLayout.parent]
         local anchor = unitLayout.anchorPosition --[[@as ParentAnchor]]
 
-        PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+        P.Point(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
     else
         -- Anchor 'child' buttons to 'parent' button
         local unitN = tonumber(string.match(button._unit, "%d+"))
@@ -70,13 +70,13 @@ function U:UpdateUnitButtonPosition(unit, button)
                 local spacing = unitLayout.spacing or 0
 
                 if unitLayout.growthDirection == const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
-                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -spacing)
+                    P.Point(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -spacing)
                 elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
-                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, spacing)
+                    P.Point(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, spacing)
                 elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
-                    PixelUtil.SetPoint(button, "LEFT", parent, "RIGHT", spacing, 0)
+                    P.Point(button, "LEFT", parent, "RIGHT", spacing, 0)
                 else
-                    PixelUtil.SetPoint(button, "RIGHT", parent, "LEFT", -spacing, 0)
+                    P.Point(button, "RIGHT", parent, "LEFT", -spacing, 0)
                 end
 
                 return
@@ -90,7 +90,7 @@ function U:UpdateUnitButtonPosition(unit, button)
             x, y = unpack(unitLayout.position)
         end
 
-        PixelUtil.SetPoint(button, "CENTER", UIParent, "CENTER", x, y)
+        P.Point(button, "CENTER", UIParent, "CENTER", x, y)
     end
 end
 

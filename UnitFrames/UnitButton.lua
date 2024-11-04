@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
@@ -12,6 +11,7 @@ local W = CUF.widgets
 local const = CUF.constants
 local Util = CUF.Util
 local DB = CUF.DB
+local P = CUF.PixelPerfect
 
 local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
 
@@ -113,7 +113,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
             width, height = unpack(layout[unit].size)
         end
 
-        button:SetSize(width, height)
+        P.Size(button, width, height)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize

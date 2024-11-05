@@ -106,9 +106,9 @@ function PixelPerfect.Scale(num)
 end
 
 ---@param frame Frame|Texture
----@param width number
----@param height number
----@overload fun(frame: Frame|Texture, size: number)
+---@param width uiUnit
+---@param height uiUnit
+---@overload fun(frame: Frame|Texture, size: uiUnit)
 function PixelPerfect.Size(frame, width, height)
     if not width then return end
     height = height or width
@@ -121,35 +121,42 @@ function PixelPerfect.Size(frame, width, height)
 end
 
 ---@param frame Frame|Texture
----@param size number
-function PixelPerfect.Width(frame, size)
-    if not size then return end
+---@param width uiUnit
+function PixelPerfect.Width(frame, width)
+    if not width then return end
 
     if CUF.vars.useScaling then
-        CellP:Width(frame, size)
+        CellP:Width(frame, width)
     else
-        frame:SetWidth(size)
+        frame:SetWidth(width)
     end
 end
 
 ---@param frame Frame|Texture
----@param size number
-function PixelPerfect.Height(frame, size)
-    if not size then return end
+---@param height uiUnit
+function PixelPerfect.Height(frame, height)
+    if not height then return end
 
     if CUF.vars.useScaling then
-        CellP:Height(frame, size)
+        CellP:Height(frame, height)
     else
-        frame:SetHeight(size)
+        frame:SetHeight(height)
     end
 end
 
----@param frame Frame|Texture
-function PixelPerfect.Point(frame, ...)
+---@param frame Frame|Texture|table
+---@param point FramePoint
+---@param relativeTo? any
+---@param relativePoint? FramePoint
+---@param offsetX? uiUnit
+---@param offsetY? uiUnit
+---@overload fun(frame: Frame, point: FramePoint, offsetX: uiUnit, offsetY: uiUnit)
+---@overload fun(frame: Frame, point: FramePoint, relativeTo: Frame, offsetX: uiUnit, offsetY: uiUnit)
+function PixelPerfect.Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
     if CUF.vars.useScaling then
-        CellP:Point(frame, ...)
+        CellP:Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
     else
-        frame:SetPoint(...)
+        frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
     end
 end
 

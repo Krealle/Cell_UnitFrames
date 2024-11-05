@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local P = Cell.pixelPerfectFuncs
+local CellP = Cell.pixelPerfectFuncs
 
 ---@class CUF.PixelPerfect
 local PixelPerfect = CUF.PixelPerfect
@@ -39,11 +39,11 @@ function PixelPerfect.DebugInfo()
         relativeScale,
         PixelPerfect.GetPixelScale(),
         CellScale,
-        P:GetPixelPerfectScale(),
-        P:GetEffectiveScale(),
-        P:Scale(1),
-        P:Scale(0.1),
-        P:Scale(220)
+        CellP:GetPixelPerfectScale(),
+        CellP:GetEffectiveScale(),
+        CellP:Scale(1),
+        CellP:Scale(0.1),
+        CellP:Scale(220)
     )
 
     return info
@@ -62,7 +62,7 @@ end
 ---@param frame Frame
 function PixelPerfect.SetPixelScale(frame)
     if CUF.vars.useScaling then
-        P:SetEffectiveScale(CUF.mainFrame)
+        CellP:SetEffectiveScale(CUF.mainFrame)
     else
         frame:SetScale(PixelPerfect.GetPixelScale())
     end
@@ -98,7 +98,7 @@ end
 ---@param num number
 function PixelPerfect.Scale(num)
     if CUF.vars.useScaling then
-        return P:Scale(num)
+        return CellP:Scale(num)
     end
 
     return num
@@ -109,7 +109,7 @@ end
 ---@param height number
 function PixelPerfect.Size(frame, width, height)
     if CUF.vars.useScaling then
-        P:Size(frame, width, height)
+        CellP:Size(frame, width, height)
     else
         frame:SetSize(width, height)
     end
@@ -118,7 +118,7 @@ end
 ---@param frame Frame|Texture
 function PixelPerfect.Point(frame, ...)
     if CUF.vars.useScaling then
-        P:Point(frame, ...)
+        CellP:Point(frame, ...)
     else
         frame:SetPoint(...)
     end
@@ -127,7 +127,7 @@ end
 ---@param frame Frame|Texture
 function PixelPerfect.ClearPoints(frame)
     if CUF.vars.useScaling then
-        P:ClearPoints(frame)
+        CellP:ClearPoints(frame)
     else
         frame:ClearAllPoints()
     end

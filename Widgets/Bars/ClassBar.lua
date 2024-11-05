@@ -9,6 +9,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local P = CUF.PixelPerfect
 
 local SPEC_DEATHKNIGHT_BLOOD = 1
 local SPEC_DEATHKNIGHT_FROST = 2
@@ -615,7 +616,7 @@ function W:CreateClassBar(button)
         bar.border:SetBackdrop({
             bgFile = nil,
             edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
+            edgeSize = P.Scale(CELL_BORDER_SIZE),
         })
         bar.border:SetBackdropBorderColor(0, 0, 0, 1)
 

@@ -14,6 +14,7 @@ local Builder = CUF.Builder
 local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
+local P = CUF.PixelPerfect
 
 -- Blizzard has this at 4, but apparently the true max is 5
 local MAX_TOTEMS = 5
@@ -47,7 +48,7 @@ function W.UpdateTotemsWidgets(button, unit, setting, subSetting)
         totems:SetOrientation(styleTable.orientation)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SIZE then
-        totems:SetSize(styleTable.size.width, styleTable.size.height)
+        P.Size(totems, styleTable.size.width, styleTable.size.height)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SHOW_DURATION then
         totems:ShowDuration(styleTable.showDuration)

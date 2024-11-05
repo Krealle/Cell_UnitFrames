@@ -268,12 +268,12 @@ local function Repoint(bar, anchorPoint)
         P.Point(bar.overShieldGlow, "TOPRIGHT", bar.parentHealthBar)
         P.Point(bar.overShieldGlow, "BOTTOMRIGHT", bar.parentHealthBar)
         F:RotateTexture(bar.overShieldGlow, 0)
-        bar.overShieldGlow:SetWidth(4)
+        P.Width(bar.overShieldGlow, 4)
 
         P.Point(bar.overShieldGlowReverse, "TOP", bar.shieldReverse, "TOPLEFT")
         P.Point(bar.overShieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMLEFT")
         F:RotateTexture(bar.overShieldGlowReverse, 0)
-        bar.overShieldGlowReverse:SetWidth(4)
+        P.Width(bar.overShieldGlowReverse, 4)
     else
         bar.SetValue = ShieldBar_SetValue_Vertical
 
@@ -286,12 +286,12 @@ local function Repoint(bar, anchorPoint)
         P.Point(bar.overShieldGlow, "TOPLEFT", bar.parentHealthBar)
         P.Point(bar.overShieldGlow, "TOPRIGHT", bar.parentHealthBar)
         F:RotateTexture(bar.overShieldGlow, 90)
-        bar.overShieldGlow:SetHeight(4)
+        P.Height(bar.overShieldGlow, 4)
 
         P.Point(bar.overShieldGlowReverse, "LEFT", bar.shieldReverse, "BOTTOMLEFT")
         P.Point(bar.overShieldGlowReverse, "RIGHT", bar.shieldReverse, "BOTTOMRIGHT")
         F:RotateTexture(bar.overShieldGlowReverse, 90)
-        bar.overShieldGlowReverse:SetHeight(4)
+        P.Height(bar.overShieldGlowReverse, 4)
     end
 end
 

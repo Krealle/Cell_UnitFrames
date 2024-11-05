@@ -96,6 +96,7 @@ function PixelPerfect.GetPositionRelativeToScreenCenter(frame)
 end
 
 ---@param num number
+---@return number
 function PixelPerfect.Scale(num)
     if CUF.vars.useScaling then
         return CellP:Scale(num)
@@ -104,14 +105,42 @@ function PixelPerfect.Scale(num)
     return num
 end
 
----@param frame Frame
+---@param frame Frame|Texture
 ---@param width number
 ---@param height number
+---@overload fun(frame: Frame|Texture, size: number)
 function PixelPerfect.Size(frame, width, height)
+    if not width then return end
+    height = height or width
+
     if CUF.vars.useScaling then
         CellP:Size(frame, width, height)
     else
         frame:SetSize(width, height)
+    end
+end
+
+---@param frame Frame|Texture
+---@param size number
+function PixelPerfect.Width(frame, size)
+    if not size then return end
+
+    if CUF.vars.useScaling then
+        CellP:Width(frame, size)
+    else
+        frame:SetWidth(size)
+    end
+end
+
+---@param frame Frame|Texture
+---@param size number
+function PixelPerfect.Height(frame, size)
+    if not size then return end
+
+    if CUF.vars.useScaling then
+        CellP:Height(frame, size)
+    else
+        frame:SetHeight(size)
     end
 end
 

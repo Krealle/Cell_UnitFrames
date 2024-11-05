@@ -54,8 +54,7 @@ end
 ---@param widget Widget
 ---@param styleTable WidgetTable
 function W.SetWidgetSize(widget, styleTable)
-    widget:SetWidth(styleTable.size.width)
-    widget:SetHeight(styleTable.size.height)
+    P.Size(widget, styleTable.size.width, styleTable.size.height)
 end
 
 ---@param widget Widget

@@ -16,6 +16,9 @@ local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
 
+local UnitIsFriend = UnitIsFriend
+local UnitCanAttack = UnitCanAttack
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -99,16 +102,19 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
 
     -- TODO: Add prio? right now we just take first
     local foundDispel = false
-    button:IterateAuras("debuffs", function(aura)
-        if not dispels:ShouldShowDispel(aura.dispelName) then return end
-        foundDispel = true
 
-        dispels:SetDispelHighlight(aura.dispelName)
-        dispels:SetDispelIcon(aura.dispelName)
-        dispels:Show()
+    if UnitIsFriend("player", button.states.unit) and not UnitCanAttack("player", button.states.unit) then
+        button:IterateAuras("debuffs", function(aura)
+            if not dispels:ShouldShowDispel(aura.dispelName) then return end
+            foundDispel = true
 
-        return true
-    end)
+            dispels:SetDispelHighlight(aura.dispelName)
+            dispels:SetDispelIcon(aura.dispelName)
+            dispels:Show()
+
+            return true
+        end)
+    end
     --CUF:Log("FoundDispel:", foundDispel)
 
     if not foundDispel then

@@ -58,7 +58,8 @@ Builder.MenuOptions = {
     CustomText = 31,
     DispelsOptions = 32,
     TrueSingleSizeOptions = 33,
-    TotemOptions = 34
+    TotemOptions = 34,
+    HideAtMaxLevel = 35
 }
 
 -------------------------------------------------
@@ -1080,6 +1081,26 @@ function Builder:CreateFrameLevelOptions(parent, widgetName)
     return f
 end
 
+-------------------------------------------------
+-- MARK: Max Level
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return FrameLevelOptions
+function Builder:CreateHideAtMaxLevel(parent, widgetName)
+    ---@class FrameLevelOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "FrameLevelOptions"
+    f.optionHeight = 20
+
+    f.hideAtMaxLevelCB = self:CreateCheckBox(f, widgetName, L.HideAtMaxLevel,
+        const.OPTION_KIND.HIDE_AT_MAX_LEVEL)
+    f.hideAtMaxLevelCB:SetPoint("TOPLEFT", f)
+
+    return f
+end
+
 -----------------------------------------------
 -- MARK: Texture Dropdown
 -----------------------------------------------
@@ -1961,4 +1982,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
     [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
     [Builder.MenuOptions.TotemOptions] = Builder.CreateTotemOptions,
+    [Builder.MenuOptions.HideAtMaxLevel] = Builder.CreateHideAtMaxLevel,
 }

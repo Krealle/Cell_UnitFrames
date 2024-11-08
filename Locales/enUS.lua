@@ -225,6 +225,7 @@ Reload after toggling to fully update all frames]]
 L.buffFrame = "Buff Frame"
 L.debuffFrame = "Debuff Frame"
 L.playerCastBar = "Player Cast Bar"
+L.HideAtMaxLevel = "Hide at Max Level"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

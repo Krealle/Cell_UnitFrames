@@ -172,7 +172,8 @@ const.OPTION_KIND = {
     POISON                  = "poison",
     BLEED                   = "bleed",
     ICON_STYLE              = "iconStyle",
-    ONLY_SHOW_INTERRUPT     = "onlyShowInterrupt"
+    ONLY_SHOW_INTERRUPT     = "onlyShowInterrupt",
+    HIDE_AT_MAX_LEVEL       = "hideAtMaxLevel",
 }
 
 ---@enum AURA_OPTION_KIND

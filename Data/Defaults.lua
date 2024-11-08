@@ -11,7 +11,8 @@ local Util = CUF.Util
 local Defaults = CUF.Defaults
 
 Defaults.Values = {
-    maxAuraIcons = 20
+    maxAuraIcons = 20,
+    maxLevel = 80,
 }
 
 Defaults.Options = {}
@@ -618,6 +619,7 @@ Defaults.Widgets = {
     restingIcon = {
         enabled = false,
         frameLevel = 10,
+        hideAtMaxLevel = false,
         size = {
             width = 20,
             height = 20,

@@ -166,6 +166,7 @@
 ---@field position PositionOpt
 ---@field frameLevel number
 ---@field size SizeOpt
+---@field hideAtMaxLevel boolean
 
 ---@class ReadyCheckIconWidgetTable
 ---@field enabled boolean

@@ -226,6 +226,45 @@ end
 ---@class Misc: Frame
 local Misc = {}
 
+---@param type string
+function Misc:AddBlizzardFrame(type)
+    local checkBox = Cell:CreateCheckButton(self.blizzardFramesPopup,
+        L["Hide"] .. " " .. L[type],
+        function(checked)
+            CUF_DB.blizzardFrames[type] = checked
+            if checked then
+                CUF:HideBlizzardUnitFrame(type)
+            end
+        end)
+    checkBox.type = type
+
+    self.blizzardFramesPopup:SetHeight(self.blizzardFramesPopup:GetHeight() + checkBox:GetHeight() + 10)
+
+    if not self.blizzardFramesCheckBoxes then
+        checkBox:SetPoint("TOPLEFT", self.blizzardFramesPopup, "TOPLEFT", 10, -10)
+        self.blizzardFramesCheckBoxes = {}
+        tinsert(self.blizzardFramesCheckBoxes, checkBox)
+    else
+        checkBox:SetPoint("TOPLEFT", self.blizzardFramesCheckBoxes[#self.blizzardFramesCheckBoxes], "BOTTOMLEFT", 0, -10)
+        tinsert(self.blizzardFramesCheckBoxes, checkBox)
+    end
+end
+
+function Misc:ShowBlizzardFramesPopup()
+    if self.blizzardFramesPopup:IsShown() then
+        self.blizzardFramesPopup:Hide()
+        return
+    end
+
+    self.blizzardFramesPopup:Show()
+    self.blizzardFramesButton:SetFrameLevel(self.blizzardFramesPopup:GetFrameLevel())
+    Menu.window.mask:Show()
+
+    for _, checkBox in ipairs(self.blizzardFramesCheckBoxes) do
+        checkBox:SetChecked(CUF_DB.blizzardFrames[checkBox.type])
+    end
+end
+
 function Misc.Update()
     if not generalTab:IsShown() then return end
 
@@ -247,6 +286,27 @@ function Misc:Create()
             DB.SetUseScaling(checked)
         end, L.UseScaling, L.UseScalingTooltip)
     self.useScalingCB:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
+
+    self.blizzardFramesButton = CUF:CreateButton(self.frame, L["Blizzard Frames"], { 195, 20 }, function()
+        self:ShowBlizzardFramesPopup()
+    end)
+    self.blizzardFramesButton:SetPoint("TOPLEFT", self.useScalingCB, "BOTTOMLEFT", 0, -10)
+
+    ---@class BlizzardFramesPopup: Frame, BackdropTemplate
+    self.blizzardFramesPopup = CUF:CreateFrame("CUF_Misc_BlizzardFramesPopup", self.frame, 195, 10)
+    self.blizzardFramesPopup:SetPoint("BOTTOMRIGHT", self.blizzardFramesButton, "BOTTOMLEFT", -5, 0)
+    self.blizzardFramesPopup:SetFrameLevel(generalTab.window:GetFrameLevel() + 50)
+    self.blizzardFramesPopup:SetBackdropBorderColor(unpack(Cell:GetAccentColorTable()))
+
+    self.blizzardFramesPopup:SetScript("OnHide", function()
+        self.blizzardFramesPopup:Hide()
+        Menu.window.mask:Hide()
+        self.blizzardFramesButton:SetFrameLevel(self.frame:GetFrameLevel() + 1)
+    end)
+
+    for _, type in pairs(CUF.constants.BlizzardFrameTypes) do
+        Misc:AddBlizzardFrame(type)
+    end
 end
 
 -------------------------------------------------

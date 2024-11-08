@@ -160,7 +160,7 @@ function PixelPerfect.Point(frame, point, relativeTo, relativePoint, offsetX, of
     end
 end
 
----@param frame Frame|Texture
+---@param frame Frame|Texture|table
 function PixelPerfect.ClearPoints(frame)
     if CUF.vars.useScaling then
         CellP:ClearPoints(frame)

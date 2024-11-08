@@ -130,6 +130,23 @@ function DB:Revise()
             end
         end)
     end
+    if CUF_DB.version < 13 then
+        local curLayout = DB.GetMasterLayout()
+        if CellDB.layouts[curLayout].CUFUnits then
+            for unit, unitLayout in pairs(CellDB.layouts[curLayout].CUFUnits) do
+                if CUF_DB.blizzardFrames[unit] ~= nil then
+                    CUF_DB.blizzardFrames[unit] = unitLayout.enabled
+                end
+                if unit == "player" then
+                    CUF_DB.blizzardFrames.playerCastBar = unitLayout.hideBlizzardCastBar
+                end
+            end
+        end
+
+        IterateUnitLayouts(function(layout)
+            layout.hideBlizzardCastBar = nil
+        end)
+    end
 
     ShowChangelog()
 end

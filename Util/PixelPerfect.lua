@@ -61,7 +61,7 @@ end
 
 ---@param frame Frame
 function PixelPerfect.SetPixelScale(frame)
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:SetEffectiveScale(CUF.mainFrame)
     else
         frame:SetScale(PixelPerfect.GetPixelScale())
@@ -98,7 +98,7 @@ end
 ---@param num number
 ---@return number
 function PixelPerfect.Scale(num)
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         return CellP:Scale(num)
     end
 
@@ -113,7 +113,7 @@ function PixelPerfect.Size(frame, width, height)
     if not width then return end
     height = height or width
 
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:Size(frame, width, height)
     else
         frame:SetSize(width, height)
@@ -125,7 +125,7 @@ end
 function PixelPerfect.Width(frame, width)
     if not width then return end
 
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:Width(frame, width)
     else
         frame:SetWidth(width)
@@ -137,7 +137,7 @@ end
 function PixelPerfect.Height(frame, height)
     if not height then return end
 
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:Height(frame, height)
     else
         frame:SetHeight(height)
@@ -153,7 +153,7 @@ end
 ---@overload fun(frame: Frame, point: FramePoint, offsetX: uiUnit, offsetY: uiUnit)
 ---@overload fun(frame: Frame, point: FramePoint, relativeTo: Frame, offsetX: uiUnit, offsetY: uiUnit)
 function PixelPerfect.Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
     else
         frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
@@ -162,7 +162,7 @@ end
 
 ---@param frame Frame|Texture|table
 function PixelPerfect.ClearPoints(frame)
-    if CUF.vars.useScaling then
+    if CUF_DB.useScaling then
         CellP:ClearPoints(frame)
     else
         frame:ClearAllPoints()

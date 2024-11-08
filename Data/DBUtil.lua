@@ -37,6 +37,8 @@ function DB.InitDB()
         CUF_DB.masterLayout = "default"
     end
 
+    CUF_DB.useScaling = CUF_DB.useScaling or false
+
     DB.CreateAutomaticBackup()
     DB:Revise()
 

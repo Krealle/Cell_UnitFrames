@@ -288,7 +288,7 @@ local function UpdateAppearance(kind)
             end)
         end)
     end
-    if kind == "scale" and CUF.vars.useScaling then
+    if kind == "scale" and CUF_DB.useScaling then
         -- Full update for everything
         -- Needs to be delayed
         C_Timer.After(0.1, function()

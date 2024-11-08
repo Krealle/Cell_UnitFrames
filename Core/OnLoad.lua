@@ -98,7 +98,6 @@ local function OnAddonLoaded(owner, loadedAddonName)
 
         Cell:RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 
-        CUF.vars.useScaling = true
         CUF:Fire("AddonLoaded")
 
         -- Use this to allow Cell snippets to manipulate functions before we start using them

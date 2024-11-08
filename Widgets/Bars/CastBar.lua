@@ -13,6 +13,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local P = CUF.PixelPerfect
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -152,11 +153,11 @@ local function RepointCastBar(self)
     local bar = self.statusBar
     local icon = self.icon
 
-    bar:ClearAllPoints()
+    P.ClearPoints(bar)
     if not icon.enabled then
         icon:Hide()
-        bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
-        bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+        P.Point(bar, "TOPLEFT", self, "TOPLEFT")
+        P.Point(bar, "BOTTOMRIGHT", self, "BOTTOMRIGHT")
 
         self:UpdateElements()
         return
@@ -166,17 +167,17 @@ local function RepointCastBar(self)
     icon:SetSize(barHeight, barHeight)
     icon:Show()
 
-    icon:ClearAllPoints()
+    P.ClearPoints(icon)
     if icon.position == "left" then
-        icon:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+        P.Point(icon, "TOPLEFT", self, "TOPLEFT")
 
-        bar:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 0)
-        bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+        P.Point(bar, "TOPLEFT", icon, "TOPRIGHT")
+        P.Point(bar, "BOTTOMRIGHT", self, "BOTTOMRIGHT")
     else
-        icon:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 0)
+        P.Point(icon, "TOPRIGHT", self, "TOPRIGHT")
 
-        bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
-        bar:SetPoint("BOTTOMRIGHT", icon, "BOTTOMLEFT", 0, 0)
+        P.Point(bar, "TOPLEFT", self, "TOPLEFT")
+        P.Point(bar, "BOTTOMRIGHT", icon, "BOTTOMLEFT")
     end
 end
 
@@ -555,9 +556,9 @@ local function RepointPip(self, pip)
     local relativePoint = reversed and "RIGHT" or "LEFT"
 
     if pip.stage < self.NumStages then
-        pip:SetPoint(point, self:GetPip(pip.stage + 1), relativePoint, 0, 0)
+        P.Point(pip, point, self:GetPip(pip.stage + 1), relativePoint, 0, 0)
     else
-        pip:SetPoint(point, self.statusBar, point, 0, 0)
+        P.Point(pip, point, self.statusBar, point, 0, 0)
     end
 end
 
@@ -607,17 +608,17 @@ local function AddStages(self, numStages)
             local offset = castBarWidth * portion
 
             local pip = self:GetPip(stage)
-            pip:ClearAllPoints()
+            P.ClearPoints(pip)
             pip:Show()
 
             if reversed then
                 -- Left to right
-                pip:SetPoint("TOPRIGHT", castBar, "TOPRIGHT", -offset, 0)
-                pip:SetPoint("BOTTOMRIGHT", castBar, "BOTTOMRIGHT", -offset, 0)
+                P.Point(pip, "TOPRIGHT", castBar, "TOPRIGHT", -offset, 0)
+                P.Point(pip, "BOTTOMRIGHT", castBar, "BOTTOMRIGHT", -offset, 0)
             else
                 -- Right to left
-                pip:SetPoint("TOPLEFT", castBar, "TOPLEFT", offset, 0)
-                pip:SetPoint("BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
+                P.Point(pip, "TOPLEFT", castBar, "TOPLEFT", offset, 0)
+                P.Point(pip, "BOTTOMLEFT", castBar, "BOTTOMLEFT", offset, 0)
             end
 
             self:RepointPip(pip)
@@ -626,15 +627,15 @@ local function AddStages(self, numStages)
             -- Create a dummy pip for "stage 0"
             if stage == 1 then
                 local dummyPip = self:GetPip(0)
-                dummyPip:ClearAllPoints()
+                P.ClearPoints(dummyPip)
                 dummyPip:Show()
 
                 if reversed then
-                    dummyPip:SetPoint("TOPRIGHT", castBar, "TOPRIGHT", 0, 0)
-                    dummyPip:SetPoint("BOTTOMLEFT", pip, "BOTTOMLEFT", 0, 0)
+                    P.Point(dummyPip, "TOPRIGHT", castBar, "TOPRIGHT", 0, 0)
+                    P.Point(dummyPip, "BOTTOMLEFT", pip, "BOTTOMLEFT", 0, 0)
                 else
-                    dummyPip:SetPoint("TOPLEFT", castBar, "TOPLEFT", 0, 0)
-                    dummyPip:SetPoint("BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
+                    P.Point(dummyPip, "TOPLEFT", castBar, "TOPLEFT", 0, 0)
+                    P.Point(dummyPip, "BOTTOMRIGHT", pip, "BOTTOMRIGHT", 0, 0)
                 end
                 self:UpdatePipTexture(dummyPip)
             end
@@ -721,10 +722,9 @@ end
 ---@param self TimerText|SpellText
 ---@param styleTable BigFontOpt
 local function SetFontPosition(self, styleTable)
-    self:ClearAllPoints()
-    self:SetPoint(styleTable.point, self:GetParent(),
-        styleTable.offsetX,
-        styleTable.offsetY)
+    P.ClearPoints(self)
+    P.Point(self, styleTable.point, self:GetParent(),
+        styleTable.offsetX, styleTable.offsetY)
 end
 
 ---@param self CastBarWidget
@@ -734,18 +734,18 @@ local function SetSparkWidth(self, width)
     if spark.enabled then
         -- Repoint
         local relativeSide = self.statusBar:GetReverseFill() and "LEFT" or "RIGHT"
-        spark:ClearAllPoints()
-        spark:SetPoint("TOP", self.statusBar:GetStatusBarTexture(), "TOP" .. relativeSide)
-        spark:SetPoint("BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOM" .. relativeSide)
+        P.ClearPoints(spark)
+        P.Point(spark, "TOP", self.statusBar:GetStatusBarTexture(), "TOP" .. relativeSide)
+        P.Point(spark, "BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOM" .. relativeSide)
 
         -- Resize
         if width then
-            spark:SetWidth(width)
+            P.Width(spark, width)
         end
 
         spark:Show()
     else
-        spark:ClearAllPoints()
+        P.ClearPoints(spark)
         spark:Hide()
     end
 end
@@ -797,14 +797,14 @@ local function SetBorderStyle(self, styleTable)
     border:SetBackdrop({
         bgFile = nil,
         edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = styleTable.size,
+        edgeSize = P.Scale(styleTable.size),
     })
 
     border:SetBackdropBorderColor(unpack(styleTable.color))
 
-    border:ClearAllPoints()
-    border:SetPoint("TOPLEFT", self, "TOPLEFT", -styleTable.offset, styleTable.offset)
-    border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", styleTable.offset, -styleTable.offset)
+    P.ClearPoints(border)
+    P.Point(border, "TOPLEFT", self, "TOPLEFT", -styleTable.offset, styleTable.offset)
+    P.Point(border, "BOTTOMRIGHT", self, "BOTTOMRIGHT", styleTable.offset, -styleTable.offset)
 end
 
 ---@param self CastBarWidget

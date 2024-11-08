@@ -20,6 +20,7 @@ Core/Events.lua
 
 Data/Constants.lua
 Util/Utils.lua
+Util/PixelPerfect.lua
 Data/Defaults.lua
 Data/Database.lua
 Data/DBUtil.lua

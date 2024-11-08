@@ -7,6 +7,7 @@ local F = Cell.funcs
 local L = CUF.L
 local Util = CUF.Util
 local DB = CUF.DB
+local P = CUF.PixelPerfect
 
 ---@class CUF.Menu
 ---@field window CellCombatFrame
@@ -227,7 +228,7 @@ function menu:CreateMenu()
     end)
     self.window:SetScript("OnDragStop", function()
         self.window:StopMovingOrSizing()
-        local x, y = Util.GetPositionRelativeToScreenCenter(self.window)
+        local x, y = P.GetPositionRelativeToScreenCenter(self.window)
 
         -- coords are relative to the screen center so we need to offset them
         local centerOffset = self.window:GetHeight() / 2

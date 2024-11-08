@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
@@ -12,6 +11,7 @@ local W = CUF.widgets
 local const = CUF.constants
 local Util = CUF.Util
 local DB = CUF.DB
+local P = CUF.PixelPerfect
 
 local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
 
@@ -50,12 +50,12 @@ function U:UpdateUnitButtonPosition(unit, button)
     local layout = CUF.DB.CurrentLayoutTable()
     local unitLayout = layout[unit]
 
-    button:ClearAllPoints()
+    P.ClearPoints(button)
     if unitLayout.anchorToParent then
         local parent = CUF.unitButtons[unitLayout.parent]
         local anchor = unitLayout.anchorPosition --[[@as ParentAnchor]]
 
-        PixelUtil.SetPoint(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+        P.Point(button, anchor.point, parent, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
     else
         -- Anchor 'child' buttons to 'parent' button
         local unitN = tonumber(string.match(button._unit, "%d+"))
@@ -70,13 +70,13 @@ function U:UpdateUnitButtonPosition(unit, button)
                 local spacing = unitLayout.spacing or 0
 
                 if unitLayout.growthDirection == const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
-                    PixelUtil.SetPoint(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -spacing)
+                    P.Point(button, "TOPLEFT", parent, "BOTTOMLEFT", 0, -spacing)
                 elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
-                    PixelUtil.SetPoint(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, spacing)
+                    P.Point(button, "BOTTOMLEFT", parent, "TOPLEFT", 0, spacing)
                 elseif unitLayout.growthDirection == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
-                    PixelUtil.SetPoint(button, "LEFT", parent, "RIGHT", spacing, 0)
+                    P.Point(button, "LEFT", parent, "RIGHT", spacing, 0)
                 else
-                    PixelUtil.SetPoint(button, "RIGHT", parent, "LEFT", -spacing, 0)
+                    P.Point(button, "RIGHT", parent, "LEFT", -spacing, 0)
                 end
 
                 return
@@ -90,7 +90,7 @@ function U:UpdateUnitButtonPosition(unit, button)
             x, y = unpack(unitLayout.position)
         end
 
-        PixelUtil.SetPoint(button, "CENTER", UIParent, "CENTER", x, y)
+        P.Point(button, "CENTER", UIParent, "CENTER", x, y)
     end
 end
 
@@ -113,7 +113,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
             width, height = unpack(layout[unit].size)
         end
 
-        button:SetSize(width, height)
+        P.Size(button, width, height)
     end
 
     -- NOTE: SetOrientation BEFORE SetPowerSize
@@ -215,29 +215,29 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
     if orientation == "horizontal" then
         -- update healthBarLoss
-        healthBarLoss:ClearAllPoints()
-        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
-        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        P.ClearPoints(healthBarLoss)
+        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
         -- update powerBarLoss
-        powerBarLoss:ClearAllPoints()
-        powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-        powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        P.ClearPoints(powerBarLoss)
+        P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+        P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
     else -- vertical / vertical_health
-        healthBarLoss:ClearAllPoints()
-        healthBarLoss:SetPoint("TOPRIGHT", healthBar)
-        healthBarLoss:SetPoint("BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+        P.ClearPoints(healthBarLoss)
+        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
 
         if orientation == "vertical" then
             -- update powerBarLoss
-            powerBarLoss:ClearAllPoints()
-            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
+            P.ClearPoints(powerBarLoss)
+            P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
         else -- vertical_health
             -- update powerBarLoss
-            powerBarLoss:ClearAllPoints()
-            powerBarLoss:SetPoint("TOPRIGHT", powerBar)
-            powerBarLoss:SetPoint("BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+            P.ClearPoints(powerBarLoss)
+            P.Point(powerBarLoss, "TOPRIGHT", powerBar)
+            P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
         end
     end
 
@@ -286,6 +286,14 @@ local function UpdateAppearance(kind)
                 U:UnitFrame_UpdateHealthColor(button, true)
                 button.widgets.powerBar.UpdatePowerType(button)
             end)
+        end)
+    end
+    if kind == "scale" then
+        -- Full update for everything
+        -- Needs to be delayed
+        C_Timer.After(0.1, function()
+            CUF.PixelPerfect.SetPixelScale(CUF.mainFrame)
+            CUF:Fire("UpdateUnitButtons")
         end)
     end
 end

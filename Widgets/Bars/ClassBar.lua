@@ -9,6 +9,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local P = CUF.PixelPerfect
 
 local SPEC_DEATHKNIGHT_BLOOD = 1
 local SPEC_DEATHKNIGHT_FROST = 2
@@ -162,7 +163,7 @@ local function UpdateSize(self)
 
     local maxWidth
     if self.sameSizeAsHealthBar then
-        maxWidth = self.parent:GetWidth()
+        maxWidth = self._owner:GetWidth()
     else
         maxWidth = self.width
     end
@@ -176,13 +177,13 @@ local function UpdateSize(self)
         local bar = self[i]
 
         if i <= self.maxPower then
-            bar:ClearAllPoints()
+            P.ClearPoints(bar)
             bar:SetSize(barWidth - self.spacing, self.height)
 
             if i == 1 then
-                bar:SetPoint("LEFT", self, "LEFT", startX, 0)
+                P.Point(bar, "LEFT", self, "LEFT", startX, 0)
             else
-                bar:SetPoint("LEFT", self[i - 1], "RIGHT", self.spacing, 0)
+                P.Point(bar, "LEFT", self[i - 1], "RIGHT", self.spacing, 0)
             end
 
             bar:Show()
@@ -615,7 +616,7 @@ function W:CreateClassBar(button)
         bar.border:SetBackdrop({
             bgFile = nil,
             edgeFile = "Interface\\Buttons\\WHITE8X8",
-            edgeSize = 1,
+            edgeSize = P.Scale(CELL_BORDER_SIZE),
         })
         bar.border:SetBackdropBorderColor(0, 0, 0, 1)
 

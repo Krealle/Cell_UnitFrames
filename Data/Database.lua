@@ -145,3 +145,9 @@ end
 function DB.SetHelpTip(helpTip, acknowledged)
     CUF_DB.helpTips[helpTip] = acknowledged
 end
+
+---@param useScaling boolean
+function DB.SetUseScaling(useScaling)
+    CUF_DB.useScaling = useScaling
+    CUF:Fire("UpdateAppearance", "scale")
+end

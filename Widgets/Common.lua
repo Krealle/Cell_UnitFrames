@@ -6,6 +6,8 @@ local CUF = select(2, ...)
 local W = CUF.widgets
 W.WidgetsCreateFuncs = {}
 
+local P = CUF.PixelPerfect
+
 -------------------------------------------------
 -- MARK: Widget Setters
 -------------------------------------------------
@@ -24,19 +26,17 @@ end
 ---@param widget Widget
 ---@param styleTable WidgetTable
 function W.SetPosition(widget, styleTable)
-    widget:ClearAllPoints()
-    widget:SetPoint(styleTable.position.point, widget:GetParent(),
-        styleTable.position.offsetX,
-        styleTable.position.offsetY)
+    P.ClearPoints(widget)
+    P.Point(widget, styleTable.position.point, widget:GetParent(),
+        styleTable.position.offsetX, styleTable.position.offsetY)
 end
 
 ---@param widget Widget
 ---@param styleTable WidgetTable
 function W.SetRelativePosition(widget, styleTable)
-    widget:ClearAllPoints()
-    widget:SetPoint(styleTable.position.point, widget:GetParent(),
-        styleTable.position.relativePoint,
-        styleTable.position.offsetX,
+    P.ClearPoints(widget)
+    P.Point(widget, styleTable.position.point, widget:GetParent(),
+        styleTable.position.relativePoint, styleTable.position.offsetX,
         styleTable.position.offsetY)
 end
 
@@ -54,8 +54,7 @@ end
 ---@param widget Widget
 ---@param styleTable WidgetTable
 function W.SetWidgetSize(widget, styleTable)
-    widget:SetWidth(styleTable.size.width)
-    widget:SetHeight(styleTable.size.height)
+    P.Size(widget, styleTable.size.width, styleTable.size.height)
 end
 
 ---@param widget Widget

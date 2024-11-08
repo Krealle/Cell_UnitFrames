@@ -218,6 +218,9 @@ L.PlayerTarget = "Player Target"
 L.AlwaysUpdate = "Always Update"
 L.AlwaysUpdateUnitFrameTooltip = [[Forces an update every %ss
 Can help with issues where the Unit Frame is not updating correctly]]
+L.UseScaling = "Use Scaling"
+L.UseScalingTooltip = [[Enable to apply the Scale set in |cFFFFD700Cell|r
+Reload after toggling to fully update all frames]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

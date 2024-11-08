@@ -28,6 +28,8 @@ function SlashCmdList.CUF(msg, editbox)
         CUF:Print("All Help Tips have been reset, reload to see them again")
     elseif command == "tags" then
         CUF.widgets:ShowTooltipFrame()
+    elseif command == "pixel" then
+        CUF:Print(CUF.PixelPerfect.DebugInfo())
     else
         CUF:Print("Available commands:" .. "\n" ..
             "/cuf test - toggle test mode" .. "\n" ..
@@ -35,7 +37,8 @@ function SlashCmdList.CUF(msg, editbox)
             "/cuf edit - toggle edit mode" .. "\n" ..
             "/cuf restore <automatic|manual> - restore a backup" .. "\n" ..
             "/cuf resettips - reset all help tips" .. "\n" ..
-            "/cuf tags - show available tags"
+            "/cuf tags - show available tags" .. "\n" ..
+            "/cuf pixel - show pixel debug info"
         )
     end
 end

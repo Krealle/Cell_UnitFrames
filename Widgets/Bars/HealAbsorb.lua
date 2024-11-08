@@ -14,6 +14,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local P = CUF.PixelPerfect
 
 local UnitHealthMax = UnitHealthMax
 local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
@@ -148,29 +149,26 @@ end
 ---@param self HealAbsorbWidget
 ---@param orientation string?
 local function SetOrientation(self, orientation)
-    self:ClearAllPoints()
+    P.ClearPoints(self)
+    P.ClearPoints(self.overAbsorbGlow)
 
     if orientation == "horizontal" then
-        self:SetPoint("TOP", self.parentHealthBar:GetStatusBarTexture())
-        self:SetPoint("BOTTOM", self.parentHealthBar:GetStatusBarTexture())
-        self:SetPoint("RIGHT", self.parentHealthBar:GetStatusBarTexture())
+        P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
+        P.Point(self, "BOTTOMRIGHT", self.parentHealthBar:GetStatusBarTexture())
 
-        self.overAbsorbGlow:ClearAllPoints()
-        self.overAbsorbGlow:SetPoint("TOPLEFT", self.parentHealthBar)
-        self.overAbsorbGlow:SetPoint("BOTTOMLEFT", self.parentHealthBar)
-        self.overAbsorbGlow:SetWidth(4)
+        P.Point(self.overAbsorbGlow, "TOPLEFT", self.parentHealthBar)
+        P.Point(self.overAbsorbGlow, "BOTTOMLEFT", self.parentHealthBar)
+        P.Width(self.overAbsorbGlow, 4)
         F:RotateTexture(self.overAbsorbGlow, 0)
 
         self.SetValue = SetValue_Horizontal
     else
-        self:SetPoint("LEFT", self.parentHealthBar:GetStatusBarTexture())
-        self:SetPoint("RIGHT", self.parentHealthBar:GetStatusBarTexture())
-        self:SetPoint("TOP", self.parentHealthBar:GetStatusBarTexture())
+        P.Point(self, "TOPLEFT", self.parentHealthBar:GetStatusBarTexture())
+        P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
 
-        self.overAbsorbGlow:ClearAllPoints()
-        self.overAbsorbGlow:SetPoint("BOTTOMLEFT", self.parentHealthBar)
-        self.overAbsorbGlow:SetPoint("BOTTOMRIGHT", self.parentHealthBar)
-        self.overAbsorbGlow:SetWidth(4)
+        P.Point(self.overAbsorbGlow, "BOTTOMLEFT", self.parentHealthBar)
+        P.Point(self.overAbsorbGlow, "BOTTOMRIGHT", self.parentHealthBar)
+        P.Height(self.overAbsorbGlow, 4)
         F:RotateTexture(self.overAbsorbGlow, 90)
 
         self.SetValue = SetValue_Vertical

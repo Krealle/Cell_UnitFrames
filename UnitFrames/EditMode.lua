@@ -302,7 +302,7 @@ local function CreateOverlayBox(button, unit, unitN, parentButton)
     overlay:SetScript("OnDragStop", function()
         button:StopMovingOrSizing()
 
-        local x, y = Util.GetPositionRelativeToScreenCenter(button)
+        local x, y = CUF.PixelPerfect.GetPositionRelativeToScreenCenter(button)
         U:SavePosition(unit, x, y)
 
         if unit == const.UNIT.PLAYER then

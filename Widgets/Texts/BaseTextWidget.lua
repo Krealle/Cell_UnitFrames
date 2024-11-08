@@ -9,6 +9,7 @@ local W = CUF.widgets
 
 local Util = CUF.Util
 local const = CUF.constants
+local P = CUF.PixelPerfect
 
 ---@param button CUFUnitButton
 ---@param kind WIDGET_KIND
@@ -71,10 +72,9 @@ function W.CreateBaseTextWidget(button, kind)
 
     ---@param styleTable WidgetTable
     function textWidget:SetPosition(styleTable)
-        self.text:ClearAllPoints()
-        self.text:SetPoint(styleTable.position.point, button,
-            styleTable.position.offsetX,
-            styleTable.position.offsetY)
+        P.ClearPoints(self.text)
+        P.Point(self.text, styleTable.position.point, button,
+            styleTable.position.offsetX, styleTable.position.offsetY)
     end
 
     -- Forward common methods to text

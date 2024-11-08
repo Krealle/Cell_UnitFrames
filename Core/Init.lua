@@ -24,6 +24,8 @@ CUF.Debug = {}
 CUF.Builder = {}
 ---@class CUF.API
 CUF.API = {}
+---@class CUF.PixelPerfect
+CUF.PixelPerfect = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string
@@ -36,6 +38,7 @@ CUF.API = {}
 ---@field selectedSubTab string
 ---@field inEditMode boolean
 ---@field customPositioning boolean
+---@field useScaling boolean
 CUF.vars = {}
 
 ---@class CUF.unitButtons

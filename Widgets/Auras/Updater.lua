@@ -1,12 +1,9 @@
 ---@class CUF
 local CUF = select(2, ...)
 
-local Cell = CUF.Cell
-local P = Cell.pixelPerfectFuncs
-
 local const = CUF.constants
 local DB = CUF.DB
-local U = CUF.uFuncs
+local P = CUF.PixelPerfect
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -29,7 +26,7 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         auras:SetOrientation(styleTable.orientation)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SIZE then
-        auras:SetSize(styleTable.size.width, styleTable.size.height)
+        P.Size(auras, styleTable.size.width, styleTable.size.height)
     end
     if not setting or setting == const.AURA_OPTION_KIND.SHOW_DURATION then
         auras:ShowDuration(styleTable.showDuration)

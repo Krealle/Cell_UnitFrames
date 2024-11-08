@@ -317,3 +317,15 @@ const.UnitButtonColorType = {
     CLASS_COLOR_DARK = "class_color_dark",
     CUSTOM = "custom",
 }
+
+const.BlizzardFrameTypes = {
+    CUF.constants.UNIT.PLAYER,
+    CUF.constants.UNIT.TARGET,
+    CUF.constants.UNIT.TARGET_TARGET,
+    CUF.constants.UNIT.FOCUS,
+    CUF.constants.UNIT.PET,
+    CUF.constants.UNIT.BOSS,
+    "playerCastBar",
+    "buffFrame",
+    "debuffFrame",
+}

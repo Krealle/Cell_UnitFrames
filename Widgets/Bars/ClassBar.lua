@@ -155,6 +155,11 @@ local function UpdateColors(self)
             SetBarColor(self[i], { r, g, b, 1 })
         end
     end
+
+    for i = 1, self.maxPower do
+        self[i]:SetStatusBarTexture(DB.GetColors().classBar.texture)
+        self[i].bg:SetTexture(DB.GetColors().classBar.texture)
+    end
 end
 
 ---@param self ClassBarWidget

@@ -78,7 +78,8 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
             or which == "classResources"
             or which == "comboPoints"
             or which == "chi"
-            or which == "runes" then
+            or which == "runes"
+            or which == "classBar" then
             CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, "classBar", const.OPTION_KIND.COLOR)
         else
             CUF:Fire("UpdateAppearance", "color")

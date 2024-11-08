@@ -124,6 +124,7 @@ Defaults.Options.fontWidth = {
 ---| "shieldBar"
 ---| "healAbsorb"
 ---| "unitFrames"
+---| "classBar"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -205,6 +206,9 @@ Defaults.Colors = {
         lossAlpha = 1,
         backgroundAlpha = 1,
     },
+    classBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+    }
 }
 
 Defaults.ColorsMenuOrder = {
@@ -290,6 +294,9 @@ Defaults.ColorsMenuOrder = {
         { "barAlpha",        "slider-percent" },
         { "lossAlpha",       "slider-percent" },
         { "backgroundAlpha", "slider-percent" },
+    },
+    classBar = {
+        { "texture", "texture" },
     }
 }
 

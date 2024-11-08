@@ -292,6 +292,12 @@ Defaults.ColorsMenuOrder = {
     }
 }
 
+---@class Defaults.BlizzardFrames
+Defaults.BlizzardFrames = {}
+for _, unit in pairs(CUF.constants.BlizzardFrameTypes) do
+    Defaults.BlizzardFrames[unit] = false
+end
+
 ---@type CustomTextWidgetTable
 Defaults.CustomText = {
     enabled = false,

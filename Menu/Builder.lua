@@ -986,18 +986,19 @@ end
 ---@param minVal number?
 ---@param maxVal number?
 ---@param path string?
+---@param width number?
 ---@return SizeOptions
-function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal, path)
+function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal, path, width)
     ---@class SizeOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     minVal = minVal or 0
     maxVal = maxVal or 100
 
-    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], nil, minVal, maxVal,
+    f.sizeWidthSlider = self:CreateSlider(f, widgetName, L["Width"], width, minVal, maxVal,
         (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.WIDTH)
     f.sizeWidthSlider:SetPoint("TOPLEFT", f)
 
-    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], nil, minVal, maxVal,
+    f.sizeHeightSlider = self:CreateSlider(f, widgetName, L["Height"], width, minVal, maxVal,
         (path or const.AURA_OPTION_KIND.SIZE) .. "." .. const.OPTION_KIND.HEIGHT)
     f.sizeHeightSlider:SetPoint("TOPLEFT", f.sizeWidthSlider, "TOPRIGHT", self.spacingX, 0)
 
@@ -1384,22 +1385,18 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     ---@class CastBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarOptions"
-    f.optionHeight = 185
+    f.optionHeight = 135
 
     -- Title
     f.title = self:CreateOptionTitle(f, "General")
 
-    -- First Row
-    f.anchorOptions = self:CreateFullAnchorOptions(f, widgetName, nil, -1000, 1000)
-    self:AnchorBelow(f.anchorOptions, f.title)
-
     -- Second Row
-    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
-    self:AnchorBelow(f.sizeOptions, f.anchorOptions.sliderX)
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 1800, nil, 150)
+    self:AnchorBelow(f.sizeOptions, f.title)
 
     -- Third Row
     f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
-    self:AnchorBelow(f.reverseCB, f.anchorOptions.relativeDropdown)
+    self:AnchorBelow(f.reverseCB, f.sizeOptions.sizeWidthSlider)
 
     f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor, const.OPTION_KIND.USE_CLASS_COLOR)
     self:AnchorRightOfCB(f.classColorCB, f.reverseCB)

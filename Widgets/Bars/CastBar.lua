@@ -963,7 +963,7 @@ function W:CreateCastBar(button)
         castBar:RepointCastBar()
     end
     castBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
-    castBar.SetPosition = W.SetRelativePosition
+    castBar.SetPosition = W.SetDetachedRelativePosition
     castBar.SetEnabled = W.SetEnabled
 
     castBar.Enable = Enable

@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local P = Cell.pixelPerfectFuncs
+local CellP = Cell.pixelPerfectFuncs
 
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
@@ -10,6 +10,8 @@ local U = CUF.uFuncs
 local const = CUF.constants
 local Util = CUF.Util
 local L = CUF.L
+local W = CUF.widgets
+local P = CUF.PixelPerfect
 
 -------------------------------------------------
 -- MARK: Positioning Popup
@@ -17,6 +19,8 @@ local L = CUF.L
 
 ---@type CUFPositioningPopup
 local positioningPopup
+---@type CUFWidgetPositioningPopup
+local widgetPositioningPopup
 
 local function CreatePositioningPopup()
     ---@class CUFPositioningPopup: Frame
@@ -219,6 +223,10 @@ local function ShowPositioningPopup(unit)
 
     UpdatePositioningPopup()
 
+    if widgetPositioningPopup then
+        widgetPositioningPopup:Hide()
+    end
+
     CUF:RegisterCallback("UpdateUnitButtons", "UpdatePositioningPopup", UpdatePositioningPopup)
     CUF:RegisterCallback("UpdateLayout", "UpdatePositioningPopup", UpdatePositioningPopup)
 end
@@ -230,6 +238,190 @@ local function HidePositioningPopup()
 
     CUF:UnregisterCallback("UpdateUnitButtons", "UpdatePositioningPopup")
     CUF:UnregisterCallback("UpdateLayout", "UpdatePositioningPopup")
+end
+
+local function CreateWidgetPositioningPopup()
+    ---@class CUFWidgetPositioningPopup: Frame
+    ---@field unit Unit
+    ---@field widget WIDGET_KIND
+    widgetPositioningPopup = CUF:CreateFrame("CUFWidgetPositioningPopup", UIParent, 340, 160)
+    widgetPositioningPopup:SetPoint("CENTER")
+    widgetPositioningPopup:Hide()
+
+    widgetPositioningPopup:SetMovable(true)
+    widgetPositioningPopup:EnableMouse(true)
+    widgetPositioningPopup:RegisterForDrag("LeftButton")
+    widgetPositioningPopup:SetScript("OnDragStart", function(self)
+        self:StartMoving()
+    end)
+    widgetPositioningPopup:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+    end)
+
+    local closeBtn = Cell:CreateButton(widgetPositioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+        "CELL_FONT_SPECIAL")
+    closeBtn:SetPoint("TOPRIGHT", CellP:Scale(-5), CellP:Scale(-1))
+    closeBtn:SetScript("OnClick", function() widgetPositioningPopup:Hide() end)
+
+    local title = widgetPositioningPopup:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS")
+    title:SetPoint("TOPLEFT", 5, -5)
+    widgetPositioningPopup.title = title
+
+    -- Offsets
+    local maxX, maxY = GetPhysicalScreenSize()
+    local xVal = maxX / 2
+    local yVal = maxY / 2
+
+    widgetPositioningPopup.xPosSlider = Cell:CreateSlider(L["X Offset"], widgetPositioningPopup, -xVal, xVal, 150, 1)
+    widgetPositioningPopup.xPosSlider:SetPoint("TOPLEFT", 10, -45)
+    widgetPositioningPopup.xPosSlider.onValueChangedFn = function(value)
+        CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).detachedPosition.offsetX =
+            value
+        CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+    end
+
+    widgetPositioningPopup.yPosSlider = Cell:CreateSlider(L["Y Offset"], widgetPositioningPopup, -yVal, yVal, 150, 1)
+    widgetPositioningPopup.yPosSlider:SetPoint("TOPLEFT", widgetPositioningPopup.xPosSlider, "TOPRIGHT", 20, 0)
+
+    widgetPositioningPopup.yPosSlider.onValueChangedFn = function(value)
+        CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).detachedPosition.offsetY =
+            value
+        CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+    end
+
+    -- Parent Anchor
+    local parentAnchorFrame = CreateFrame("Frame", nil, widgetPositioningPopup)
+
+    ---@type CellCheckButton
+    local anchorToParentCB = Cell:CreateCheckButton(parentAnchorFrame, "", function(checked)
+        CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).anchorToParent =
+            checked
+        CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+
+        widgetPositioningPopup.pointDropdown:SetEnabled(checked)
+        widgetPositioningPopup.relativeDropdown:SetEnabled(checked)
+        widgetPositioningPopup.parentOffsetXSlider:SetEnabled(checked)
+        widgetPositioningPopup.parentOffsetYSlider:SetEnabled(checked)
+
+        widgetPositioningPopup.xPosSlider:SetEnabled(not checked)
+        widgetPositioningPopup.yPosSlider:SetEnabled(not checked)
+    end)
+    anchorToParentCB:SetPoint("TOPLEFT", widgetPositioningPopup.xPosSlider, "BOTTOMLEFT", 0, -40)
+    anchorToParentCB.label:SetText(L["Anchor To"] .. " " .. L["Unit Button"])
+    widgetPositioningPopup.anchorToParentCB = anchorToParentCB
+
+    ---@type CellDropdown
+    local pointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    pointDropdown:SetPoint("TOPLEFT", anchorToParentCB, "BOTTOMLEFT", 0, -30)
+    pointDropdown:SetLabel(L["Anchor Point"])
+
+    ---@type CellDropdown
+    local relativePointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    relativePointDropdown:SetPoint("TOPLEFT", pointDropdown, "TOPRIGHT", 30, 0)
+    relativePointDropdown:SetLabel(L["To UnitButton's"])
+
+    for _, point in pairs(const.ANCHOR_POINTS) do
+        pointDropdown:AddItem({
+            text = L[point],
+            value = point,
+            onClick = function()
+                CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.point =
+                    point
+                CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+            end,
+        })
+        relativePointDropdown:AddItem({
+            text = L[point],
+            value = point,
+            onClick = function()
+                CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.relativePoint =
+                    point
+                CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+            end,
+        })
+    end
+
+    local parentOffsetXSlider = Cell:CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
+    parentOffsetXSlider:SetPoint("TOPLEFT", pointDropdown, "BOTTOMLEFT", 0, -30)
+    parentOffsetXSlider.onValueChangedFn = function(value)
+        CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetX =
+            value
+        CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+    end
+
+    local parentOffsetYSlider = Cell:CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
+    parentOffsetYSlider:SetPoint("TOPLEFT", parentOffsetXSlider, "TOPRIGHT", 20, 0)
+    parentOffsetYSlider.onValueChangedFn = function(value)
+        CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetY =
+            value
+        CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+    end
+
+    widgetPositioningPopup.parentAnchorFrame = parentAnchorFrame
+    widgetPositioningPopup.pointDropdown = pointDropdown
+    widgetPositioningPopup.relativeDropdown = relativePointDropdown
+    widgetPositioningPopup.parentOffsetXSlider = parentOffsetXSlider
+    widgetPositioningPopup.parentOffsetYSlider = parentOffsetYSlider
+end
+
+local function UpdateWidgetPositioningPopup()
+    if not widgetPositioningPopup then return end
+    local layout = CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit)
+
+    widgetPositioningPopup.xPosSlider:SetValue(layout.detachedPosition.offsetX)
+    widgetPositioningPopup.yPosSlider:SetValue(layout.detachedPosition.offsetY)
+
+    local anchored = layout.anchorToParent
+
+    widgetPositioningPopup.anchorToParentCB:SetChecked(anchored)
+
+    widgetPositioningPopup.pointDropdown:SetSelectedValue(layout.position.point)
+    widgetPositioningPopup.relativeDropdown:SetSelectedValue(layout.position
+        .relativePoint)
+    widgetPositioningPopup.parentOffsetXSlider:SetValue(layout.position.offsetX)
+    widgetPositioningPopup.parentOffsetYSlider:SetValue(layout.position.offsetY)
+
+    widgetPositioningPopup.pointDropdown:SetEnabled(anchored)
+    widgetPositioningPopup.relativeDropdown:SetEnabled(anchored)
+    widgetPositioningPopup.parentOffsetXSlider:SetEnabled(anchored)
+    widgetPositioningPopup.parentOffsetYSlider:SetEnabled(anchored)
+
+    widgetPositioningPopup.xPosSlider:SetEnabled(not anchored)
+    widgetPositioningPopup.yPosSlider:SetEnabled(not anchored)
+end
+
+---@param unit Unit
+---@param widget WIDGET_KIND
+local function ShowWidgetPositioningPopup(unit, widget)
+    if not widgetPositioningPopup then
+        CreateWidgetPositioningPopup()
+    end
+    widgetPositioningPopup:Show()
+    widgetPositioningPopup.title:SetText(L.Positioning .. ": " .. L[unit] .. " " .. L[widget])
+
+    widgetPositioningPopup.unit = unit
+    widgetPositioningPopup.widget = widget
+
+    widgetPositioningPopup.parentAnchorFrame:Show()
+    widgetPositioningPopup:SetHeight(230)
+
+    UpdateWidgetPositioningPopup()
+
+    if positioningPopup then
+        positioningPopup:Hide()
+    end
+
+    CUF:RegisterCallback("UpdateWidget", "UpdateWidgetPositioningPopup", UpdateWidgetPositioningPopup)
+    CUF:RegisterCallback("UpdateLayout", "UpdateWidgetPositioningPopup", UpdateWidgetPositioningPopup)
+end
+
+local function HideWidgetPositioningPopup()
+    if widgetPositioningPopup then
+        widgetPositioningPopup:Hide()
+    end
+
+    CUF:UnregisterCallback("UpdateWidget", "UpdateWidgetPositioningPopup")
+    CUF:UnregisterCallback("UpdateLayout", "UpdateWidgetPositioningPopup")
 end
 
 -------------------------------------------------
@@ -246,6 +438,93 @@ local colors = {
     [const.UNIT.FOCUS] = { 0, 1, 0 },
     [const.UNIT.PET] = { 0, 0.5, 1 },
 }
+
+---@param widget Widget
+---@param unit Unit
+---@param unitOverlay CUFOverlayBox
+local function CreateWidgetOverlayBox(widget, unit, unitOverlay)
+    ---@class CUFOverlayBox: CellButton
+    local overlay = CUF:CreateButton(UIParent, "", { 1, 1 },
+        function() ShowWidgetPositioningPopup(unit, widget.id) end, "accent")
+    overlay:SetAllPoints(widget)
+    overlay:SetFrameStrata("HIGH")
+    overlay:SetFrameLevel(overlay:GetFrameLevel() + 100)
+    overlay:Hide()
+    overlay:SetClampedToScreen(true)
+    overlay:SetAlpha(0.75)
+
+    local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    label:SetPoint("CENTER")
+    label:SetText(L[unit] .. " " .. L[widget.id])
+
+    -- Register mouse and movable
+    overlay:RegisterForDrag("LeftButton")
+    overlay:SetMovable(true)
+    widget:SetMovable(true)
+
+    -- Animation
+    overlay.fadeIn = overlay:CreateAnimationGroup()
+    local fadeIn = overlay.fadeIn:CreateAnimation("alpha")
+    fadeIn:SetFromAlpha(0)
+    fadeIn:SetToAlpha(0.75)
+    fadeIn:SetDuration(0.5)
+    fadeIn:SetSmoothing("OUT")
+    fadeIn:SetScript("OnPlay", function()
+        overlay:Show()
+    end)
+
+    overlay.fadeOut = overlay:CreateAnimationGroup()
+    local fadeOut = overlay.fadeOut:CreateAnimation("alpha")
+    fadeOut:SetFromAlpha(0.75)
+    fadeOut:SetToAlpha(0)
+    fadeOut:SetDuration(0.5)
+    fadeOut:SetSmoothing("IN")
+    fadeOut:SetScript("OnFinished", function()
+        overlay:Hide()
+    end)
+
+    -- Scripts
+    overlay:SetScript("OnDragStart", function()
+        widget:StartMoving()
+    end)
+    overlay:SetScript("OnDragStop", function()
+        widget:StopMovingOrSizing()
+
+        local x, y = P.GetPositionRelativeToScreenCenter(widget)
+        W.SaveDetachedPosition(widget.id, unit, x, y, false)
+
+        UpdateWidgetPositioningPopup()
+    end)
+
+    -- Hooks
+    overlay:HookScript("OnShow", function()
+        widget:SetMovable(true)
+    end)
+    overlay:HookScript("OnHide", function()
+        widget:SetMovable(false)
+    end)
+
+    unitOverlay:HookScript("OnShow", function()
+        overlay:Show()
+    end)
+    unitOverlay:HookScript("OnHide", function()
+        overlay:Hide()
+    end)
+    unitOverlay.fadeIn:HookScript("OnPlay", function()
+        overlay.fadeIn:Play()
+        if overlay.fadeOut:IsPlaying() then
+            overlay.fadeOut:Stop()
+        end
+    end)
+    unitOverlay.fadeOut:HookScript("OnPlay", function()
+        overlay.fadeOut:Play()
+        if overlay.fadeIn:IsPlaying() then
+            overlay.fadeIn:Stop()
+        end
+    end)
+
+    return overlay
+end
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -302,7 +581,7 @@ local function CreateOverlayBox(button, unit, unitN, parentButton)
     overlay:SetScript("OnDragStop", function()
         button:StopMovingOrSizing()
 
-        local x, y = CUF.PixelPerfect.GetPositionRelativeToScreenCenter(button)
+        local x, y = P.GetPositionRelativeToScreenCenter(button)
         U:SavePosition(unit, x, y)
 
         if unit == const.UNIT.PLAYER then
@@ -332,6 +611,11 @@ local function CreateOverlayBox(button, unit, unitN, parentButton)
 
     local overlayUnit = unit .. (unitN or "")
     overlays[overlayUnit] = overlay
+
+    if (not unitN or unitN == 1) and button:HasWidget("castBar") then
+        CreateWidgetOverlayBox(button.widgets.castBar, unit, overlay)
+    end
+
     return overlay
 end
 
@@ -362,8 +646,8 @@ local function ShowOverlays()
                     CreateOverlayBox(CUF.unitButtons.boss[unit .. i], unit, i, mainBossFrame)
 
                 overlay.fadeIn:Play()
-                if overlay.fadeIn:IsPlaying() then
-                    overlay.fadeIn:Stop()
+                if overlay.fadeOut:IsPlaying() then
+                    overlay.fadeOut:Stop()
                 end
             end
             return
@@ -450,11 +734,11 @@ local function UpdateCellFramePosition()
     local anchorFrame, key = GetAnchorFrame()
 
     -- Use Cell functions directly to reduce chance of error
-    P:LoadPosition(anchorFrame, { x, y })
+    CellP:LoadPosition(anchorFrame, { x, y })
     if key then
-        P:SavePosition(anchorFrame, Cell.vars.currentLayoutTable[key].position)
+        CellP:SavePosition(anchorFrame, Cell.vars.currentLayoutTable[key].position)
     else
-        P:SavePosition(anchorFrame, CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
+        CellP:SavePosition(anchorFrame, CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
     end
 end
 
@@ -548,6 +832,7 @@ eventFrame:SetScript("OnEvent", function()
     HideOverlays(true)
     HidePositioningPopup()
     HideCellEditModePopup()
+    HideWidgetPositioningPopup()
 end)
 
 --- Enable or disable edit mode
@@ -571,6 +856,7 @@ function U:EditMode(show)
         HideOverlays()
         HidePositioningPopup()
         HideCellEditModePopup()
+        HideWidgetPositioningPopup()
         eventFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
     end
 end

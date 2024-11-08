@@ -256,6 +256,8 @@
 ---@field enabled boolean
 ---@field frameLevel number
 ---@field position PositionOpt
+---@field anchorToParent boolean
+---@field detachedPosition PositionOpt
 ---@field size SizeOpt
 ---@field reverse boolean
 ---@field timer BigFontOpt

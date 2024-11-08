@@ -637,11 +637,18 @@ Defaults.Widgets = {
         useClassColor = true,
         frameLevel = 10,
         onlyShowInterrupt = false,
+        anchorToParent = true,
         position = {
             point = "TOPLEFT",
             offsetY = -30,
             offsetX = 0,
             relativePoint = "BOTTOMLEFT",
+        },
+        detachedPosition = {
+            point = "CENTER",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "CENTER",
         },
         size = {
             width = 200,

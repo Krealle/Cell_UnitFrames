@@ -220,6 +220,36 @@ function layoutBackup:Create()
 end
 
 -------------------------------------------------
+-- MARK: Misc
+-------------------------------------------------
+
+---@class Misc: Frame
+local Misc = {}
+
+function Misc.Update()
+    if not generalTab:IsShown() then return end
+
+    Misc.useScalingCB:SetChecked(CUF_DB.useScaling)
+end
+
+function Misc:Create()
+    local sectionWidth = (generalTab.window:GetWidth() / 2) - 5
+
+    self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
+    self.frame:SetPoint("TOPLEFT", copyLayoutFrom.frame, "BOTTOMLEFT", 0, -20)
+
+    local pane = Cell:CreateTitledPane(self.frame, L["Misc"], sectionWidth, generalTab.paneHeight)
+    pane:SetPoint("TOPLEFT")
+
+    self.useScalingCB = Cell:CreateCheckButton(self.frame,
+        L.UseScaling,
+        function(checked)
+            DB.SetUseScaling(checked)
+        end, L.UseScaling, L.UseScalingTooltip)
+    self.useScalingCB:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
+end
+
+-------------------------------------------------
 -- MARK: Show/Hide
 -------------------------------------------------
 
@@ -234,6 +264,7 @@ function generalTab:ShowTab()
     layoutProfile:SetLayoutItems()
     copyLayoutFrom:SetLayoutItems()
     layoutBackup:Update()
+    Misc:Update()
 end
 
 function generalTab:HideTab()
@@ -259,4 +290,5 @@ function generalTab:Create()
     layoutProfile:Create()
     copyLayoutFrom:Create()
     layoutBackup:Create()
+    Misc:Create()
 end

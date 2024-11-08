@@ -163,7 +163,7 @@ local function UpdateSize(self)
 
     local maxWidth
     if self.sameSizeAsHealthBar then
-        maxWidth = self.parent:GetWidth()
+        maxWidth = self._owner:GetWidth()
     else
         maxWidth = self.width
     end
@@ -177,13 +177,13 @@ local function UpdateSize(self)
         local bar = self[i]
 
         if i <= self.maxPower then
-            bar:ClearAllPoints()
+            P.ClearPoints(bar)
             bar:SetSize(barWidth - self.spacing, self.height)
 
             if i == 1 then
-                bar:SetPoint("LEFT", self, "LEFT", startX, 0)
+                P.Point(bar, "LEFT", self, "LEFT", startX, 0)
             else
-                bar:SetPoint("LEFT", self[i - 1], "RIGHT", self.spacing, 0)
+                P.Point(bar, "LEFT", self[i - 1], "RIGHT", self.spacing, 0)
             end
 
             bar:Show()

@@ -39,6 +39,9 @@ function DB.InitDB()
 
     CUF_DB.useScaling = CUF_DB.useScaling or false
 
+    ---@type Defaults.BlizzardFrames
+    CUF_DB.blizzardFrames = CUF_DB.blizzardFrames or Util:CopyDeep(Defaults.BlizzardFrames)
+
     DB.CreateAutomaticBackup()
     DB:Revise()
 

@@ -132,7 +132,10 @@ function DB:Revise()
     end
     if CUF_DB.version < 13 then
         local curLayout = DB.GetMasterLayout()
-        if CellDB.layouts[curLayout].CUFUnits then
+        if not CellDB.layouts[curLayout] then
+            curLayout = "default"
+        end
+        if CellDB.layouts[curLayout] and CellDB.layouts[curLayout].CUFUnits then
             for unit, unitLayout in pairs(CellDB.layouts[curLayout].CUFUnits) do
                 if CUF_DB.blizzardFrames[unit] ~= nil then
                     CUF_DB.blizzardFrames[unit] = unitLayout.enabled

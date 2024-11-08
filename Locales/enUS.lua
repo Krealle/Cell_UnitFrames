@@ -222,6 +222,9 @@ Can help with issues where the Unit Frame is not updating correctly]]
 L.UseScaling = "Use Scaling"
 L.UseScalingTooltip = [[Enable to apply the Scale set in |cFFFFD700Cell|r
 Reload after toggling to fully update all frames]]
+L.buffFrame = "Buff Frame"
+L.debuffFrame = "Debuff Frame"
+L.playerCastBar = "Player Cast Bar"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

@@ -1424,10 +1424,11 @@ function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
         const.CastBarTimerFormat.HIDDEN,
         const.CastBarTimerFormat.NORMAL,
         const.CastBarTimerFormat.REMAINING,
+        const.CastBarTimerFormat.REMAINING_AND_MAX,
         const.CastBarTimerFormat.DURATION,
         const.CastBarTimerFormat.DURATION_AND_MAX,
     }
-    f.timerFormat = self:CreateDropdown(f, widgetName, L.TimerFormat, nil,
+    f.timerFormat = self:CreateDropdown(f, widgetName, L.TimerFormat, 140,
         items, const.OPTION_KIND.TIMER_FORMAT)
     self:AnchorBelow(f.timerFormat, f.fontOptions.styleDropdown)
 

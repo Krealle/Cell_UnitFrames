@@ -401,12 +401,26 @@ local function onUpdate(self, elapsed)
             if self.empowering then
                 self.timerText:SetFormattedText("%d", self.CurStage)
             elseif timerFormat == const.CastBarTimerFormat.DURATION then
-                self.timerText:SetFormattedText("%.1f", self.duration)
-            elseif timerFormat == const.CastBarTimerFormat.REMAINING then
-                self.timerText:SetFormattedText("%.1f", (self.max - self.duration))
+                local dur = self.duration
+                if self.channeling then
+                    dur = (self.max - self.duration)
+                end
+                self.timerText:SetFormattedText("%.1f", dur)
             elseif timerFormat == const.CastBarTimerFormat.DURATION_AND_MAX then
                 local dur = self.duration
                 if self.channeling then
+                    dur = (self.max - self.duration)
+                end
+                self.timerText:SetFormattedText("%.1f / %.1f", dur, self.max)
+            elseif timerFormat == const.CastBarTimerFormat.REMAINING then
+                local dur = self.duration
+                if not self.channeling then
+                    dur = (self.max - self.duration)
+                end
+                self.timerText:SetFormattedText("%.1f", dur)
+            elseif timerFormat == const.CastBarTimerFormat.REMAINING_AND_MAX then
+                local dur = self.duration
+                if not self.channeling then
                     dur = (self.max - self.duration)
                 end
                 self.timerText:SetFormattedText("%.1f / %.1f", dur, self.max)

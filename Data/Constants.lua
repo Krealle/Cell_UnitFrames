@@ -248,6 +248,7 @@ const.COLORS = {
 const.CastBarTimerFormat = {
     NORMAL = "normal",
     REMAINING = "remaining",
+    REMAINING_AND_MAX = "remaining-and-max",
     DURATION = "duration",
     DURATION_AND_MAX = "duration-and-max",
     HIDDEN = "hidden",

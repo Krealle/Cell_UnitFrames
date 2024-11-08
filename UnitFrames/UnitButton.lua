@@ -163,7 +163,6 @@ function U:UpdateUnitFrameVisibility(which, unit, button, frame)
         if CUF.DB.CurrentLayoutTable()[unit].enabled then
             RegisterUnitWatch(button)
             frame:Show()
-            CUF:HideBlizzardUnitFrame(unit)
         else
             UnregisterUnitWatch(button)
             frame:Hide()

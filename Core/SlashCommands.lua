@@ -2,7 +2,6 @@
 local CUF = select(2, ...)
 
 local Debug = CUF.Debug
-local P = CUF.PixelPerfect
 
 SLASH_CUF1 = "/cuf"
 function SlashCmdList.CUF(msg, editbox)
@@ -38,7 +37,8 @@ function SlashCmdList.CUF(msg, editbox)
             "/cuf edit - toggle edit mode" .. "\n" ..
             "/cuf restore <automatic|manual> - restore a backup" .. "\n" ..
             "/cuf resettips - reset all help tips" .. "\n" ..
-            "/cuf tags - show available tags"
+            "/cuf tags - show available tags" .. "\n" ..
+            "/cuf pixel - show pixel debug info"
         )
     end
 end

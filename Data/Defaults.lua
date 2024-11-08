@@ -292,6 +292,12 @@ Defaults.ColorsMenuOrder = {
     }
 }
 
+---@class Defaults.BlizzardFrames
+Defaults.BlizzardFrames = {}
+for _, unit in pairs(CUF.constants.BlizzardFrameTypes) do
+    Defaults.BlizzardFrames[unit] = false
+end
+
 ---@type CustomTextWidgetTable
 Defaults.CustomText = {
     enabled = false,
@@ -814,7 +820,6 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field position Position
 ---@field widgets WidgetTables
 ---@field sameSizeAsPlayer boolean?
----@field hideBlizzardCastBar boolean?
 ---@field clickCast boolean
 ---@field mirrorPlayer boolean?
 ---@field parent Unit?
@@ -837,7 +842,6 @@ Defaults.Layouts = {
         size = { 200, 40 },
         position = { -300, -250 },
         widgets = Util:CopyDeep(Defaults.Widgets),
-        hideBlizzardCastBar = false,
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,

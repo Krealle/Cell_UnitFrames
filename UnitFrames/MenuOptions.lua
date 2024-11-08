@@ -30,8 +30,6 @@ local function AddLoadPageDB(unitPage)
         -- same as player
         if not isPlayerPage then
             unitPage.sameSizeAsPlayerCB:SetChecked(isSameSizeAsPlayer)
-        else
-            unitPage.hideBlizzardCastBarCB:SetChecked(pageDB.hideBlizzardCastBar)
         end
 
         -- click casting
@@ -148,14 +146,6 @@ local function AddUnitsToMenu()
                             end
                         end)
                     unitPage.sameSizeAsPlayerCB:SetPoint("TOPLEFT", unitPage.clickCastCB, "TOPRIGHT", 130, 0)
-                else
-                    -- Disable blizzard cast bar
-                    unitPage.hideBlizzardCastBarCB = Cell:CreateCheckButton(unitPage.frame, L.HideDefaultCastBar,
-                        function(checked)
-                            CUF.DB.SelectedLayoutTable()[unit].hideBlizzardCastBar = checked
-                            CUF:Fire("UpdateVisibility", unit)
-                        end, L.HideDefaultCastBarTooltip)
-                    unitPage.hideBlizzardCastBarCB:SetPoint("TOPLEFT", unitPage.clickCastCB, "TOPRIGHT", 130, 0)
                 end
 
                 -- Second row

@@ -19,10 +19,10 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
     CUF.vars.inEditMode = false
 
-    -- Hide Blizzard Unit Frames
-    for _, unit in pairs(CUF.constants.UNIT) do
-        if CUF.DB.CurrentLayoutTable()[unit].enabled then
-            CUF:HideBlizzardUnitFrame(unit)
+    -- Hide Blizzard Frames
+    for type, hidden in pairs(CUF_DB.blizzardFrames) do
+        if hidden then
+            CUF:HideBlizzardUnitFrame(type)
         end
     end
 

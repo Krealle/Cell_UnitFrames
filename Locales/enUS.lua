@@ -261,6 +261,8 @@ L["tag_curhp:abs:merge"] = "Displays the sum of current HP and absorbs."
 L["tag_curhp:abs:merge:short"] = "Displays summed HP and absorbs as a shortvalue."
 L["tag_perhp:perabs:merge"] = "Displays the total HP and absorbs as a percentage."
 L["tag_perhp:perabs:merge:short"] = "Displays total HP and absorbs as a percentage without decimals."
+L["tag_abs:healabs:merge"] = "Displays the current amount of absorbs minus heal absorbs."
+L["tag_abs:healabs:merge:short"] = "Displays the current amount of absorbs minus heal absorbs as a shortvalue."
 
 L["tag_defhp"] = "Displays the current HP deficit."
 L["tag_defhp:short"] = "Displays HP deficit as a shortvalue."

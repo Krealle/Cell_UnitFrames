@@ -503,6 +503,16 @@ W:AddTag("perhp:perabs:merge:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMO
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return FormatPercentShort(maxhp, (curhp + totalAbsorbs))
 end, "Health", "90%")
+W:AddTag("abs:healabs:merge", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
+    local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
+    local totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    return FormatNumberNoZeroes(totalAbsorbs - totalHealAbsorbs)
+end, "Health", "40000")
+W:AddTag("abs:healabs:merge:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
+    local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
+    local totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    return FormatNumberShortNoZeroes(totalAbsorbs - totalHealAbsorbs)
+end, "Health", "-40k")
 
 -- MARK: Heal Absorbs
 W:AddTag("healabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)

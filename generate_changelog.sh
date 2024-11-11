@@ -40,6 +40,7 @@ git shortlog --no-merges --reverse "$previous..$current" > "$tempFile"
 # Initialize arrays to hold categorized commits
 featureCommits=()
 bugfixCommits=()
+misCommits=()
 
 # Read the temporary file line by line
 while IFS= read -r line; do
@@ -53,6 +54,9 @@ while IFS= read -r line; do
   elif echo "$line" | grep -q "\[Bugfix\]"; then
     # Remove suffix and add to bugfixes array
     bugfixCommits+=("- ${commitMessage//\[Bugfix\]/}")
+  elif echo "$line" | grep -q "\[Misc\]"; then
+    # Remove suffix and add to bugfixes array
+    misCommits+=("- ${commitMessage//\[Misc\]/}")
   fi
 done < "$tempFile"
 
@@ -71,6 +75,13 @@ rm "$tempFile"
   if [ ${#bugfixCommits[@]} -ne 0 ]; then
     echo -ne "### Bug Fixes\n"
     for commit in "${bugfixCommits[@]}"; do
+      echo "$commit"
+    done
+  fi
+
+  if [ ${#misCommits[@]} -ne 0 ]; then
+    echo -ne "### Miscellaneous\n"
+    for commit in "${misCommits[@]}"; do
       echo "$commit"
     done
   fi

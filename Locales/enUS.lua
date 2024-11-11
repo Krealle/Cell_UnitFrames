@@ -365,6 +365,7 @@ L.HelpTip_EditModeOverlay = [[Drag to reposition the Unit Frame.
 Click for more options.]]
 L.HelpTip_TagHintButton = "Click here to see available tags"
 L.HelpTip_BossFramePreview = "When editing %s frames, they will display the %s."
+L.HelpTip_BlizzardFramesToggle = "Click here to toggle Blizzard Frames"
 
 -- Aliases
 -- !!DO NOT ADD TO CURSEFORGE!!

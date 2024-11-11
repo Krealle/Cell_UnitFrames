@@ -1613,7 +1613,7 @@ function Builder:CreateClassBarOptions(parent, widgetName)
     f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
     self:AnchorBelow(f.sizeOptions, f.anchorOptions.anchorDropdown)
 
-    f.spacing = self:CreateSlider(f, widgetName, L["Spacing"], nil, 0, 50,
+    f.spacing = self:CreateSlider(f, widgetName, L["Spacing"], nil, -1, 50,
         const.OPTION_KIND.SPACING)
     self:AnchorRight(f.spacing, f.sizeOptions.sizeHeightSlider)
 

@@ -168,9 +168,9 @@ local function UpdateSize(self)
 
     local maxWidth
     if self.sameSizeAsHealthBar then
-        maxWidth = self._owner:GetWidth()
+        maxWidth = self._owner:GetWidth() + (self.spacing == -1 and -1 or 0)
     else
-        maxWidth = self.width
+        maxWidth = self.width + (self.spacing == -1 and -1 or 0)
     end
     self:SetSize(maxWidth, self.height)
 

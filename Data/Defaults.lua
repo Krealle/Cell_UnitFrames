@@ -641,7 +641,7 @@ Defaults.Widgets = {
     ---@type ShieldBarWidgetTable
     shieldBar = {
         enabled = false,
-        frameLevel = 10,
+        frameLevel = 9,
         point = "RIGHT",
         reverseFill = false,
         overShield = false,

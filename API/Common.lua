@@ -29,9 +29,7 @@ function API:GetUnitFrame(name)
         end
     end
 
-    local lowerCaseUnitName = string.lower(name)
-
-    return unitFrame, lowerCaseUnitName
+    return unitFrame, unitFrame._baseUnit
 end
 
 --- Returns all unit frames as an indexed table.

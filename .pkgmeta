@@ -3,6 +3,9 @@ package-as: Cell_UnitFrames
 required-dependencies:
   - cell
 
+externals:
+  Libs/!BlizzPolyfill: https://github.com/inyawfaze/BlizzPolyfill
+
 manual-changelog:
   filename: CHANGELOG.md
   markup-type: markdown

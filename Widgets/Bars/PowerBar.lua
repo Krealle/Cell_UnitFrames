@@ -4,7 +4,7 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 ---@type LibGroupInfo
-local LGI = LibStub:GetLibrary("LibGroupInfo")
+local LGI = LibStub:GetLibrary("LibGroupInfo", true)
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -36,7 +36,7 @@ local function GetRole(button)
         return button.states.role
     end
 
-    local info = LGI:GetCachedInfo(button.states.guid)
+    local info = LGI and LGI:GetCachedInfo(button.states.guid)
     if not info then return end
     return info.role
 end

@@ -94,8 +94,6 @@ function layoutProfile:SetLayoutItems()
         ["value"] = "CUFLayoutMasterNone",
         ["onClick"] = function()
             DB.SetMasterLayout("CUFLayoutMasterNone")
-            CUF:Fire("UpdateUnitButtons")
-            CUF:Fire("UpdateWidget", Cell.vars.currentLayout)
             copyLayoutFrom.SetLayoutItems()
         end,
     } }
@@ -107,8 +105,6 @@ function layoutProfile:SetLayoutItems()
             ["value"] = layoutName,
             ["onClick"] = function()
                 DB.SetMasterLayout(layoutName)
-                CUF:Fire("UpdateUnitButtons")
-                CUF:Fire("UpdateWidget", layoutName)
                 copyLayoutFrom.SetLayoutItems()
             end,
         })

@@ -129,6 +129,10 @@ end
 ---@param layout string
 function DB.SetMasterLayout(layout)
     CUF_DB.masterLayout = layout
+
+    CUF.vars.selectedLayout = DB.GetMasterLayout()
+
+    CUF:Fire("UpdateWidget", DB.GetMasterLayout())
     CUF:Fire("UpdateUnitButtons")
 end
 

@@ -59,7 +59,8 @@ Builder.MenuOptions = {
     DispelsOptions = 32,
     TrueSingleSizeOptions = 33,
     TotemOptions = 34,
-    HideAtMaxLevel = 35
+    HideAtMaxLevel = 35,
+    HideOutOfCombat = 36
 }
 
 -------------------------------------------------
@@ -1101,6 +1102,26 @@ function Builder:CreateHideAtMaxLevel(parent, widgetName)
     return f
 end
 
+-------------------------------------------------
+-- MARK: Out Of Combat
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return FrameLevelOptions
+function Builder:CreateHideOutOfCombat(parent, widgetName)
+    ---@class FrameLevelOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "FrameLevelOptions"
+    f.optionHeight = 20
+
+    f.hideOutOfCombatCB = self:CreateCheckBox(f, widgetName, L.HideOutOfCombat,
+        const.OPTION_KIND.HIDE_OUT_OF_COMBAT)
+    f.hideOutOfCombatCB:SetPoint("TOPLEFT", f)
+
+    return f
+end
+
 -----------------------------------------------
 -- MARK: Texture Dropdown
 -----------------------------------------------
@@ -1625,6 +1646,8 @@ function Builder:CreateClassBarOptions(parent, widgetName)
         const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
     self:AnchorRightOfCB(f.sameSizeAsHealthBar, f.verticalFill)
 
+    f.hideOutOfCombat = self:CreateHideOutOfCombat(f, widgetName)
+
     return f
 end
 
@@ -1983,4 +2006,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
     [Builder.MenuOptions.TotemOptions] = Builder.CreateTotemOptions,
     [Builder.MenuOptions.HideAtMaxLevel] = Builder.CreateHideAtMaxLevel,
+    [Builder.MenuOptions.HideOutOfCombat] = Builder.CreateHideOutOfCombat,
 }

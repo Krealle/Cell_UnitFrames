@@ -87,6 +87,14 @@ function W.UpdateClassBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
         widget.hideOutOfCombat = styleTable.hideOutOfCombat
         widget:UpdateEventListeners()
+        local shouldShow = widget:ShouldShow()
+        if shouldShow then
+            widget:ShowBars()
+            widget:TogglePowerEvents(true)
+        else
+            widget:HideBars()
+            widget:TogglePowerEvents(false)
+        end
     end
 end
 
@@ -254,8 +262,9 @@ local function TogglePowerEvents(self, enable)
 end
 
 ---@param self ClassBarWidget
-local function ShouldShow(self)
-    if self.hideOutOfCombat and not UnitAffectingCombat("player") then return false end
+---@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
+local function ShouldShow(self, event)
+    if self.hideOutOfCombat and not (UnitAffectingCombat("player") or event == "PLAYER_REGEN_DISABLED") then return false end
     if not self.classPowerID then return false end
     if self.requiredPowerType and self.requiredPowerType ~= UnitPowerType("player") then return false end
 
@@ -479,7 +488,7 @@ local function Update(button, event)
 
     classBar:UpdatePowerType()
 
-    local shouldShow = classBar:ShouldShow()
+    local shouldShow = classBar:ShouldShow(event)
     if not shouldShow then
         classBar:HideBars()
         classBar:TogglePowerEvents(false)
@@ -500,21 +509,6 @@ end
 
 ---@param self ClassBarWidget
 local function UpdateEventListeners(self)
-    self.requiredPowerType = REQUIRED_ENERGY[self._owner.states.class]
-    self.requiredSpec = REQUIRED_SPEC[self._owner.states.class]
-
-    self:UpdatePowerType()
-    self.Update(self._owner)
-
-    -- This class doesn't have a power type so no reason to show bars
-    if not self.classPowerID then
-        -- If want it shown for Vehicles we should still enable
-        if not self.showForVehicle then
-            self:HideBars()
-            return false
-        end
-    end
-
     if self.hideOutOfCombat then
         self._owner:AddEventListener("PLAYER_REGEN_DISABLED", self.Update, true)
         self._owner:AddEventListener("PLAYER_REGEN_ENABLED", self.Update, true)
@@ -537,12 +531,24 @@ local function UpdateEventListeners(self)
     if self._owner.states.class == "DRUID" then
         self._owner:AddEventListener("UNIT_DISPLAYPOWER", self.Update)
     end
-
-    return true
 end
 
 ---@param self ClassBarWidget
 local function Enable(self)
+    self.requiredPowerType = REQUIRED_ENERGY[self._owner.states.class]
+    self.requiredSpec = REQUIRED_SPEC[self._owner.states.class]
+
+    self:UpdatePowerType()
+    self.Update(self._owner)
+
+    -- This class doesn't have a power type so no reason to show bars
+    if not self.classPowerID then
+        -- If want it shown for Vehicles we should still enable
+        if not self.showForVehicle then
+            self:HideBars()
+            return false
+        end
+    end
     self:UpdateEventListeners()
 
     return true
@@ -662,6 +668,12 @@ function W:CreateClassBar(button)
     function classBar:HideBars()
         for i = 1, #self do
             self[i]:Hide()
+        end
+    end
+
+    function classBar:ShowBars()
+        for i = 1, #self do
+            self[i]:Show()
         end
     end
 

@@ -1646,8 +1646,6 @@ function Builder:CreateClassBarOptions(parent, widgetName)
         const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
     self:AnchorRightOfCB(f.sameSizeAsHealthBar, f.verticalFill)
 
-    f.hideOutOfCombat = self:CreateHideOutOfCombat(f, widgetName)
-
     return f
 end
 

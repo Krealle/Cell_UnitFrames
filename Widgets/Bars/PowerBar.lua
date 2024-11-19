@@ -47,31 +47,42 @@ end
 local function ShouldShowPowerBar(self)
     if not self.powerSize or self.powerSize == 0 then return end
 
-    if not self.states.guid then
-        return true
+    local guid = self.states.guid or UnitGUID(self.states.unit)
+    if not guid then
+        C_Timer.After(0.1, function()
+            self:EnableWidget(self.widgets.powerBar)
+        end)
+        return false
     end
 
     local class, role
     if self.states.inVehicle then
         class = "VEHICLE"
-    elseif F:IsPlayer(self.states.guid) then
+    elseif F:IsPlayer(guid) then
         class = self.states.class
         role = GetRole(self)
-    elseif F:IsPet(self.states.guid) then
+    elseif F:IsPet(guid) then
         class = "PET"
-    elseif F:IsNPC(self.states.guid) then
+    elseif F:IsNPC(guid) then
         if UnitInPartyIsAI(self.states.unit) then
             class = self.states.class
             role = GetRole(self)
         else
             class = "NPC"
         end
-    elseif F:IsVehicle(self.states.guid) then
+    elseif F:IsVehicle(guid) then
         class = "VEHICLE"
     end
 
     if CUF.DB.CurrentLayoutTable()[self._baseUnit].powerFilter then
-        if class and Cell.vars.currentLayoutTable and self.states.unit == "player" then
+        if not Cell.vars.currentLayoutTable then
+            C_Timer.After(0.1, function()
+                self:EnableWidget(self.widgets.powerBar)
+            end)
+            return false
+        end
+
+        if class and self.states.unit == "player" then
             if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
                 return Cell.vars.currentLayoutTable["powerFilters"][class]
             else
@@ -200,9 +211,7 @@ end
 ---@param self PowerBarWidget
 local function Enable(self)
     if not ShouldShowPowerBar(self._owner) then
-        if self:IsVisible() then
-            self._owner:DisableWidget(self)
-        end
+        self._owner:DisableWidget(self)
         return false
     end
 

@@ -78,8 +78,12 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
                 if icons.id == "buffs" then
-                    GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                        icons.auraFilter);
+                    if self.isTempEnchant then
+                        GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+                    else
+                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                            icons.auraFilter);
+                    end
                 else
                     GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
                         icons.auraFilter);
@@ -193,6 +197,15 @@ local function Icons_ShowDuration(icons, show)
     for _, icon in ipairs(icons) do
         icon._showDuration = show
         icon.duration:SetShown(show)
+    end
+end
+
+---@param icons CellAuraIcons
+---@param show boolean
+local function Icons_SetShowTempEnchant(icons, show)
+    if icons._owner._baseUnit == "player" and icons.id == "buffs" then
+        icons.showTempEnchant = show
+        icons:UpdateTempEnchantListener()
     end
 end
 
@@ -364,6 +377,85 @@ end
 -- MARK: UpdateAuraIcons
 -------------------------------------------------
 
+local textureMapping = {
+    [1] = 16, --Main hand
+    [2] = 17, --Off-hand
+    [3] = 18, --Ranged
+}
+
+---@param icons CellAuraIcons
+local function UpdateTempEnchants(icons)
+    if not icons.showTempEnchant then return end
+
+    local temp = Util:GetWeaponEnchantInfo()
+    if not temp then return end
+
+    local id
+
+    if temp.hasMainHandEnchant then
+        if temp.mainHandExpiration then
+            temp.mainHandExpiration = temp.mainHandExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.mainHandExpiration;
+
+        id = textureMapping[1]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.mainHandExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.mainHandCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+
+    if temp.hasOffHandEnchant then
+        if temp.offHandExpiration then
+            temp.offHandExpiration = temp.offHandExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.offHandExpiration;
+
+        id = textureMapping[2]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.offHandExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.offHandCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+
+    if temp.hasRangedEnchant then
+        if temp.rangedExpiration then
+            temp.rangedExpiration = temp.rangedExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.rangedExpiration;
+
+        id = textureMapping[3]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.rangedExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.rangedCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+end
+
 ---@param icons CellAuraIcons
 local function UpdateAuraIcons(icons)
     -- Preview
@@ -378,6 +470,8 @@ local function UpdateAuraIcons(icons)
 
     -- Update aura cache
     icons._owner:IterateAuras(icons.id, HandleAura, icons)
+
+    UpdateTempEnchants(icons)
 
     -- Sort
     table.sort(icons._auraInstanceIDs, function(a, b)
@@ -416,7 +510,16 @@ local function UpdateAuraIcons(icons)
             auraData.applications,
             auraData.refreshing
         )
-        icons[icons._auraCount].auraInstanceID = auraInstanceID -- Tooltip
+
+        -- Tooltip
+        ---@diagnostic disable-next-line: undefined-field
+        if auraData.isTempEnchant then
+            icons[icons._auraCount].auraInstanceID = math.abs(auraInstanceID)
+            icons[icons._auraCount].isTempEnchant = true
+        else
+            icons[icons._auraCount].auraInstanceID = auraInstanceID
+            icons[icons._auraCount].isTempEnchant = false
+        end
 
         icons[icons._auraCount]:PostUpdate(auraData)
     end
@@ -484,8 +587,21 @@ end
 -------------------------------------------------
 
 ---@param self CellAuraIcons
+local function UpdateTempEnchantListener(self)
+    if self.showTempEnchant then
+        self._owner:AddEventListener("WEAPON_ENCHANT_CHANGED", self.Update, true)
+        self._owner:AddEventListener("WEAPON_SLOT_CHANGED", self.Update, true)
+    else
+        self._owner:RemoveEventListener("WEAPON_ENCHANT_CHANGED", self.Update)
+        self._owner:RemoveEventListener("WEAPON_SLOT_CHANGED", self.Update)
+    end
+end
+
+---@param self CellAuraIcons
 local function Enable(self)
     self._owner:RegisterAuraCallback(self.id, self.Update)
+
+    self:UpdateTempEnchantListener()
 
     self:Show()
     return true
@@ -514,6 +630,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
     auraIcons._maxNum = CUF.Defaults.Values.maxAuraIcons
     auraIcons._isSelected = false
+    auraIcons.showTempEnchant = false
 
     ---@type table<number, AuraData>
     auraIcons._auraCache = {}
@@ -575,6 +692,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetUseBlacklist = Icons_SetUseBlacklist
     auraIcons.SetUseWhitelist = Icons_SetUseWhitelist
     auraIcons.SetWhiteListPriority = Icons_SetWhiteListPriority
+    auraIcons.SetShowTempEnchant = Icons_SetShowTempEnchant
 
     auraIcons.SetBoss = Icons_SetBoss
     auraIcons.SetCastByPlayers = Icons_SetCastByPlayers
@@ -612,6 +730,7 @@ function W:CreateAuraIcons(button, type)
     else
         auraIcons.Update = UpdateAuras_Debuffs
     end
+    auraIcons.UpdateTempEnchantListener = UpdateTempEnchantListener
 
     return auraIcons
 end

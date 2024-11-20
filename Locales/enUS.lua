@@ -97,6 +97,9 @@ The priority goes from top of the list to the bottom]]
 L.OverrideImportTooltip = "Will override the current list"
 L.AdditiveImportTooltip = "Will add to the current list"
 
+L.tempEnchant = "Temporary Enchants"
+L.tempEnchantTooltip = "Show temporary enchants"
+
 -- Cast Bar
 L.Reverse = "Reverse"
 L.Spark = "Spark"

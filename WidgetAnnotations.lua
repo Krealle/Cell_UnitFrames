@@ -208,6 +208,7 @@
 ---@field castByNPC boolean
 ---@field personal boolean
 ---@field boss boolean
+---@field tempEnchant boolean
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

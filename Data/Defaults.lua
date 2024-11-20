@@ -444,6 +444,7 @@ Defaults.Widgets = {
             castByNPC = false,
             personal = true,
             boss = false,
+            tempEnchant = false,
         },
         position = {
             point = "BOTTOMLEFT",
@@ -489,6 +490,7 @@ Defaults.Widgets = {
             castByNPC = false,
             personal = true,
             boss = false,
+            tempEnchant = false,
         },
         position = {
             point = "BOTTOMRIGHT",

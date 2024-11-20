@@ -12,6 +12,8 @@ local Util = CUF.Util
 
 local const = CUF.constants
 
+local GetWeaponEnchantInfo = GetWeaponEnchantInfo
+
 -------------------------------------------------
 -- MARK: Prop Hunting
 -------------------------------------------------
@@ -592,6 +594,47 @@ function Util:GetHealthBarColor(healthBarColorType, healthLossColorType, percent
     end
 
     return barR, barG, barB, lossR, lossG, lossB
+end
+
+---@class WeaponEnchantInfo
+---@field hasMainHandEnchant boolean
+---@field mainHandExpiration number?
+---@field mainHandCharges number?
+---@field mainHandEnchantID number?
+---@field hasOffHandEnchant boolean?
+---@field offHandExpiration number?
+---@field offHandCharges number?
+---@field offHandEnchantID number?
+---@field hasRangedEnchant boolean?
+---@field rangedExpiration number?
+---@field rangedCharges number?
+---@field rangedEnchantID number?
+
+--- Returns weapon enchant info as a table
+--- Returns nil if no weapon enchant info can be found
+---@return WeaponEnchantInfo?
+function Util:GetWeaponEnchantInfo()
+    local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID,
+    hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantID,
+    hasRangedEnchant, rangedExpiration, rangedCharges, rangedEnchantID =
+        GetWeaponEnchantInfo()
+
+    if hasMainHandEnchant ~= nil then
+        return {
+            hasMainHandEnchant = hasMainHandEnchant,
+            mainHandExpiration = mainHandExpiration,
+            mainHandCharges = mainHandCharges,
+            mainHandEnchantID = mainHandEnchantID,
+            hasOffHandEnchant = hasOffHandEnchant,
+            offHandExpiration = offHandExpiration,
+            offHandCharges = offHandCharges,
+            offHandEnchantID = offHandEnchantID,
+            hasRangedEnchant = hasRangedEnchant,
+            rangedExpiration = rangedExpiration,
+            rangedCharges = rangedCharges,
+            rangedEnchantID = rangedEnchantID,
+        }
+    end
 end
 
 -------------------------------------------------

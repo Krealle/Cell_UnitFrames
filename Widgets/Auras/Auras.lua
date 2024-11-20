@@ -511,12 +511,14 @@ local function UpdateAuraIcons(icons)
             auraData.refreshing
         )
 
+        -- Tooltip
         ---@diagnostic disable-next-line: undefined-field
         if auraData.isTempEnchant then
-            icons[icons._auraCount].auraInstanceID = math.abs(auraInstanceID) -- Tooltip
-            icons[icons._auraCount].isTempEnchant = true                      -- Tooltip
+            icons[icons._auraCount].auraInstanceID = math.abs(auraInstanceID)
+            icons[icons._auraCount].isTempEnchant = true
         else
-            icons[icons._auraCount].auraInstanceID = auraInstanceID           -- Tooltip
+            icons[icons._auraCount].auraInstanceID = auraInstanceID
+            icons[icons._auraCount].isTempEnchant = false
         end
 
         icons[icons._auraCount]:PostUpdate(auraData)

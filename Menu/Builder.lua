@@ -1395,6 +1395,22 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         L.WhiteListPriorityTooltip)
     self:AnchorBelowCB(f.whiteListPriority, f.useBlacklistCB)
 
+    if widgetName == const.WIDGET_KIND.BUFFS then
+        f.tempEnchant = self:CreateCheckBox(f, widgetName, L.tempEnchant,
+            const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.TEMP_ENCHANT,
+            L.tempEnchantTooltip)
+        self:AnchorRightOfCB(f.tempEnchant, f.whiteListPriority)
+
+        local function LoadPageDB()
+            if CUF.vars.selectedUnit == const.UNIT.PLAYER then
+                f.tempEnchant:Show()
+            else
+                f.tempEnchant:Hide()
+            end
+        end
+        Handler:RegisterOption(LoadPageDB, widgetName, "AuraFilterOptions")
+    end
+
     return f
 end
 

@@ -78,8 +78,12 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
                 if icons.id == "buffs" then
-                    GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                        icons.auraFilter);
+                    if self.isTempEnchant then
+                        GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+                    else
+                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                            icons.auraFilter);
+                    end
                 else
                     GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
                         icons.auraFilter);

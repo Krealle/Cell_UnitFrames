@@ -205,6 +205,7 @@ end
 local function Icons_SetShowTempEnchant(icons, show)
     if icons._owner._baseUnit == "player" and icons.id == "buffs" then
         icons.showTempEnchant = show
+        icons:UpdateTempEnchantListener()
     end
 end
 
@@ -584,8 +585,21 @@ end
 -------------------------------------------------
 
 ---@param self CellAuraIcons
+local function UpdateTempEnchantListener(self)
+    if self.showTempEnchant then
+        self._owner:AddEventListener("WEAPON_ENCHANT_CHANGED", self.Update, true)
+        self._owner:AddEventListener("WEAPON_SLOT_CHANGED", self.Update, true)
+    else
+        self._owner:RemoveEventListener("WEAPON_ENCHANT_CHANGED", self.Update)
+        self._owner:RemoveEventListener("WEAPON_SLOT_CHANGED", self.Update)
+    end
+end
+
+---@param self CellAuraIcons
 local function Enable(self)
     self._owner:RegisterAuraCallback(self.id, self.Update)
+
+    self:UpdateTempEnchantListener()
 
     self:Show()
     return true
@@ -714,6 +728,7 @@ function W:CreateAuraIcons(button, type)
     else
         auraIcons.Update = UpdateAuras_Debuffs
     end
+    auraIcons.UpdateTempEnchantListener = UpdateTempEnchantListener
 
     return auraIcons
 end

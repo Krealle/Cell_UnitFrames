@@ -179,6 +179,7 @@ L.HideDefaultCastBarTooltip = [[Hides the default cast bar.
 Reload to show it again after disabling this option.]]
 L.texture = "Texture"
 L.VerticalFill = "Vertical Fill"
+L.HideOutOfCombat = "Hide Out of Combat"
 L.SameSizeAsHealthBar = "Same Size As Health Bar"
 L.EditingLayout = "Editing Layout"
 L.MirrorPlayer = "Mirror Player"

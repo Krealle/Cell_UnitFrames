@@ -295,6 +295,7 @@
 ---@field spacing number
 ---@field verticalFill boolean
 ---@field sameSizeAsHealthBar boolean
+---@field hideOutOfCombat boolean
 
 ---@class HealAbsorbWidgetTable
 ---@field enabled boolean

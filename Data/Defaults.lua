@@ -723,6 +723,7 @@ Defaults.Widgets = {
         frameLevel = 10,
         verticalFill = false,
         sameSizeAsHealthBar = true,
+        hideOutOfCombat = false,
         size = {
             width = 200,
             height = 8,

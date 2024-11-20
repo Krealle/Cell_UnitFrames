@@ -57,7 +57,8 @@ local TIMER_TICK_INTERVAL = 0.1
 
 menu:AddWidget(const.WIDGET_KIND.CLASS_BAR,
     Builder.MenuOptions.ClassBarOptions,
-    Builder.MenuOptions.FrameLevel)
+    Builder.MenuOptions.FrameLevel,
+    Builder.MenuOptions.HideOutOfCombat)
 
 ---@param button CUFUnitButton
 ---@param unit Unit
@@ -82,6 +83,11 @@ function W.UpdateClassBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.SIZE then
         widget:SetSizeStyle(styleTable.size)
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
+        widget.hideOutOfCombat = styleTable.hideOutOfCombat
+        widget:UpdateEventListeners()
+        widget.Update(button)
     end
 end
 
@@ -249,10 +255,14 @@ local function TogglePowerEvents(self, enable)
 end
 
 ---@param self ClassBarWidget
-local function ShouldShow(self)
+---@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
+local function ShouldShow(self, event)
+    if self.hideOutOfCombat then
+        if event == "PLAYER_REGEN_ENABLED" then return false end
+        if not UnitAffectingCombat("player") then return false end
+    end
     if not self.classPowerID then return false end
     if self.requiredPowerType and self.requiredPowerType ~= UnitPowerType("player") then return false end
-
     return true
 end
 
@@ -463,7 +473,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER")?
+---@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
 local function Update(button, event)
     local classBar = button.widgets.classBar
 
@@ -473,7 +483,7 @@ local function Update(button, event)
 
     classBar:UpdatePowerType()
 
-    local shouldShow = classBar:ShouldShow()
+    local shouldShow = classBar:ShouldShow(event)
     if not shouldShow then
         classBar:HideBars()
         classBar:TogglePowerEvents(false)
@@ -493,20 +503,13 @@ local function Update(button, event)
 end
 
 ---@param self ClassBarWidget
-local function Enable(self)
-    self.requiredPowerType = REQUIRED_ENERGY[self._owner.states.class]
-    self.requiredSpec = REQUIRED_SPEC[self._owner.states.class]
-
-    self:UpdatePowerType()
-    self.Update(self._owner)
-
-    -- This class doesn't have a power type so no reason to show bars
-    if not self.classPowerID then
-        -- If want it shown for Vehicles we should still enable
-        if not self.showForVehicle then
-            self:HideBars()
-            return false
-        end
+local function UpdateEventListeners(self)
+    if self.hideOutOfCombat then
+        self._owner:AddEventListener("PLAYER_REGEN_DISABLED", self.Update, true)
+        self._owner:AddEventListener("PLAYER_REGEN_ENABLED", self.Update, true)
+    else
+        self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", self.Update)
+        self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", self.Update)
     end
 
     -- We need to listen for changes in the spec so we can appropriately toggle the bars
@@ -523,6 +526,26 @@ local function Enable(self)
     if self._owner.states.class == "DRUID" then
         self._owner:AddEventListener("UNIT_DISPLAYPOWER", self.Update)
     end
+end
+
+---@param self ClassBarWidget
+local function Enable(self)
+    self.requiredPowerType = REQUIRED_ENERGY[self._owner.states.class]
+    self.requiredSpec = REQUIRED_SPEC[self._owner.states.class]
+
+    self:UpdatePowerType()
+    self.Update(self._owner)
+
+    -- This class doesn't have a power type so no reason to show bars
+    if not self.classPowerID then
+        -- If want it shown for Vehicles we should still enable
+        if not self.showForVehicle then
+            self:HideBars()
+            return false
+        end
+    end
+
+    self:UpdateEventListeners()
 
     return true
 end
@@ -533,6 +556,8 @@ local function Disable(self)
     self._owner:RemoveEventListener("UNIT_ENTERED_VEHICLE", self.Update)
     self._owner:RemoveEventListener("UNIT_EXITED_VEHICLE", self.Update)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", self.Update)
+    self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", self.Update)
+    self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", self.Update)
 
     self:TogglePowerEvents(false)
 
@@ -594,6 +619,7 @@ function W:CreateClassBar(button)
     classBar.sameSizeAsHealthBar = true
     classBar.height = 8
     classBar.width = 200
+    classBar.hideOutOfCombat = false
 
     classBar.showForVehicle = false
     classBar.inVehicle = false
@@ -656,6 +682,8 @@ function W:CreateClassBar(button)
     classBar.UpdateColors = UpdateColors
     classBar.UpdatePowerType = UpdatePowerType
     classBar.TogglePowerEvents = TogglePowerEvents
+
+    classBar.UpdateEventListeners = UpdateEventListeners
 
     classBar.SetEnabled = W.SetEnabled
     classBar.SetPosition = W.SetPosition

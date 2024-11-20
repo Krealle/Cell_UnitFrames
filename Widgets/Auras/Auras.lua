@@ -203,7 +203,9 @@ end
 ---@param icons CellAuraIcons
 ---@param show boolean
 local function Icons_SetShowTempEnchant(icons, show)
-    icons.showTempEnchant = show
+    if icons._owner._baseUnit == "player" and icons.id == "buffs" then
+        icons.showTempEnchant = show
+    end
 end
 
 -- We need to override this so we can format the duration for really long auras

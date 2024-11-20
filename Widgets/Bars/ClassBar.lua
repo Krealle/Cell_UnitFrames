@@ -87,14 +87,7 @@ function W.UpdateClassBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
         widget.hideOutOfCombat = styleTable.hideOutOfCombat
         widget:UpdateEventListeners()
-        local shouldShow = widget:ShouldShow()
-        if shouldShow then
-            widget:ShowBars()
-            widget:TogglePowerEvents(true)
-        else
-            widget:HideBars()
-            widget:TogglePowerEvents(false)
-        end
+        widget.Update(button)
     end
 end
 
@@ -264,10 +257,12 @@ end
 ---@param self ClassBarWidget
 ---@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
 local function ShouldShow(self, event)
-    if self.hideOutOfCombat and not (UnitAffectingCombat("player") or event == "PLAYER_REGEN_DISABLED") then return false end
+    if self.hideOutOfCombat then
+        if event == "PLAYER_REGEN_ENABLED" then return false end
+        if not UnitAffectingCombat("player") then return false end
+    end
     if not self.classPowerID then return false end
     if self.requiredPowerType and self.requiredPowerType ~= UnitPowerType("player") then return false end
-
     return true
 end
 
@@ -549,6 +544,7 @@ local function Enable(self)
             return false
         end
     end
+
     self:UpdateEventListeners()
 
     return true
@@ -668,12 +664,6 @@ function W:CreateClassBar(button)
     function classBar:HideBars()
         for i = 1, #self do
             self[i]:Hide()
-        end
-    end
-
-    function classBar:ShowBars()
-        for i = 1, #self do
-            self[i]:Show()
         end
     end
 

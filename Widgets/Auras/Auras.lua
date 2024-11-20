@@ -196,6 +196,12 @@ local function Icons_ShowDuration(icons, show)
     end
 end
 
+---@param icons CellAuraIcons
+---@param show boolean
+local function Icons_SetShowTempEnchant(icons, show)
+    icons.showTempEnchant = show
+end
+
 -- We need to override this so we can format the duration for really long auras
 local function Icon_OnUpdate(frame, elapsed)
     frame._remain = frame._duration - (GetTime() - frame._start)
@@ -514,6 +520,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.auraFilter = type == "buffs" and "HELPFUL" or "HARMFUL"
     auraIcons._maxNum = CUF.Defaults.Values.maxAuraIcons
     auraIcons._isSelected = false
+    auraIcons.showTempEnchant = false
 
     ---@type table<number, AuraData>
     auraIcons._auraCache = {}
@@ -575,6 +582,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetUseBlacklist = Icons_SetUseBlacklist
     auraIcons.SetUseWhitelist = Icons_SetUseWhitelist
     auraIcons.SetWhiteListPriority = Icons_SetWhiteListPriority
+    auraIcons.SetShowTempEnchant = Icons_SetShowTempEnchant
 
     auraIcons.SetBoss = Icons_SetBoss
     auraIcons.SetCastByPlayers = Icons_SetCastByPlayers

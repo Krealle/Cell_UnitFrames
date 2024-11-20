@@ -211,6 +211,7 @@ const.AURA_OPTION_KIND = {
     CAST_BY_NPC = "castByNPC",
     HIDE_IN_COMBAT = "hideInCombat",
     WHITE_LIST_PRIORITY = "whiteListPriority",
+    TEMP_ENCHANT = "showTempEnchant",
 }
 
 ---@enum GrowthOrientation

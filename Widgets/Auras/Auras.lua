@@ -370,6 +370,85 @@ end
 -- MARK: UpdateAuraIcons
 -------------------------------------------------
 
+local textureMapping = {
+    [1] = 16, --Main hand
+    [2] = 17, --Off-hand
+    [3] = 18, --Ranged
+}
+
+---@param icons CellAuraIcons
+local function UpdateTempEnchants(icons)
+    if not icons.showTempEnchant then return end
+
+    local temp = Util:GetWeaponEnchantInfo()
+    if not temp then return end
+
+    local id
+
+    if temp.hasMainHandEnchant then
+        if temp.mainHandExpiration then
+            temp.mainHandExpiration = temp.mainHandExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.mainHandExpiration;
+
+        id = textureMapping[1]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.mainHandExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.mainHandCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+
+    if temp.hasOffHandEnchant then
+        if temp.offHandExpiration then
+            temp.offHandExpiration = temp.offHandExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.offHandExpiration;
+
+        id = textureMapping[2]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.offHandExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.offHandCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+
+    if temp.hasRangedEnchant then
+        if temp.rangedExpiration then
+            temp.rangedExpiration = temp.rangedExpiration / 1000;
+        end
+        local expirationTime = GetTime() + temp.rangedExpiration;
+
+        id = textureMapping[3]
+
+        local tempAura = {
+            expirationTime = expirationTime,
+            duration = temp.rangedExpiration,
+            icon = GetInventoryItemTexture("player", id),
+            applications = temp.rangedCharges,
+            refreshing = false,
+            isTempEnchant = true,
+            spellId = -id,
+        }
+        tinsert(icons._auraInstanceIDs, -id)
+        icons._auraCache[-id] = tempAura
+    end
+end
+
 ---@param icons CellAuraIcons
 local function UpdateAuraIcons(icons)
     -- Preview
@@ -384,6 +463,8 @@ local function UpdateAuraIcons(icons)
 
     -- Update aura cache
     icons._owner:IterateAuras(icons.id, HandleAura, icons)
+
+    UpdateTempEnchants(icons)
 
     -- Sort
     table.sort(icons._auraInstanceIDs, function(a, b)
@@ -422,7 +503,14 @@ local function UpdateAuraIcons(icons)
             auraData.applications,
             auraData.refreshing
         )
-        icons[icons._auraCount].auraInstanceID = auraInstanceID -- Tooltip
+
+        ---@diagnostic disable-next-line: undefined-field
+        if auraData.isTempEnchant then
+            icons[icons._auraCount].auraInstanceID = math.abs(auraInstanceID) -- Tooltip
+            icons[icons._auraCount].isTempEnchant = true                      -- Tooltip
+        else
+            icons[icons._auraCount].auraInstanceID = auraInstanceID           -- Tooltip
+        end
 
         icons[icons._auraCount]:PostUpdate(auraData)
     end

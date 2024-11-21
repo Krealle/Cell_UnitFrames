@@ -16,7 +16,64 @@ local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
 
 local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
-local ForEachAura = AuraUtil.ForEachAura
+local AuraFilters = (AuraUtil and AuraUtil.AuraFilters or {
+	Helpful = "HELPFUL",
+	Harmful = "HARMFUL",
+	Raid = "RAID",
+	IncludeNameplateOnly = "INCLUDE_NAME_PLATE_ONLY",
+	Player = "PLAYER",
+	Cancelable = "CANCELABLE",
+	NotCancelable = "NOT_CANCELABLE",
+	Maw = "MAW",
+});
+
+local AuraUpdateChangedType = (AuraUtil and AuraUtil.AuraUpdateChangedType or EnumUtil.MakeEnum(
+	"None",
+	"Debuff",
+	"Buff",
+	"Dispel"
+));
+
+local function ForEachAura(...)    
+    if AuraUtil.ForEachAura then return AuraUtil.ForEachAura(...) end
+
+    local function ForEachAuraHelper(unit, filter, func, usePackedAura, continuationToken, ...)
+		-- continuationToken is the first return value of UnitAuraSlots()
+		local n = select('#', ...);
+		for i=1, n do
+			local slot = select(i, ...);
+			local done;
+			local auraInfo = C_UnitAuras.GetAuraDataBySlot(unit, slot);
+
+			-- Protect against GetAuraDataBySlot desyncing with GetAuraSlots
+			if auraInfo then
+				if usePackedAura then
+					done = func(auraInfo);
+				else
+					done = func(AuraUtil.UnpackAuraData(auraInfo));
+				end
+			end
+			if done then
+				-- if func returns true then no further slots are needed, so don't return continuationToken
+				return nil;
+			end
+		end
+		return continuationToken;
+	end
+
+	local function ForEachAura(unit, filter, maxCount, func, usePackedAura)
+		if maxCount and maxCount <= 0 then
+			return;
+		end
+		local continuationToken;
+		repeat
+			-- continuationToken is the first return value of UnitAuraSltos
+			continuationToken = ForEachAuraHelper(unit, filter, func, usePackedAura, C_UnitAuras.GetAuraSlots(unit, filter, maxCount, continuationToken));
+		until continuationToken == nil;
+	end
+
+    return ForEachAura(...)
+end
 
 -------------------------------------------------
 -- MARK: Aura tables
@@ -56,25 +113,25 @@ end
 ---@return AuraUtil.AuraUpdateChangedType
 local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
     if aura == nil then
-        return AuraUtil.AuraUpdateChangedType.None;
+        return AuraUpdateChangedType.None;
     end
 
     if aura.isNameplateOnly then
-        return AuraUtil.AuraUpdateChangedType.None;
+        return AuraUpdateChangedType.None;
     end
 
     if aura.isHarmful and not ignoreDebuffs then
         aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
         if aura.dispelName ~= "" then
-            return AuraUtil.AuraUpdateChangedType.Dispel
+            return AuraUpdateChangedType.Dispel
         end
 
-        return AuraUtil.AuraUpdateChangedType.Debuff
+        return AuraUpdateChangedType.Debuff
     elseif aura.isHelpful and not ignoreBuffs then
-        return AuraUtil.AuraUpdateChangedType.Buff
+        return AuraUpdateChangedType.Buff
     end
 
-    return AuraUtil.AuraUpdateChangedType.None;
+    return AuraUpdateChangedType.None;
 end
 
 --- Perform a full aura update for a unit
@@ -90,20 +147,20 @@ local function ParseAllAuras(self, ignoreBuffs, ignoreDebuffs)
     ---@param aura AuraData
     local function HandleAura(aura)
         local type = ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
-        if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
+        if type == AuraUpdateChangedType.Debuff or type == AuraUpdateChangedType.Dispel then
             self._auraDebuffCache[aura.auraInstanceID] = aura
-        elseif type == AuraUtil.AuraUpdateChangedType.Buff then
+        elseif type == AuraUpdateChangedType.Buff or type == AuraUpdateChangedType.None then
             self._auraBuffCache[aura.auraInstanceID] = aura
         end
     end
 
     if not ignoreDebuffs then
-        ForEachAura(self.states.unit, AuraUtil.AuraFilters.Harmful, batchCount,
+        ForEachAura(self.states.unit, AuraFilters.Harmful, batchCount,
             HandleAura,
             usePackedAura)
     end
     if not ignoreBuffs then
-        ForEachAura(self.states.unit, AuraUtil.AuraFilters.Helpful, batchCount,
+        ForEachAura(self.states.unit, AuraFilters.Helpful, batchCount,
             HandleAura,
             usePackedAura)
     end
@@ -136,11 +193,11 @@ local function UpdateAurasInternal(self, event, unit, unitAuraUpdateInfo)
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
                 local type = ProcessAura(aura, self._ignoreBuffs, self._ignoreDebuffs)
 
-                if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
+                if type == AuraUpdateChangedType.Debuff or type == AuraUpdateChangedType.Dispel then
                     self._auraDebuffCache[aura.auraInstanceID] = aura
                     debuffsChanged = true
-                    dispelsChanged = type == AuraUtil.AuraUpdateChangedType.Dispel
-                elseif type == AuraUtil.AuraUpdateChangedType.Buff then
+                    dispelsChanged = type == AuraUpdateChangedType.Dispel
+                elseif type == AuraUpdateChangedType.Buff then
                     self._auraBuffCache[aura.auraInstanceID] = aura
                     buffsChanged = true
                 end
@@ -603,11 +660,13 @@ function CUFUnitButton_OnLoad(button)
     button.healthLossColorType = const.UnitButtonColorType.CELL
 
     -- ping system
-    Mixin(button, PingableType_UnitFrameMixin)
-    button:SetAttribute("ping-receiver", true)
+    if CUF.vars.isRetail then
+        Mixin(button, PingableType_UnitFrameMixin)
+        button:SetAttribute("ping-receiver", true)
 
-    function button:GetTargetPingGUID()
-        return button.__unitGuid
+        function button:GetTargetPingGUID()
+            return button.__unitGuid
+        end
     end
 
     ---@param widget WIDGET_KIND

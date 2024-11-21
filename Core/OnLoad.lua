@@ -16,7 +16,9 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF.vars.selectedUnit = CUF.constants.UNIT.PLAYER
     CUF.vars.selectedWidget = CUF.constants.WIDGET_KIND.NAME_TEXT
     CUF.vars.selectedLayout = Cell.vars.currentLayout
-    CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+ 
+    -- moved the game version vars to constants, since they load ealier but depend on it
+
     CUF.vars.inEditMode = false
 
     -- Hide Blizzard Frames

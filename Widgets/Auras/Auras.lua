@@ -77,16 +77,27 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
                 if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-                if icons.id == "buffs" then
-                    if self.isTempEnchant then
-                        GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+                if CUF.vars.isRetail then
+                    if icons.id == "buffs" then
+                        if self.isTempEnchant then
+                            GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+                        else
+                            GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                                icons.auraFilter);
+                        end
                     else
-                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
                             icons.auraFilter);
                     end
                 else
-                    GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                        icons.auraFilter);
+                    -- The aura index is not stored along the auraInstanceId and is prone to change on ever new buff on the unit
+                    -- So it's either rebuilding a mapping on every single buff update or looking for the index on demand
+                    local auraIndex = Util:GetAuraIndexByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID, icons.auraFilter)
+                    if icons.id == "buffs" then
+                        GameTooltip:SetUnitBuff(icons._owner.states.displayedUnit, auraIndex, icons.auraFilter);
+                    else
+                        GameTooltip:SetUnitDebuff(icons._owner.states.displayedUnit, auraIndex, icons.auraFilter);
+                    end
                 end
             end)
 

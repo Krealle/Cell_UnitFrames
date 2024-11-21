@@ -94,6 +94,7 @@ function unitFramesTab:InitUnits()
     local prevButton
     local prevAnchor
     local idx = 1
+    local rowsUsed = 1
 
     for _, fn in pairs(self.unitsToAdd) do
         ---@type UnitsMenuPage
@@ -104,6 +105,7 @@ function unitFramesTab:InitUnits()
         if prevButton then
             -- Max 4 buttons per row
             if idx % 4 == 0 then
+                rowsUsed = rowsUsed + 1
                 unit.pageButton:SetPoint("BOTTOMLEFT", prevAnchor, "TOPLEFT", 0, 0)
                 idx = 1
                 prevAnchor = unit.pageButton
@@ -121,6 +123,12 @@ function unitFramesTab:InitUnits()
         prevButton = unit.pageButton
 
         table.insert(self.unitPageButtons, unit.pageButton)
+    end
+
+    -- Prevent the edit mode button from colliding with the unitPane CreateTitledPane
+    if rowsUsed == 1 then        
+        self.window:SetHeight(self.window:GetHeight() + self.paneHeight)
+        self.unitPane:SetHeight(self.unitPane:GetHeight() + self.paneHeight)
     end
 end
 

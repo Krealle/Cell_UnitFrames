@@ -14,16 +14,32 @@ local function OnAddonLoaded()
 end
 
 CUF:RegisterCallback("AddonLoaded", "CUF_Constants_OnAddonLoaded", OnAddonLoaded)
+   
+-- detect the different game versions
+CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+CUF.vars.isVanilla = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+CUF.vars.isBCC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE
+CUF.vars.isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+CUF.vars.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
+CUF.vars.isTWW = LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_WAR_WITHIN
 
----@enum Unit
+---@class Unit
 const.UNIT = {
     PLAYER = "player",
     TARGET = "target",
-    FOCUS = "focus",
     PET = "pet",
     TARGET_TARGET = "targettarget",
-    BOSS = "boss",
 }
+
+-- Focus was introduced with TBC
+if not CUF.vars.isVanilla then
+    const.UNIT.FOCUS = "focus"
+end
+
+-- Boss frames were intoduced with Wrath
+if not CUF.vars.isVanilla and not CUF.vars.isBCC then
+    const.UNIT.BOSS = "boss"
+end
 
 ---@enum TitleCasedUnits
 -- Used for frame titles
@@ -57,26 +73,29 @@ const.PowerTextFormat = {
     CUSTOM = "custom"
 }
 
----@enum HealthTextFormat
+---@class HealthTextFormat
 const.HealthTextFormat = {
     PERCENTAGE = "percentage",
     NUMBER = "number",
     NUMBER_SHORT = "number-short",
-    PERCENTAGE_ABSORBS = "percentage-absorbs",
-    PERCENTAGE_ABSORBS_MERGED = "percentage-absorbs-merged",
     PERCENTAGE_DEFICIT = "percentage-deficit",
-    NUMBER_ABSORBS_SHORT = "number-absorbs-short",
-    NUMBER_ABSORBS_MERGED_SHORT = "number-absorbs-merged-short",
     NUMBER_DEFICIT = "number-deficit",
     NUMBER_DEFICIT_SHORT = "number-deficit-short",
     CURRENT_SHORT_PERCENTAGE = "current-short-percentage",
-    ABSORBS_ONLY = "absorbs-only",
-    ABSORBS_ONLY_SHORT = "absorbs-only-short",
-    ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
     CUSTOM = "custom",
 }
 
----@enum WIDGET_KIND
+if CUF.vars.isRetail then
+    const.HealthTextFormat.PERCENTAGE_ABSORBS = "percentage-absorbs"
+    const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED = "percentage-absorbs-merged"
+    const.HealthTextFormat.NUMBER_ABSORBS_SHORT = "number-absorbs-short"
+    const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT = "number-absorbs-merged-short"
+    const.HealthTextFormat.ABSORBS_ONLY = "absorbs-only"
+    const.HealthTextFormat.ABSORBS_ONLY_SHORT = "absorbs-only-short"
+    const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage"
+end
+
+---@class WIDGET_KIND
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
     HEALTH_TEXT = "healthText",
@@ -86,19 +105,22 @@ const.WIDGET_KIND = {
     BUFFS = "buffs",
     DEBUFFS = "debuffs",
     RAID_ICON = "raidIcon",
-    ROLE_ICON = "roleIcon",
     LEADER_ICON = "leaderIcon",
     COMBAT_ICON = "combatIcon",
-    SHIELD_BAR = "shieldBar",
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
-    CLASS_BAR = "classBar",
-    HEAL_ABSORB = "healAbsorb",
     DISPELS = "dispels",
     TOTEMS = "totems",
     FADER = "fader"
 }
+
+if CUF.vars.isRetail then
+    const.WIDGET_KIND.CLASS_BAR = "classBar"
+    const.WIDGET_KIND.HEAL_ABSORB = "healAbsorb"
+    const.WIDGET_KIND.SHIELD_BAR = "shieldBar"
+    const.WIDGET_KIND.ROLE_ICON = "roleIcon"
+end
 
 ---@enum OPTION_KIND
 const.OPTION_KIND = {
@@ -325,10 +347,18 @@ const.BlizzardFrameTypes = {
     CUF.constants.UNIT.PLAYER,
     CUF.constants.UNIT.TARGET,
     CUF.constants.UNIT.TARGET_TARGET,
-    CUF.constants.UNIT.FOCUS,
     CUF.constants.UNIT.PET,
-    CUF.constants.UNIT.BOSS,
     "playerCastBar",
     "buffFrame",
     "debuffFrame",
 }
+
+-- Focus was introduced with TBC
+if not CUF.vars.isVanilla then
+    table.insert(const.BlizzardFrameTypes, CUF.constants.UNIT.FOCUS)
+end
+
+-- Boss frames were intoduced with Wrath
+if not CUF.vars.isVanilla and not CUF.vars.isBCC then
+    table.insert(const.BlizzardFrameTypes, CUF.constants.UNIT.BOSS)
+end

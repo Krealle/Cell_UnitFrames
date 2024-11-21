@@ -2,6 +2,7 @@
 local CUF = select(2, ...)
 
 local F = Cell.funcs
+local L = CUF.L
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -202,7 +203,7 @@ end
 ---@param event ("UNIT_SPELLCAST_START" | "UNIT_SPELLCAST_CHANNEL_START" | "UNIT_SPELLCAST_EMPOWER_START")?
 ---@param unit UnitToken
 ---@param castGUID WOWGUID?
-function CastStart(button, event, unit, castGUID)
+function CastStart(button, event, unit, castGUID,...)
     if not ShouldShow(button, unit) then return end
 
     local castBar = button.widgets.castBar
@@ -218,6 +219,26 @@ function CastStart(button, event, unit, castGUID)
         event = (numStages and numStages > 0) and "UNIT_SPELLCAST_EMPOWER_START" or "UNIT_SPELLCAST_CHANNEL_START"
     end
 
+    -- In era UnitChannelInfo does not return information for some unit token (e.g. target)
+    -- if we actually want this we currently need to fake it
+    if CUF.vars.isVanilla then    
+        if not name then
+            spellID = ...            
+            if spellID then
+                local spellChannelDuration = CUF.Util:GetSpellChannelDuration(spellID)
+                if spellChannelDuration ~= 0 then
+                    local spellInfo = C_Spell.GetSpellInfo(spellID);
+                    name = spellInfo.name
+                    displayName = L.Channeling
+                    texture = spellInfo.originalIconID
+                    local fakeTime = (GetTime()*1000)
+                    startTime, endTime = fakeTime, fakeTime + spellChannelDuration
+                    isTradeSkill, notInterruptible = false, nil
+                end                
+            end
+        end    
+    end
+
     if (not name) or (castBar.onlyShowInterrupt and notInterruptible) then
         castBar:ResetAttributes()
         castBar:Hide()
@@ -227,10 +248,12 @@ function CastStart(button, event, unit, castGUID)
 
     castBar.casting = event == "UNIT_SPELLCAST_START"
     castBar.channeling = event == "UNIT_SPELLCAST_CHANNEL_START"
-    castBar.empowering = event == "UNIT_SPELLCAST_EMPOWER_START"
 
-    if castBar.empowering then
-        endTime = endTime + GetUnitEmpowerHoldAtMaxTime(unit)
+    if CUF.vars.isRetail then
+        castBar.empowering = event == "UNIT_SPELLCAST_EMPOWER_START"
+        if castBar.empowering then
+            endTime = endTime + GetUnitEmpowerHoldAtMaxTime(unit)
+        end
     end
 
     castBar:ClearStages()
@@ -261,7 +284,7 @@ function CastStart(button, event, unit, castGUID)
 
     castBar:Show()
 
-    if castBar.empowering then
+    if CUF.vars.isRetail and castBar.empowering then
         castBar:AddStages(numStages)
     end
 end

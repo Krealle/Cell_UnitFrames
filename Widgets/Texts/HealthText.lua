@@ -18,8 +18,8 @@ local L = CUF.L
 
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
-local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
-local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs -- Function is still not present in classic cata, orgiginally made available in mists.
+local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs -- Function is still not present in classic cata, orgiginally made available in mists.
 
 -------------------------------------------------
 -- MARK: AddWidget
@@ -96,16 +96,18 @@ local function Enable(self)
     self._owner:AddEventListener("UNIT_HEALTH", UpdateFrequent, unitLess)
     self._owner:AddEventListener("UNIT_MAXHEALTH", UpdateFrequent, unitLess)
 
-    if self._showingAbsorbs then
-        self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
-    else
-        self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
-    end
+    if CUF.vars.isRetail then
+        if self._showingAbsorbs then
+            self._owner:AddEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
+        else
+            self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+        end
 
-    if self._showingHealAbsorbs then
-        self._owner:AddEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
-    else
-        self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+        if self._showingHealAbsorbs then
+            self._owner:AddEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent, unitLess)
+        else
+            self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+        end
     end
 
     -- Full update
@@ -119,8 +121,10 @@ end
 local function Disable(self)
     self._owner:RemoveEventListener("UNIT_HEALTH", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_MAXHEALTH", UpdateFrequent)
-    self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
-    self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    if CUF.vars.isRetail then
+        self._owner:RemoveEventListener("UNIT_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+        self._owner:RemoveEventListener("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", UpdateFrequent)
+    end
 end
 
 -------------------------------------------------
@@ -137,6 +141,11 @@ end
 local function GetHealthInfo(unit, absorbs, healAbsorbs)
     local health = UnitHealth(unit) or 0
     local healthMax = UnitHealthMax(unit) or 0
+
+    if not CUF.vars.isRetail then
+        return health, healthMax, 0, 0
+    end
+
     local totalAbsorbs = absorbs and UnitGetTotalAbsorbs(unit) or 0
     local healAborbs = healAbsorbs and UnitGetTotalHealAbsorbs(unit) or 0
     return health, healthMax, totalAbsorbs, healAborbs
@@ -282,17 +291,19 @@ end
 local function SetHealth_Custom(self)
     local formatFn, events = W.GetTagFunction(self.textFormat, "Health")
 
-    local hasAbsorb, hasHealAbsorb = false, false
-    for event, _ in pairs(events) do
-        if event == "UNIT_ABSORB_AMOUNT_CHANGED" then
-            hasAbsorb = true
-        elseif event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED" then
-            hasHealAbsorb = true
+    if CUF.vars.isRetail then
+        local hasAbsorb, hasHealAbsorb = false, false
+        for event, _ in pairs(events) do
+            if event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+                hasAbsorb = true
+            elseif event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED" then
+                hasHealAbsorb = true
+            end
         end
+    
+        self._showingAbsorbs = hasAbsorb
+        self._showingHealAbsorbs = hasHealAbsorb
     end
-
-    self._showingAbsorbs = hasAbsorb
-    self._showingHealAbsorbs = hasHealAbsorb
 
     self.SetValue = function()
         self:SetText(formatFn(nil, self._owner.states.unit))
@@ -310,12 +321,6 @@ local function HealthText_SetFormat(self, format)
     if format == const.HealthTextFormat.PERCENTAGE then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage
-    elseif format == const.HealthTextFormat.PERCENTAGE_ABSORBS then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Percentage_Absorbs
-    elseif format == const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Percentage_Absorbs_Merged
     elseif format == const.HealthTextFormat.PERCENTAGE_DEFICIT then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Percentage_Deficit
@@ -325,12 +330,6 @@ local function HealthText_SetFormat(self, format)
     elseif format == const.HealthTextFormat.NUMBER_SHORT then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Number_Short
-    elseif format == const.HealthTextFormat.NUMBER_ABSORBS_SHORT then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Number_Absorbs_Short
-    elseif format == const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Number_Absorbs_Merged_Short
     elseif format == const.HealthTextFormat.NUMBER_DEFICIT then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Number_Deficit
@@ -340,17 +339,35 @@ local function HealthText_SetFormat(self, format)
     elseif format == const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE then
         self._showingAbsorbs = false
         self.SetValue = SetHealth_Current_Short_Percentage
-    elseif format == const.HealthTextFormat.ABSORBS_ONLY then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Absorbs_Only
-    elseif format == const.HealthTextFormat.ABSORBS_ONLY_SHORT then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Absorbs_Only_Short
-    elseif format == const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE then
-        self._showingAbsorbs = true
-        self.SetValue = SetHealth_Absorbs_Only_Percentage
     elseif format == const.HealthTextFormat.CUSTOM then
         self:SetHealth_Custom()
+    end
+
+    if CUF.vars.isRetail then
+        if format == const.HealthTextFormat.PERCENTAGE_ABSORBS then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Percentage_Absorbs
+        elseif format == const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Percentage_Absorbs_Merged
+        elseif format == const.HealthTextFormat.NUMBER_ABSORBS_SHORT then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Number_Absorbs_Short
+        elseif format == const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Number_Absorbs_Merged_Short
+        elseif format == const.HealthTextFormat.ABSORBS_ONLY then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Absorbs_Only
+        elseif format == const.HealthTextFormat.ABSORBS_ONLY_SHORT then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Absorbs_Only_Short
+        elseif format == const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE then
+            self._showingAbsorbs = true
+            self.SetValue = SetHealth_Absorbs_Only_Percentage
+        end
+    else
+        self._showingAbsorbs = false
     end
 
     if not self.enabled then return end

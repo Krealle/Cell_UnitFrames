@@ -1,0 +1,88 @@
+## Interface: 110005
+## SavedVariables: CUF_DB
+## IconTexture: Interface\ICONS\spell_progenitor_buff
+
+## Title: Cell - Unit Frames
+## Author: Vollmer
+## Version: @project-version@
+## X-Date: @project-date-iso@
+## X-License: MIT
+## X-Curse-Project-ID: 1085605
+## X-Wago-ID: ZKxqRdGk
+
+## Dependencies: Cell
+
+## Notes: Unitframes for our beloved Cell!
+
+Locales/LoadLocales.xml
+Core/Init.lua
+Core/Events.lua
+
+Data/Constants.lua
+Util/Utils.lua
+Util/PixelPerfect.lua
+Data/Defaults.lua
+Data/Database.lua
+Data/DBUtil.lua
+Data/Revise.lua
+
+Util/Handler.lua
+Util/HideBlizzard.lua
+# Util/HelpTips.lua
+
+Debug/DebugWindow.lua
+Debug/Debug.lua
+
+Core/SlashCommands.lua
+
+Menu/Builder.lua
+Menu/AuraFilterList.lua
+Menu/Menu.lua
+Menu/ImportExport.lua
+Menu/GeneralTab.lua
+Menu/UnitFramesTab.lua
+Menu/WidgetsTab.lua
+Menu/FaderTab.lua
+Menu/ColorTab.lua
+
+Widgets/Common.lua
+
+Widgets/Texts/BaseTextWidget.lua
+Widgets/Texts/CustomFormats.lua
+Widgets/Texts/NameText.lua
+Widgets/Texts/HealthText.lua
+Widgets/Texts/PowerText.lua
+Widgets/Texts/LevelText.lua
+Widgets/Texts/CustomText.lua
+
+Widgets/Bars/HealthBar.lua
+Widgets/Bars/PowerBar.lua
+# Widgets/Bars/ShieldBar.lua
+Widgets/Bars/CastBar.lua
+# Widgets/Bars/ClassBar.lua
+# Widgets/Bars/HealAbsorb.lua
+
+Widgets/Icons/RaidIcon.lua
+# Widgets/Icons/RoleIcon.lua # this could get reintegrated via LibGroupInfo support
+Widgets/Icons/LeaderIcon.lua
+Widgets/Icons/CombatIcon.lua
+Widgets/Icons/ReadyCheckIcon.lua
+Widgets/Icons/RestingIcon.lua
+
+Widgets/Auras/Auras.lua
+Widgets/Auras/Updater.lua
+Widgets/Auras/Dispels.lua
+Widgets/Auras/Totems.lua
+
+Widgets/Misc/Fader.lua
+
+UnitFrames/UnitButton.xml
+UnitFrames/UnitButton.lua
+UnitFrames/OnLoad.lua
+UnitFrames/MenuOptions.lua
+UnitFrames/EditMode.lua
+
+API/Common.lua
+API/CustomAnchors.lua
+
+Core/OnLoad.lua

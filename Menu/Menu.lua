@@ -290,7 +290,9 @@ function menu:CreateMenu()
 
     editModeButton:SetScript("OnClick", function()
         CUF.uFuncs:EditMode()
-        CUF.HelpTips:Acknowledge(editModeButton, L.HelpTip_EditModeToggle)
+        if CUF.vars.isRetail then
+            CUF.HelpTips:Acknowledge(editModeButton, L.HelpTip_EditModeToggle)
+        end
     end)
     editModeButton:SetScript("OnHide", function()
         CUF.uFuncs:EditMode(false)
@@ -298,13 +300,15 @@ function menu:CreateMenu()
     self.editModeButton = editModeButton
     self.editModeButton:Hide()
 
-    CUF.HelpTips:Show(editModeButton, {
-        text = L.HelpTip_EditModeToggle,
-        dbKey = "editModeToggle",
-        buttonStyle = HelpTip.ButtonStyle.None,
-        alignment = HelpTip.Alignment.Left,
-        targetPoint = HelpTip.Point.LeftEdgeCenter,
-    })
+    if CUF.vars.isRetail then
+        CUF.HelpTips:Show(editModeButton, {
+            text = L.HelpTip_EditModeToggle,
+            dbKey = "editModeToggle",
+            buttonStyle = HelpTip.ButtonStyle.None,
+            alignment = HelpTip.Alignment.Left,
+            targetPoint = HelpTip.Point.LeftEdgeCenter,
+        })
+    end
 
     hooksecurefunc(optionsFrame, "Hide", function()
         self:HideMenu()

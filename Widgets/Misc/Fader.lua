@@ -60,21 +60,41 @@ Handler:RegisterWidget(W.FaderWidget, const.WIDGET_KIND.FADER)
 -- MARK: Checks
 -------------------------------------------------
 
-local DEFAULT_HARM_SPELLS = {
-    ["WARLOCK"] = 234153, -- Drain Life
-    ["EVOKER"] = 361469,  -- Living Flame
-}
+local DEFAULT_HARM_SPELLS = {}
+if CUF.vars.isRetail then
+    DEFAULT_HARM_SPELLS = {
+        ["WARLOCK"] = 234153, -- Drain Life
+        ["EVOKER"] = 361469,  -- Living Flame
+    }
+-- it seems C_Spell.IsSpellInRange always returns true on era servers...
+-- elseif CUF.vars.isVanilla then
+--     DEFAULT_HARM_SPELLS = {
+--         ["HUNTER"] = 14266, -- Raptor Strike to enable melee detection
+--     }
+end
 
 ---@param self FaderWidget
 ---@param unit UnitToken
 local function RangeCheck(self, unit)
     local inRange = F:IsInRange(unit)
 
-    -- Hack to circumvent override issue with C_Spell.IsSpellInRange and override spells
     if not inRange and UnitCanAttack("player", unit) then
-        local overrideSpell = DEFAULT_HARM_SPELLS[UnitClassBase("player")]
+        local playerClass = UnitClassBase("player")
+        
+        -- Hack to circumvent override issue with C_Spell.IsSpellInRange and override spells
+        local overrideSpell = DEFAULT_HARM_SPELLS[playerClass]
         if overrideSpell then
             inRange = C_Spell.IsSpellInRange(overrideSpell, unit) or false
+        end
+
+        -- Hack to enable hunter melee detection on era
+        -- C_Spell.IsSpellInRange always returns true for melee spells
+        -- even IsActionInRange always returns true for melee spells... 
+        if not inRange and CUF.vars.isVanilla and playerClass == "HUNTER" and UnitCanAttack("player", unit) then
+            -- duel range check, 7 yards
+            -- this is not accurate to melee range 
+            -- but enables the frames to not get faded at least
+            inRange = CheckInteractDistance(unit, 3)
         end
     end
 

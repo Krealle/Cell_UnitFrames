@@ -123,6 +123,7 @@ L.ShowEmpowerName = "Show Empower Name"
 L.ShowBorder = "Show Border"
 L.ShowIcon = "Show Icon"
 L.Zoom = "Zoom"
+L.Channeling = "Channeling"
 
 L.UseFullyChargedTooltip = "Use fully charged color for the final stage"
 L.ShowEmpowerNameTooltip = "Show the spell name for Empowers"

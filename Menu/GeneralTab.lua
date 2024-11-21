@@ -285,17 +285,21 @@ function Misc:Create()
 
     self.blizzardFramesButton = CUF:CreateButton(self.frame, L["Blizzard Frames"], { 195, 20 }, function()
         self:ShowBlizzardFramesPopup()
-        CUF.HelpTips:Acknowledge(self.blizzardFramesButton, L.HelpTip_BlizzardFramesToggle)
+        if CUF.vars.isRetail then
+            CUF.HelpTips:Acknowledge(self.blizzardFramesButton, L.HelpTip_BlizzardFramesToggle)
+        end
     end)
     self.blizzardFramesButton:SetPoint("TOPLEFT", self.useScalingCB, "BOTTOMLEFT", 0, -10)
 
-    CUF.HelpTips:Show(self.blizzardFramesButton, {
-        text = L.HelpTip_BlizzardFramesToggle,
-        dbKey = "blizzardFramesToggle",
-        buttonStyle = HelpTip.ButtonStyle.None,
-        alignment = HelpTip.Alignment.Center,
-        targetPoint = HelpTip.Point.TopEdgeCenter,
-    })
+    if CUF.vars.isRetail then
+        CUF.HelpTips:Show(self.blizzardFramesButton, {
+            text = L.HelpTip_BlizzardFramesToggle,
+            dbKey = "blizzardFramesToggle",
+            buttonStyle = HelpTip.ButtonStyle.None,
+            alignment = HelpTip.Alignment.Center,
+            targetPoint = HelpTip.Point.TopEdgeCenter,
+        })
+    end
 
     ---@class BlizzardFramesPopup: Frame, BackdropTemplate
     self.blizzardFramesPopup = CUF:CreateFrame("CUF_Misc_BlizzardFramesPopup", self.frame, 195, 10)

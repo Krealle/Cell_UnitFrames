@@ -23,7 +23,7 @@ Builder.singleOptionWidth = 117
 Builder.dualOptionWidth = 117 * 2
 Builder.tripleOptionWidth = 117 * 3
 
----@enum MenuOptions
+---@class MenuOptions
 Builder.MenuOptions = {
     TextColor = 1,
     TextWidth = 2,
@@ -46,15 +46,12 @@ Builder.MenuOptions = {
     FullAnchor = 19,
     ColorPicker = 20,
     CastBarGeneral = 21,
-    ClassBarOptions = 22,
     CastBarTimer = 23,
     CastBarSpell = 24,
     CastBarSpark = 25,
-    CastBarEmpower = 26,
     CastBarBorder = 27,
     CastBarIcon = 28,
     NameFormat = 29,
-    ShieldBarOptions = 30,
     CustomText = 31,
     DispelsOptions = 32,
     TrueSingleSizeOptions = 33,
@@ -62,6 +59,12 @@ Builder.MenuOptions = {
     HideAtMaxLevel = 35,
     HideOutOfCombat = 36
 }
+
+if CUF.vars.isRetail then
+    Builder.MenuOptions.ClassBarOptions = 22;
+    Builder.MenuOptions.CastBarEmpower = 26;
+    Builder.MenuOptions.ShieldBarOptions = 30;
+end
 
 -------------------------------------------------
 -- MARK: Build Menu
@@ -817,37 +820,56 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return HealthFormatOptions
 function Builder:CreateHealthFormatOptions(parent, widgetName)
-    local healthFormats = {
-        { "32%",
-            const.HealthTextFormat.PERCENTAGE, },
-        { "32+25% |cFFA7A7A7+" .. L["shields"],
-            const.HealthTextFormat.PERCENTAGE_ABSORBS },
-        { "57% |cFFA7A7A7+" .. L["shields"],
-            const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED },
-        { "-67%",
-            const.HealthTextFormat.PERCENTAGE_DEFICIT },
-        { "21377",
-            const.HealthTextFormat.NUMBER },
-        { F:FormatNumber(21377),
-            const.HealthTextFormat.NUMBER_SHORT },
-        { F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
-            const.HealthTextFormat.NUMBER_ABSORBS_SHORT },
-        { F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
-            const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT },
-        { "-44158",
-            const.HealthTextFormat.NUMBER_DEFICIT },
-        { F:FormatNumber(-44158),
-            const.HealthTextFormat.NUMBER_DEFICIT_SHORT },
-        { F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
-            const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE },
-        { "16384 |cFFA7A7A7" .. L["shields"],
-            const.HealthTextFormat.ABSORBS_ONLY },
-        { F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
-            const.HealthTextFormat.ABSORBS_ONLY_SHORT },
-        { "25% |cFFA7A7A7" .. L["shields"],
-            const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE },
-        { L["Custom"], const.HealthTextFormat.CUSTOM }
-    }
+    -- support partial definitions
+    -- maybe move the example text into the const.HealthTextFormat?
+    -- that could make it iterable / 1:1 usable
+    local healthFormats = {}
+
+    if const.HealthTextFormat.PERCENTAGE then 
+        table.insert(healthFormats, { "32%", const.HealthTextFormat.PERCENTAGE }) 
+    end
+    if const.HealthTextFormat.PERCENTAGE_ABSORBS then 
+        table.insert(healthFormats, { "32+25% |cFFA7A7A7+" .. L["shields"], const.HealthTextFormat.PERCENTAGE_ABSORBS }) 
+    end
+    if const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED then 
+        table.insert(healthFormats, { "57% |cFFA7A7A7+" .. L["shields"], const.HealthTextFormat.PERCENTAGE_ABSORBS_MERGED }) 
+    end
+    if const.HealthTextFormat.PERCENTAGE_DEFICIT then 
+        table.insert(healthFormats, { "-67%", const.HealthTextFormat.PERCENTAGE_DEFICIT }) 
+    end
+    if const.HealthTextFormat.NUMBER then 
+        table.insert(healthFormats, { "21377", const.HealthTextFormat.NUMBER }) 
+    end
+    if const.HealthTextFormat.NUMBER_SHORT then 
+        table.insert(healthFormats, { F:FormatNumber(21377), const.HealthTextFormat.NUMBER_SHORT }) 
+    end
+    if const.HealthTextFormat.NUMBER_ABSORBS_SHORT then 
+        table.insert(healthFormats, { F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"], const.HealthTextFormat.NUMBER_ABSORBS_SHORT })     
+    end
+    if const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT then 
+        table.insert(healthFormats, { F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"], const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT }) 
+    end
+    if const.HealthTextFormat.NUMBER_DEFICIT then 
+        table.insert(healthFormats, { "-44158", const.HealthTextFormat.NUMBER_DEFICIT }) 
+    end
+    if const.HealthTextFormat.NUMBER_DEFICIT_SHORT then 
+        table.insert(healthFormats, { F:FormatNumber(-44158), const.HealthTextFormat.NUMBER_DEFICIT_SHORT }) 
+    end
+    if const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE then 
+        table.insert(healthFormats, { F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP", const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE }) 
+    end
+    if const.HealthTextFormat.ABSORBS_ONLY then 
+        table.insert(healthFormats, { "16384 |cFFA7A7A7" .. L["shields"], const.HealthTextFormat.ABSORBS_ONLY }) 
+    end
+    if const.HealthTextFormat.ABSORBS_ONLY_SHORT then 
+        table.insert(healthFormats, { F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"], const.HealthTextFormat.ABSORBS_ONLY_SHORT }) 
+    end
+    if const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE then 
+        table.insert(healthFormats, { "25% |cFFA7A7A7" .. L["shields"], const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE }) 
+    end
+    if const.HealthTextFormat.CUSTOM then 
+        table.insert(healthFormats, { L["Custom"], const.HealthTextFormat.CUSTOM }) 
+    end
 
     ---@class HealthFormatOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
@@ -1633,36 +1655,38 @@ end
 -- MARK: Class Bar
 -------------------------------------------------
 
----@param parent Frame
----@param widgetName WIDGET_KIND
----@return ClassBarOptions
-function Builder:CreateClassBarOptions(parent, widgetName)
-    ---@class ClassBarOptions: OptionsFrame
-    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.id = "ClassBarOptions"
-    f.optionHeight = 120
+if CUF.vars.isRetail then
+    ---@param parent Frame
+    ---@param widgetName WIDGET_KIND
+    ---@return ClassBarOptions
+    function Builder:CreateClassBarOptions(parent, widgetName)
+        ---@class ClassBarOptions: OptionsFrame
+        local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+        f.id = "ClassBarOptions"
+        f.optionHeight = 120
 
-    -- First Row
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, nil, -1000, 1000)
-    f.anchorOptions:SetPoint("TOPLEFT", 0, -5)
+        -- First Row
+        f.anchorOptions = self:CreateAnchorOptions(f, widgetName, nil, -1000, 1000)
+        f.anchorOptions:SetPoint("TOPLEFT", 0, -5)
 
-    -- Second Row
-    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
-    self:AnchorBelow(f.sizeOptions, f.anchorOptions.anchorDropdown)
+        -- Second Row
+        f.sizeOptions = self:CreateSizeOptions(f, widgetName, 0, 500)
+        self:AnchorBelow(f.sizeOptions, f.anchorOptions.anchorDropdown)
 
-    f.spacing = self:CreateSlider(f, widgetName, L["Spacing"], nil, -1, 50,
-        const.OPTION_KIND.SPACING)
-    self:AnchorRight(f.spacing, f.sizeOptions.sizeHeightSlider)
+        f.spacing = self:CreateSlider(f, widgetName, L["Spacing"], nil, -1, 50,
+            const.OPTION_KIND.SPACING)
+        self:AnchorRight(f.spacing, f.sizeOptions.sizeHeightSlider)
 
-    -- Third Row
-    f.verticalFill = self:CreateCheckBox(f, widgetName, L.VerticalFill, const.OPTION_KIND.VERTICAL_FILL)
-    self:AnchorBelow(f.verticalFill, f.sizeOptions.sizeWidthSlider)
+        -- Third Row
+        f.verticalFill = self:CreateCheckBox(f, widgetName, L.VerticalFill, const.OPTION_KIND.VERTICAL_FILL)
+        self:AnchorBelow(f.verticalFill, f.sizeOptions.sizeWidthSlider)
 
-    f.sameSizeAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameSizeAsHealthBar,
-        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
-    self:AnchorRightOfCB(f.sameSizeAsHealthBar, f.verticalFill)
+        f.sameSizeAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameSizeAsHealthBar,
+            const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+        self:AnchorRightOfCB(f.sameSizeAsHealthBar, f.verticalFill)
 
-    return f
+        return f
+    end
 end
 
 -------------------------------------------------
@@ -1752,16 +1776,20 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 
     tagHint:SetScript("OnClick", function()
         W.ShowTooltipFrame()
-        CUF.HelpTips:Acknowledge(tagHint, L.HelpTip_TagHintButton)
+        if CUF.vars.isRetail then
+            CUF.HelpTips:Acknowledge(tagHint, L.HelpTip_TagHintButton)
+        end
     end)
 
-    CUF.HelpTips:Show(tagHint, {
-        text = L.HelpTip_TagHintButton,
-        dbKey = "tagHintButton_Builder",
-        buttonStyle = HelpTip.ButtonStyle.None,
-        alignment = HelpTip.Alignment.Center,
-        targetPoint = HelpTip.Point.LeftEdgeCenter,
-    })
+    if CUF.vars.isRetail then
+        CUF.HelpTips:Show(tagHint, {
+            text = L.HelpTip_TagHintButton,
+            dbKey = "tagHintButton_Builder",
+            buttonStyle = HelpTip.ButtonStyle.None,
+            alignment = HelpTip.Alignment.Center,
+            targetPoint = HelpTip.Point.LeftEdgeCenter,
+        })
+    end
 
     -- Color
     local items = {
@@ -2010,11 +2038,8 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarTimer] = Builder.CreateCastBarTimerFontOptions,
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
-    [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
     [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
     [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
-    [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
-    [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,
     [Builder.MenuOptions.CustomText] = Builder.CreateCustomTextOptions,
     [Builder.MenuOptions.DispelsOptions] = Builder.CreateDispelsOptions,
     [Builder.MenuOptions.TrueSingleSizeOptions] = Builder.CreateTrueSingleSizeOptions,
@@ -2022,3 +2047,15 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.HideAtMaxLevel] = Builder.CreateHideAtMaxLevel,
     [Builder.MenuOptions.HideOutOfCombat] = Builder.CreateHideOutOfCombat,
 }
+
+if Builder.MenuOptions.CastBarEmpower then
+    Builder.MenuFuncs[Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions;
+end
+
+if Builder.MenuOptions.ClassBarOptions then
+    Builder.MenuFuncs[Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions;
+end
+
+if Builder.MenuOptions.ShieldBarOptions then
+    Builder.MenuFuncs[Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions;
+end

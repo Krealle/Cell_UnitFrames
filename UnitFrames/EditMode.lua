@@ -435,9 +435,12 @@ local colors = {
     [const.UNIT.PLAYER] = { 1, 0, 0 },
     [const.UNIT.TARGET] = { 1, 0.5, 0 },
     [const.UNIT.TARGET_TARGET] = { 1, 1, 0 },
-    [const.UNIT.FOCUS] = { 0, 1, 0 },
     [const.UNIT.PET] = { 0, 0.5, 1 },
 }
+
+if const.UNIT.FOCUS then
+    colors[const.UNIT.FOCUS] = { 0, 1, 0 };
+end
 
 ---@param widget Widget
 ---@param unit Unit
@@ -656,13 +659,15 @@ local function ShowOverlays()
         local overlay = overlays[unit] or CreateOverlayBox(CUF.unitButtons[unit], unit)
 
         if unit == "player" then
-            CUF.HelpTips:Show(overlay, {
-                text = L.HelpTip_EditModeOverlay,
-                dbKey = "editModeOverlay",
-                buttonStyle = HelpTip.ButtonStyle.GotIt,
-                alignment = HelpTip.Alignment.Center,
-                targetPoint = HelpTip.Point.TopEdgeCenter,
-            })
+            if CUF.vars.isRetail then
+                CUF.HelpTips:Show(overlay, {
+                    text = L.HelpTip_EditModeOverlay,
+                    dbKey = "editModeOverlay",
+                    buttonStyle = HelpTip.ButtonStyle.GotIt,
+                    alignment = HelpTip.Alignment.Center,
+                    targetPoint = HelpTip.Point.TopEdgeCenter,
+                })
+            end
         end
 
         overlay.fadeIn:Play()

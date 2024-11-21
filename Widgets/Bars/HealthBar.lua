@@ -23,6 +23,7 @@ local UnitIsFriend = UnitIsFriend
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
 
 -------------------------------------------------
 -- MARK: Button Update HealthBar
@@ -100,7 +101,9 @@ local function UpdateUnitHealthState(button)
 
     button.states.health = health
     button.states.healthMax = healthMax
-    button.states.totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    if CUF.vars.isRetail then
+        button.states.totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    end
 
     if healthMax == 0 then
         button.states.healthPercent = 0

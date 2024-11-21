@@ -133,12 +133,6 @@ Defaults.Colors = {
         interruptible = { 0.2, 0.57, 0.5, 1 },
         nonInterruptible = { 0.43, 0.43, 0.43, 1 },
         background = { 0, 0, 0, 0.8 },
-        stageZero = { 0.2, 0.57, 0.5, 1 },
-        stageOne = { 0.3, 0.47, 0.45, 1 },
-        stageTwo = { 0.4, 0.4, 0.4, 1 },
-        stageThree = { 0.54, 0.3, 0.3, 1 },
-        stageFour = { 0.65, 0.2, 0.3, 1 },
-        fullyCharged = { 0.77, 0.1, 0.2, 1 },
     },
     reaction = {
         friendly = { 0.29, 0.69, 0.3, 1 },
@@ -148,52 +142,12 @@ Defaults.Colors = {
         useClassColorForPet = false,
         swapHostileHealthAndLossColors = false,
     },
-    essence = {
-        ["1"] = { 0.2, 0.57, 0.5, 1 },
-        ["2"] = { 0.2, 0.57, 0.5, 1 },
-        ["3"] = { 0.2, 0.57, 0.5, 1 },
-        ["4"] = { 0.2, 0.57, 0.5, 1 },
-        ["5"] = { 0.2, 0.57, 0.5, 1 },
-        ["6"] = { 0.2, 0.57, 0.5, 1 },
-    },
-    classResources = {
-        holyPower = { 0.9, 0.89, 0.04, 1 },
-        arcaneCharges = { 0, 0.62, 1, 1 },
-        soulShards = { 0.58, 0.51, 0.8, 1 },
-    },
     comboPoints = {
         ["1"] = { 0.76, 0.3, 0.3, 1 },
         ["2"] = { 0.79, 0.56, 0.3, 1 },
         ["3"] = { 0.82, 0.82, 0.3, 1 },
         ["4"] = { 0.56, 0.79, 0.3, 1 },
         ["5"] = { 0.43, 0.77, 0.3, 1 },
-        ["6"] = { 0.3, 0.76, 0.3, 1 },
-        ["7"] = { 0.36, 0.82, 0.54, 1 },
-        charged = { 0.15, 0.64, 1, 1 },
-    },
-    chi = {
-        ["1"] = { 0.72, 0.77, 0.31, 1 },
-        ["2"] = { 0.58, 0.74, 0.36, 1 },
-        ["3"] = { 0.49, 0.72, 0.38, 1 },
-        ["4"] = { 0.38, 0.7, 0.42, 1 },
-        ["5"] = { 0.26, 0.67, 0.46, 1 },
-        ["6"] = { 0.13, 0.64, 0.5, 1 },
-    },
-    runes = {
-        bloodRune = { 1.0, 0.24, 0.24, 1 },
-        frostRune = { 0.24, 1.0, 1.0, 1 },
-        unholyRune = { 0.24, 1.0, 0.24, 1 },
-    },
-    shieldBar = {
-        texture = "Interface\\Buttons\\WHITE8X8",
-        color = { 1, 1, 0, 0.25 },
-        overShield = { 1, 1, 1, 1 },
-    },
-    healAbsorb = {
-        texture = "Interface\\AddOns\\Cell\\Media\\shield",
-        color = { 1, 0.1, 0.1, 1 },
-        overAbsorb = { 1, 1, 1, 1 },
-        invertColor = false,
     },
     unitFrames = {
         barColor = { 0.06, 0.07, 0.07, 1 },
@@ -206,10 +160,81 @@ Defaults.Colors = {
         lossAlpha = 1,
         backgroundAlpha = 1,
     },
-    classBar = {
-        texture = "Interface\\Buttons\\WHITE8X8",
-    }
 }
+
+if CUF.vars.isRetail then
+
+    Defaults.Colors.castBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        interruptible = { 0.2, 0.57, 0.5, 1 },
+        nonInterruptible = { 0.43, 0.43, 0.43, 1 },
+        background = { 0, 0, 0, 0.8 },
+        stageZero = { 0.2, 0.57, 0.5, 1 },
+        stageOne = { 0.3, 0.47, 0.45, 1 },
+        stageTwo = { 0.4, 0.4, 0.4, 1 },
+        stageThree = { 0.54, 0.3, 0.3, 1 },
+        stageFour = { 0.65, 0.2, 0.3, 1 },
+        fullyCharged = { 0.77, 0.1, 0.2, 1 },
+    };
+
+    Defaults.Colors.essence = {
+        ["1"] = { 0.2, 0.57, 0.5, 1 },
+        ["2"] = { 0.2, 0.57, 0.5, 1 },
+        ["3"] = { 0.2, 0.57, 0.5, 1 },
+        ["4"] = { 0.2, 0.57, 0.5, 1 },
+        ["5"] = { 0.2, 0.57, 0.5, 1 },
+        ["6"] = { 0.2, 0.57, 0.5, 1 },
+    };
+
+    Defaults.Colors.classResources = {
+        holyPower = { 0.9, 0.89, 0.04, 1 },
+        arcaneCharges = { 0, 0.62, 1, 1 },
+        soulShards = { 0.58, 0.51, 0.8, 1 },
+    };
+
+    Defaults.Colors.comboPoints = {
+        ["1"] = { 0.76, 0.3, 0.3, 1 },
+        ["2"] = { 0.79, 0.56, 0.3, 1 },
+        ["3"] = { 0.82, 0.82, 0.3, 1 },
+        ["4"] = { 0.56, 0.79, 0.3, 1 },
+        ["5"] = { 0.43, 0.77, 0.3, 1 },
+        ["6"] = { 0.3, 0.76, 0.3, 1 },
+        ["7"] = { 0.36, 0.82, 0.54, 1 },
+        charged = { 0.15, 0.64, 1, 1 },
+    };
+
+    Defaults.Colors.chi = {
+        ["1"] = { 0.72, 0.77, 0.31, 1 },
+        ["2"] = { 0.58, 0.74, 0.36, 1 },
+        ["3"] = { 0.49, 0.72, 0.38, 1 },
+        ["4"] = { 0.38, 0.7, 0.42, 1 },
+        ["5"] = { 0.26, 0.67, 0.46, 1 },
+        ["6"] = { 0.13, 0.64, 0.5, 1 },
+    };    
+    
+    Defaults.Colors.runes = {
+        bloodRune = { 1.0, 0.24, 0.24, 1 },
+        frostRune = { 0.24, 1.0, 1.0, 1 },
+        unholyRune = { 0.24, 1.0, 0.24, 1 },
+    };
+
+    Defaults.Colors.shieldBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        color = { 1, 1, 0, 0.25 },
+        overShield = { 1, 1, 1, 1 },
+    };
+
+    Defaults.Colors.healAbsorb = {
+        texture = "Interface\\AddOns\\Cell\\Media\\shield",
+        color = { 1, 0.1, 0.1, 1 },
+        overAbsorb = { 1, 1, 1, 1 },
+        invertColor = false,
+    };
+
+    Defaults.Colors.classBar = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+    };
+end
 
 Defaults.ColorsMenuOrder = {
     castBar = {
@@ -217,13 +242,6 @@ Defaults.ColorsMenuOrder = {
         { "background",       "rgb" },
         { "interruptible",    "rgb" },
         { "nonInterruptible", "rgb" },
-        { "Empowers",         "seperator" },
-        { "stageZero",        "rgb" },
-        { "stageOne",         "rgb" },
-        { "stageTwo",         "rgb" },
-        { "stageThree",       "rgb" },
-        { "stageFour",        "rgb" },
-        { "fullyCharged",     "rgb" }
     },
     reaction = {
         { "friendly",                       "rgb" },
@@ -234,52 +252,12 @@ Defaults.ColorsMenuOrder = {
         { "hostileUnits",                   "seperator" },
         { "swapHostileHealthAndLossColors", "toggle" }
     },
-    essence = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
-    },
-    classResources = {
-        { "holyPower",     "rgb" },
-        { "soulShards",    "rgb" },
-        { "arcaneCharges", "rgb" },
-    },
     comboPoints = {
         { "1",       "rgb" },
         { "2",       "rgb" },
         { "3",       "rgb" },
         { "4",       "rgb" },
         { "5",       "rgb" },
-        { "6",       "rgb" },
-        { "7",       "rgb" },
-        { "charged", "rgb" },
-    },
-    chi = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
-    },
-    runes = {
-        { "bloodRune",  "rgb" },
-        { "frostRune",  "rgb" },
-        { "unholyRune", "rgb" },
-    },
-    shieldBar = {
-        { "texture",    "texture" },
-        { "color",      "rgb" },
-        { "overShield", "rgb" },
-    },
-    healAbsorb = {
-        { "texture",     "texture" },
-        { "color",       "rgb" },
-        { "overAbsorb",  "rgb" },
-        { "invertColor", "toggle" },
     },
     unitFrames = {
         { "barColor",        "rgb" },
@@ -295,10 +273,82 @@ Defaults.ColorsMenuOrder = {
         { "lossAlpha",       "slider-percent" },
         { "backgroundAlpha", "slider-percent" },
     },
-    classBar = {
-        { "texture", "texture" },
-    }
 }
+
+if CUF.vars.isRetail then
+
+    Defaults.ColorsMenuOrder.castBar = {
+        { "texture",          "texture" },
+        { "background",       "rgb" },
+        { "interruptible",    "rgb" },
+        { "nonInterruptible", "rgb" },
+        { "Empowers",     "seperator" },
+        { "stageZero",    "rgb" },
+        { "stageOne",     "rgb" },
+        { "stageTwo",     "rgb" },
+        { "stageThree",   "rgb" },
+        { "stageFour",    "rgb" },
+        { "fullyCharged", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.comboPoints = {
+        { "1",       "rgb" },
+        { "2",       "rgb" },
+        { "3",       "rgb" },
+        { "4",       "rgb" },
+        { "5",       "rgb" },
+        { "6",       "rgb" },
+        { "7",       "rgb" },
+        { "charged", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.essence = {
+        { "1", "rgb" },
+        { "2", "rgb" },
+        { "3", "rgb" },
+        { "4", "rgb" },
+        { "5", "rgb" },
+        { "6", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.classResources = {
+        { "holyPower",     "rgb" },
+        { "soulShards",    "rgb" },
+        { "arcaneCharges", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.chi = {
+        { "1", "rgb" },
+        { "2", "rgb" },
+        { "3", "rgb" },
+        { "4", "rgb" },
+        { "5", "rgb" },
+        { "6", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.runes = {
+        { "bloodRune",  "rgb" },
+        { "frostRune",  "rgb" },
+        { "unholyRune", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.shieldBar = {
+        { "texture",    "texture" },
+        { "color",      "rgb" },
+        { "overShield", "rgb" },
+    };
+
+    Defaults.ColorsMenuOrder.healAbsorb = {
+        { "texture",     "texture" },
+        { "color",       "rgb" },
+        { "overAbsorb",  "rgb" },
+        { "invertColor", "toggle" },
+    };
+
+    Defaults.ColorsMenuOrder.classBar = {
+        { "texture", "texture" },
+    };
+end
 
 ---@class Defaults.BlizzardFrames
 Defaults.BlizzardFrames = {}
@@ -640,14 +690,6 @@ Defaults.Widgets = {
             relativePoint = "CENTER",
         },
     }, -- MARK: Widgets (Bars)
-    ---@type ShieldBarWidgetTable
-    shieldBar = {
-        enabled = false,
-        frameLevel = 9,
-        point = "RIGHT",
-        reverseFill = false,
-        overShield = false,
-    },
     ---@type CastBarWidgetTable
     castBar = {
         enabled = false,
@@ -755,6 +797,17 @@ Defaults.Widgets = {
         minAlpha = 0.35,
     }
 }
+
+if CUF.vars.isRetail then
+    ---@type ShieldBarWidgetTable
+    Defaults.Widgets.shieldBar = {
+        enabled = false,
+        frameLevel = 9,
+        point = "RIGHT",
+        reverseFill = false,
+        overShield = false,
+    }
+end
 
 -- Boss Widgets
 Defaults.Widgets_Boss = {
@@ -878,7 +931,6 @@ Defaults.Layouts = {
             leaderIcon = Defaults.Widgets.leaderIcon,
             combatIcon = Defaults.Widgets.combatIcon,
             readyCheckIcon = Defaults.Widgets.readyCheckIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
             dispels = Defaults.Widgets.dispels,
@@ -887,45 +939,6 @@ Defaults.Layouts = {
         sameSizeAsPlayer = false,
         clickCast = false,
         mirrorPlayer = false,
-        barOrientation = "horizontal",
-        powerFilter = false,
-        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
-        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-    },
-    focus = {
-        enabled = false,
-        powerSize = 2,
-        size = { 100, 30 },
-        position = { -300, 125 },
-        widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            customText = Defaults.Widgets.customText,
-            buffs = Defaults.Widgets.buffs,
-            debuffs = Defaults.Widgets.debuffs,
-            raidIcon = Defaults.Widgets.raidIcon,
-            roleIcon = Defaults.Widgets.roleIcon,
-            leaderIcon = Defaults.Widgets.leaderIcon,
-            combatIcon = Defaults.Widgets.combatIcon,
-            readyCheckIcon = Defaults.Widgets.readyCheckIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
-            castBar = Defaults.Widgets.castBar,
-            healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader
-        },
-        anchorToParent = false,
-        parent = CUF.constants.UNIT.PLAYER,
-        anchorPosition = {
-            point = "BOTTOMLEFT",
-            relativePoint = "TOPLEFT",
-            offsetX = 0,
-            offsetY = 10
-        },
-        sameSizeAsPlayer = false,
-        clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
@@ -974,7 +987,6 @@ Defaults.Layouts = {
             buffs = Defaults.Widgets.buffs,
             debuffs = Defaults.Widgets.debuffs,
             raidIcon = Defaults.Widgets.raidIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
             dispels = Defaults.Widgets.dispels,
@@ -995,7 +1007,53 @@ Defaults.Layouts = {
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     },
-    boss = {
+}
+
+-- Focus was introduced with TBC
+if not CUF.vars.isVanilla then
+    Defaults.Layouts.focus = {
+        enabled = false,
+        powerSize = 2,
+        size = { 100, 30 },
+        position = { -300, 125 },
+        widgets = {
+            nameText = Defaults.Widgets.nameText,
+            healthText = Defaults.Widgets.healthText,
+            powerText = Defaults.Widgets.powerText,
+            levelText = Defaults.Widgets.levelText,
+            customText = Defaults.Widgets.customText,
+            buffs = Defaults.Widgets.buffs,
+            debuffs = Defaults.Widgets.debuffs,
+            raidIcon = Defaults.Widgets.raidIcon,
+            roleIcon = Defaults.Widgets.roleIcon,
+            leaderIcon = Defaults.Widgets.leaderIcon,
+            combatIcon = Defaults.Widgets.combatIcon,
+            readyCheckIcon = Defaults.Widgets.readyCheckIcon,
+            castBar = Defaults.Widgets.castBar,
+            healAbsorb = Defaults.Widgets.healAbsorb,
+            dispels = Defaults.Widgets.dispels,
+            fader = Defaults.Widgets.fader
+        },
+        anchorToParent = false,
+        parent = CUF.constants.UNIT.PLAYER,
+        anchorPosition = {
+            point = "BOTTOMLEFT",
+            relativePoint = "TOPLEFT",
+            offsetX = 0,
+            offsetY = 10
+        },
+        sameSizeAsPlayer = false,
+        clickCast = false,
+        barOrientation = "horizontal",
+        powerFilter = false,
+        healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
+        healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+    }
+end
+
+-- Boss frames were intoduced with Wrath
+if not CUF.vars.isVanilla and not CUF.vars.isBCC then
+    Defaults.Layouts.boss = {
         enabled = false,
         powerSize = 4,
         spacing = 50,
@@ -1012,7 +1070,6 @@ Defaults.Layouts = {
             levelText = Defaults.Widgets.levelText,
             customText = Defaults.Widgets.customText,
             raidIcon = Defaults.Widgets.raidIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
             buffs = Defaults.Widgets_Boss.buffs,
             debuffs = Defaults.Widgets_Boss.debuffs,
             castBar = Defaults.Widgets_Boss.castBar,
@@ -1021,7 +1078,14 @@ Defaults.Layouts = {
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
     }
-}
+end
+
+if CUF.vars.isRetail then
+    Defaults.Layouts.target.widgets.shieldBar = Defaults.Widgets.shieldBar;
+    Defaults.Layouts.pet.widgets.shieldBar = Defaults.Widgets.shieldBar;
+    Defaults.Layouts.focus.widgets.shieldBar = Defaults.Widgets.shieldBar;
+    Defaults.Layouts.boss.widgets.shieldBar = Defaults.Widgets.shieldBar;
+end
 
 Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.enabled = false
 Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.range = false

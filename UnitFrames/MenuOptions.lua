@@ -242,13 +242,15 @@ local function AddUnitsToMenu()
                     end
 
                     if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
-                        CUF.HelpTips:Show(unitPage.spacingSlider, {
-                            text = format(L.HelpTip_BossFramePreview, L.Boss, L.player),
-                            dbKey = "bossFramePreview",
-                            buttonStyle = HelpTip.ButtonStyle.GotIt,
-                            alignment = HelpTip.Alignment.Left,
-                            targetPoint = HelpTip.Point.LeftEdgeCenter,
-                        }, CUF.unitButtons.boss.boss1)
+                        if CUF.vars.isRetail then
+                            CUF.HelpTips:Show(unitPage.spacingSlider, {
+                                text = format(L.HelpTip_BossFramePreview, L.Boss, L.player),
+                                dbKey = "bossFramePreview",
+                                buttonStyle = HelpTip.ButtonStyle.GotIt,
+                                alignment = HelpTip.Alignment.Left,
+                                targetPoint = HelpTip.Point.LeftEdgeCenter,
+                            }, CUF.unitButtons.boss.boss1)
+                        end
                     end
                 else
                     ---@type CheckButton

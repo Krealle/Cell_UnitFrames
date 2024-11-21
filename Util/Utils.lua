@@ -13,6 +13,7 @@ local Util = CUF.Util
 local const = CUF.constants
 
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
+local UnitSelectionType = UnitSelectionType
 
 -------------------------------------------------
 -- MARK: Prop Hunting
@@ -447,6 +448,15 @@ function Util:GetPowerColor(unit)
     return r, g, b
 end
 
+-- Helper fallback function for older game versions, blizzards function was introduced with BFA
+---@param unit UnitToken
+function Util:UnitSelectionType(unit)
+    if UnitIsFriend(unit, "player") then return 3 end
+    if UnitIsEnemy(unit, "player") then return 0 end
+    if UnitIsUnit(unit, "pet") or UnitIsOtherPlayersPet(unit) then return 4 end
+    return 999
+end
+
 ---@param unit UnitToken
 ---@param class? string
 ---@param guid? string
@@ -460,7 +470,7 @@ function Util:GetUnitClassColor(unit, class, guid)
         return F:GetClassColor(class)
     end
 
-    local selectionType = UnitSelectionType(unit)
+    local selectionType = UnitSelectionType and UnitSelectionType(unit) or Util:UnitSelectionType(unit)
 
     -- Friendly
     if selectionType == 3 then
@@ -635,6 +645,117 @@ function Util:GetWeaponEnchantInfo()
             rangedEnchantID = rangedEnchantID,
         }
     end
+end
+
+do
+	local function ForEachAuraHelperByIndex(unit, filter, func)
+		for i = 1, 40 do
+			local auraInfo = C_UnitAuras.GetAuraDataByIndex(unit, i, filter);
+			if auraInfo and func(auraInfo) then
+				return i;
+			end
+		end
+		return nil;
+	end
+
+    ---@param unit UnitToken
+    ---@param auraInstanceID number
+    ---@param filter "HELPFUL" | "HARMFUL"
+    ---@return string? 
+	function Util:GetAuraIndexByAuraInstanceID(unit, auraInstanceID, filter)
+		local func = function(aura)
+			if aura.auraInstanceID == auraInstanceID then return aura end
+		end
+		return ForEachAuraHelperByIndex(unit, filter, func);
+	end
+end
+
+local ChannelDurationLUT = {
+    [698] = 10* 60000, --Ritual of Summoning
+    [605] = 1* 60000, --Mind Control
+    [19305] = 6000, --Starshards
+    [18540] = 1* 60000, --Ritual of Doom
+    [1515] = 20000, --Tame Beast
+    [10] = 8000, --Blizzard
+    [689] = 5000, --Drain Life
+    [11684] = 15000, --Hellfire
+    [5740] = 8000, --Rain of Fire
+    [10797] = 6000, --Starshards
+    [740] = 10000, --Tranquility
+    [1120] = 15000, --Drain Soul
+    [12051] = 8000, --Evocation
+    [16914] = 10000, --Hurricane
+    [14295] = 6000, --Volley
+    [5143] = 3000, --Arcane Missiles
+    [1002] = 1* 60000, --Eyes of the Beast
+    [1949] = 15000, --Hellfire
+    [11704] = 5000, --Drain Mana
+    [10187] = 8000, --Blizzard
+    [136] = 5000, --Mend Pet
+    [11678] = 8000, --Rain of Fire
+    [126] = 45000, --Eye of Kilrogg
+    [6197] = 1* 60000, --Eagle Eye
+    [755] = 10000, --Health Funnel
+    [10912] = 1* 60000, --Mind Control
+    [6196] = 1* 60000, --Far Sight
+    [11700] = 5000, --Drain Life
+    [10911] = 1* 60000, --Mind Control
+    [17402] = 10000, --Hurricane
+    [17401] = 10000, --Hurricane
+    [6141] = 8000, --Blizzard
+    [25345] = 5000, --Arcane Missiles
+    [11683] = 15000, --Hellfire
+    [9863] = 10000, --Tranquility
+    [5138] = 5000, --Drain Mana
+    [11675] = 15000, --Drain Soul
+    [2096] = 1* 60000, --Mind Vision
+    [10185] = 8000, --Blizzard
+    [8427] = 8000, --Blizzard
+    [8289] = 15000, --Drain Soul
+    [709] = 5000, --Drain Life
+    [10909] = 1* 60000, --Mind Vision
+    [11693] = 10000, --Health Funnel
+    [1510] = 6000, --Volley
+    [6226] = 5000, --Drain Mana
+    [19296] = 6000, --Starshards
+    [5144] = 4000, --Arcane Missiles
+    [19302] = 6000, --Starshards
+    [3700] = 10000, --Health Funnel
+    [10186] = 8000, --Blizzard
+    [10211] = 5000, --Arcane Missiles
+    [3662] = 5000, --Mend Pet
+    [8288] = 15000, --Drain Soul
+    [11703] = 5000, --Drain Mana
+    [699] = 5000, --Drain Life
+    [5145] = 5000, --Arcane Missiles
+    [8417] = 5000, --Arcane Missiles
+    [10212] = 5000, --Arcane Missiles
+    [11677] = 8000, --Rain of Fire
+    [11695] = 10000, --Health Funnel
+    [3661] = 5000, --Mend Pet
+    [3699] = 10000, --Health Funnel
+    [6219] = 8000, --Rain of Fire
+    [8416] = 5000, --Arcane Missiles
+    [11699] = 5000, --Drain Life
+    [13542] = 5000, --Mend Pet
+    [3111] = 5000, --Mend Pet
+    [3698] = 10000, --Health Funnel
+    [11694] = 10000, --Health Funnel
+    [19299] = 6000, --Starshards
+    [13544] = 5000, --Mend Pet
+    [19303] = 6000, --Starshards
+    [19304] = 6000, --Starshards
+    [7651] = 5000, --Drain Life
+    [8918] = 10000, --Tranquility
+    [9862] = 10000, --Tranquility
+    [13543] = 5000, --Mend Pet
+    [14294] = 6000, --Volley
+}
+
+---@param spellID number
+---@return number 
+function Util:GetSpellChannelDuration(spellID)    
+    return ChannelDurationLUT[spellID] or 0
 end
 
 -------------------------------------------------

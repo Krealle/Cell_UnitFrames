@@ -55,6 +55,9 @@ function CUF:HideBlizzardUnitFrame(type)
         if _G.PlayerCastingBarFrame then
             HideFrame(_G.PlayerCastingBarFrame)
         end
+        if CUF.vars.isVanilla and _G.CastingBarFrame then
+            HideFrame(_G.CastingBarFrame)
+        end
     elseif type == "target" and _G.TargetFrame then
         HideFrame(_G.TargetFrame)
     elseif type == "focus" and _G.FocusFrame then

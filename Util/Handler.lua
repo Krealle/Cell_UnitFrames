@@ -100,9 +100,9 @@ function Handler.UpdateSelected(selectedUnit, selectedWidget)
             button._isSelected = button._baseUnit == selectedUnit and CUF.vars.isMenuOpen
             if button._previewUnit then
                 if button._isSelected and button:GetAttribute("unit") ~= button._previewUnit then
-                    button:SetAttribute("unit", button._previewUnit)
+                    button:SetUnit(button._previewUnit)
                 elseif not button._isSelected and button:GetAttribute("unit") ~= button._unit then
-                    button:SetAttribute("unit", button._unit)
+                    button:SetUnit(button._unit)
                 end
             end
 

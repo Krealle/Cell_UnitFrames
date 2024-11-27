@@ -772,6 +772,12 @@ function CUFUnitButton_OnLoad(button)
             and not widget._isEnabled
     end
 
+    ---@param unit UnitToken
+    function button:SetUnit(unit)
+        self:SetAttribute("unit", unit)
+        CUF:Fire("UpdateVisibility", unit)
+    end
+
     -- Auras
 
     button.IterateAuras = IterateAuras

@@ -844,6 +844,7 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field alwaysUpdate boolean?
 ---@field healthBarColorType UnitButtonColorType
 ---@field healthLossColorType UnitButtonColorType
+---@field visibility string
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -859,6 +860,7 @@ Defaults.Layouts = {
         powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = "[petbattle] hide;show"
     },
     target = {
         enabled = false,
@@ -891,6 +893,7 @@ Defaults.Layouts = {
         powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = ""
     },
     focus = {
         enabled = false,
@@ -930,6 +933,7 @@ Defaults.Layouts = {
         powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = ""
     },
     targettarget = {
         enabled = false,
@@ -959,6 +963,7 @@ Defaults.Layouts = {
         alwaysUpdate = true,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = ""
     },
     pet = {
         enabled = false,
@@ -994,6 +999,7 @@ Defaults.Layouts = {
         powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = ""
     },
     boss = {
         enabled = false,
@@ -1020,6 +1026,7 @@ Defaults.Layouts = {
         },
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
+        visibility = ""
     }
 }
 

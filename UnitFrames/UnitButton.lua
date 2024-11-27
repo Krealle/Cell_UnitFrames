@@ -161,7 +161,13 @@ function U:UpdateUnitFrameVisibility(which, unit, button, frame)
     if InCombatLockdown() then return end
     if not which or which == unit then
         if CUF.DB.CurrentLayoutTable()[unit].enabled then
-            RegisterUnitWatch(button)
+            local visibility = DB.CurrentLayoutTable()[unit].visibility
+            if visibility ~= "" then
+                RegisterAttributeDriver(button, 'state-visibility',
+                    "[@" .. button._unit .. ",noexists]hide;" .. visibility)
+            else
+                RegisterUnitWatch(button)
+            end
             frame:Show()
         else
             UnregisterUnitWatch(button)

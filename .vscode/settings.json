@@ -39,6 +39,7 @@
     "PlayerCastingBarFrame",
     "CellLayoutsPreviewButton",
     "EventUtil",
-    "MAX_BOSS_FRAMES"
+    "MAX_BOSS_FRAMES",
+    "RegisterAttributeDriver"
   ]
 }

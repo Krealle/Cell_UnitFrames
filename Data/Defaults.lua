@@ -122,7 +122,7 @@ Defaults.Options.glow = {
     thickness = 2,
     particles = 9,
     duration = 1,
-    scale = 50,
+    scale = 100,
 }
 
 ---@alias Defaults.Colors.Types

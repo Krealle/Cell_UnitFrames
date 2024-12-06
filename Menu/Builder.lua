@@ -276,10 +276,11 @@ end
 ---@param minVal number
 ---@param maxVal number
 ---@param path string
+---@param percentage boolean?
 ---@return CUFSlider
-function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, path)
+function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, path, percentage)
     ---@class CUFSlider: CellSlider
-    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1)
+    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1, nil, nil, percentage)
     slider.id = "Slider"
 
     slider.Set_DB = HandleWidgetOption

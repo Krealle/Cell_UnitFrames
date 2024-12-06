@@ -103,7 +103,7 @@ function Builder:CreateWidgetMenuPage(settingsFrame, widgetName, ...)
         settingsFrame.scrollFrame:SetContentHeight(height)
     end
 
-    local enabledCheckBox = self:CreatEnabledCheckBox(widgetPage.frame, widgetName)
+    local enabledCheckBox = self:CreateEnabledCheckBox(widgetPage.frame, widgetName)
 
     local prevOption = enabledCheckBox ---@type Frame
     for _, option in pairs({ ... }) do
@@ -253,7 +253,7 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return EnabledCheckBox
-function Builder:CreatEnabledCheckBox(parent, widgetName)
+function Builder:CreateEnabledCheckBox(parent, widgetName)
     ---@class EnabledCheckBox: Frame
     local f = CUF:CreateFrame(nil, parent, self.optionWidth, 30)
     f:SetPoint("TOPLEFT", parent, 5, -5)

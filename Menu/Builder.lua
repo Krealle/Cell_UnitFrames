@@ -1203,8 +1203,10 @@ function Builder:CreateGlowOptions(parent, widgetName)
         function(val) f.updateMenu(val) end)
     glowTypeDropdown:SetPoint("TOPLEFT")
 
-    local glowColor = self:CreateColorPickerOptions(f, widgetName, L["Glow Color"], "glow.color")
-    self:AnchorRight(glowColor, glowTypeDropdown)
+    if widgetName ~= const.WIDGET_KIND.DISPELS then
+        local glowColor = self:CreateColorPickerOptions(f, widgetName, L["Glow Color"], "glow.color")
+        self:AnchorRight(glowColor, glowTypeDropdown)
+    end
 
     local lines = self:CreateSlider(f, widgetName, L["Lines"], nil, 1, 30, "glow.lines")
     self:AnchorBelow(lines, glowTypeDropdown)

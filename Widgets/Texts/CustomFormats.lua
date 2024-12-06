@@ -274,7 +274,7 @@ end
 ---
 --- Functions an easy way to create wrapper functions that can be used with the tag system
 --- eg. for adding prefixes or wrapping string tags (non valid tag functions)
----@param tag string|function
+---@param tag string|CustomTagFunc
 ---@param prefix string? if present will create a wrapper function that prepends the prefix to the tag
 ---@param suffix string? if present will create a wrapper function that appends the suffix to the tag
 ---@return CustomTagFunc

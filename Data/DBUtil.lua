@@ -137,7 +137,7 @@ end
 --- Create a backup of the current layotus
 ---
 --- Overrides old manual backup
-function DB.CreateManulBackup()
+function DB.CreateManualBackup()
     CreateBackup("manual", L.CreatedManualBackup)
 end
 

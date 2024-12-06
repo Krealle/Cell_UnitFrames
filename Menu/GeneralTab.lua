@@ -155,7 +155,7 @@ function layoutBackup:OnRestoreSelect(backupType)
         end)
 end
 
---- Update the dropdown items (maybe we didnt havent manual back but we do now)
+--- Update the dropdown items (maybe we didnt haven't manual back but we do now)
 ---
 --- Update tooltips
 function layoutBackup.Update()
@@ -179,7 +179,7 @@ function layoutBackup.Update()
     CUF:SetTooltips(layoutBackup.restoreDropdown, "ANCHOR_TOPLEFT", 0, 3, L.RestoreBackup, restoreTooltip)
 
     local createTooltip = string.format(L.CreateBackupTooltip, Util:GetAllLayoutNamesAsString(true))
-    CUF:SetTooltips(layoutBackup.createManulBackup, "ANCHOR_TOPLEFT", 0, 3, L.CreateBackup, createTooltip)
+    CUF:SetTooltips(layoutBackup.createManualBackup, "ANCHOR_TOPLEFT", 0, 3, L.CreateBackup, createTooltip)
 end
 
 function layoutBackup:Create()
@@ -196,7 +196,7 @@ function layoutBackup:Create()
     self.restoreDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -20)
     self.restoreDropdown:SetLabel(L.RestoreBackup)
 
-    self.createManulBackup = CUF:CreateButton(self.frame, L.CreateBackup, { sectionWidth - 10, 16 },
+    self.createManualBackup = CUF:CreateButton(self.frame, L.CreateBackup, { sectionWidth - 10, 16 },
         function()
             local popupMsg = string.format(L.CreateBackupPopup, Util:GetAllLayoutNamesAsString(true))
 
@@ -208,11 +208,11 @@ function layoutBackup:Create()
             Menu:ShowPopup(
                 popupMsg,
                 function()
-                    DB.CreateManulBackup()
+                    DB.CreateManualBackup()
                     layoutBackup.Update()
                 end)
         end)
-    self.createManulBackup:SetPoint("TOPLEFT", self.restoreDropdown, "BOTTOMLEFT", 0, -10)
+    self.createManualBackup:SetPoint("TOPLEFT", self.restoreDropdown, "BOTTOMLEFT", 0, -10)
 end
 
 -------------------------------------------------

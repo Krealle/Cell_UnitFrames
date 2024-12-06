@@ -24,7 +24,7 @@ W.TagTooltips = {}
 ---@alias TagCategory "Health"|"Miscellaneous"|"Group"|"Classification"|"Target"|"Power"|"Color"|"Name"|"Status"
 ---@alias CustomTagFunc fun(unit: UnitToken): string?
 
-local nameLenghts = {
+local nameLengths = {
     veryshort = 5,
     short = 10,
     medium = 15,
@@ -132,12 +132,12 @@ end
 -- Will return the first format if the second is empty
 ---@param format1 string
 ---@param format2 string?
----@param seperator? string Default: "+"
+---@param separator? string Default: "+"
 ---@return string
-local function CombineFormats(format1, format2, seperator)
+local function CombineFormats(format1, format2, separator)
     if not format2 then return format1 end
 
-    return string.format("%s" .. (seperator or "+") .. "%s", format1, format2)
+    return string.format("%s" .. (separator or "+") .. "%s", format1, format2)
 end
 
 -------------------------------------------------
@@ -614,37 +614,37 @@ W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
 end, "Classification", (L.rare .. ", " .. L.rareelite .. ", " .. L.elite .. ", " .. L.worldboss))
 
 -- MARK: Name
-for type, lenght in pairs(nameLenghts) do
-    local normalExample = Util.ShortenString("Sylvanas Windrunner", lenght)
-    local abbrevExample = Util.ShortenString("S. Windrunner", lenght)
+for type, length in pairs(nameLengths) do
+    local normalExample = Util.ShortenString("Sylvanas Windrunner", length)
+    local abbrevExample = Util.ShortenString("S. Windrunner", length)
 
     W:AddTag("name:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
         if unitName then
-            return Util.ShortenString(unitName, lenght)
+            return Util.ShortenString(unitName, length)
         end
     end, "Name", normalExample)
 
     W:AddTag("name:abbrev:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
         if unitName then
-            local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
-            return Util.ShortenString(abbreveated, lenght)
+            local abbreviated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
+            return Util.ShortenString(abbreviated, length)
         end
     end, "Name", abbrevExample)
 
     W:AddTag("target:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
         if unitName then
-            return Util.ShortenString(unitName, lenght)
+            return Util.ShortenString(unitName, length)
         end
     end, "Target", normalExample)
 
     W:AddTag("target:abbrev:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
         if unitName then
-            local abbreveated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
-            return Util.ShortenString(abbreveated, lenght)
+            local abbreviated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
+            return Util.ShortenString(abbreviated, length)
         end
     end, "Target", abbrevExample)
 end

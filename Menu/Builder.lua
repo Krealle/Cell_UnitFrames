@@ -312,8 +312,9 @@ end
 ---@param width number? Default: 117
 ---@param items DropdownItem[] | string[]
 ---@param path string
+---@param postUpdate? fun(val)
 ---@return CUFDropdown
-function Builder:CreateDropdown(parent, widgetName, title, width, items, path)
+function Builder:CreateDropdown(parent, widgetName, title, width, items, path, postUpdate)
     ---@class CUFDropdown: CellDropdown
     local dropdown = Cell:CreateDropdown(parent, width or 117)
     dropdown.optionHeight = 20
@@ -333,6 +334,9 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, path)
             ["value"] = value,
             ["onClick"] = function()
                 dropdown.Set_DB(widgetName, path, value)
+                if postUpdate then
+                    postUpdate(value)
+                end
             end,
         })
     end

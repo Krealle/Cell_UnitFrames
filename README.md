@@ -67,6 +67,12 @@ This plugin provides custom API that can be used to easily perform various actio
 
 Check out https://github.com/Krealle/Cell_UnitFrames/tree/master/API for further documentation.
 
+## Compatibility
+
+This plugin provides built-in support for creating dummy anchors to match other Unit Frame addons.
+
+With these anchors, you can easily migrate from other Unit Frame addons to **Cell Unit Frames**, without having to update various anchors used in eg. WeakAuras.
+
 ## Issues / Feature Requests
 
 Please report any issues or feature requests over on [GitHub](https://github.com/Krealle/Cell_UnitFrames/issues).

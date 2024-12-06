@@ -114,6 +114,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
 
             dispels:SetDispelHighlight(aura.dispelName)
             dispels:SetDispelIcon(aura.dispelName)
+            dispels:SetDispelGlow(aura.dispelName)
             dispels:Show()
 
             return true
@@ -125,9 +126,13 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         if dispels.activeIconType then
             dispels.icons[dispels.activeIconType]:Hide()
         end
+        if dispels.activeGlowType then
+            Util.GlowStop(dispels.glowLayer)
+        end
 
         dispels.activeType = nil
         dispels.activeIconType = nil
+        dispels.activeGlowType = nil
 
         dispels:Hide()
         return

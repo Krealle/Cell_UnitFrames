@@ -42,6 +42,13 @@ function DB.InitDB()
     ---@type Defaults.BlizzardFrames
     CUF_DB.blizzardFrames = CUF_DB.blizzardFrames or Util:CopyDeep(Defaults.BlizzardFrames)
 
+    ---@class CUF.database.dummyAnchors.anchor
+    ---@field dummyName string
+    ---@field enabled boolean
+
+    ---@type table<string, CUF.database.dummyAnchors.anchor>
+    CUF_DB.dummyAnchors = CUF_DB.dummyAnchors or {}
+
     DB.CreateAutomaticBackup()
     DB:Revise()
 

@@ -305,11 +305,13 @@ local function PreviewMode(self)
                 if index > #types then index = 1 end
                 self:SetDispelHighlight(types[index])
                 self:SetDispelIcon(types[index])
+                self:SetDispelGlow(types[index])
             end
         end)
 
         self:Show()
     else
+        Util.GlowStop(self.glowLayer)
         self:Hide()
         self:SetScript("OnUpdate", nil)
     end

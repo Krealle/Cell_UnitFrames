@@ -112,6 +112,18 @@ Defaults.Options.fontWidth = {
     type = "percentage",
     auxValue = 3,
 }
+---@type GlowOpt
+Defaults.Options.glow = {
+    type = CUF.constants.GlowType.NONE,
+    color = { 1, 1, 1, 1 },
+    lines = 9,
+    frequency = 0.25,
+    length = 8,
+    thickness = 2,
+    particles = 9,
+    duration = 1,
+    scale = 100,
+}
 
 ---@alias Defaults.Colors.Types
 ---| "castBar"
@@ -518,6 +530,7 @@ Defaults.Widgets = {
             offsetX = -4,
             relativePoint = "BOTTOMRIGHT",
         },
+        glow = Defaults.Options.glow
     },
     ---@type TotemsWidgetTable
     totems = {

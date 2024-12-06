@@ -227,6 +227,7 @@
 ---@field iconStyle "none" | "blizzard" | "rhombus"
 ---@field size number
 ---@field position PositionOpt
+---@field glow GlowOpt
 
 ---@class TotemsWidgetTable
 ---@field enabled boolean
@@ -376,3 +377,14 @@
 ---@field offset number
 ---@field size number
 ---@field color RGBAOpt
+
+---@class GlowOpt
+---@field type GlowType
+---@field color RGBAOpt
+---@field lines number
+---@field frequency number
+---@field length number
+---@field thickness number
+---@field particles number
+---@field duration number
+---@field scale number

@@ -2,7 +2,6 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local F = Cell.funcs
 local I = Cell.iFuncs
 
 ---@class CUF.widgets
@@ -15,6 +14,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local Util = CUF.Util
 
 local UnitIsFriend = UnitIsFriend
 local UnitCanAttack = UnitCanAttack
@@ -25,6 +25,7 @@ local UnitCanAttack = UnitCanAttack
 
 menu:AddWidget(const.WIDGET_KIND.DISPELS,
     Builder.MenuOptions.DispelsOptions,
+    Builder.MenuOptions.Glow,
     Builder.MenuOptions.TrueSingleSizeOptions,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.FrameLevel)
@@ -64,6 +65,9 @@ function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.SIZE then
         widget.UpdateIconSize(widget, styleTable.size)
+    end
+    if not setting or setting == const.OPTION_KIND.GLOW then
+        widget.UpdateGlowStyle(widget, styleTable.glow)
     end
 
     widget.Update(button)
@@ -110,6 +114,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
 
             dispels:SetDispelHighlight(aura.dispelName)
             dispels:SetDispelIcon(aura.dispelName)
+            dispels:SetDispelGlow(aura.dispelName)
             dispels:Show()
 
             return true
@@ -121,9 +126,13 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         if dispels.activeIconType then
             dispels.icons[dispels.activeIconType]:Hide()
         end
+        if dispels.activeGlowType then
+            Util.GlowStop(dispels.glowLayer)
+        end
 
         dispels.activeType = nil
         dispels.activeIconType = nil
+        dispels.activeGlowType = nil
 
         dispels:Hide()
         return
@@ -220,6 +229,56 @@ local function SetDispelIcon_Rhombus(self)
 end
 
 ---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Pixel(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    local glow = self.glow
+    Util.GlowStart_Pixel(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, glow.length, glow.thickness)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Shine(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    local glow = self.glow
+    Util.GlowStart_Shine(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, (glow.scale / 100))
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Proc(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    Util.GlowStart_Proc(self.glowLayer, { r, g, b, 1 }, self.glow.duration)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Normal(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    Util.GlowStart_Normal(self.glowLayer, { r, g, b, 1 }, self.glow.frequency)
+end
+
+---@param self DispelsWidget
 local function PreviewMode(self)
     if self._isSelected then
         local types = {}
@@ -246,11 +305,13 @@ local function PreviewMode(self)
                 if index > #types then index = 1 end
                 self:SetDispelHighlight(types[index])
                 self:SetDispelIcon(types[index])
+                self:SetDispelGlow(types[index])
             end
         end)
 
         self:Show()
     else
+        Util.GlowStop(self.glowLayer)
         self:Hide()
         self:SetScript("OnUpdate", nil)
     end
@@ -344,6 +405,30 @@ local function UpdateIconPosition(self, styleTable)
     end
 end
 
+---@param self DispelsWidget
+---@param glowOpt GlowOpt
+local function UpdateGlowStyle(self, glowOpt)
+    self.glow = glowOpt
+    self.showGlow = glowOpt.type ~= const.GlowType.NONE
+    self.activeGlowType = nil
+
+    if glowOpt.type == const.GlowType.NONE then
+        Util.GlowStop(self.glowLayer)
+        self.glowLayer:Hide()
+        return
+    elseif glowOpt.type == const.GlowType.PIXEL then
+        self.SetDispelGlow = SetDispelGlow_Pixel
+    elseif glowOpt.type == const.GlowType.SHINE then
+        self.SetDispelGlow = SetDispelGlow_Shine
+    elseif glowOpt.type == const.GlowType.PROC then
+        self.SetDispelGlow = SetDispelGlow_Proc
+    elseif glowOpt.type == const.GlowType.NORMAL then
+        self.SetDispelGlow = SetDispelGlow_Normal
+    end
+
+    self.glowLayer:Show()
+end
+
 -------------------------------------------------
 -- MARK: CreateDispels
 -------------------------------------------------
@@ -371,10 +456,17 @@ function W:CreateDispels(button)
 
     dispels.activeType = nil
     dispels.activeIconType = nil
+    dispels.activeGlowType = nil
+
+    dispels.glow = CUF.Defaults.Options.glow
+    dispels.showGlow = false
 
     dispels:Hide()
 
     dispels.highlight = dispels:CreateTexture(button:GetName() .. "_DispelHighlight")
+
+    dispels.glowLayer = CreateFrame("Frame", nil, dispels) --[[@as GlowFrame]]
+    dispels.glowLayer:SetAllPoints(dispels.parentHealthBar)
 
     -- Icons
     ---@type table<string, DispelsWidget.Icon>
@@ -393,10 +485,12 @@ function W:CreateDispels(button)
     dispels.SetDispelIcon = SetDispelIcon
     dispels.ShouldShowDispel = ShouldShowDispel
     dispels.SetDispelHighlight = SetDispelHighlight_Current
+    dispels.SetDispelGlow = SetDispelGlow_Pixel
 
     dispels.PreviewMode = PreviewMode
     dispels.UpdateIconSize = UpdateIconSize
     dispels.UpdateIconStyle = UpdateIconStyle
+    dispels.UpdateGlowStyle = UpdateGlowStyle
     dispels.UpdateHighlightStyle = UpdateHighlightStyle
 
     dispels.SetPosition = UpdateIconPosition

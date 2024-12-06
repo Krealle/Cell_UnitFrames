@@ -2,7 +2,6 @@
 local CUF = select(2, ...)
 
 local Cell = CUF.Cell
-local F = Cell.funcs
 local I = Cell.iFuncs
 
 ---@class CUF.widgets

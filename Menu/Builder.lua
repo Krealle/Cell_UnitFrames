@@ -60,7 +60,8 @@ Builder.MenuOptions = {
     TrueSingleSizeOptions = 33,
     TotemOptions = 34,
     HideAtMaxLevel = 35,
-    HideOutOfCombat = 36
+    HideOutOfCombat = 36,
+    Glow = 37
 }
 
 -------------------------------------------------
@@ -1185,6 +1186,110 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
 end
 
 -------------------------------------------------
+-- MARK: Glow
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return GlowOptions
+function Builder:CreateGlowOptions(parent, widgetName)
+    ---@class GlowOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "GlowOptions"
+    f.optionHeight = 120
+
+    local glowTypeItems = { "none", "normal", "pixel", "shine", "proc" }
+    local glowTypeDropdown = self:CreateDropdown(f, widgetName, L["Glow Type"], nil, glowTypeItems, "glow.type",
+        function(val) f.updateMenu(val) end)
+    glowTypeDropdown:SetPoint("TOPLEFT")
+
+    local glowColor = self:CreateColorPickerOptions(f, widgetName, L["Glow Color"], "glow.color")
+    self:AnchorRight(glowColor, glowTypeDropdown)
+
+    local lines = self:CreateSlider(f, widgetName, L["Lines"], nil, 1, 30, "glow.lines")
+    self:AnchorBelow(lines, glowTypeDropdown)
+
+    local frequency = self:CreateSlider(f, widgetName, L["Frequency"], nil, -2, 2, "glow.frequency")
+    self:AnchorRight(frequency, lines)
+
+    local length = self:CreateSlider(f, widgetName, L["Length"], nil, 1, 50, "glow.length")
+    self:AnchorRight(length, frequency)
+
+    local thickness = self:CreateSlider(f, widgetName, L["Thickness"], nil, 1, 20, "glow.thickness")
+    self:AnchorBelow(thickness, lines)
+
+    local particles = self:CreateSlider(f, widgetName, L["Particles"], nil, 1, 30, "glow.particles")
+    self:AnchorRight(particles, thickness)
+
+    local duration = self:CreateSlider(f, widgetName, L["Duration"], nil, 0.1, 4, "glow.duration")
+    self:AnchorRight(duration, particles)
+
+    local scale = self:CreateSlider(f, widgetName, L["Scale"], nil, 50, 500, "glow.scale", true)
+    self:AnchorBelow(scale, duration)
+
+    ---@param type GlowType
+    f.updateMenu = function(type)
+        lines:Hide()
+        frequency:Hide()
+        length:Hide()
+        length:Hide()
+        thickness:Hide()
+        particles:Hide()
+        duration:Hide()
+        scale:Hide()
+
+        lines:ClearAllPoints()
+        frequency:ClearAllPoints()
+        length:ClearAllPoints()
+        length:ClearAllPoints()
+        thickness:ClearAllPoints()
+        particles:ClearAllPoints()
+        duration:ClearAllPoints()
+        scale:ClearAllPoints()
+
+        if type == const.GlowType.NONE or type == const.GlowType.NORMAL then
+            f.wrapperFrame:SetHeight(55)
+        elseif type == const.GlowType.PIXEL then
+            lines:Show()
+            self:AnchorBelow(lines, glowTypeDropdown)
+
+            frequency:Show()
+            self:AnchorRight(frequency, lines)
+
+            length:Show()
+            self:AnchorBelow(length, lines)
+
+            thickness:Show()
+            self:AnchorRight(thickness, length)
+
+            f.wrapperFrame:SetHeight(f.optionHeight + 40)
+        elseif type == const.GlowType.SHINE then
+            particles:Show()
+            self:AnchorBelow(particles, glowTypeDropdown)
+
+            frequency:Show()
+            self:AnchorRight(frequency, particles)
+
+            scale:Show()
+            self:AnchorBelow(scale, particles)
+            f.wrapperFrame:SetHeight(f.optionHeight + 40)
+        elseif type == const.GlowType.PROC then
+            duration:Show()
+            self:AnchorBelow(duration, glowTypeDropdown)
+            f.wrapperFrame:SetHeight(110)
+        end
+    end
+
+    local function LoadPageDB()
+        local glow = HandleWidgetOption(widgetName, const.OPTION_KIND.GLOW) --[[@as GlowOpt]]
+        f.updateMenu(glow.type)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "GlowOptions")
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: Aura Icon
 -------------------------------------------------
 
@@ -2026,4 +2131,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.TotemOptions] = Builder.CreateTotemOptions,
     [Builder.MenuOptions.HideAtMaxLevel] = Builder.CreateHideAtMaxLevel,
     [Builder.MenuOptions.HideOutOfCombat] = Builder.CreateHideOutOfCombat,
+    [Builder.MenuOptions.Glow] = Builder.CreateGlowOptions,
 }

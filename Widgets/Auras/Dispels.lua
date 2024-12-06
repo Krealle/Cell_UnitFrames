@@ -410,8 +410,13 @@ end
 local function UpdateGlowStyle(self, glowOpt)
     self.glow = glowOpt
     self.showGlow = glowOpt.type ~= const.GlowType.NONE
+    self.activeGlowType = nil
 
-    if glowOpt.type == const.GlowType.PIXEL then
+    if glowOpt.type == const.GlowType.NONE then
+        Util.GlowStop(self.glowLayer)
+        self.glowLayer:Hide()
+        return
+    elseif glowOpt.type == const.GlowType.PIXEL then
         self.SetDispelGlow = SetDispelGlow_Pixel
     elseif glowOpt.type == const.GlowType.SHINE then
         self.SetDispelGlow = SetDispelGlow_Shine
@@ -420,6 +425,8 @@ local function UpdateGlowStyle(self, glowOpt)
     elseif glowOpt.type == const.GlowType.NORMAL then
         self.SetDispelGlow = SetDispelGlow_Normal
     end
+
+    self.glowLayer:Show()
 end
 
 -------------------------------------------------

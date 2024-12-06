@@ -15,6 +15,7 @@ local menu = CUF.Menu
 local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
+local Util = CUF.Util
 
 local UnitIsFriend = UnitIsFriend
 local UnitCanAttack = UnitCanAttack

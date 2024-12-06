@@ -220,6 +220,56 @@ local function SetDispelIcon_Rhombus(self)
 end
 
 ---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Pixel(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    local glow = self.glow
+    Util.GlowStart_Pixel(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, glow.length, glow.thickness)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Shine(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    local glow = self.glow
+    Util.GlowStart_Shine(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, (glow.scale / 100))
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Proc(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    Util.GlowStart_Proc(self.glowLayer, { r, g, b, 1 }, self.glow.duration)
+end
+
+---@param self DispelsWidget
+---@param type string
+local function SetDispelGlow_Normal(self, type)
+    if not self.showGlow then return end
+    if self.activeGlowType == type then return end
+
+    self.activeGlowType = type
+
+    local r, g, b = I.GetDebuffTypeColor(type)
+    Util.GlowStart_Normal(self.glowLayer, { r, g, b, 1 }, self.glow.frequency)
+end
+
+---@param self DispelsWidget
 local function PreviewMode(self)
     if self._isSelected then
         local types = {}
@@ -371,10 +421,17 @@ function W:CreateDispels(button)
 
     dispels.activeType = nil
     dispels.activeIconType = nil
+    dispels.activeGlowType = nil
+
+    dispels.glow = CUF.Defaults.Options.glow
+    dispels.showGlow = false
 
     dispels:Hide()
 
     dispels.highlight = dispels:CreateTexture(button:GetName() .. "_DispelHighlight")
+
+    dispels.glowLayer = CreateFrame("Frame", nil, dispels) --[[@as GlowFrame]]
+    dispels.glowLayer:SetAllPoints(dispels.parentHealthBar)
 
     -- Icons
     ---@type table<string, DispelsWidget.Icon>
@@ -393,6 +450,7 @@ function W:CreateDispels(button)
     dispels.SetDispelIcon = SetDispelIcon
     dispels.ShouldShowDispel = ShouldShowDispel
     dispels.SetDispelHighlight = SetDispelHighlight_Current
+    dispels.SetDispelGlow = SetDispelGlow_Pixel
 
     dispels.PreviewMode = PreviewMode
     dispels.UpdateIconSize = UpdateIconSize

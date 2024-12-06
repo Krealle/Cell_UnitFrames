@@ -66,6 +66,9 @@ function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SIZE then
         widget.UpdateIconSize(widget, styleTable.size)
     end
+    if not setting or setting == const.OPTION_KIND.GLOW then
+        widget.UpdateGlowStyle(widget, styleTable.glow)
+    end
 
     widget.Update(button)
 end
@@ -395,6 +398,23 @@ local function UpdateIconPosition(self, styleTable)
     end
 end
 
+---@param self DispelsWidget
+---@param glowOpt GlowOpt
+local function UpdateGlowStyle(self, glowOpt)
+    self.glow = glowOpt
+    self.showGlow = glowOpt.type ~= const.GlowType.NONE
+
+    if glowOpt.type == const.GlowType.PIXEL then
+        self.SetDispelGlow = SetDispelGlow_Pixel
+    elseif glowOpt.type == const.GlowType.SHINE then
+        self.SetDispelGlow = SetDispelGlow_Shine
+    elseif glowOpt.type == const.GlowType.PROC then
+        self.SetDispelGlow = SetDispelGlow_Proc
+    elseif glowOpt.type == const.GlowType.NORMAL then
+        self.SetDispelGlow = SetDispelGlow_Normal
+    end
+end
+
 -------------------------------------------------
 -- MARK: CreateDispels
 -------------------------------------------------
@@ -456,6 +476,7 @@ function W:CreateDispels(button)
     dispels.PreviewMode = PreviewMode
     dispels.UpdateIconSize = UpdateIconSize
     dispels.UpdateIconStyle = UpdateIconStyle
+    dispels.UpdateGlowStyle = UpdateGlowStyle
     dispels.UpdateHighlightStyle = UpdateHighlightStyle
 
     dispels.SetPosition = UpdateIconPosition

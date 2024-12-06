@@ -227,6 +227,7 @@
 ---@field iconStyle "none" | "blizzard" | "rhombus"
 ---@field size number
 ---@field position PositionOpt
+---@field glow GlowOpt
 
 ---@class TotemsWidgetTable
 ---@field enabled boolean

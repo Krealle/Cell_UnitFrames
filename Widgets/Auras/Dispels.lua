@@ -25,6 +25,7 @@ local UnitCanAttack = UnitCanAttack
 
 menu:AddWidget(const.WIDGET_KIND.DISPELS,
     Builder.MenuOptions.DispelsOptions,
+    Builder.MenuOptions.Glow,
     Builder.MenuOptions.TrueSingleSizeOptions,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.FrameLevel)

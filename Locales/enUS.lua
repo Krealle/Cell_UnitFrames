@@ -64,6 +64,12 @@ L.RestoreBackupPopup = [[Restore this backup?
 L.ColorTypeTooltip = [[|cFFFFD700Cell|r - Uses the appearance settings from |cFFFFD700Cell|r.
 Custom Unit Frame colors can be changed in the |cFFFFD700Colors|r tab.]]
 
+L.CUFFrameName = "CUF Frame Name"
+L.DummyAnchorName = "Dummy Anchor Name"
+L.DummyAnchors = "Dummy Anchors"
+L.DummyAnchorsTooltip = [[Create custom-named anchors to match other addons.
+Useful for integrating with existing UI elements like WeakAuras.]]
+
 -- Units
 L.targettarget = "TargetTarget"
 L.player = "Player"

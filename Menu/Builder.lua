@@ -1681,7 +1681,7 @@ end
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@return CastBarBorderOptions
-function Builder:CreatCastBarBorderOptions(parent, widgetName)
+function Builder:CreateCastBarBorderOptions(parent, widgetName)
     ---@class CastBarBorderOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarBorderOptions"
@@ -2123,7 +2123,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.CastBarSpell] = Builder.CreateCastBarSpellFontOptions,
     [Builder.MenuOptions.CastBarSpark] = Builder.CreateCastBarSparkOptions,
     [Builder.MenuOptions.CastBarEmpower] = Builder.CreateCastBarEmpowerOptions,
-    [Builder.MenuOptions.CastBarBorder] = Builder.CreatCastBarBorderOptions,
+    [Builder.MenuOptions.CastBarBorder] = Builder.CreateCastBarBorderOptions,
     [Builder.MenuOptions.CastBarIcon] = Builder.CreateCastBarIconOptions,
     [Builder.MenuOptions.ClassBarOptions] = Builder.CreateClassBarOptions,
     [Builder.MenuOptions.ShieldBarOptions] = Builder.CreateShieldBarOptions,

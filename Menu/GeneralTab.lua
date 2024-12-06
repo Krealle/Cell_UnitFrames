@@ -11,7 +11,7 @@ local Util = CUF.Util
 ---@class GeneralTab: Menu.Tab
 local generalTab = {}
 generalTab.id = "generalTab"
-generalTab.height = 170
+generalTab.height = 180
 generalTab.paneHeight = 17
 
 Menu:AddTab(generalTab)
@@ -261,6 +261,77 @@ function Misc:ShowBlizzardFramesPopup()
     end
 end
 
+---@param unit UnitToken
+function Misc:AddDummyAnchor(unit)
+    local dummyAnchor = {}
+
+    local cufBox = CUF:CreateEditBox(self.dummyAnchorsPopup, 150, 20, not self.dummyAnchors and L.CUFFrameName or nil)
+    cufBox:SetText("CUF_" .. unit)
+    cufBox:SetEnabled(false)
+
+    local parentName = "CUF_" .. unit
+
+    local dummyName = CUF_DB.dummyAnchors[parentName] and CUF_DB.dummyAnchors[parentName].dummyName
+    if not dummyName then
+        dummyName = "ElvUF_" .. unit
+        CUF_DB.dummyAnchors[parentName] = { dummyName = dummyName, enabled = false }
+    end
+
+    local customBox = CUF:CreateEditBox(self.dummyAnchorsPopup, 200, 20,
+        not self.dummyAnchors and L.DummyAnchorName or nil)
+    customBox:SetPoint("TOPLEFT", cufBox, "TOPRIGHT", 5, 0)
+    customBox:SetText(dummyName)
+
+    customBox:SetScript("OnEnterPressed", function()
+        customBox:ClearFocus()
+        local value = customBox:GetText()
+        CUF_DB.dummyAnchors[parentName].dummyName = value
+    end)
+
+    local checkBox = Cell:CreateCheckButton(self.dummyAnchorsPopup, "",
+        function(checked)
+            CUF_DB.dummyAnchors[parentName].enabled = checked
+            if checked then
+                CUF.Compat:CreateDummyAnchor(CUF_DB.dummyAnchors[parentName].dummyName, parentName)
+            end
+        end)
+    checkBox:SetSize(20, 20)
+    checkBox.parent = parentName
+    checkBox:SetPoint("TOPLEFT", customBox, "TOPRIGHT", 5, 0)
+
+    self.dummyAnchorsPopup:SetHeight(self.dummyAnchorsPopup:GetHeight() + checkBox:GetHeight() + 10)
+
+    dummyAnchor.cufBox = cufBox
+    dummyAnchor.customBox = customBox
+    dummyAnchor.checkBox = checkBox
+
+    if not self.dummyAnchors then
+        cufBox:SetPoint("TOPLEFT", self.dummyAnchorsPopup, "TOPLEFT", 10, -22)
+        self.dummyAnchorsPopup:SetHeight(self.dummyAnchorsPopup:GetHeight() + 12)
+        self.dummyAnchors = {}
+        tinsert(self.dummyAnchors, dummyAnchor)
+    else
+        cufBox:SetPoint("TOPLEFT", self.dummyAnchors[#self.dummyAnchors].cufBox, "BOTTOMLEFT", 0, -10)
+        tinsert(self.dummyAnchors, dummyAnchor)
+    end
+end
+
+function Misc:ShowDummyAnchorsPopup()
+    if self.dummyAnchorsPopup:IsShown() then
+        self.dummyAnchorsPopup:Hide()
+        return
+    end
+
+    self.dummyAnchorsPopup:Show()
+    self.dummyAnchorsButton:SetFrameLevel(self.dummyAnchorsPopup:GetFrameLevel())
+    Menu.window.mask:Show()
+
+    for _, dummyAnchor in ipairs(self.dummyAnchors) do
+        dummyAnchor.checkBox:SetChecked(CUF_DB.dummyAnchors[dummyAnchor.checkBox.parent].enabled)
+        dummyAnchor.customBox:SetText(CUF_DB.dummyAnchors[dummyAnchor.checkBox.parent].dummyName)
+    end
+end
+
 function Misc.Update()
     if not generalTab:IsShown() then return end
 
@@ -311,6 +382,34 @@ function Misc:Create()
 
     for _, type in pairs(CUF.constants.BlizzardFrameTypes) do
         Misc:AddBlizzardFrame(type)
+    end
+
+    self.dummyAnchorsButton = CUF:CreateButton(self.frame, L.DummyAnchors, { 195, 20 }, function()
+        self:ShowDummyAnchorsPopup()
+    end)
+    self.dummyAnchorsButton:SetPoint("TOPLEFT", self.blizzardFramesButton, "BOTTOMLEFT", 0, -10)
+    CUF:SetTooltips(self.dummyAnchorsButton, "ANCHOR_TOP", 0, 3, L.DummyAnchors, L.DummyAnchorsTooltip)
+
+    ---@class DummyAnchorsPopup: Frame, BackdropTemplate
+    self.dummyAnchorsPopup = CUF:CreateFrame("CUF_Misc_DummyAnchorsPopup", self.frame, 400, 10)
+    self.dummyAnchorsPopup:SetPoint("BOTTOMRIGHT", self.dummyAnchorsButton, "BOTTOMLEFT", -5, 0)
+    self.dummyAnchorsPopup:SetFrameLevel(generalTab.window:GetFrameLevel() + 50)
+    self.dummyAnchorsPopup:SetBackdropBorderColor(unpack(Cell:GetAccentColorTable()))
+
+    self.dummyAnchorsPopup:SetScript("OnHide", function()
+        self.dummyAnchorsPopup:Hide()
+        Menu.window.mask:Hide()
+        self.dummyAnchorsButton:SetFrameLevel(self.frame:GetFrameLevel() + 1)
+    end)
+
+    for _, button in pairs(CUF.unitButtons) do
+        if not button.name then
+            for _, buttonN in pairs(button) do
+                Misc:AddDummyAnchor(buttonN.name)
+            end
+        else
+            Misc:AddDummyAnchor(button.name)
+        end
     end
 end
 

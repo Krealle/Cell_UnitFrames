@@ -37,6 +37,8 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF.uFuncs:InitUnitButtons()
     CUF:Fire("UpdateUnitButtons")
 
+    CUF.Compat:InitDummyAnchors()
+
     -- Register callbacks
     Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
         function(layout) CUF:Fire("UpdateWidget", layout) end)

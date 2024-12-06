@@ -453,7 +453,7 @@ local function CreateWidgetOverlayBox(widget, unit, unitOverlay)
     overlay:SetClampedToScreen(true)
     overlay:SetAlpha(0.75)
 
-    local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     label:SetPoint("CENTER")
     label:SetText(L[unit] .. " " .. L[widget.id])
 
@@ -540,7 +540,7 @@ local function CreateOverlayBox(button, unit, unitN, parentButton)
     overlay:Hide()
     overlay:SetClampedToScreen(true)
 
-    local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local label = overlay:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     label:SetPoint("CENTER")
     label:SetText(L[unit] .. (unitN or ""))
 
@@ -766,7 +766,7 @@ local function CreateCellEditModePopup()
     title:SetPoint("TOPLEFT", 5, -5)
     title:SetText(L.CellEditMode)
 
-    local subTitle = cellPopup:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local subTitle = cellPopup:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     subTitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -5)
     subTitle:SetText(L.CellEditModeTip)
     subTitle:SetScale(0.9)

@@ -921,13 +921,13 @@ function W:CreateCastBar(button)
     spark.enabled = false
 
     ---@class TimerText: FontString
-    local timerText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local timerText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     timerText.SetFontStyle = SetFontStyle
     timerText.SetPosition = SetFontPosition
     timerText.format = const.CastBarTimerFormat.REMAINING
 
     ---@class SpellText: FontString
-    local spellText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local spellText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     spellText.SetFontStyle = SetFontStyle
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true

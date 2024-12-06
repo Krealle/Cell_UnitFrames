@@ -733,7 +733,7 @@ function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLi
     local editBox = Cell:CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
 
     if text then
-        local label = editBox:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIGET)
+        local label = editBox:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIDGET)
         label:SetText(text)
         label:SetPoint("BOTTOMLEFT", editBox, "TOPLEFT", 0, 2)
     end
@@ -795,7 +795,7 @@ function CUF:CreateInformationPopupFrame(title, width, ...)
     header.closeBtn:SetPoint("TOPRIGHT")
     header.closeBtn:SetScript("OnClick", function() f:Hide() end)
 
-    local content = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    local content = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     content:SetScale(1)
     content:SetPoint("TOP", header, "BOTTOM", 0, -10)
     content:SetWidth(f:GetWidth() - 30)

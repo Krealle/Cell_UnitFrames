@@ -65,7 +65,7 @@ function DebugWindow:AddVar(name, dumpFn, getTextFn)
     local f = CUF:CreateFrame(nil, prevVar or self.frame.varTitle, 290, 20, false, true)
     f:SetPoint("TOPLEFT", 0, -22)
 
-    f.title = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    f.title = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     f.title:SetText(name .. ":")
     f.title:SetPoint("TOPLEFT", 2, -2)
 
@@ -74,7 +74,7 @@ function DebugWindow:AddVar(name, dumpFn, getTextFn)
         varButton:SetPoint("TOPLEFT", f.title, "TOPLEFT", 150, 0)
         f.UpdateValue = function() end
     else
-        f.value = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        f.value = f:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
         f.value:SetPoint("TOPLEFT", f.title, "TOPLEFT", 150, 0)
 
         f.UpdateValue = function()

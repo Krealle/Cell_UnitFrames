@@ -261,7 +261,7 @@ function menu:CreateMenu()
     self.layoutTitleFrame = layoutTitleFrame
     layoutTitleFrame:Hide()
 
-    local layoutTitle = layoutTitleFrame:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIGET)
+    local layoutTitle = layoutTitleFrame:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIDGET)
     self.layoutTitle = layoutTitle
     layoutTitle:SetPoint("CENTER")
     layoutTitle:SetTextScale(1)

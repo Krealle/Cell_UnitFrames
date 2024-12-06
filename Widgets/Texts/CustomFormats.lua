@@ -208,7 +208,7 @@ function W.ShowTooltipFrame()
         Cell:CreateScrollFrame(settingsFrame)
         settingsFrame.scrollFrame:SetScrollStep(50)
 
-        local tagText = settingsFrame.scrollFrame.content:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        local tagText = settingsFrame.scrollFrame.content:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
         tagText:SetPoint("TOPLEFT", 5, -5)
         tagText:SetJustifyH("LEFT")
         tagText:SetSpacing(5)

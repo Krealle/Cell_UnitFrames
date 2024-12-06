@@ -120,14 +120,14 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             auraButtons[i].spellIcon:Hide()
 
             -- spellId text
-            auraButtons[i].spellIdText = auraButtons[i]:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+            auraButtons[i].spellIdText = auraButtons[i]:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
             auraButtons[i].spellIdText:SetPoint("LEFT", auraButtons[i].spellIconBg, "RIGHT", 5, 0)
             auraButtons[i].spellIdText:SetPoint("RIGHT", auraButtons[i], "LEFT", 80, 0)
             auraButtons[i].spellIdText:SetWordWrap(false)
             auraButtons[i].spellIdText:SetJustifyH("LEFT")
 
             -- spellName text
-            auraButtons[i].spellNameText = auraButtons[i]:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+            auraButtons[i].spellNameText = auraButtons[i]:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
             auraButtons[i].spellNameText:SetPoint("LEFT", auraButtons[i].spellIdText, "RIGHT", 5, 0)
             auraButtons[i].spellNameText:SetPoint("RIGHT", -70, 0)
             auraButtons[i].spellNameText:SetWordWrap(false)
@@ -422,7 +422,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
             end
         end)
 
-        auraImportExportFrame.info = auraImportExportFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+        auraImportExportFrame.info = auraImportExportFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
         auraImportExportFrame.info:SetPoint("BOTTOMLEFT", auraImportExportFrame.textArea, "TOPLEFT", 0, 3)
 
         auraImportExportFrame.closeBtn = Cell:CreateButton(auraImportExportFrame, "×", "red", { 18, 18 }, false, false,
@@ -469,7 +469,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     widget.frame:Show()
     Cell:StylizeFrame(widget.frame, { 0.15, 0.15, 0.15, 1 })
 
-    widget.text = widget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIGET)
+    widget.text = widget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     widget.text:SetPoint("BOTTOMLEFT", widget.frame, "TOPLEFT", 0, 3)
     widget.text:SetText(L[kind])
 

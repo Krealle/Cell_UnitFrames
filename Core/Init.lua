@@ -26,6 +26,8 @@ CUF.Builder = {}
 CUF.API = {}
 ---@class CUF.PixelPerfect
 CUF.PixelPerfect = {}
+---@class CUF.Compat
+CUF.Compat = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string

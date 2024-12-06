@@ -175,6 +175,7 @@ const.OPTION_KIND = {
     ONLY_SHOW_INTERRUPT     = "onlyShowInterrupt",
     HIDE_AT_MAX_LEVEL       = "hideAtMaxLevel",
     HIDE_OUT_OF_COMBAT      = "hideOutOfCombat",
+    GLOW                    = "glow",
 }
 
 ---@enum AURA_OPTION_KIND
@@ -331,4 +332,13 @@ const.BlizzardFrameTypes = {
     "playerCastBar",
     "buffFrame",
     "debuffFrame",
+}
+
+---@enum GlowType
+const.GlowType = {
+    NONE = "none",
+    NORMAL = "normal",
+    PIXEL = "pixel",
+    SHINE = "shine",
+    PROC = "proc",
 }

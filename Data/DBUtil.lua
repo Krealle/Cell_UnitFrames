@@ -89,7 +89,7 @@ end
 ---@field layoutNames string
 ---@field colors Defaults.Colors
 
---- Generic function to create a backup of the current layotus
+--- Generic function to create a backup of the current layouts
 ---@param backupType "manual"|"automatic" the type of backup to create
 ---@param msg string the message to print to the chat window
 local function CreateBackup(backupType, msg)
@@ -118,12 +118,12 @@ local function CreateBackup(backupType, msg)
     CUF:Print(msg, layoutNames)
 end
 
---- Create a backup of the current layotus
+--- Create a backup of the current layouts
 ---
 --- This is used to create to a backup for updates that either:
 ---
 --- A) Change the way the layout is stored
---- B) Implement poentially breaking changes
+--- B) Implement potentially breaking changes
 --- C) Prevent data loss due to a bug
 function DB.CreateAutomaticBackup()
     if not CUF_DB.version -- First time addon is loaded, nothing to backup
@@ -134,7 +134,7 @@ function DB.CreateAutomaticBackup()
     CreateBackup("automatic", L.CreatedAutomaticBackup)
 end
 
---- Create a backup of the current layotus
+--- Create a backup of the current layouts
 ---
 --- Overrides old manual backup
 function DB.CreateManualBackup()

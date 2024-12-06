@@ -29,6 +29,7 @@ Data/Revise.lua
 Util/Handler.lua
 Util/HideBlizzard.lua
 Util/HelpTips.lua
+Util/Compat.lua
 
 Debug/DebugWindow.lua
 Debug/Debug.lua

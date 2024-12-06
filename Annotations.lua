@@ -47,6 +47,7 @@
 ---@field GetSelected function
 ---@field AddItem function
 ---@field ClearItems function
+---@field text FontString
 
 ---@class CellColorPicker: Frame, BackdropTemplate
 ---@field SetColor fun(self: CellColorPicker, r: number|table, g: number?, b: number?, a: number?)

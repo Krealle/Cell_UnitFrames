@@ -15,6 +15,10 @@ L.useDeathColor = L["Enable Death Color"]
 L.barAlpha = L["Health Bar Alpha"]
 L.lossAlpha = L["Health Loss Alpha"]
 L.backgroundAlpha = L["Background Alpha"]
+L.none = L["None"]
+L.pixel = L["Pixel"]
+L.shine = L["Shine"]
+L.proc = L["Proc"]
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"

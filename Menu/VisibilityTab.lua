@@ -77,7 +77,7 @@ function VisibilityTab:Create()
         65, false, true)
     checkBoxSection:SetPoint("TOPLEFT", self.window, "TOPLEFT", 5, -5)
 
-    local visibilityEditBox = CUF:CreateEditBox(checkBoxSection, checkBoxSection:GetWidth() - 20, 30, L.Visibility)
+    local visibilityEditBox = CUF:CreateEditBox(checkBoxSection, checkBoxSection:GetWidth() - 20, 30, L["Visibility"])
     visibilityEditBox:SetPoint("TOPLEFT", 10, -25)
     self.visibilityEditBox = visibilityEditBox
 

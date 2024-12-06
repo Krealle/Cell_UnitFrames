@@ -291,7 +291,7 @@ function W:WrapTagFunction(tag, prefix, suffix)
             return function(unit)
                 local result = tag(unit)
                 if result then
-                    return prefix .. tag(unit) .. suffix
+                    return prefix .. result .. suffix
                 end
             end
         end
@@ -299,14 +299,14 @@ function W:WrapTagFunction(tag, prefix, suffix)
         return function(unit)
             local result = tag(unit)
             if result then
-                return prefix .. tag(unit)
+                return prefix .. result
             end
         end
     elseif suffix then
         return function(unit)
             local result = tag(unit)
             if result then
-                return tag(unit) .. suffix
+                return result .. suffix
             end
         end
     end

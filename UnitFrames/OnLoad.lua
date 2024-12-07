@@ -426,14 +426,10 @@ local function UnitFrame_OnHide(self)
     UnitFrame_UnregisterEvents(self)
     ResetAuraTables(self)
 
-    -- NOTE: update Cell.vars.guids
-    -- CUF:Log("hide", self.states.unit, self.__unitGuid, self.__unitName)
     if self.__unitGuid then
-        Cell.vars.guids[self.__unitGuid] = nil
         self.__unitGuid = nil
     end
     if self.__unitName then
-        Cell.vars.names[self.__unitName] = nil
         self.__unitName = nil
     end
     self.__displayedGuid = nil
@@ -496,17 +492,13 @@ local function UnitFrame_OnTick(self)
             if guid and guid ~= self.__unitGuid then
                 -- CUF:Log("guidChanged:", self:GetName(), self.states.unit, guid)
                 -- NOTE: unit entity changed
-                -- update Cell.vars.guids
                 self.__unitGuid = guid
-                Cell.vars.guids[guid] = self.states.unit
 
                 -- NOTE: only save players' names
                 if UnitIsPlayer(self.states.unit) then
-                    -- update Cell.vars.names
                     local name = GetUnitName(self.states.unit, true)
                     if (name and self.__nameRetries and self.__nameRetries >= 4) or (name and name ~= UNKNOWN and name ~= UNKNOWNOBJECT) then
                         self.__unitName = name
-                        Cell.vars.names[name] = self.states.unit
                         self.__nameRetries = nil
                     else
                         -- NOTE: update on next tick
@@ -556,11 +548,9 @@ local function UnitFrame_OnAttributeChanged(self, name, value)
         if not value or value ~= self.states.unit then
             -- NOTE: when unitId for this button changes
             if self.__unitGuid then -- self.__unitGuid is deleted when hide
-                Cell.vars.guids[self.__unitGuid] = nil
                 self.__unitGuid = nil
             end
             if self.__unitName then
-                Cell.vars.names[self.__unitName] = nil
                 self.__unitName = nil
             end
             wipe(self.states)

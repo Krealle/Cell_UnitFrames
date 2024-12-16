@@ -31,6 +31,8 @@ local nameLengths = {
     long = 20,
 }
 
+local format = string.format
+
 local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitIsAFK = UnitIsAFK
@@ -44,6 +46,35 @@ local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 -------------------------------------------------
 -- MARK: Formatting Functions
 -------------------------------------------------
+
+---@param max number
+---@param min number?
+---@param percent boolean?
+---@param short boolean?
+---@return string? result
+---@return boolean? isPositive
+local function FormatText(max, min, percent, short)
+    local isPositive
+    if percent then
+        if not min then return end
+
+        local val = min / max * 100
+        isPositive = val > 0
+
+        if short then
+            return format("%d%%", val), isPositive
+        end
+
+        return format("%.2f%%", val), isPositive
+    end
+
+    isPositive = max >= 0
+    if short then
+        return F:FormatNumber(max), isPositive
+    end
+
+    return tostring(max), isPositive
+end
 
 -- Formats a percent value with decimals
 ---@param max number

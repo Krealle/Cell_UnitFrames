@@ -28,7 +28,7 @@ function W.CreateBaseTextWidget(button, kind)
     textWidget.enabled = false
     textWidget.id = kind
     textWidget._isSelected = false
-    textWidget.colorType = const.ColorType.CLASS_COLOR ---@type ColorType
+    textWidget.colorType = const.ColorType.CLASS_COLOR ---@type HealthColorType
     textWidget.rgb = { 1, 1, 1 }
     textWidget._owner = button
 

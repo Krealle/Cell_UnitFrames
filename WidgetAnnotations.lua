@@ -346,7 +346,7 @@
 
 ---@class ColorOpt
 ---@field rgb RGBOpt
----@field type ColorType
+---@field type HealthColorType
 
 ---@class SmallFontOpt
 ---@field outline string

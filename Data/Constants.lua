@@ -43,7 +43,7 @@ const.PowerColorType = {
     POWER_COLOR = "power_color",
 }
 
----@enum ColorType
+---@enum HealthColorType
 const.ColorType = {
     CLASS_COLOR = "class_color",
     CUSTOM = "custom",

@@ -316,13 +316,62 @@ function W:WrapTagFunction(tag, prefix, suffix)
 
     -- Wrap the tag function to include the prefix if the tag function
     -- returns a string
+    -- [{op:color}>abs:healabs:merge:short]
     if prefix then
+        local positiveColor, negativeColor
+        local _, maybePositive = tag("player")
+        if type(maybePositive) ~= "nil" then
+            for bracketed in prefix:gmatch("%b{}") do
+                local operator, color = string.split(":", bracketed:sub(2, -2))
+                if operator == "neg" or operator == "pos" then
+                    if (const.FormatColors[color] or Util.GetClassColorCode(color)) then
+                        if operator == "neg" then
+                            negativeColor = color
+                        else
+                            positiveColor = color
+                        end
+                        prefix = prefix:gsub("%b" .. bracketed, "")
+                    end
+                end
+            end
+        end
+
         -- Check if we also have a suffix to append
         if suffix then
+            if positiveColor or negativeColor then
+                return function(unit)
+                    local result, isPositive = tag(unit)
+                    if result then
+                        if positiveColor and isPositive then
+                            return Util.ColorWrap((prefix .. result .. suffix), positiveColor)
+                        elseif negativeColor and not isPositive then
+                            return Util.ColorWrap((prefix .. result .. suffix), negativeColor)
+                        end
+
+                        return prefix .. result .. suffix
+                    end
+                end
+            end
+
             return function(unit)
                 local result = tag(unit)
                 if result then
                     return prefix .. result .. suffix
+                end
+            end
+        end
+
+        if positiveColor or negativeColor then
+            return function(unit)
+                local result, isPositive = tag(unit)
+                if result then
+                    if positiveColor and isPositive then
+                        return Util.ColorWrap((prefix .. result), positiveColor)
+                    elseif negativeColor and not isPositive then
+                        return Util.ColorWrap((prefix .. result), negativeColor)
+                    end
+
+                    return prefix .. result
                 end
             end
         end
@@ -433,58 +482,72 @@ end
 
 -- MARK: Health
 W:AddTag("curhp", "UNIT_HEALTH", function(unit)
-    return FormatNumber(UnitHealth(unit))
+    return FormatText(UnitHealth(unit))
 end, "Health", "35000")
 W:AddTag("curhp:short", "UNIT_HEALTH", function(unit)
-    return FormatNumberShort(UnitHealth(unit))
+    return FormatText(UnitHealth(unit), nil, false, true)
 end, "Health", "35K")
 W:AddTag("perhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
-    return FormatPercent(UnitHealthMax(unit), UnitHealth(unit))
+    return FormatText(UnitHealthMax(unit), UnitHealth(unit), true)
 end, "Health", "75.20%")
 W:AddTag("perhp:short", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
-    return FormatPercentShort(UnitHealthMax(unit), UnitHealth(unit))
+    return FormatText(UnitHealthMax(unit), UnitHealth(unit), true, true)
 end, "Health", "75%")
 
 W:AddTag("maxhp", "UNIT_MAXHEALTH", function(unit)
-    return FormatNumber(UnitHealthMax(unit))
+    return FormatText(UnitHealthMax(unit))
 end, "Health", "50000")
 W:AddTag("maxhp:short", "UNIT_MAXHEALTH", function(unit)
-    return FormatNumberShort(UnitHealthMax(unit))
+    return FormatText(UnitHealthMax(unit), nil, false, true)
 end, "Health", "50K")
 
 W:AddTag("defhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
-    return FormatNumberNoZeroes(UnitHealth(unit) - UnitHealthMax(unit))
+    local deficit = UnitHealth(unit) - UnitHealthMax(unit)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit)
 end, "Health", "-10000")
 W:AddTag("defhp:short", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
-    return FormatNumberShortNoZeroes(UnitHealth(unit) - UnitHealthMax(unit))
+    local deficit = UnitHealth(unit) - UnitHealthMax(unit)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit)
 end, "Health", "-10K")
 W:AddTag("perdefhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     local maxhp = UnitHealthMax(unit)
     local current = UnitHealth(unit)
-    return FormatPercentNoZeroes(maxhp, (current - maxhp))
+    local deficit = current - maxhp
+    if not deficit or deficit == 0 then return end
+    return FormatText(maxhp, deficit, true)
 end, "Health", "-20.20%")
 W:AddTag("perdefhp:short", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     local maxhp = UnitHealthMax(unit)
     local current = UnitHealth(unit)
-    return FormatPercentShortNoZeroes(maxhp, (current - maxhp))
+    local deficit = current - maxhp
+    if not deficit or deficit == 0 then return end
+    return FormatText(maxhp, deficit, true, true)
 end, "Health", "-20%")
 
 -- MARK: Absorbs
 W:AddTag("abs", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumberNoZeroes(UnitGetTotalAbsorbs(unit))
+    local totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    if totalAbsorbs == 0 then return end
+    return FormatText(totalAbsorbs)
 end, "Health", "25000")
 W:AddTag("abs:short", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumberShortNoZeroes(UnitGetTotalAbsorbs(unit))
+    local totalAbsorbs = UnitGetTotalAbsorbs(unit)
+    if totalAbsorbs == 0 then return end
+    return FormatText(totalAbsorbs, nil, false, true)
 end, "Health", "25K")
 W:AddTag("perabs", "UNIT_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
-    local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatPercentNoZeroes(maxhp, totalAbsorbs)
+    if totalAbsorbs == 0 then return end
+    local maxhp = UnitHealthMax(unit)
+    return FormatText(maxhp, totalAbsorbs, true)
 end, "Health", "50.20%")
 W:AddTag("perabs:short", "UNIT_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
-    local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatPercentShortNoZeroes(maxhp, totalAbsorbs)
+    if totalAbsorbs == 0 then return end
+    local maxhp = UnitHealthMax(unit)
+    return FormatText(maxhp, totalAbsorbs, true, true)
 end, "Health", "50%")
 
 -- MARK: Combine
@@ -515,52 +578,58 @@ end, "Health", "75% + 15%")
 W:AddTag("curhp:abs:merge", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatNumber(curhp + totalAbsorbs)
+    return FormatText(curhp + totalAbsorbs)
 end, "Health", "40000")
 W:AddTag("curhp:abs:merge:short", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatNumberShort(curhp + totalAbsorbs)
+    return FormatText(curhp + totalAbsorbs, nil, false, true)
 end, "Health", "40K")
 W:AddTag("perhp:perabs:merge", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatPercent(maxhp, (curhp + totalAbsorbs))
+    return FormatText(maxhp, (curhp + totalAbsorbs), true)
 end, "Health", "90.20%")
 W:AddTag("perhp:perabs:merge:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatPercentShort(maxhp, (curhp + totalAbsorbs))
+    return FormatText(maxhp, (curhp + totalAbsorbs), true, true)
 end, "Health", "90%")
 W:AddTag("abs:healabs:merge", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatNumberNoZeroes(totalAbsorbs - totalHealAbsorbs)
+    return FormatText(totalAbsorbs - totalHealAbsorbs)
 end, "Health", "40000")
 W:AddTag("abs:healabs:merge:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatNumberShortNoZeroes(totalAbsorbs - totalHealAbsorbs)
+    return FormatText(totalAbsorbs - totalHealAbsorbs, nil, false, true)
 end, "Health", "-40k")
 
 -- MARK: Heal Absorbs
 W:AddTag("healabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumberNoZeroes(UnitGetTotalHealAbsorbs(unit))
+    local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
+    if totalHealAbsorbs == 0 then return end
+    return FormatText(totalHealAbsorbs)
 end, "Health", "20000")
 W:AddTag("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
-    return FormatNumberShortNoZeroes(UnitGetTotalHealAbsorbs(unit))
+    local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
+    if totalHealAbsorbs == 0 then return end
+    return FormatText(totalHealAbsorbs, nil, false, true)
 end, "Health", "20K")
 W:AddTag("perhealabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
-    local maxhp = UnitHealthMax(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
-    return FormatPercentNoZeroes(maxhp, totalHealAbsorbs)
+    if totalHealAbsorbs == 0 then return end
+    local maxhp = UnitHealthMax(unit)
+    return FormatText(maxhp, totalHealAbsorbs, true)
 end, "Health", "40.20%")
 W:AddTag("perhealabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
-    local maxhp = UnitHealthMax(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
-    return FormatPercentShortNoZeroes(maxhp, totalHealAbsorbs)
+    if totalHealAbsorbs == 0 then return end
+    local maxhp = UnitHealthMax(unit)
+    return FormatText(maxhp, totalHealAbsorbs, true, true)
 end, "Health", "40%")
 
 -- MARK: Power

@@ -37,6 +37,12 @@ There is also support for conditional prefixes and suffixes. Simply add a `>` or
 - ` [target< «] [name]` to produce `Sylvanas Windrunner « Bob`.
 - `[name] [» >target]` to produce `Bob » Sylvanas Windrunner`.
 
+There is also support for conditional colors for Health Tags. They can be expressed using `{neg:color}`, for negative values, or `{pos:color}`, for positive values; inside of a prefix.
+
+- `[{neg:red}{pos:green}>abs:healabs:merge:short]`
+
+Available colors: `red`, `green`, `blue`, `white`, `black`, `yellow`, `cyan`, `magenta`, `orange`, `purple`, `gray`, `pink`, `brown`, `gold`, `warrior`, `paladin`, `hunter`, `rogue`, `priest`, `deathknight`, `shaman`, `mage`, `warlock`, `monk`, `druid`, `demonhunter`, `evoker`
+
 Write **`/cuf tags`** in the chat to see a list of all available tags.
 
 Feel like a useful tag is missing, or simply have a niche request? Feel free to make a feature request or even a PR!

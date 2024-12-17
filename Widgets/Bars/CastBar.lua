@@ -15,6 +15,9 @@ local Builder = CUF.Builder
 local Handler = CUF.Handler
 local P = CUF.PixelPerfect
 
+local FAILED = FAILED or "Failed"
+local INTERRUPTED = INTERRUPTED or "Interrupted"
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -61,6 +64,12 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.TARGET_SEPARATOR then
         castBar.spellText.targetSeparator = styleTable.targetSeparator
+    end
+    if not setting or setting == const.OPTION_KIND.TIME_TO_HOLD then
+        castBar.timeToHold = styleTable.timeToHold
+    end
+    if not setting or setting == const.OPTION_KIND.INTERRUPTED_LABEL then
+        castBar.interruptedLabel = styleTable.interruptedLabel
     end
 
     if not setting or setting == const.OPTION_KIND.SPARK then
@@ -244,6 +253,8 @@ function CastStart(button, event, unit, castGUID)
     castBar.max = endTime - startTime
     castBar.startTime = startTime
 
+    castBar.holdTime = 0
+
     castBar.notInterruptible = notInterruptible
     castBar.castID = castID
     castBar.spellID = spellID
@@ -363,6 +374,21 @@ function CastFail(button, event, unit, castID, spellID)
         return
     end
 
+    if castBar.timeToHold > 0 then
+        castBar.holdTime = castBar.timeToHold
+
+        local type = event == 'UNIT_SPELLCAST_FAILED' and FAILED or INTERRUPTED
+        castBar.spellText:SetText(castBar.interruptedLabel:gsub("%%i", type):gsub("%%s",
+            castBar.displayName ~= "" and castBar.displayName or castBar.spellName or ""))
+
+        if castBar.spark:IsShown() then
+            castBar.spark:Hide()
+        end
+
+        castBar:SetValue(castBar.max)
+        castBar:SetCastBarColor()
+    end
+
     castBar:ResetAttributes()
 end
 
@@ -457,6 +483,8 @@ local function onUpdate(self, elapsed)
                 self:OnUpdateStage()
             end
         end
+    elseif self.holdTime > 0 then
+        self.holdTime = self.holdTime - elapsed
     else
         self:ResetAttributes()
         self:Hide()
@@ -726,7 +754,9 @@ end
 
 ---@param self CastBarWidget
 local function SetCastBarColor(self)
-    if self.useClassColor then
+    if self.holdTime > 0 then
+        self.statusBar:SetStatusBarColor(1, 0, 0, 1)
+    elseif self.useClassColor then
         local r, g, b = CUF.Util:GetUnitClassColor(self._owner.states.unit)
         self.statusBar:SetStatusBarColor(r, g, b, 1)
     elseif self.notInterruptible then
@@ -900,6 +930,10 @@ function W:CreateCastBar(button)
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
     castBar.useClassColor = false
     castBar.onlyShowInterrupt = false
+
+    castBar.timeToHold = 0
+    castBar.holdTime = 0
+    castBar.interruptedLabel = ""
 
     -- Number of stages in current empower
     castBar.NumStages = 0

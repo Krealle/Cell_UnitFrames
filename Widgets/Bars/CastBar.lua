@@ -56,6 +56,12 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SHOW_SPELL then
         castBar.spellText.enabled = styleTable.showSpell
     end
+    if not setting or setting == const.OPTION_KIND.SHOW_TARGET then
+        castBar.spellText.showTarget = styleTable.showTarget
+    end
+    if not setting or setting == const.OPTION_KIND.TARGET_SEPARATOR then
+        castBar.spellText.targetSeparator = styleTable.targetSeparator
+    end
 
     if not setting or setting == const.OPTION_KIND.SPARK then
         castBar.spark.enabled = styleTable.spark.enabled
@@ -106,6 +112,8 @@ local function ResetAttributes(self)
     self.spellName = nil
     self.displayName = nil
     self.spellTexture = nil
+    self.castGUID = nil
+    self.targetName = nil
 
     self:ClearStages()
 end
@@ -117,28 +125,23 @@ local function UpdateElements(self)
     if self.icon then self.icon:SetTexture(self.spellTexture --[[ or FALLBACK_ICON ]]) end
     if self.spark then self.spark:Show() end
 
-    if self.spellText.enabled and not self.empowering then
-        local name = self.displayName ~= "" and self.displayName or self.spellName
-        self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-    elseif not self.spellText.enabled then
-        self.spellText:SetText("")
-    end
-
+    local name = "" ---@type string?
     if self.empowering then
         if self.showEmpowerSpellName then
-            local name = self.displayName ~= "" and self.displayName or self.spellName
-            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-        else
-            self.spellText:SetText("")
+            name = self.displayName ~= "" and self.displayName or self.spellName
         end
     else
         if self.spellText.enabled then
-            local name = self.displayName ~= "" and self.displayName or self.spellName
-            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-        else
-            self.spellText:SetText("")
+            name = self.displayName ~= "" and self.displayName or self.spellName
         end
     end
+
+    if self.spellText.showTarget and self.targetName then
+        name = name .. self.spellText.targetSeparator .. self.targetName
+    end
+
+    self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
+    self.spellText:SetText(name)
 
     if self.timerText then self.timerText:SetText() end
 
@@ -248,6 +251,11 @@ function CastStart(button, event, unit, castGUID)
     castBar.displayName = displayName
     castBar.spellTexture = texture
 
+    if castGUID and castBar.castGUID ~= castGUID then
+        castBar.targetName = nil
+        castBar.castGUID = castGUID
+    end
+
     if castBar.channeling then
         castBar.duration = endTime - GetTime()
     else
@@ -356,6 +364,21 @@ function CastFail(button, event, unit, castID, spellID)
     end
 
     castBar:ResetAttributes()
+end
+
+---@param button CUFUnitButton
+---@param event "UNIT_SPELLCAST_SENT"
+---@param unit UnitToken
+---@param target string
+---@param castID WOWGUID
+---@param spellID number
+function SpellCastSent(button, event, unit, target, castID, spellID)
+    if not ShouldShow(button, unit) then return end
+
+    local castBar = button.widgets.castBar
+
+    castBar.castGUID = castID
+    castBar.targetName = target
 end
 
 -------------------------------------------------
@@ -472,6 +495,10 @@ local function Enable(self)
     button:AddEventListener("UNIT_SPELLCAST_FAILED", CastFail)
     button:AddEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
 
+    if button.states.unit == "player" then
+        button:AddEventListener("UNIT_SPELLCAST_SENT", SpellCastSent)
+    end
+
     if CUF.vars.isRetail and (button.states.class == "EVOKER"
             or select(2, UnitRace(button.states.unit)) == "EarthenDwarf") then
         button:AddEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
@@ -496,6 +523,8 @@ local function Disable(self)
     button:RemoveEventListener("UNIT_SPELLCAST_CHANNEL_UPDATE", CastUpdate)
     button:RemoveEventListener("UNIT_SPELLCAST_FAILED", CastFail)
     button:RemoveEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
+
+    button:RemoveEventListener("UNIT_SPELLCAST_SENT", SpellCastSent)
 
     if CUF.vars.isRetail then
         button:RemoveEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
@@ -864,6 +893,8 @@ function W:CreateCastBar(button)
     castBar.notInterruptible = false ---@type boolean?
     castBar.spellID = 0 ---@type number?
     castBar.spellTexture = nil ---@type integer?
+    castBar.castGUID = nil ---@type WOWGUID?
+    castBar.targetName = nil ---@type string?
 
     castBar.interruptibleColor = { 1, 1, 0, 0.25 }
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
@@ -933,6 +964,8 @@ function W:CreateCastBar(button)
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
     spellText.width = CUF.Defaults.Options.fontWidth
+    spellText.showTarget = false
+    spellText.targetSeparator = "->"
 
     ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")

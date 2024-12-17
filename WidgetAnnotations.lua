@@ -268,6 +268,8 @@
 ---@field spell BigFontOpt
 ---@field spellWidth FontWidthOpt
 ---@field showSpell boolean
+---@field showTarget boolean
+---@field targetSeparator string
 ---@field spark CastBarSparkOpt
 ---@field empower EmpowerOpt
 ---@field border BorderOpt

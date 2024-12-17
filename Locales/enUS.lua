@@ -240,6 +240,8 @@ L.buffFrame = "Buff Frame"
 L.debuffFrame = "Debuff Frame"
 L.playerCastBar = "Player Cast Bar"
 L.HideAtMaxLevel = "Hide at Max Level"
+L.ShowTarget = "Show Target"
+L.Separator = "Separator"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

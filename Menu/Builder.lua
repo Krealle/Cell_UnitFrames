@@ -1615,10 +1615,37 @@ function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
     f.spellCB = self:CreateCheckBox(f, widgetName, L.ShowSpell, const.OPTION_KIND.SHOW_SPELL)
     self:AnchorBelow(f.spellCB, f.fontOptions.styleDropdown)
 
-    f.spellWidth = self:CreateTextWidthOption(f, widgetName, const.OPTION_KIND.SPELL_WIDTH)
-    self:AnchorBelow(f.spellWidth, f.spellCB)
+    f.showTarget = self:CreateCheckBox(f, widgetName, L.ShowTarget, const.OPTION_KIND.SHOW_TARGET)
+    self:AnchorBelow(f.showTarget, f.spellCB)
 
-    f.optionHeight = f.optionHeight + 50
+    f.targetSeparator = self:CreateEditBox(f, widgetName, L.Separator, nil, const.OPTION_KIND.TARGET_SEPARATOR)
+    self:AnchorRightOfCB(f.targetSeparator, f.showTarget)
+
+    f.spellWidth = self:CreateTextWidthOption(f, widgetName, const.OPTION_KIND.SPELL_WIDTH)
+    self:AnchorBelow(f.spellWidth, f.showTarget)
+
+    f.optionHeight = f.optionHeight + 100
+
+    local function LoadPageDB()
+        if CUF.vars.selectedUnit == const.UNIT.PLAYER then
+            f.wrapperFrame:SetHeight(f.optionHeight + 35)
+
+            f.showTarget:Show()
+            f.targetSeparator:Show()
+
+            f.spellWidth:ClearAllPoints()
+            self:AnchorBelow(f.spellWidth, f.showTarget)
+        else
+            f.wrapperFrame:SetHeight(f.optionHeight - 15)
+
+            f.showTarget:Hide()
+            f.targetSeparator:Hide()
+
+            f.spellWidth:ClearAllPoints()
+            self:AnchorBelow(f.spellWidth, f.spellCB)
+        end
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "CastBarSpellFontOptions")
 
     return f
 end

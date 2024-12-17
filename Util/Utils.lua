@@ -667,12 +667,24 @@ function Util:GetUnitSubgroup(unit)
     end
 end
 
+---@param unit UnitToken
+---@param localized boolean
+---@return string? classification
 function Util:GetUnitClassification(unit, localized)
     local classification = UnitClassification(unit)
     if localized then
         return L[classification]
     end
     return classification
+end
+
+local gold, silver = "|A:nameplates-icon-elite-gold:16:16|a", "|A:nameplates-icon-elite-silver:16:16|a"
+local typeIcon = { elite = gold, worldboss = gold, rareelite = silver, rare = silver }
+
+---@param unit UnitToken
+---@return string? icon
+function Util:GetUnitClassificationIcon(unit)
+    return typeIcon[UnitClassification(unit)]
 end
 
 -------------------------------------------------

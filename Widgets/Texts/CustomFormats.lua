@@ -716,6 +716,10 @@ end, "Group", "1-8")
 W:AddTag("classification", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     return Util:GetUnitClassification(unit, true)
 end, "Classification", (L.rare .. ", " .. L.rareelite .. ", " .. L.elite .. ", " .. L.worldboss))
+W:AddTag("classification:icon", "UNIT_CLASSIFICATION_CHANGED", function(unit)
+    if UnitIsPlayer(unit) then return end
+    return Util:GetUnitClassificationIcon(unit)
+end, "Classification")
 
 -- MARK: Name
 for type, length in pairs(nameLengths) do

@@ -378,7 +378,7 @@ function CastFail(button, event, unit, castID, spellID)
         castBar.holdTime = castBar.timeToHold
 
         local type = event == 'UNIT_SPELLCAST_FAILED' and FAILED or INTERRUPTED
-        castBar.spellText:SetText(castBar.interruptedLabel:gsub("%%i", type):gsub("%%s",
+        castBar.spellText:SetText(castBar.interruptedLabel:gsub("%%t", type):gsub("%%s",
             castBar.displayName ~= "" and castBar.displayName or castBar.spellName or ""))
 
         if castBar.spark:IsShown() then

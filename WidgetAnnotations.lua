@@ -167,6 +167,7 @@
 ---@field frameLevel number
 ---@field size SizeOpt
 ---@field hideAtMaxLevel boolean
+---@field iconTexture string
 
 ---@class ReadyCheckIconWidgetTable
 ---@field enabled boolean

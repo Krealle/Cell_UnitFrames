@@ -180,6 +180,7 @@ const.OPTION_KIND = {
     TARGET_SEPARATOR        = "targetSeparator",
     TIME_TO_HOLD            = "timeToHold",
     INTERRUPTED_LABEL       = "interruptedLabel",
+    ICON_TEXTURE            = "iconTexture",
 }
 
 ---@enum AURA_OPTION_KIND

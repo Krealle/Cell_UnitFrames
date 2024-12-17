@@ -642,6 +642,7 @@ Defaults.Widgets = {
         enabled = false,
         frameLevel = 10,
         hideAtMaxLevel = false,
+        iconTexture = "",
         size = {
             width = 20,
             height = 20,

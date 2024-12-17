@@ -24,6 +24,7 @@ menu:AddWidget(const.WIDGET_KIND.RESTING_ICON,
     Builder.MenuOptions.Anchor,
     Builder.MenuOptions.SingleSize,
     Builder.MenuOptions.HideAtMaxLevel,
+    Builder.MenuOptions.IconTexture,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -36,6 +37,9 @@ function W.UpdateRestingIconWidget(button, unit, setting, subSetting)
     if not setting or setting == const.OPTION_KIND.HIDE_AT_MAX_LEVEL then
         restingIcon.hideAtMaxLevel = styleTable.hideAtMaxLevel
         restingIcon:UpdateEventListeners()
+    end
+    if not setting or setting == const.OPTION_KIND.ICON_TEXTURE then
+        restingIcon:SetTexture(styleTable.iconTexture)
     end
 
     restingIcon.Update(button)
@@ -122,6 +126,18 @@ local function UpdateEventListeners(self)
     end
 end
 
+---@param self RestingIconWidget
+---@param texture string
+local function SetTexture(self, texture)
+    if texture == "" then
+        self.tex:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
+        self.tex:SetTexCoord(0, .5, 0, .421875)
+    else
+        self.tex:SetTexture(texture)
+        self.tex:SetTexCoord(0, 1, 0, 1)
+    end
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -153,6 +169,8 @@ function W:CreateRestingIcon(button)
     restingIcon.Update = Update
 
     restingIcon.UpdateEventListeners = UpdateEventListeners
+
+    restingIcon.SetTexture = SetTexture
 
     restingIcon.SetEnabled = W.SetEnabled
     restingIcon.SetPosition = W.SetPosition

@@ -61,7 +61,8 @@ Builder.MenuOptions = {
     TotemOptions = 34,
     HideAtMaxLevel = 35,
     HideOutOfCombat = 36,
-    Glow = 37
+    Glow = 37,
+    IconTexture = 38,
 }
 
 local FAILED = FAILED or "Failed"
@@ -1294,6 +1295,18 @@ function Builder:CreateGlowOptions(parent, widgetName)
     return f
 end
 
+function Builder:CreateIconTextureOptions(parent, widgetName)
+    ---@class IconTextureOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "IconTextureOptions"
+    f.optionHeight = 20
+
+    local texturePath = self:CreateEditBox(f, widgetName, L["Texture"], 350, const.OPTION_KIND.ICON_TEXTURE)
+    texturePath:SetPoint("TOPLEFT")
+
+    return f
+end
+
 -------------------------------------------------
 -- MARK: Aura Icon
 -------------------------------------------------
@@ -2173,4 +2186,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.HideAtMaxLevel] = Builder.CreateHideAtMaxLevel,
     [Builder.MenuOptions.HideOutOfCombat] = Builder.CreateHideOutOfCombat,
     [Builder.MenuOptions.Glow] = Builder.CreateGlowOptions,
+    [Builder.MenuOptions.IconTexture] = Builder.CreateIconTextureOptions,
 }

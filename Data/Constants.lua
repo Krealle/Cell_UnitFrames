@@ -176,6 +176,8 @@ const.OPTION_KIND = {
     HIDE_AT_MAX_LEVEL       = "hideAtMaxLevel",
     HIDE_OUT_OF_COMBAT      = "hideOutOfCombat",
     GLOW                    = "glow",
+    SHOW_TARGET             = "showTarget",
+    TARGET_SEPARATOR        = "targetSeparator",
 }
 
 ---@enum AURA_OPTION_KIND

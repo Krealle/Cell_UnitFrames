@@ -600,12 +600,16 @@ end, "Health", "90%")
 W:AddTag("abs:healabs:merge", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatText(totalAbsorbs - totalHealAbsorbs)
+    local tot = totalAbsorbs - totalHealAbsorbs
+    if tot == 0 then return end
+    return FormatText(tot)
 end, "Health", "40000")
 W:AddTag("abs:healabs:merge:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
-    return FormatText(totalAbsorbs - totalHealAbsorbs, nil, false, true)
+    local tot = totalAbsorbs - totalHealAbsorbs
+    if tot == 0 then return end
+    return FormatText(tot, nil, false, true)
 end, "Health", "-40k")
 
 -- MARK: Heal Absorbs

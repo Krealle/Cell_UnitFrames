@@ -276,6 +276,9 @@
 ---@field icon CastBarIconOpt
 ---@field useClassColor boolean
 ---@field onlyShowInterrupt boolean
+---@field timeToHold number
+---@field interruptedLabel string
+---@field showInterruptedSpell boolean
 
 ---@class CastBarSparkOpt
 ---@field enabled boolean

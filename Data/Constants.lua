@@ -178,6 +178,8 @@ const.OPTION_KIND = {
     GLOW                    = "glow",
     SHOW_TARGET             = "showTarget",
     TARGET_SEPARATOR        = "targetSeparator",
+    TIME_TO_HOLD            = "timeToHold",
+    INTERRUPTED_LABEL       = "interruptedLabel",
 }
 
 ---@enum AURA_OPTION_KIND

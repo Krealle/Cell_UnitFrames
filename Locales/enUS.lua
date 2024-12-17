@@ -242,6 +242,11 @@ L.playerCastBar = "Player Cast Bar"
 L.HideAtMaxLevel = "Hide at Max Level"
 L.ShowTarget = "Show Target"
 L.Separator = "Separator"
+L.TimeToHold = "Time to Hold"
+L.TimeToHoldTooltip = "Time in seconds to hold the Cast Bar after the spell has failed or been interrupted"
+L.Label = "Label"
+L.InterruptedLabelTooltip = [[%s - Type (%s or %s)
+%s - Spell Name]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

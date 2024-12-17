@@ -64,6 +64,9 @@ Builder.MenuOptions = {
     Glow = 37
 }
 
+local FAILED = FAILED or "Failed"
+local INTERRUPTED = INTERRUPTED or "Interrupted"
+
 -------------------------------------------------
 -- MARK: Build Menu
 -------------------------------------------------
@@ -1555,7 +1558,7 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     ---@class CastBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarOptions"
-    f.optionHeight = 135
+    f.optionHeight = 195
 
     -- Title
     f.title = self:CreateOptionTitle(f, "General")
@@ -1574,6 +1577,15 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     f.onlyShowInterruptableCB = self:CreateCheckBox(f, widgetName, L.OnlyShowInterruptableCast,
         const.OPTION_KIND.ONLY_SHOW_INTERRUPT)
     self:AnchorBelowCB(f.onlyShowInterruptableCB, f.reverseCB)
+
+    f.timeToHoldSlider = self:CreateSlider(f, widgetName, L.TimeToHold, nil, 0, 10, const.OPTION_KIND.TIME_TO_HOLD)
+    self:AnchorBelow(f.timeToHoldSlider, f.onlyShowInterruptableCB)
+    CUF:SetTooltips(f.timeToHoldSlider, "ANCHOR_TOPLEFT", 0, 3, L.TimeToHold, L.TimeToHoldTooltip)
+
+    f.interruptedLabelEditBox = self:CreateEditBox(f, widgetName, L.Label, nil, const.OPTION_KIND.INTERRUPTED_LABEL)
+    self:AnchorRight(f.interruptedLabelEditBox, f.timeToHoldSlider)
+    CUF:SetTooltips(f.interruptedLabelEditBox, "ANCHOR_TOPLEFT", 0, 3, L.Label,
+        string.format(L.InterruptedLabelTooltip, "%t", INTERRUPTED, FAILED, "%s"))
 
     local function LoadPageDB()
         f.onlyShowInterruptableCB:SetEnabled(CUF.vars.selectedUnit ~= const.UNIT.PLAYER)

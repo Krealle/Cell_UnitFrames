@@ -249,6 +249,11 @@ function CastStart(button, event, unit, castGUID)
     castBar.displayName = displayName
     castBar.spellTexture = texture
 
+    if castGUID and castBar.castGUID ~= castGUID then
+        castBar.targetName = nil
+        castBar.castGUID = castGUID
+    end
+
     if castBar.channeling then
         castBar.duration = endTime - GetTime()
     else

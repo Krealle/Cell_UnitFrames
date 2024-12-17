@@ -117,13 +117,6 @@ local function UpdateElements(self)
     if self.icon then self.icon:SetTexture(self.spellTexture --[[ or FALLBACK_ICON ]]) end
     if self.spark then self.spark:Show() end
 
-    if self.spellText.enabled and not self.empowering then
-        local name = self.displayName ~= "" and self.displayName or self.spellName
-        self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-    elseif not self.spellText.enabled then
-        self.spellText:SetText("")
-    end
-
     if self.empowering then
         if self.showEmpowerSpellName then
             local name = self.displayName ~= "" and self.displayName or self.spellName

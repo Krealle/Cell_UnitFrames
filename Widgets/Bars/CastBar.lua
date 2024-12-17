@@ -112,6 +112,8 @@ local function ResetAttributes(self)
     self.spellName = nil
     self.displayName = nil
     self.spellTexture = nil
+    self.castGUID = nil
+    self.targetName = nil
 
     self:ClearStages()
 end
@@ -357,6 +359,21 @@ function CastFail(button, event, unit, castID, spellID)
     castBar:ResetAttributes()
 end
 
+---@param button CUFUnitButton
+---@param event "UNIT_SPELLCAST_SENT"
+---@param unit UnitToken
+---@param target string
+---@param castID WOWGUID
+---@param spellID number
+function SpellCastSent(button, event, unit, target, castID, spellID)
+    if not ShouldShow(button, unit) then return end
+
+    local castBar = button.widgets.castBar
+
+    castBar.castGUID = castID
+    castBar.targetName = target
+end
+
 -------------------------------------------------
 -- MARK: OnUpdate
 -------------------------------------------------
@@ -471,6 +488,10 @@ local function Enable(self)
     button:AddEventListener("UNIT_SPELLCAST_FAILED", CastFail)
     button:AddEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
 
+    if button.states.unit == "player" then
+        button:AddEventListener("UNIT_SPELLCAST_SENT", SpellCastSent)
+    end
+
     if CUF.vars.isRetail and (button.states.class == "EVOKER"
             or select(2, UnitRace(button.states.unit)) == "EarthenDwarf") then
         button:AddEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
@@ -495,6 +516,8 @@ local function Disable(self)
     button:RemoveEventListener("UNIT_SPELLCAST_CHANNEL_UPDATE", CastUpdate)
     button:RemoveEventListener("UNIT_SPELLCAST_FAILED", CastFail)
     button:RemoveEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
+
+    button:RemoveEventListener("UNIT_SPELLCAST_SENT", SpellCastSent)
 
     if CUF.vars.isRetail then
         button:RemoveEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
@@ -863,6 +886,8 @@ function W:CreateCastBar(button)
     castBar.notInterruptible = false ---@type boolean?
     castBar.spellID = 0 ---@type number?
     castBar.spellTexture = nil ---@type integer?
+    castBar.castGUID = nil ---@type WOWGUID?
+    castBar.targetName = nil ---@type string?
 
     castBar.interruptibleColor = { 1, 1, 0, 0.25 }
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }

@@ -125,21 +125,23 @@ local function UpdateElements(self)
     if self.icon then self.icon:SetTexture(self.spellTexture --[[ or FALLBACK_ICON ]]) end
     if self.spark then self.spark:Show() end
 
+    local name = "" ---@type string?
     if self.empowering then
         if self.showEmpowerSpellName then
-            local name = self.displayName ~= "" and self.displayName or self.spellName
-            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-        else
-            self.spellText:SetText("")
+            name = self.displayName ~= "" and self.displayName or self.spellName
         end
     else
         if self.spellText.enabled then
-            local name = self.displayName ~= "" and self.displayName or self.spellName
-            self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-        else
-            self.spellText:SetText("")
+            name = self.displayName ~= "" and self.displayName or self.spellName
         end
     end
+
+    if self.spellText.showTarget and self.targetName then
+        name = name .. self.spellText.targetSeparator .. self.targetName
+    end
+
+    self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
+    self.spellText:SetText(name)
 
     if self.timerText then self.timerText:SetText() end
 

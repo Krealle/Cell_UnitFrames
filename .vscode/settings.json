@@ -40,6 +40,8 @@
     "CellLayoutsPreviewButton",
     "EventUtil",
     "MAX_BOSS_FRAMES",
-    "RegisterAttributeDriver"
+    "RegisterAttributeDriver",
+    "FAILED",
+    "INTERRUPTED"
   ]
 }

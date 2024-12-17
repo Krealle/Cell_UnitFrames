@@ -710,6 +710,8 @@ Defaults.Widgets = {
         },
         spellWidth = Defaults.Options.fontWidth,
         showSpell = true,
+        showTarget = false,
+        targetSeparator = "->",
         spark = {
             enabled = true,
             width = 2,

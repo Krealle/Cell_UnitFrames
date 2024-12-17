@@ -56,6 +56,12 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SHOW_SPELL then
         castBar.spellText.enabled = styleTable.showSpell
     end
+    if not setting or setting == const.OPTION_KIND.SHOW_TARGET then
+        castBar.spellText.showTarget = styleTable.showTarget
+    end
+    if not setting or setting == const.OPTION_KIND.TARGET_SEPARATOR then
+        castBar.spellText.targetSeparator = styleTable.targetSeparator
+    end
 
     if not setting or setting == const.OPTION_KIND.SPARK then
         castBar.spark.enabled = styleTable.spark.enabled
@@ -926,6 +932,8 @@ function W:CreateCastBar(button)
     spellText.SetPosition = SetFontPosition
     spellText.enabled = true
     spellText.width = CUF.Defaults.Options.fontWidth
+    spellText.showTarget = false
+    spellText.targetSeparator = "->"
 
     ---@class IconTexture: Texture
     local icon = castBar:CreateTexture(nil, "OVERLAY")

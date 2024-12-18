@@ -319,19 +319,16 @@ function W:WrapTagFunction(tag, prefix, suffix)
     -- [{op:color}>abs:healabs:merge:short]
     if prefix then
         local positiveColor, negativeColor
-        local _, maybePositive = tag("player")
-        if type(maybePositive) ~= "nil" then
-            for bracketed in prefix:gmatch("%b{}") do
-                local operator, color = string.split(":", bracketed:sub(2, -2))
-                if operator == "neg" or operator == "pos" then
-                    if (const.FormatColors[color] or Util.GetClassColorCode(color)) then
-                        if operator == "neg" then
-                            negativeColor = color
-                        else
-                            positiveColor = color
-                        end
-                        prefix = prefix:gsub("%b" .. bracketed, "")
+        for bracketed in prefix:gmatch("%b{}") do
+            local operator, color = string.split(":", bracketed:sub(2, -2))
+            if operator == "neg" or operator == "pos" then
+                if (const.FormatColors[color] or Util.GetClassColorCode(color)) then
+                    if operator == "neg" then
+                        negativeColor = color
+                    else
+                        positiveColor = color
                     end
+                    prefix = prefix:gsub("%b" .. bracketed, "")
                 end
             end
         end

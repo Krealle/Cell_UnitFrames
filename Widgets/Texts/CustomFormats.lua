@@ -57,6 +57,7 @@ local function FormatText(max, min, percent, short)
     local isPositive
     if percent then
         if not min then return end
+        if not max or max == 0 then return end
 
         local val = min / max * 100
         isPositive = val > 0

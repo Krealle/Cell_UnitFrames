@@ -266,14 +266,14 @@ local function UnregisterAuraCallback(self, type, callback)
     if type == "buffs" then
         for i, cb in ipairs(self._auraBuffCallbacks) do
             if cb == callback then
-                tremove(self._auraBuffCallbacks, i)
+                table.remove(self._auraBuffCallbacks, i)
                 break
             end
         end
     elseif type == "debuffs" then
         for i, cb in ipairs(self._auraDebuffCallbacks) do
             if cb == callback then
-                tremove(self._auraDebuffCallbacks, i)
+                table.remove(self._auraDebuffCallbacks, i)
                 break
             end
         end
@@ -701,7 +701,7 @@ function CUFUnitButton_OnLoad(button)
         for i = 1, #handlers do
             local handler = handlers[i]
             if handler.callback == callback then
-                tremove(handlers, i)
+                table.remove(handlers, i)
                 break
             end
         end

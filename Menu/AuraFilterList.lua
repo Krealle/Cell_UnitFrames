@@ -325,7 +325,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
         end)
 
         auraButtons[i].del:SetScript("OnClick", function()
-            tremove(auraTable, i)
+            table.remove(auraTable, i)
             parent.func(auraTable)
             CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons, updateHeightFunc)
             updateHeightFunc(-19)

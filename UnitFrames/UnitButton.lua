@@ -105,7 +105,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     local layout = CUF.DB.CurrentLayoutTable()
 
     -- Size
-    if (not kind or strfind(kind, "size$")) and not button.__customSize then
+    if (not kind or string.find(kind, "size$")) and not button.__customSize then
         local width, height
         if layout[unit].sameSizeAsPlayer then
             width, height = unpack(layout[const.UNIT.PLAYER].size)
@@ -121,7 +121,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         U:SetOrientation(button, layout[unit].barOrientation, false)
     end
 
-    if not kind or strfind(kind, "power$") or kind == "barOrientation" then
+    if not kind or string.find(kind, "power$") or kind == "barOrientation" then
         if layout[unit].sameSizeAsPlayer then
             W:SetPowerSize(button, layout[const.UNIT.PLAYER].powerSize)
         else
@@ -328,7 +328,7 @@ local function ClearClickCastings(button)
     button:SetAttribute("menu", nil)
     for _, t in pairs(previousClickCastings) do
         local bindKey = t[1]
-        if strfind(bindKey, "SCROLL") then
+        if string.find(bindKey, "SCROLL") then
             bindKey = GetMouseWheelBindKey(t[1])
         end
 

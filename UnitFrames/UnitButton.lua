@@ -311,7 +311,7 @@ CUF:RegisterCallback("UpdateAppearance", "UpdateAppearance", UpdateAppearance)
 local previousClickCastings
 
 local function GetMouseWheelBindKey(fullKey, noTypePrefix)
-    local modifier, key = strmatch(fullKey, "^(.*)type%-(.+)$")
+    local modifier, key = string.match(fullKey, "^(.*)type%-(.+)$")
     modifier = string.gsub(modifier, "-", "")
 
     if noTypePrefix then

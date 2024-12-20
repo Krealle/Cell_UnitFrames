@@ -19,6 +19,7 @@ local U = CUF.uFuncs
 
 local tinsert = table.insert
 local wipe = table.wipe
+local ceil = math.ceil
 
 -------------------------------------------------
 -- MARK: Menu Options

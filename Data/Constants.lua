@@ -182,6 +182,8 @@ const.OPTION_KIND = {
     TIME_TO_HOLD            = "timeToHold",
     INTERRUPTED_LABEL       = "interruptedLabel",
     ICON_TEXTURE            = "iconTexture",
+    TARGET                  = "target",
+    HOVER                   = "hover",
 }
 
 ---@enum AURA_OPTION_KIND

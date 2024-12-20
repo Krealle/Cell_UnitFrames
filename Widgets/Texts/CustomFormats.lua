@@ -63,10 +63,10 @@ local function FormatText(max, min, percent, short)
         isPositive = val > 0
 
         if short then
-            return format("%d%%", val), isPositive
+            return string.format("%d%%", val), isPositive
         end
 
-        return format("%.2f%%", val), isPositive
+        return string.format("%.2f%%", val), isPositive
     end
 
     isPositive = max >= 0

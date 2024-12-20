@@ -1116,7 +1116,7 @@ function Util.RGBToOpenColorCode(r, g, b)
         return "|cffFFFFFF"
     end
 
-    return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+    return string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
 --- Shortens a string to a given length

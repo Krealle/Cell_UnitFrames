@@ -243,7 +243,7 @@ local function AddUnitsToMenu()
 
                     if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
                         CUF.HelpTips:Show(unitPage.spacingSlider, {
-                            text = format(L.HelpTip_BossFramePreview, L.Boss, L.player),
+                            text = string.format(L.HelpTip_BossFramePreview, L.Boss, L.player),
                             dbKey = "bossFramePreview",
                             buttonStyle = HelpTip.ButtonStyle.GotIt,
                             alignment = HelpTip.Alignment.Left,
@@ -270,7 +270,7 @@ local function AddUnitsToMenu()
                                 if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
                                     CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "alwaysUpdate", unit)
                                 end
-                            end, L.AlwaysUpdate, format(L.AlwaysUpdateUnitFrameTooltip, "0.25"))
+                            end, L.AlwaysUpdate, string.format(L.AlwaysUpdateUnitFrameTooltip, "0.25"))
                         unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.powerFilterCB, 0, -30)
                     end
                 end

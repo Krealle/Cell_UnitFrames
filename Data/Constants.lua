@@ -97,7 +97,8 @@ const.WIDGET_KIND = {
     HEAL_ABSORB = "healAbsorb",
     DISPELS = "dispels",
     TOTEMS = "totems",
-    FADER = "fader"
+    FADER = "fader",
+    HIGHLIGHT = "highlight",
 }
 
 ---@enum OPTION_KIND
@@ -181,6 +182,8 @@ const.OPTION_KIND = {
     TIME_TO_HOLD            = "timeToHold",
     INTERRUPTED_LABEL       = "interruptedLabel",
     ICON_TEXTURE            = "iconTexture",
+    TARGET                  = "target",
+    HOVER                   = "hover",
 }
 
 ---@enum AURA_OPTION_KIND

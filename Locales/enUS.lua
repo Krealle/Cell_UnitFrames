@@ -175,6 +175,7 @@ L.classBar = "Class Bar"
 L.healthBar = "Health Bar"
 L.healAbsorb = "Heal Absorb"
 L.totems = "Totems"
+L.highlight = "Highlight"
 
 -- Misc
 L.Frame = "Frame"
@@ -391,3 +392,4 @@ L.HelpTip_BlizzardFramesToggle = "Click here to toggle Blizzard Frames"
 -- Aliases
 -- !!DO NOT ADD TO CURSEFORGE!!
 L.unitFrames = L.UnitFrames
+L.hover = L.Hover

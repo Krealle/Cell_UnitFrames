@@ -137,6 +137,7 @@ Defaults.Options.glow = {
 ---| "healAbsorb"
 ---| "unitFrames"
 ---| "classBar"
+---| "highlight"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -220,6 +221,10 @@ Defaults.Colors = {
     },
     classBar = {
         texture = "Interface\\Buttons\\WHITE8X8",
+    },
+    highlight = {
+        target = { 1, 0.3, 0.3, 1 },
+        hover = { 1, 1, 1, 1 }
     }
 }
 
@@ -309,6 +314,10 @@ Defaults.ColorsMenuOrder = {
     },
     classBar = {
         { "texture", "texture" },
+    },
+    highlight = {
+        { "target", "rgb" },
+        { "hover",  "rgb" },
     }
 }
 
@@ -772,7 +781,14 @@ Defaults.Widgets = {
         fadeDuration = 0.25,
         maxAlpha = 1,
         minAlpha = 0.35,
-    }
+    },
+    ---@type HighlightWidgetTable
+    highlight = {
+        enabled = false,
+        hover = true,
+        target = true,
+        size = 1,
+    },
 }
 
 -- Boss Widgets
@@ -903,7 +919,8 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
             dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader
+            fader = Defaults.Widgets.fader,
+            highlight = Defaults.Widgets.highlight,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -936,7 +953,8 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
             dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader
+            fader = Defaults.Widgets.fader,
+            highlight = Defaults.Widgets.highlight,
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -965,7 +983,8 @@ Defaults.Layouts = {
             powerText = Defaults.Widgets.powerText,
             levelText = Defaults.Widgets.levelText,
             raidIcon = Defaults.Widgets.raidIcon,
-            fader = Defaults.Widgets.fader
+            fader = Defaults.Widgets.fader,
+            highlight = Defaults.Widgets.highlight,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1002,7 +1021,8 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets.castBar,
             healAbsorb = Defaults.Widgets.healAbsorb,
             dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader
+            fader = Defaults.Widgets.fader,
+            highlight = Defaults.Widgets.highlight,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1041,7 +1061,8 @@ Defaults.Layouts = {
             buffs = Defaults.Widgets_Boss.buffs,
             debuffs = Defaults.Widgets_Boss.debuffs,
             castBar = Defaults.Widgets_Boss.castBar,
-            fader = Defaults.Widgets.fader
+            fader = Defaults.Widgets.fader,
+            highlight = Defaults.Widgets.highlight,
         },
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,

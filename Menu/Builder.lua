@@ -63,6 +63,7 @@ Builder.MenuOptions = {
     HideOutOfCombat = 36,
     Glow = 37,
     IconTexture = 38,
+    Highlight = 39,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2144,6 +2145,31 @@ function Builder:CreateTotemOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Highlight
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return HighlightOptions
+function Builder:CreateHighlightOptions(parent, widgetName)
+    ---@class HighlightOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "HighlightOptions"
+    f.optionHeight = 65
+
+    local targetCB = self:CreateCheckBox(f, widgetName, L.target, const.OPTION_KIND.TARGET)
+    targetCB:SetPoint("TOPLEFT", 0, 10)
+    local hoverCB = self:CreateCheckBox(f, widgetName, L.Hover, const.OPTION_KIND.HOVER)
+    self:AnchorRightOfCB(hoverCB, targetCB)
+
+    local sizeSlider = self:CreateSlider(f, widgetName, L["Highlight Size"], nil, -5, 5,
+        const.OPTION_KIND.SIZE)
+    self:AnchorBelow(sizeSlider, targetCB)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2187,4 +2213,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.HideOutOfCombat] = Builder.CreateHideOutOfCombat,
     [Builder.MenuOptions.Glow] = Builder.CreateGlowOptions,
     [Builder.MenuOptions.IconTexture] = Builder.CreateIconTextureOptions,
+    [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
 }

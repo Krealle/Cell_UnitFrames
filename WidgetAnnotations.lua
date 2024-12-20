@@ -20,6 +20,7 @@
 ---| DispelsWidgetTable
 ---| TotemsWidgetTable
 ---| FaderWidgetTable
+---| HighlightWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -41,6 +42,7 @@
 ---| DispelsWidget
 ---| TotemsWidget
 ---| FaderWidget
+---| HighlightWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -70,6 +72,7 @@
 ---@field dispels DispelsWidget
 ---@field totems TotemsWidget
 ---@field fader FaderWidget
+---@field highlight HighlightWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -323,6 +326,12 @@
 ---@field fadeDuration number
 ---@field maxAlpha number
 ---@field minAlpha number
+
+---@class HighlightWidgetTable
+---@field enabled boolean
+---@field hover boolean
+---@field target boolean
+---@field size number
 
 -------------------------------------------------
 -- MARK: Generic Options

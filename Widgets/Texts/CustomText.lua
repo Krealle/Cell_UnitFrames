@@ -158,7 +158,7 @@ end
 
 ---@param self CustomTextWidget
 local function Disable(self)
-    wipe(self.activeTexts)
+    table.wipe(self.activeTexts)
     self:IterateTexts(function(text)
         text:Disable()
     end)
@@ -232,7 +232,7 @@ function W:CreateCustomText(button)
             if txt._index == text._index then return end
         end
 
-        tinsert(customText.activeTexts, text)
+        table.insert(customText.activeTexts, text)
         text:Show()
     end
 

@@ -164,7 +164,7 @@ end
 ---@param unit Unit
 function W:AssignWidgets(button, unit)
     -- Unit passed will be 'bossN', we need 'boss'
-    if strfind(unit, "boss") then
+    if string.find(unit, "boss") then
         unit = "boss"
     end
 

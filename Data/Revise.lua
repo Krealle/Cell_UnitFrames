@@ -25,7 +25,7 @@ local function AddToChangelog(text)
     if #changelog > 0 then
         text = "\n" .. text
     end
-    tinsert(changelog, text)
+    table.insert(changelog, text)
 end
 
 local function ShowChangelog()

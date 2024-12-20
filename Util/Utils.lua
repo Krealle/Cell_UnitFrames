@@ -508,7 +508,7 @@ end
 function Util:GetAllLayoutNames()
     local layoutNames = {}
     for layoutName, _ in pairs(CellDB.layouts) do
-        tinsert(layoutNames, layoutName)
+        table.insert(layoutNames, layoutName)
     end
 
     return layoutNames
@@ -520,7 +520,7 @@ function Util:GetAllLayoutNamesAsString(formatted)
     local layoutNames = {}
 
     for layoutName, _ in pairs(CellDB.layouts) do
-        tinsert(layoutNames, Util:FormatLayoutName(layoutName, formatted))
+        table.insert(layoutNames, Util:FormatLayoutName(layoutName, formatted))
     end
 
     return table.concat(layoutNames, ", ")
@@ -1116,7 +1116,7 @@ function Util.RGBToOpenColorCode(r, g, b)
         return "|cffFFFFFF"
     end
 
-    return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+    return string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
 --- Shortens a string to a given length

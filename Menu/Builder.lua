@@ -335,7 +335,7 @@ function Builder:CreateDropdown(parent, widgetName, title, width, items, path, p
         local text = type(item) == "string" and item or item[1]
         local value = type(item) == "string" and item or item[2]
 
-        tinsert(dropDownItems, {
+        table.insert(dropDownItems, {
             ["text"] = L[text],
             ["value"] = value,
             ["onClick"] = function()
@@ -629,7 +629,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
         { L["Custom Color"], const.ColorType.CUSTOM },
     }
     if includePowerType then
-        tinsert(items, { L["Power Color"], const.PowerColorType.POWER_COLOR })
+        table.insert(items, { L["Power Color"], const.PowerColorType.POWER_COLOR })
     end
 
     f.dropdown = self:CreateDropdown(f, widgetName, L["Color"], nil, items,
@@ -1171,7 +1171,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
 
     local textureDropdownItems = {}
     for name, tex in pairs(self:GetTextures()) do
-        tinsert(textureDropdownItems, {
+        table.insert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
             ["onClick"] = function()

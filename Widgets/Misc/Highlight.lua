@@ -155,7 +155,7 @@ local function SetSize(self, size)
     P.ClearPoints(self.mouseoverGlow)
 
     if size < 0 then
-        size = abs(size)
+        size = math.abs(size)
         P.Point(self.targetGlow, "TOPLEFT", self._owner, "TOPLEFT")
         P.Point(self.targetGlow, "BOTTOMRIGHT", self._owner, "BOTTOMRIGHT")
         P.Point(self.mouseoverGlow, "TOPLEFT", self._owner, "TOPLEFT")

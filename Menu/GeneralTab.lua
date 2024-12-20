@@ -35,7 +35,7 @@ function copyLayoutFrom.SetLayoutItems()
 
     for _, layoutName in pairs(Util:GetAllLayoutNames()) do
         if layoutName ~= DB.GetMasterLayout() then
-            tinsert(dropdownItems, {
+            table.insert(dropdownItems, {
                 ["text"] = Util:FormatLayoutName(layoutName),
                 ["value"] = layoutName,
                 ["onClick"] = function()
@@ -99,7 +99,7 @@ function layoutProfile:SetLayoutItems()
     } }
 
     for _, layoutName in pairs(Util:GetAllLayoutNames()) do
-        tinsert(dropdownItems, {
+        table.insert(dropdownItems, {
             ---@diagnostic disable-next-line: undefined-field
             ["text"] = layoutName == "default" and _G.DEFAULT or layoutName,
             ["value"] = layoutName,
@@ -239,10 +239,10 @@ function Misc:AddBlizzardFrame(type)
     if not self.blizzardFramesCheckBoxes then
         checkBox:SetPoint("TOPLEFT", self.blizzardFramesPopup, "TOPLEFT", 10, -10)
         self.blizzardFramesCheckBoxes = {}
-        tinsert(self.blizzardFramesCheckBoxes, checkBox)
+        table.insert(self.blizzardFramesCheckBoxes, checkBox)
     else
         checkBox:SetPoint("TOPLEFT", self.blizzardFramesCheckBoxes[#self.blizzardFramesCheckBoxes], "BOTTOMLEFT", 0, -10)
-        tinsert(self.blizzardFramesCheckBoxes, checkBox)
+        table.insert(self.blizzardFramesCheckBoxes, checkBox)
     end
 end
 
@@ -309,10 +309,10 @@ function Misc:AddDummyAnchor(unit)
         cufBox:SetPoint("TOPLEFT", self.dummyAnchorsPopup, "TOPLEFT", 10, -22)
         self.dummyAnchorsPopup:SetHeight(self.dummyAnchorsPopup:GetHeight() + 12)
         self.dummyAnchors = {}
-        tinsert(self.dummyAnchors, dummyAnchor)
+        table.insert(self.dummyAnchors, dummyAnchor)
     else
         cufBox:SetPoint("TOPLEFT", self.dummyAnchors[#self.dummyAnchors].cufBox, "BOTTOMLEFT", 0, -10)
-        tinsert(self.dummyAnchors, dummyAnchor)
+        table.insert(self.dummyAnchors, dummyAnchor)
     end
 end
 

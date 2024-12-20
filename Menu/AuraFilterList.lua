@@ -84,7 +84,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             local spellName = F:GetSpellInfo(spellId)
             if (spellId and spellName) then
                 -- update db
-                tinsert(auraTable, spellId)
+                table.insert(auraTable, spellId)
 
                 parent.func(auraTable)
                 CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons, updateHeightFunc)
@@ -325,7 +325,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
         end)
 
         auraButtons[i].del:SetScript("OnClick", function()
-            tremove(auraTable, i)
+            table.remove(auraTable, i)
             parent.func(auraTable)
             CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons, updateHeightFunc)
             updateHeightFunc(-19)
@@ -440,12 +440,12 @@ function Builder.CreateSetting_Auras(parent, which, kind)
                     curIds[spellID] = true
                 end
             else
-                wipe(auraImportExportFrame.parent.t)
+                table.wipe(auraImportExportFrame.parent.t)
             end
 
             for _, id in pairs(auraImportExportFrame.data) do
                 if not curIds[id] then
-                    tinsert(auraImportExportFrame.parent.t, id)
+                    table.insert(auraImportExportFrame.parent.t, id)
                 end
             end
             -- update list
@@ -535,7 +535,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     widget.clear:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\trash", { 15, 15 }, { "CENTER", 0, 0 })
     widget.clear:SetScript("OnClick", function(self, button)
         if button == "LeftButton" and IsControlKeyDown() then
-            wipe(widget.t)
+            table.wipe(widget.t)
             -- update list
             widget:SetDBValue(widget.t)
             -- event

@@ -122,7 +122,7 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
 
     local textureDropdownItems = {}
     for name, tex in pairs(Builder:GetTextures()) do
-        tinsert(textureDropdownItems, {
+        table.insert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
             ["onClick"] = function()
@@ -287,7 +287,7 @@ function ColorTab:CreateSections()
 
                 baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
 
-                tinsert(section.dropdowns, element)
+                table.insert(section.dropdowns, element)
             elseif colorType == "slider-percent" then
                 element = CreateSlider(which, colorName, colorTable, section, true)
                 gridLayout.currentColumn = 1
@@ -312,7 +312,7 @@ function ColorTab:CreateSections()
                 end
                 gridLayout.firstInRow = element
 
-                tinsert(section.dropdowns, element)
+                table.insert(section.dropdowns, element)
             elseif colorType == "rgb" or colorType == "toggle" then
                 if colorType == "toggle" then
                     element, elementWidth = CreateCheckbox(which, colorName, colorTable, section)
@@ -329,7 +329,7 @@ function ColorTab:CreateSections()
                 end
 
                 gridLayout.currentColumnWidth = gridLayout.currentColumnWidth + elementWidth
-                tinsert(section.cps, element)
+                table.insert(section.cps, element)
 
                 -- Position the element in the grid
                 if gridLayout.currentColumn == 1 then
@@ -360,7 +360,7 @@ function ColorTab:CreateSections()
         end
 
         prevSection = section
-        tinsert(self.colorSections, section)
+        table.insert(self.colorSections, section)
     end
 
     self.colorSection = colorSection

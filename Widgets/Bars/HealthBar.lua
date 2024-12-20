@@ -96,7 +96,7 @@ local function UpdateUnitHealthState(button)
 
     local health = UnitHealth(unit)
     local healthMax = UnitHealthMax(unit)
-    health = min(health, healthMax) --! diff
+    health = math.min(health, healthMax) --! diff
 
     button.states.health = health
     button.states.healthMax = healthMax

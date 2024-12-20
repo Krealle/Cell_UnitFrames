@@ -17,6 +17,10 @@ local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
 
+local tinsert = table.insert
+local wipe = table.wipe
+local ceil = math.ceil
+
 -------------------------------------------------
 -- MARK: Menu Options
 -------------------------------------------------

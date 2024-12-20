@@ -18,6 +18,7 @@ local Util = CUF.Util
 
 local UnitIsFriend = UnitIsFriend
 local UnitCanAttack = UnitCanAttack
+local tinsert = table.insert
 
 -------------------------------------------------
 -- MARK: AddWidget

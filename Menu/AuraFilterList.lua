@@ -84,7 +84,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             local spellName = F:GetSpellInfo(spellId)
             if (spellId and spellName) then
                 -- update db
-                tinsert(auraTable, spellId)
+                table.insert(auraTable, spellId)
 
                 parent.func(auraTable)
                 CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons, updateHeightFunc)
@@ -445,7 +445,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
 
             for _, id in pairs(auraImportExportFrame.data) do
                 if not curIds[id] then
-                    tinsert(auraImportExportFrame.parent.t, id)
+                    table.insert(auraImportExportFrame.parent.t, id)
                 end
             end
             -- update list

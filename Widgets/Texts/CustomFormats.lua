@@ -189,15 +189,15 @@ function W:GetTagTooltips(category)
         for cat, tooltips in pairs(self.TagTooltips) do
             -- Add buffer between categories
             if #allTooltips > 0 then
-                tinsert(allTooltips, "")
+                table.insert(allTooltips, "")
             end
 
             -- Color category titles
             local catTitle = Util.ColorWrap(cat, "WARLOCK")
-            tinsert(allTooltips, catTitle)
+            table.insert(allTooltips, catTitle)
 
             for _, tooltip in ipairs(tooltips) do
-                tinsert(allTooltips, tooltip)
+                table.insert(allTooltips, tooltip)
             end
         end
     end
@@ -299,7 +299,7 @@ function W:AddTag(tagName, events, func, category, example)
     if not self.TagTooltips[category] then
         self.TagTooltips[category] = {}
     end
-    tinsert(self.TagTooltips[category], tooltip)
+    table.insert(self.TagTooltips[category], tooltip)
 end
 
 --- Generic for getting a tag function to the given tag

@@ -247,10 +247,10 @@ local function RegisterAuraCallback(self, type, callback)
     end
 
     if type == "buffs" then
-        tinsert(self._auraBuffCallbacks, callback)
+        table.insert(self._auraBuffCallbacks, callback)
         self._ignoreBuffs = false
     elseif type == "debuffs" then
-        tinsert(self._auraDebuffCallbacks, callback)
+        table.insert(self._auraDebuffCallbacks, callback)
         self._ignoreDebuffs = false
     end
 
@@ -687,7 +687,7 @@ function CUFUnitButton_OnLoad(button)
             end
         end
 
-        tinsert(self.eventHandlers[event], { callback = callback, unitLess = unitLess })
+        table.insert(self.eventHandlers[event], { callback = callback, unitLess = unitLess })
     end
 
     --- Remove an event listener for the button.

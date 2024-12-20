@@ -17,6 +17,8 @@ local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
 
+local tinsert = table.insert
+
 -------------------------------------------------
 -- MARK: Menu Options
 -------------------------------------------------

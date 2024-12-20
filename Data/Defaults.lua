@@ -772,7 +772,14 @@ Defaults.Widgets = {
         fadeDuration = 0.25,
         maxAlpha = 1,
         minAlpha = 0.35,
-    }
+    },
+    ---@type HighlightWidgetTable
+    highlight = {
+        enabled = true,
+        hover = true,
+        target = true,
+        size = 1,
+    },
 }
 
 -- Boss Widgets

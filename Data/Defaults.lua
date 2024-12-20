@@ -137,6 +137,7 @@ Defaults.Options.glow = {
 ---| "healAbsorb"
 ---| "unitFrames"
 ---| "classBar"
+---| "highlight"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -220,6 +221,10 @@ Defaults.Colors = {
     },
     classBar = {
         texture = "Interface\\Buttons\\WHITE8X8",
+    },
+    highlight = {
+        target = { 1, 0.3, 0.3, 1 },
+        hover = { 1, 1, 1, 1 }
     }
 }
 
@@ -309,6 +314,10 @@ Defaults.ColorsMenuOrder = {
     },
     classBar = {
         { "texture", "texture" },
+    },
+    highlight = {
+        { "target", "rgb" },
+        { "hover",  "rgb" },
     }
 }
 

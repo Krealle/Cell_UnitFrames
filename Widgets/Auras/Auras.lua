@@ -18,6 +18,7 @@ local W = CUF.widgets
 local U = CUF.uFuncs
 
 local tinsert = table.insert
+local wipe = table.wipe
 
 -------------------------------------------------
 -- MARK: Menu Options

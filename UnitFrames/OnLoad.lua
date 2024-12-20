@@ -18,6 +18,8 @@ local UnitGUID = UnitGUID
 local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
 local ForEachAura = AuraUtil.ForEachAura
 
+local wipe = table.wipe
+
 -------------------------------------------------
 -- MARK: Aura tables
 -------------------------------------------------

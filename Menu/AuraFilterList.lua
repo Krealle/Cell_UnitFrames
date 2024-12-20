@@ -440,7 +440,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
                     curIds[spellID] = true
                 end
             else
-                wipe(auraImportExportFrame.parent.t)
+                table.wipe(auraImportExportFrame.parent.t)
             end
 
             for _, id in pairs(auraImportExportFrame.data) do
@@ -535,7 +535,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     widget.clear:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\trash", { 15, 15 }, { "CENTER", 0, 0 })
     widget.clear:SetScript("OnClick", function(self, button)
         if button == "LeftButton" and IsControlKeyDown() then
-            wipe(widget.t)
+            table.wipe(widget.t)
             -- update list
             widget:SetDBValue(widget.t)
             -- event

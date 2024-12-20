@@ -158,7 +158,7 @@ end
 
 ---@param self CustomTextWidget
 local function Disable(self)
-    wipe(self.activeTexts)
+    table.wipe(self.activeTexts)
     self:IterateTexts(function(text)
         text:Disable()
     end)

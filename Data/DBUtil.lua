@@ -107,7 +107,7 @@ local function CreateBackup(backupType, msg)
     local backup = CUF_DB.backups[backupType]
 
     -- Clear old backups
-    wipe(backup.layouts)
+    table.wipe(backup.layouts)
 
     local timestamp = string.format("%s, %s", CUF.Util:GetFormattedTimeStamp(), CUF.Util:GetFormattedDate())
     backup.timestamp = timestamp

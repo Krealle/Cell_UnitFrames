@@ -97,7 +97,8 @@ const.WIDGET_KIND = {
     HEAL_ABSORB = "healAbsorb",
     DISPELS = "dispels",
     TOTEMS = "totems",
-    FADER = "fader"
+    FADER = "fader",
+    HIGHLIGHT = "highlight",
 }
 
 ---@enum OPTION_KIND

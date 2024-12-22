@@ -56,7 +56,7 @@ local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 local function FormatPercent(max, cur)
     if not cur or cur == 0 then return "0.00%" end
 
-    return string.format("%.2f%%", (cur / max * 100))
+    return format("%.2f%%", (cur / max * 100))
 end
 
 -- Formats a percent value with decimals
@@ -68,7 +68,7 @@ end
 local function FormatPercentNoZeroes(max, cur)
     if not cur or cur == 0 then return end
 
-    return string.format("%.2f%%", (cur / max * 100))
+    return format("%.2f%%", (cur / max * 100))
 end
 
 -- Formats a percent value without decimals
@@ -78,7 +78,7 @@ end
 local function FormatPercentShort(max, cur)
     if not cur or cur == 0 then return "0%" end
 
-    return string.format("%d%%", (cur / max * 100))
+    return format("%d%%", (cur / max * 100))
 end
 
 -- Formats a percent value without decimals
@@ -90,7 +90,7 @@ end
 local function FormatPercentShortNoZeroes(max, cur)
     if not cur or cur == 0 then return end
 
-    return string.format("%d%%", (cur / max * 100))
+    return format("%d%%", (cur / max * 100))
 end
 
 -- Format a number using tostring
@@ -141,7 +141,7 @@ end
 local function CombineFormats(format1, format2, separator)
     if not format2 then return format1 end
 
-    return string.format("%s" .. (separator or "+") .. "%s", format1, format2)
+    return format("%s" .. (separator or "+") .. "%s", format1, format2)
 end
 
 -------------------------------------------------
@@ -260,7 +260,7 @@ function W:AddTag(tagName, events, func, category, example)
     category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
-    local tooltip = string.format(Util.ColorWrap("[", "gold") .. "%s" .. Util.ColorWrap("]", "gold") .. " - %s",
+    local tooltip = format(Util.ColorWrap("[", "gold") .. "%s" .. Util.ColorWrap("]", "gold") .. " - %s",
         Util.ColorWrap(tagName, "orange"),
         L["tag_" .. tagName])
 

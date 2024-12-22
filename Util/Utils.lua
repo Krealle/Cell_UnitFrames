@@ -1126,6 +1126,36 @@ function Util.ShortenString(str, maxLength)
     return utf8sub(str, 1, maxLength)
 end
 
+---@param max number
+---@param min number?
+---@param percent boolean?
+---@param short boolean?
+---@return string? result
+---@return boolean? isPositive
+function Util.FormatText(max, min, percent, short)
+    local isPositive
+    if percent then
+        if not min then return end
+        if not max or max == 0 then return end
+
+        local val = min / max * 100
+        isPositive = val > 0
+
+        if short then
+            return string.format("%d%%", val), isPositive
+        end
+
+        return string.format("%.2f%%", val), isPositive
+    end
+
+    isPositive = max >= 0
+    if short then
+        return F:FormatNumber(max), isPositive
+    end
+
+    return tostring(max), isPositive
+end
+
 -------------------------------------------------
 -- MARK: Debug
 -------------------------------------------------

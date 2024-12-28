@@ -17,6 +17,9 @@ HelpTips.framePool = CreateFramePool("Frame", UIParent, "HelpTipTemplate", HelpT
 -- Blizzard functions
 HelpTips.IsShowing = HelpTip.IsShowing ---@type fun(self: CUF.HelpTips, parent: Frame, text: string): boolean
 HelpTips.Acknowledge = HelpTip.Acknowledge ---@type fun(self: CUF.HelpTips, parent: Frame, text: string)
+-- Due to Blizzard's implementation, sometimes a frame is attempted to be released
+-- Without actually being shown. This prevents the taint that follows that behaviour.
+HelpTips.Release = function(...) pcall(HelpTip.Release, ...) end ---@type fun(self: CUF.HelpTips, frame: HelpTips.Frame)
 
 ---@param frame HelpTips.Frame
 local function HandleAcknowledge(frame)

@@ -393,12 +393,14 @@ function W.GetTagFunction(textFormat, categoryFilter)
 
         local tagContent = bracketed:sub(2, -2)
 
+        ---@type string?, string
         local prefix, tag = string.split(">", tagContent)
         if not tag then
             tag = tagContent
             prefix = nil
         end
 
+        ---@type string, string
         local maybeSuffixedTag, suffix = string.split("<", tag)
         if suffix then
             tag = maybeSuffixedTag

@@ -66,6 +66,14 @@ local function OnCellInitialUpdateLayout(_layout)
     Cell:RegisterCallback("UpdateClickCastings", "CUF_UpdateClickCastings",
         function(noReload, onlyqueued) CUF:Fire("UpdateClickCasting", noReload, onlyqueued) end)
 
+    -- Hook Cell's UpdateLayout function so we can ensure full updates properly
+    hooksecurefunc(Cell.funcs, "UpdateLayout", function(_, layout)
+        CUF:Log("|cff00ff00F:UpdateLayout:|r", layout)
+        if InCombatLockdown() then return end
+        CUF:Fire("UpdateWidget")
+        CUF:Fire("UpdateUnitButtons")
+    end)
+
     -- Init widgets
     CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 

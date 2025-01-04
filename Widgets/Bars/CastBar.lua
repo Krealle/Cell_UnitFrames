@@ -150,7 +150,6 @@ local function UpdateElements(self)
     end
 
     self.SetSpellWidth(self.spellText, name, self.spellText.width, self.statusBar)
-    self.spellText:SetText(name)
 
     if self.timerText then self.timerText:SetText() end
 
@@ -377,9 +376,12 @@ function CastFail(button, event, unit, castID, spellID)
     if castBar.timeToHold > 0 then
         castBar.holdTime = castBar.timeToHold
 
-        local type = event == 'UNIT_SPELLCAST_FAILED' and FAILED or INTERRUPTED
-        castBar.spellText:SetText(castBar.interruptedLabel:gsub("%%t", type):gsub("%%s",
-            castBar.displayName ~= "" and castBar.displayName or castBar.spellName or ""))
+        local type = event == "UNIT_SPELLCAST_FAILED" and FAILED or INTERRUPTED
+        castBar.SetSpellWidth(castBar.spellText,
+            (castBar.interruptedLabel:gsub("%%t", type):gsub("%%s",
+                castBar.displayName ~= "" and castBar.displayName or castBar.spellName or "")),
+            castBar.spellText.width,
+            castBar.statusBar)
 
         if castBar.spark:IsShown() then
             castBar.spark:Hide()

@@ -45,7 +45,7 @@ local REQUIRED_SPEC = {
     ["MAGE"] = SPEC_MAGE_ARCANE,
 }
 
-local USES_PARTIAL_RESSOURCE = {
+local USES_PARTIAL_RESOURCE = {
     [SPEC_WARLOCK_DESTRUCTION] = true,
 }
 
@@ -286,7 +286,7 @@ local function UpdatePower(button, event, unit, powerType)
     local cur
     local partialBar = 0
 
-    if classBar.isPartialRessource then
+    if classBar.isPartialResource then
         local mod = UnitPowerDisplayMod(classBar.classPowerID)
         cur = UnitPower(unit, classBar.classPowerID, true) / mod
         partialBar = math.ceil(cur)
@@ -491,13 +491,13 @@ local function Update(button, event)
     end
 
     classBar.maxPower = UnitPowerMax("player", classBar.classPowerID)
-    classBar.isPartialRessource = USES_PARTIAL_RESSOURCE[GetSpecialization()] or false
+    classBar.isPartialResource = USES_PARTIAL_RESOURCE[GetSpecialization()] or false
 
     classBar:TogglePowerEvents(true)
     classBar:UpdateSize()
 
     --[[ CUF:Log("ClassBar - Update:", event, "classPowerID:", classBar.classPowerID, "powerType:", classBar.powerType,
-        "maxPower:", classBar.maxPower, "isPartialRessource:", classBar.isPartialRessource,
+        "maxPower:", classBar.maxPower, "isPartialResource:", classBar.isPartialResource,
         "maxPower:", classBar.maxPower) ]]
     classBar.UpdatePower(button, nil, "player", classBar.powerType)
 end
@@ -624,7 +624,7 @@ function W:CreateClassBar(button)
     classBar.showForVehicle = false
     classBar.inVehicle = false
     classBar.maxPower = 4
-    classBar.isPartialRessource = false
+    classBar.isPartialResource = false
     classBar.lastPower = 0
 
     for i = 1, 7 do

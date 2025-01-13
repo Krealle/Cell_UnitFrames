@@ -623,7 +623,7 @@ function W:CreateClassBar(button)
 
     classBar.showForVehicle = false
     classBar.inVehicle = false
-    classBar.maxPower = 0
+    classBar.maxPower = 4
     classBar.isPartialRessource = false
     classBar.lastPower = 0
 

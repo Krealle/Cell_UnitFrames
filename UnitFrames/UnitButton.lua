@@ -189,6 +189,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
     local healthBarLoss = button.widgets.healthBarLoss
     local powerBar = button.widgets.powerBar
     local powerBarLoss = button.widgets.powerBarLoss
+    local gapTexture = button.widgets.powerBar.gapTexture
     --[[ local incomingHeal = button.widgets.incomingHeal
     local damageFlashTex = button.widgets.damageFlashTex
     local gapTexture = button.widgets.gapTexture
@@ -198,6 +199,8 @@ function U:SetOrientation(button, orientation, rotateTexture)
     local overShieldGlowR = button.widgets.overShieldGlowR
     local overAbsorbGlow = button.widgets.overAbsorbGlow
     local absorbsBar = button.widgets.absorbsBar ]]
+
+    gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
 
     button.orientation = orientation
     if orientation == "vertical_health" then
@@ -228,6 +231,12 @@ function U:SetOrientation(button, orientation, rotateTexture)
         P.ClearPoints(powerBarLoss)
         P.Point(powerBarLoss, "TOPRIGHT", powerBar)
         P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+
+        -- update gapTexture
+        P.ClearPoints(gapTexture)
+        P.Point(gapTexture, "BOTTOMLEFT", powerBar, "TOPLEFT")
+        P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "TOPRIGHT")
+        P.Height(gapTexture, CELL_BORDER_SIZE)
     else -- vertical / vertical_health
         P.ClearPoints(healthBarLoss)
         P.Point(healthBarLoss, "TOPRIGHT", healthBar)
@@ -238,11 +247,23 @@ function U:SetOrientation(button, orientation, rotateTexture)
             P.ClearPoints(powerBarLoss)
             P.Point(powerBarLoss, "TOPRIGHT", powerBar)
             P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
+
+            -- update gapTexture
+            P.ClearPoints(gapTexture)
+            P.Point(gapTexture, "TOPRIGHT", powerBar, "TOPLEFT")
+            P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "BOTTOMLEFT")
+            P.Width(gapTexture, CELL_BORDER_SIZE)
         else -- vertical_health
             -- update powerBarLoss
             P.ClearPoints(powerBarLoss)
             P.Point(powerBarLoss, "TOPRIGHT", powerBar)
             P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+
+            -- update gapTexture
+            P.ClearPoints(gapTexture)
+            P.Point(gapTexture, "BOTTOMLEFT", powerBar, "TOPLEFT")
+            P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "TOPRIGHT")
+            P.Height(gapTexture, CELL_BORDER_SIZE)
         end
     end
 

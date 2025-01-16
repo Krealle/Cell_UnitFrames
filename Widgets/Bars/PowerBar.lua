@@ -110,6 +110,7 @@ local function ShowPowerBar(self)
 
     powerBar:Show()
     self.widgets.powerBarLoss:Show()
+    powerBar.gapTexture:Show()
 
     P.ClearPoints(healthBar)
     P.ClearPoints(powerBar)
@@ -140,6 +141,7 @@ end
 local function HidePowerBar(self)
     self.widgets.powerBar:Hide()
     self.widgets.powerBarLoss:Hide()
+    self.widgets.powerBar.gapTexture:Hide()
 
     P.ClearPoints(self.widgets.healthBar)
     P.Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
@@ -260,6 +262,10 @@ function W:CreatePowerBar(button)
     powerBarLoss:SetPoint("TOPLEFT", powerBar:GetStatusBarTexture(), "TOPRIGHT")
     powerBarLoss:SetPoint("BOTTOMRIGHT")
     powerBarLoss:SetTexture(Cell.vars.texture)
+
+    local gapTexture = powerBar:CreateTexture(nil, "BORDER")
+    powerBar.gapTexture = gapTexture
+    gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
 
     button.ShowPowerBar = ShowPowerBar
     button.HidePowerBar = HidePowerBar

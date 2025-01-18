@@ -25,6 +25,13 @@ const.UNIT = {
     BOSS = "boss",
 }
 
+if CUF.vars.isClassic then
+    const.UNIT.FOCUS = nil
+end
+if CUF.vars.isClassic or CUF.vars.isBCC then
+    const.UNIT.BOSS = nil
+end
+
 ---@enum TitleCasedUnits
 -- Used for frame titles
 const.TITLE_CASED_UNITS = {

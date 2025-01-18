@@ -100,6 +100,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param ... MenuOptions
 function Menu:AddWidget(widgetName, ...)
+    if not widgetName then return end
     table.insert(WidgetsTab.widgetsToAdd,
         { ["widgetName"] = widgetName, ["options"] = { ... } })
 end

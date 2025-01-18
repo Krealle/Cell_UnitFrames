@@ -149,6 +149,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@param func fun(self: CUF.widgets, button: CUFUnitButton)
 function W:RegisterCreateWidgetFunc(widgetName, func)
+    if not widgetName then return end
     self.WidgetsCreateFuncs[widgetName] = func
 end
 

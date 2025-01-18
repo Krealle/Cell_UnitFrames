@@ -75,6 +75,7 @@ CUF:RegisterCallback("UpdateWidget", "Handler_UpdateWidget", Handler.UpdateWidge
 ---@param func function
 ---@param widgetName WIDGET_KIND
 function Handler:RegisterWidget(func, widgetName)
+    if not widgetName then return end
     --CUF:Log("|cffff7777RegisterWidget:|r", widgetName)
     self.widgets[widgetName] = (function(...)
         local button = select(1, ...) ---@type CUFUnitButton

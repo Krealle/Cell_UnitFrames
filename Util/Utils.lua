@@ -144,6 +144,17 @@ function Util:SafeImport(imported, current)
     end
 end
 
+---@param enum table
+---@param val any
+---@return boolean?
+function Util:EnumHasValue(enum, val)
+    if not enum or not val then return false end
+
+    for _, value in pairs(enum) do
+        if val == value then return true end
+    end
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------

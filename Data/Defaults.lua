@@ -851,6 +851,25 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 -- MARK: Units
 -------------------------------------------------
 
+---@param widget WIDGET_KIND|string?
+---@return WidgetTable?
+local function GetValidWidgets(widget)
+    -- Player adds all
+    if not widget then
+        local widgets = {}
+
+        for _, widgetName in pairs(CUF.constants.WIDGET_KIND) do
+            widgets[widgetName] = GetValidWidgets(widgetName)
+        end
+
+        return widgets
+    end
+
+    if not Util:EnumHasValue(CUF.constants.WIDGET_KIND, widget) then return end
+
+    return Util:CopyDeep(Defaults.Widgets[widget])
+end
+
 ---@class Size
 ---@field [1] number
 ---@field [2] number
@@ -894,7 +913,7 @@ Defaults.Layouts = {
         powerSize = 2,
         size = { 200, 40 },
         position = { -300, -250 },
-        widgets = Util:CopyDeep(Defaults.Widgets),
+        widgets = GetValidWidgets(),
         clickCast = false,
         barOrientation = "horizontal",
         powerFilter = false,
@@ -908,24 +927,24 @@ Defaults.Layouts = {
         size = { 200, 40 },
         position = { 300, -250 },
         widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            customText = Defaults.Widgets.customText,
-            buffs = Defaults.Widgets.buffs,
-            debuffs = Defaults.Widgets.debuffs,
-            raidIcon = Defaults.Widgets.raidIcon,
-            roleIcon = Defaults.Widgets.roleIcon,
-            leaderIcon = Defaults.Widgets.leaderIcon,
-            combatIcon = Defaults.Widgets.combatIcon,
-            readyCheckIcon = Defaults.Widgets.readyCheckIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
-            castBar = Defaults.Widgets.castBar,
-            healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader,
-            highlight = Defaults.Widgets.highlight,
+            nameText = GetValidWidgets(CUF.constants.WIDGET_KIND.NAME_TEXT),
+            healthText = GetValidWidgets(CUF.constants.WIDGET_KIND.HEALTH_TEXT),
+            powerText = GetValidWidgets(CUF.constants.WIDGET_KIND.POWER_TEXT),
+            levelText = GetValidWidgets(CUF.constants.WIDGET_KIND.LEVEL_TEXT),
+            customText = GetValidWidgets(CUF.constants.WIDGET_KIND.CUSTOM_TEXT),
+            buffs = GetValidWidgets(CUF.constants.WIDGET_KIND.BUFFS),
+            debuffs = GetValidWidgets(CUF.constants.WIDGET_KIND.DEBUFFS),
+            raidIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.RAID_ICON),
+            roleIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.ROLE_ICON),
+            leaderIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.LEADER_ICON),
+            combatIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.COMBAT_ICON),
+            readyCheckIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.READY_CHECK_ICON),
+            shieldBar = GetValidWidgets(CUF.constants.WIDGET_KIND.SHIELD_BAR),
+            castBar = GetValidWidgets(CUF.constants.WIDGET_KIND.CAST_BAR),
+            healAbsorb = GetValidWidgets(CUF.constants.WIDGET_KIND.HEAL_ABSORB),
+            dispels = GetValidWidgets(CUF.constants.WIDGET_KIND.DISPELS),
+            fader = GetValidWidgets(CUF.constants.WIDGET_KIND.FADER),
+            highlight = GetValidWidgets(CUF.constants.WIDGET_KIND.HIGHLIGHT),
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -942,24 +961,24 @@ Defaults.Layouts = {
         size = { 100, 30 },
         position = { -300, 125 },
         widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            customText = Defaults.Widgets.customText,
-            buffs = Defaults.Widgets.buffs,
-            debuffs = Defaults.Widgets.debuffs,
-            raidIcon = Defaults.Widgets.raidIcon,
-            roleIcon = Defaults.Widgets.roleIcon,
-            leaderIcon = Defaults.Widgets.leaderIcon,
-            combatIcon = Defaults.Widgets.combatIcon,
-            readyCheckIcon = Defaults.Widgets.readyCheckIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
-            castBar = Defaults.Widgets.castBar,
-            healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader,
-            highlight = Defaults.Widgets.highlight,
+            nameText = GetValidWidgets(CUF.constants.WIDGET_KIND.NAME_TEXT),
+            healthText = GetValidWidgets(CUF.constants.WIDGET_KIND.HEALTH_TEXT),
+            powerText = GetValidWidgets(CUF.constants.WIDGET_KIND.POWER_TEXT),
+            levelText = GetValidWidgets(CUF.constants.WIDGET_KIND.LEVEL_TEXT),
+            customText = GetValidWidgets(CUF.constants.WIDGET_KIND.CUSTOM_TEXT),
+            buffs = GetValidWidgets(CUF.constants.WIDGET_KIND.BUFFS),
+            debuffs = GetValidWidgets(CUF.constants.WIDGET_KIND.DEBUFFS),
+            raidIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.RAID_ICON),
+            roleIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.ROLE_ICON),
+            leaderIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.LEADER_ICON),
+            combatIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.COMBAT_ICON),
+            readyCheckIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.READY_CHECK_ICON),
+            shieldBar = GetValidWidgets(CUF.constants.WIDGET_KIND.SHIELD_BAR),
+            castBar = GetValidWidgets(CUF.constants.WIDGET_KIND.CAST_BAR),
+            healAbsorb = GetValidWidgets(CUF.constants.WIDGET_KIND.HEAL_ABSORB),
+            dispels = GetValidWidgets(CUF.constants.WIDGET_KIND.DISPELS),
+            fader = GetValidWidgets(CUF.constants.WIDGET_KIND.FADER),
+            highlight = GetValidWidgets(CUF.constants.WIDGET_KIND.HIGHLIGHT),
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -983,13 +1002,13 @@ Defaults.Layouts = {
         size = { 200, 40 },
         position = { 500, -250 },
         widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            raidIcon = Defaults.Widgets.raidIcon,
-            fader = Defaults.Widgets.fader,
-            highlight = Defaults.Widgets.highlight,
+            nameText = GetValidWidgets(CUF.constants.WIDGET_KIND.NAME_TEXT),
+            healthText = GetValidWidgets(CUF.constants.WIDGET_KIND.HEALTH_TEXT),
+            powerText = GetValidWidgets(CUF.constants.WIDGET_KIND.POWER_TEXT),
+            levelText = GetValidWidgets(CUF.constants.WIDGET_KIND.LEVEL_TEXT),
+            raidIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.RAID_ICON),
+            fader = GetValidWidgets(CUF.constants.WIDGET_KIND.FADER),
+            highlight = GetValidWidgets(CUF.constants.WIDGET_KIND.HIGHLIGHT),
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1014,20 +1033,20 @@ Defaults.Layouts = {
         size = { 200, 30 },
         position = { -300, -300 },
         widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            customText = Defaults.Widgets.customText,
-            buffs = Defaults.Widgets.buffs,
-            debuffs = Defaults.Widgets.debuffs,
-            raidIcon = Defaults.Widgets.raidIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
-            castBar = Defaults.Widgets.castBar,
-            healAbsorb = Defaults.Widgets.healAbsorb,
-            dispels = Defaults.Widgets.dispels,
-            fader = Defaults.Widgets.fader,
-            highlight = Defaults.Widgets.highlight,
+            nameText = GetValidWidgets(CUF.constants.WIDGET_KIND.NAME_TEXT),
+            healthText = GetValidWidgets(CUF.constants.WIDGET_KIND.HEALTH_TEXT),
+            powerText = GetValidWidgets(CUF.constants.WIDGET_KIND.POWER_TEXT),
+            levelText = GetValidWidgets(CUF.constants.WIDGET_KIND.LEVEL_TEXT),
+            customText = GetValidWidgets(CUF.constants.WIDGET_KIND.CUSTOM_TEXT),
+            buffs = GetValidWidgets(CUF.constants.WIDGET_KIND.BUFFS),
+            debuffs = GetValidWidgets(CUF.constants.WIDGET_KIND.DEBUFFS),
+            raidIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.RAID_ICON),
+            shieldBar = GetValidWidgets(CUF.constants.WIDGET_KIND.SHIELD_BAR),
+            castBar = GetValidWidgets(CUF.constants.WIDGET_KIND.CAST_BAR),
+            healAbsorb = GetValidWidgets(CUF.constants.WIDGET_KIND.HEAL_ABSORB),
+            dispels = GetValidWidgets(CUF.constants.WIDGET_KIND.DISPELS),
+            fader = GetValidWidgets(CUF.constants.WIDGET_KIND.FADER),
+            highlight = GetValidWidgets(CUF.constants.WIDGET_KIND.HIGHLIGHT),
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1056,24 +1075,32 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         growthDirection = CUF.constants.GROWTH_ORIENTATION.TOP_TO_BOTTOM,
         widgets = {
-            nameText = Defaults.Widgets.nameText,
-            healthText = Defaults.Widgets.healthText,
-            powerText = Defaults.Widgets.powerText,
-            levelText = Defaults.Widgets.levelText,
-            customText = Defaults.Widgets.customText,
-            raidIcon = Defaults.Widgets.raidIcon,
-            shieldBar = Defaults.Widgets.shieldBar,
+            nameText = GetValidWidgets(CUF.constants.WIDGET_KIND.NAME_TEXT),
+            healthText = GetValidWidgets(CUF.constants.WIDGET_KIND.HEALTH_TEXT),
+            powerText = GetValidWidgets(CUF.constants.WIDGET_KIND.POWER_TEXT),
+            levelText = GetValidWidgets(CUF.constants.WIDGET_KIND.LEVEL_TEXT),
+            customText = GetValidWidgets(CUF.constants.WIDGET_KIND.CUSTOM_TEXT),
+            raidIcon = GetValidWidgets(CUF.constants.WIDGET_KIND.RAID_ICON),
+            shieldBar = GetValidWidgets(CUF.constants.WIDGET_KIND.SHIELD_BAR),
+            fader = GetValidWidgets(CUF.constants.WIDGET_KIND.FADER),
+            highlight = GetValidWidgets(CUF.constants.WIDGET_KIND.HIGHLIGHT),
+            -- TODO: Fix this special case
             buffs = Defaults.Widgets_Boss.buffs,
             debuffs = Defaults.Widgets_Boss.debuffs,
             castBar = Defaults.Widgets_Boss.castBar,
-            fader = Defaults.Widgets.fader,
-            highlight = Defaults.Widgets.highlight,
         },
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     }
 }
+
+if CUF.vars.isClassic then
+    Defaults.Layouts[CUF.constants.UNIT.FOCUS] = nil
+end
+if CUF.vars.isClassic or CUF.vars.isBCC then
+    Defaults.Layouts[CUF.constants.UNIT.BOSS] = nil
+end
 
 Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.enabled = false
 Defaults.Layouts[CUF.constants.UNIT.PLAYER].widgets.fader.range = false

@@ -2,6 +2,7 @@
 local CUF = select(2, ...)
 
 local Util = CUF.Util
+local tinsert = table.insert
 
 -------------------------------------------------
 -- MARK: Defaults
@@ -234,13 +235,6 @@ Defaults.ColorsMenuOrder = {
         { "background",       "rgb" },
         { "interruptible",    "rgb" },
         { "nonInterruptible", "rgb" },
-        { "Empowers",         "seperator" },
-        { "stageZero",        "rgb" },
-        { "stageOne",         "rgb" },
-        { "stageTwo",         "rgb" },
-        { "stageThree",       "rgb" },
-        { "stageFour",        "rgb" },
-        { "fullyCharged",     "rgb" }
     },
     reaction = {
         { "friendly",                       "rgb" },
@@ -250,53 +244,6 @@ Defaults.ColorsMenuOrder = {
         { "useClassColorForPet",            "toggle" },
         { "hostileUnits",                   "seperator" },
         { "swapHostileHealthAndLossColors", "toggle" }
-    },
-    essence = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
-    },
-    classResources = {
-        { "holyPower",     "rgb" },
-        { "soulShards",    "rgb" },
-        { "arcaneCharges", "rgb" },
-    },
-    comboPoints = {
-        { "1",       "rgb" },
-        { "2",       "rgb" },
-        { "3",       "rgb" },
-        { "4",       "rgb" },
-        { "5",       "rgb" },
-        { "6",       "rgb" },
-        { "7",       "rgb" },
-        { "charged", "rgb" },
-    },
-    chi = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
-    },
-    runes = {
-        { "bloodRune",  "rgb" },
-        { "frostRune",  "rgb" },
-        { "unholyRune", "rgb" },
-    },
-    shieldBar = {
-        { "texture",    "texture" },
-        { "color",      "rgb" },
-        { "overShield", "rgb" },
-    },
-    healAbsorb = {
-        { "texture",     "texture" },
-        { "color",       "rgb" },
-        { "overAbsorb",  "rgb" },
-        { "invertColor", "toggle" },
     },
     unitFrames = {
         { "barColor",        "rgb" },
@@ -312,14 +259,72 @@ Defaults.ColorsMenuOrder = {
         { "lossAlpha",       "slider-percent" },
         { "backgroundAlpha", "slider-percent" },
     },
-    classBar = {
-        { "texture", "texture" },
-    },
     highlight = {
         { "target", "rgb" },
         { "hover",  "rgb" },
     }
 }
+
+if CUF.vars.isRetail then
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "Empowers", "seperator" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "stageZero", "rgb" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "stageOne", "rgb" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "stageTwo", "rgb" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "stageThree", "rgb" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "stageFour", "rgb" })
+    tinsert(Defaults.ColorsMenuOrder.castBar, { "fullyCharged", "rgb" })
+
+    Defaults.ColorsMenuOrder.essence = {
+        { "1", "rgb" },
+        { "2", "rgb" },
+        { "3", "rgb" },
+        { "4", "rgb" },
+        { "5", "rgb" },
+        { "6", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.classResources = {
+        { "holyPower",     "rgb" },
+        { "soulShards",    "rgb" },
+        { "arcaneCharges", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.comboPoints = {
+        { "1",       "rgb" },
+        { "2",       "rgb" },
+        { "3",       "rgb" },
+        { "4",       "rgb" },
+        { "5",       "rgb" },
+        { "6",       "rgb" },
+        { "7",       "rgb" },
+        { "charged", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.chi = {
+        { "1", "rgb" },
+        { "2", "rgb" },
+        { "3", "rgb" },
+        { "4", "rgb" },
+        { "5", "rgb" },
+        { "6", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.runes = {
+        { "bloodRune",  "rgb" },
+        { "frostRune",  "rgb" },
+        { "unholyRune", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.shieldBar = {
+        { "texture",    "texture" },
+        { "color",      "rgb" },
+        { "overShield", "rgb" },
+    }
+    Defaults.ColorsMenuOrder.healAbsorb = {
+        { "texture",     "texture" },
+        { "color",       "rgb" },
+        { "overAbsorb",  "rgb" },
+        { "invertColor", "toggle" },
+    }
+    Defaults.ColorsMenuOrder.classBar = {
+        { "texture", "texture" },
+    }
+end
 
 ---@class Defaults.BlizzardFrames
 Defaults.BlizzardFrames = {}

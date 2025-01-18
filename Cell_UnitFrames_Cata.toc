@@ -1,0 +1,62 @@
+## Interface: 40400
+## SavedVariables: CUF_DB
+## IconTexture: Interface\ICONS\spell_progenitor_buff
+
+## Title: Cell - Unit Frames
+## Author: Vollmer
+## Version: @project-version@
+## X-Date: @project-date-iso@
+## X-License: MIT
+## X-Curse-Project-ID: 1085605
+## X-Wago-ID: ZKxqRdGk
+
+## Dependencies: Cell
+
+## Notes: Unitframes for our beloved Cell!
+
+Locales/LoadLocales.xml
+Core/Init.lua
+Core/Events.lua
+
+Data/Constants.lua
+Util/Utils.lua
+Util/PixelPerfect.lua
+Data/Defaults.lua
+Data/Database.lua
+Data/DBUtil.lua
+Data/Revise.lua
+
+Util/Handler.lua
+Util/HideBlizzard.lua
+Util/HelpTips.lua
+Util/Compat.lua
+
+Debug/DebugWindow.lua
+Debug/Debug.lua
+
+Core/SlashCommands.lua
+
+Menu/Builder.lua
+Menu/AuraFilterList.lua
+Menu/Menu.lua
+Menu/ImportExport.lua
+Menu/GeneralTab.lua
+Menu/UnitFramesTab.lua
+Menu/WidgetsTab.lua
+Menu/FaderTab.lua
+Menu/ColorTab.lua
+Menu/VisibilityTab.lua
+
+Widgets/LoadWidgets_Common.xml
+Widgets/LoadWidgets_Cata.xml
+
+UnitFrames/UnitButton.xml
+UnitFrames/UnitButton.lua
+UnitFrames/OnLoad.lua
+UnitFrames/MenuOptions.lua
+UnitFrames/EditMode.lua
+
+API/Common.lua
+API/CustomAnchors.lua
+
+Core/OnLoad.lua

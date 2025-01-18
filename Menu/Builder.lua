@@ -828,6 +828,7 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return HealthFormatOptions
 function Builder:CreateHealthFormatOptions(parent, widgetName)
+    -- TODO: CLASSIC Case Absorbs
     local healthFormats = {
         { "32%",
             const.HealthTextFormat.PERCENTAGE, },

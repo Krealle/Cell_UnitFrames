@@ -83,6 +83,7 @@ const.HealthTextFormat = {
     CUSTOM = "custom",
 }
 
+-- TODO: This is not a good way to case this
 ---@enum WIDGET_KIND
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",
@@ -93,15 +94,15 @@ const.WIDGET_KIND = {
     BUFFS = "buffs",
     DEBUFFS = "debuffs",
     RAID_ICON = "raidIcon",
-    ROLE_ICON = "roleIcon",
+    ROLE_ICON = (CUF.vars.isRetail or CUF.vars.isCata) and "roleIcon" or nil,
     LEADER_ICON = "leaderIcon",
     COMBAT_ICON = "combatIcon",
-    SHIELD_BAR = "shieldBar",
+    SHIELD_BAR = (CUF.vars.isRetail or CUF.vars.isCata) and "shieldBar" or nil,
     READY_CHECK_ICON = "readyCheckIcon",
     RESTING_ICON = "restingIcon",
     CAST_BAR = "castBar",
-    CLASS_BAR = "classBar",
-    HEAL_ABSORB = "healAbsorb",
+    CLASS_BAR = CUF.vars.isRetail and "classBar" or nil,
+    HEAL_ABSORB = CUF.vars.isRetail and "healAbsorb" or nil,
     DISPELS = "dispels",
     TOTEMS = "totems",
     FADER = "fader",

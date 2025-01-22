@@ -11,7 +11,7 @@ local Builder = CUF.Builder
 local Handler = CUF.Handler
 local P = CUF.PixelPerfect
 
-local ALT_MANA_POWERS = {
+local ALT_POWERS = {
     DRUID = {
         [Enum.PowerType.Energy] = Enum.PowerType.Mana,
         [Enum.PowerType.LunarPower] = Enum.PowerType.Mana,
@@ -216,7 +216,7 @@ end
 
 ---@param self AltPowerBarWidget
 local function Enable(self)
-    self.altPowerTypes = ALT_MANA_POWERS[self._owner.states.class]
+    self.altPowerTypes = ALT_POWERS[self._owner.states.class]
 
     if not self.altPowerTypes then
         self:Hide()

@@ -116,7 +116,7 @@ local function TogglePowerEvents(self, enable)
 end
 
 ---@param self AltPowerBarWidget
----@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
+---@param event ("SPELLS_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
 local function ShouldShow(self, event)
     if self.hideOutOfCombat then
         if event == "PLAYER_REGEN_ENABLED" then return false end
@@ -173,7 +173,7 @@ end
 -------------------------------------------------
 
 ---@param button CUFUnitButton
----@param event ("UNIT_ENTERED_VEHICLE"|"UNIT_EXITED_VEHICLE"|"PLAYER_SPECIALIZATION_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
+---@param event ("SPELLS_CHANGED"|"UNIT_DISPLAYPOWER"|"PLAYER_REGEN_ENABLED"|"PLAYER_REGEN_DISABLED")?
 local function Update(button, event)
     local altPowerBar = button.widgets.altPowerBar
     if not altPowerBar.enabled then return end

@@ -39,7 +39,6 @@ local POWER_NAME = {
 
 menu:AddWidget(const.WIDGET_KIND.ALT_POWER_BAR,
     Builder.MenuOptions.FullAnchor,
-    Builder.MenuOptions.Size,
     Builder.MenuOptions.AltPower,
     Builder.MenuOptions.FrameLevel)
 

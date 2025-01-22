@@ -21,6 +21,7 @@
 ---| TotemsWidgetTable
 ---| FaderWidgetTable
 ---| HighlightWidgetTable
+---| AltPowerBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -43,6 +44,7 @@
 ---| TotemsWidget
 ---| FaderWidget
 ---| HighlightWidget
+---| AltPowerBarWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -73,6 +75,7 @@
 ---@field totems TotemsWidget
 ---@field fader FaderWidget
 ---@field highlight HighlightWidget
+---@field altPowerBar AltPowerBarWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -311,6 +314,13 @@
 ---@class HealAbsorbWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
+
+---@class AltPowerBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field size SizeOpt
+---@field sameSizeAsHealthBar boolean
+---@field position PositionOpt
 
 -------------------------------------------------
 -- MARK: Misc Widgets

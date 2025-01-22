@@ -1004,6 +1004,8 @@ end
 function Builder:CreateSizeOptions(parent, widgetName, minVal, maxVal, path, width)
     ---@class SizeOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 20
+
     minVal = minVal or 0
     maxVal = maxVal or 100
 

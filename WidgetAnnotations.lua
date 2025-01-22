@@ -321,6 +321,9 @@
 ---@field size SizeOpt
 ---@field sameSizeAsHealthBar boolean
 ---@field position PositionOpt
+---@field hideIfEmpty boolean
+---@field hideIfFull boolean
+---@field hideOutOfCombat boolean
 
 -------------------------------------------------
 -- MARK: Misc Widgets

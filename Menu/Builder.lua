@@ -64,6 +64,7 @@ Builder.MenuOptions = {
     Glow = 37,
     IconTexture = 38,
     Highlight = 39,
+    AltPower = 40,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2172,6 +2173,34 @@ function Builder:CreateHighlightOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Alt Power
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return AltPowerOptions
+function Builder:CreateAltPowerOptions(parent, widgetName)
+    ---@class AltPowerOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 35
+    f.id = "AltPowerOptions"
+
+    f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
+        const.OPTION_KIND.HIDE_IF_EMPTY)
+    f.hideIfEmpty:SetPoint("TOPLEFT", 0, 10)
+
+    f.hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
+        const.OPTION_KIND.HIDE_IF_FULL)
+    self:AnchorRightOfCB(f.hideIfFull, f.hideIfEmpty)
+
+    f.hideOutOfCombat = self:CreateCheckBox(f, widgetName, L.HideOutOfCombat,
+        const.OPTION_KIND.HIDE_OUT_OF_COMBAT)
+    self:AnchorBelowCB(f.hideOutOfCombat, f.hideIfEmpty)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2216,4 +2245,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Glow] = Builder.CreateGlowOptions,
     [Builder.MenuOptions.IconTexture] = Builder.CreateIconTextureOptions,
     [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
+    [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
 }

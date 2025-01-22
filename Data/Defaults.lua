@@ -798,6 +798,9 @@ Defaults.Widgets = {
             height = 5,
         },
         sameSizeAsHealthBar = true,
+        hideIfEmpty = false,
+        hideIfFull = false,
+        hideOutOfCombat = false,
         position = {
             point = "TOPLEFT",
             offsetY = 0,

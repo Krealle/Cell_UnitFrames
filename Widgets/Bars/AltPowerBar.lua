@@ -102,9 +102,11 @@ local function UpdatePowerType(self)
     self.powerTypeID, self.powerType = UnitPowerType("player")
 
     self.altPowerTypeID = self.altPowerTypes[self.powerTypeID]
-    self.altPowerType = POWER_NAME[self.altPowerTypeID]
 
-    if self.altPowerType then
+    local altPowerType = POWER_NAME[self.altPowerTypeID]
+    self.altPowerType = altPowerType
+
+    if altPowerType and self.altPowerType ~= altPowerType then
         self:UpdateColors()
     end
 end

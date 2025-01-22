@@ -176,6 +176,7 @@ L.healthBar = "Health Bar"
 L.healAbsorb = "Heal Absorb"
 L.totems = "Totems"
 L.highlight = "Highlight"
+L.altPowerBar = "Alt Power Bar"
 
 -- Misc
 L.Frame = "Frame"

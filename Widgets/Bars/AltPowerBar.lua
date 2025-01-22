@@ -81,20 +81,13 @@ Handler:RegisterWidget(W.UpdateAltPowerBarWidget, const.WIDGET_KIND.ALT_POWER_BA
 -- MARK: Functions
 -------------------------------------------------
 
----@param self AltPowerBarWidget
----@param color RGBAOpt
-local function SetBarColor(self, color)
-    local r, g, b, a = unpack(color)
-
-    self:SetStatusBarColor(r, g, b, a)
-    self.bg:SetVertexColor(r * 0.2, g * 0.2, b * 0.2, a)
-end
+-- Mana colors based on Cell's
+local manaR, manaG, manaB = 0, 0.5, 1
 
 ---@param self AltPowerBarWidget
 local function UpdateColors(self)
-    SetBarColor(self, { 0, 0.5, 1, 1 })
-    self:SetStatusBarTexture(DB.GetColors().classBar.texture)
-    self.bg:SetTexture(DB.GetColors().classBar.texture)
+    self:SetStatusBarColor(manaR, manaG, manaB, 1)
+    self.bg:SetVertexColor(manaR * 0.2, manaG * 0.2, manaB * 0.2, 1)
 end
 
 ---@param self AltPowerBarWidget

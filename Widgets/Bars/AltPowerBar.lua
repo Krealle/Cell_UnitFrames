@@ -40,6 +40,7 @@ local POWER_NAME = {
 menu:AddWidget(const.WIDGET_KIND.ALT_POWER_BAR,
     Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.Size,
+    Builder.MenuOptions.AltPower,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton
@@ -60,11 +61,16 @@ function W.UpdateAltPowerBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SIZE then
         widget:SetSizeStyle(styleTable.size)
     end
-    --[[ if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
+    if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
         widget.hideOutOfCombat = styleTable.hideOutOfCombat
         widget:UpdateEventListeners()
-        widget.Update(button)
-    end ]]
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY then
+        widget.hideIfEmpty = styleTable.hideIfEmpty
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_FULL then
+        widget.hideIfFull = styleTable.hideIfFull
+    end
 
     widget.Update(button)
 end
@@ -142,7 +148,16 @@ local function UpdatePower(button, event, unit, powerType)
     powerType = powerType or altPowerBar.altPowerType
     if powerType ~= altPowerBar.altPowerType then return end
 
-    altPowerBar:SetValue(UnitPower(unit, altPowerBar.altPowerTypeID))
+    local power = UnitPower(unit, altPowerBar.altPowerTypeID)
+
+    if altPowerBar.hideIfEmpty and power == 0 then
+        altPowerBar:Hide()
+    elseif altPowerBar.hideIfFull and power == altPowerBar.maxPower then
+        altPowerBar:Hide()
+    else
+        altPowerBar:Show()
+        altPowerBar:SetValue(power)
+    end
 end
 
 ---@param button CUFUnitButton
@@ -186,6 +201,8 @@ end
 
 ---@param self AltPowerBarWidget
 local function UpdateEventListeners(self)
+    if not self.enabled then return end
+
     if self.hideOutOfCombat then
         self._owner:AddEventListener("PLAYER_REGEN_DISABLED", self.Update, true)
         self._owner:AddEventListener("PLAYER_REGEN_ENABLED", self.Update, true)
@@ -294,7 +311,6 @@ function W:CreateAltPowerBar(button)
     altPowerBar.maxPower = 100
     altPowerBar.hideOutOfCombat = false
     altPowerBar.sameSizeAsHealthBar = true
-    altPowerBar.hideIfEmptyOrFull = false
     altPowerBar.hideIfFull = false
     altPowerBar.hideIfEmpty = false
 

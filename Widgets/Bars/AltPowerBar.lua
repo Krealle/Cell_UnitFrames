@@ -181,6 +181,11 @@ local function Update(button, event)
     altPowerBar:UpdatePowerType()
 
     if not altPowerBar:ShouldShow(event) then
+        -- Preview for cases with no alt power
+        if altPowerBar._isSelected and altPowerBar.altPowerType == nil then
+            return
+        end
+
         altPowerBar:Hide()
         altPowerBar:TogglePowerEvents(false)
         return
@@ -321,6 +326,36 @@ function W:CreateAltPowerBar(button)
     altPowerBar.TogglePowerEvents = TogglePowerEvents
 
     altPowerBar.UpdateEventListeners = UpdateEventListeners
+
+    altPowerBar._OnIsSelected = function()
+        if altPowerBar._isSelected then
+            if altPowerBar.altPowerType == nil then
+                altPowerBar:Show()
+
+                altPowerBar:SetMinMaxValues(0, altPowerBar.maxPower)
+
+                altPowerBar:SetScript("OnUpdate", function(bar, elapsed)
+                    bar.elapsedTime = (bar.elapsedTime or 0) + elapsed
+
+                    if bar.elapsedTime >= 1 then
+                        bar.elapsedTime = 0
+
+                        local cur = bar:GetValue()
+                        if cur >= bar.maxPower then
+                            bar:SetValue(0)
+                        else
+                            bar:SetValue(cur + (bar.maxPower / 4))
+                        end
+                    end
+                end)
+            end
+        else
+            altPowerBar:Hide()
+            altPowerBar:SetScript("OnUpdate", nil)
+
+            altPowerBar.Update(button)
+        end
+    end
 
     altPowerBar.SetEnabled = W.SetEnabled
     altPowerBar.SetPosition = W.SetRelativePosition

@@ -183,6 +183,7 @@ local function Update(button, event)
     if not altPowerBar:ShouldShow(event) then
         -- Preview for cases with no alt power
         if altPowerBar._isSelected and altPowerBar.altPowerType == nil then
+            altPowerBar:_OnIsSelected()
             return
         end
 
@@ -328,7 +329,7 @@ function W:CreateAltPowerBar(button)
     altPowerBar.UpdateEventListeners = UpdateEventListeners
 
     altPowerBar._OnIsSelected = function()
-        if altPowerBar._isSelected then
+        if altPowerBar._isSelected and altPowerBar.enabled then
             if altPowerBar.altPowerType == nil then
                 altPowerBar:Show()
 

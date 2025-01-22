@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 110007
 ## SavedVariables: CUF_DB
 ## IconTexture: Interface\ICONS\spell_progenitor_buff
 

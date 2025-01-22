@@ -789,6 +789,25 @@ Defaults.Widgets = {
         target = true,
         size = 1,
     },
+    ---@type AltPowerBarWidgetTable
+    altPowerBar = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 200,
+            height = 5,
+        },
+        sameSizeAsHealthBar = true,
+        hideIfEmpty = false,
+        hideIfFull = false,
+        hideOutOfCombat = false,
+        position = {
+            point = "TOPLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "TOPLEFT",
+        },
+    },
 }
 
 -- Boss Widgets

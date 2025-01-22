@@ -99,6 +99,7 @@ const.WIDGET_KIND = {
     TOTEMS = "totems",
     FADER = "fader",
     HIGHLIGHT = "highlight",
+    ALT_POWER_BAR = "altPowerBar",
 }
 
 ---@enum OPTION_KIND

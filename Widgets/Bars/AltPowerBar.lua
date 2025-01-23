@@ -91,6 +91,8 @@ end
 
 ---@param self AltPowerBarWidget
 local function UpdatePowerType(self)
+    if not self.altPowerTypes then return end
+
     self.powerTypeID, self.powerType = UnitPowerType("player")
 
     self.altPowerTypeID = self.altPowerTypes[self.powerTypeID]

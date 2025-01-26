@@ -443,6 +443,9 @@ end
 local function UpdateRune(bar)
     local start, duration, runeReady = GetRuneCooldown(bar.index)
 
+    -- When changing zones this API can return nil
+    if start == nil then return end
+
     if runeReady then
         bar:SetValue(1)
         bar:StopRuneTimer()

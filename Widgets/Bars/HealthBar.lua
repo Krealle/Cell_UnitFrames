@@ -44,7 +44,8 @@ function U:UnitFrame_UpdateHealthColor(button, fullUpdate)
 
     local barR, barG, barB
     local lossR, lossG, lossB
-    local healthPct = button.states.healthPercent or UnitHealth(unit) / UnitHealthMax(unit)
+    local cur, max = UnitHealth(unit), UnitHealthMax(unit)
+    local healthPct = max > 0 and (cur / max) or 0
 
     -- TODO: Revist this
     -- In general this entire widget should be improved

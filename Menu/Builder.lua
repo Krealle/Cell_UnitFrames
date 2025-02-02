@@ -284,10 +284,11 @@ end
 ---@param maxVal number
 ---@param path string
 ---@param percentage boolean?
+---@param step number?
 ---@return CUFSlider
-function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, path, percentage)
+function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, path, percentage, step)
     ---@class CUFSlider: CellSlider
-    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, 1, nil, nil, percentage)
+    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, step or 1, nil, nil, percentage)
     slider.id = "Slider"
 
     slider.Set_DB = HandleWidgetOption
@@ -1595,7 +1596,8 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
         const.OPTION_KIND.ONLY_SHOW_INTERRUPT)
     self:AnchorBelowCB(f.onlyShowInterruptableCB, f.reverseCB)
 
-    f.timeToHoldSlider = self:CreateSlider(f, widgetName, L.TimeToHold, nil, 0, 10, const.OPTION_KIND.TIME_TO_HOLD)
+    f.timeToHoldSlider = self:CreateSlider(f, widgetName, L.TimeToHold, nil, 0, 10, const.OPTION_KIND.TIME_TO_HOLD, false,
+        0.1)
     self:AnchorBelow(f.timeToHoldSlider, f.onlyShowInterruptableCB)
     CUF:SetTooltips(f.timeToHoldSlider, "ANCHOR_TOPLEFT", 0, 3, L.TimeToHold, L.TimeToHoldTooltip)
 

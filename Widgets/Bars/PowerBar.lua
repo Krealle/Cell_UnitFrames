@@ -10,7 +10,56 @@ local LGI = LibStub:GetLibrary("LibGroupInfo", true)
 local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
+
 local P = CUF.PixelPerfect
+local const = CUF.constants
+local menu = CUF.Menu
+local DB = CUF.DB
+local Builder = CUF.Builder
+local Handler = CUF.Handler
+
+-------------------------------------------------
+-- MARK: AddWidget
+-------------------------------------------------
+
+menu:AddWidget(const.WIDGET_KIND.POWER_BAR,
+    Builder.MenuOptions.FullAnchor,
+    Builder.MenuOptions.Size,
+    Builder.MenuOptions.FrameLevel)
+
+---@param button CUFUnitButton
+---@param unit Unit
+---@param setting string
+---@param subSetting string
+function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
+    local widget = button.widgets.powerBar
+    local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.POWER_BAR, unit) --[[@as PowerBarWidgetTable]]
+
+    --[[ if not setting or setting == const.OPTION_KIND.COLOR then
+        widget:UpdateColors()
+    end ]]
+    if not setting or setting == const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR then
+        widget.sameSizeAsHealthBar = styleTable.sameSizeAsHealthBar
+        widget:SetSizeStyle(styleTable.size)
+    end
+    if not setting or setting == const.OPTION_KIND.SIZE then
+        widget:SetSizeStyle(styleTable.size)
+    end
+    --[[ if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
+        widget.hideOutOfCombat = styleTable.hideOutOfCombat
+        widget:UpdateEventListeners()
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY then
+        widget.hideIfEmpty = styleTable.hideIfEmpty
+    end
+    if not setting or setting == const.OPTION_KIND.HIDE_IF_FULL then
+        widget.hideIfFull = styleTable.hideIfFull
+    end ]]
+
+    widget.Update(button)
+end
+
+Handler:RegisterWidget(W.UpdatePowerBarWidget, const.WIDGET_KIND.POWER_BAR)
 
 -------------------------------------------------
 -- MARK: Layout Update PowerBar
@@ -45,7 +94,7 @@ end
 ---@field ShouldShowPowerBar function
 ---@param self CUFUnitButton
 local function ShouldShowPowerBar(self)
-    if not self.powerSize or self.powerSize == 0 then return end
+    if not self.widgets.powerBar.enabled then return end
 
     local guid = self.states.guid or UnitGUID(self.states.unit)
     if not guid then
@@ -106,28 +155,8 @@ end
 ---@param self CUFUnitButton
 local function ShowPowerBar(self)
     local powerBar = self.widgets.powerBar
-    local healthBar = self.widgets.healthBar
 
     powerBar:Show()
-    self.widgets.powerBarLoss:Show()
-    powerBar.gapTexture:Show()
-
-    P.ClearPoints(healthBar)
-    P.ClearPoints(powerBar)
-    if self.orientation == "horizontal" or self.orientation == "vertical_health" then
-        P.Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        P.Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
-            self.powerSize + CELL_BORDER_SIZE * 2)
-        P.Point(powerBar, "TOPLEFT", healthBar, "BOTTOMLEFT", 0, -CELL_BORDER_SIZE)
-        P.Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
-    else
-        P.Point(healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-        P.Point(healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT",
-            -(self.powerSize + CELL_BORDER_SIZE * 2),
-            CELL_BORDER_SIZE)
-        P.Point(powerBar, "TOPLEFT", healthBar, "TOPRIGHT", CELL_BORDER_SIZE, 0)
-        P.Point(powerBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
-    end
 
     if self:IsVisible() then
         -- update now
@@ -140,12 +169,6 @@ end
 ---@param self CUFUnitButton
 local function HidePowerBar(self)
     self.widgets.powerBar:Hide()
-    self.widgets.powerBarLoss:Hide()
-    self.widgets.powerBar.gapTexture:Hide()
-
-    P.ClearPoints(self.widgets.healthBar)
-    P.Point(self.widgets.healthBar, "TOPLEFT", self, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
-    P.Point(self.widgets.healthBar, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -CELL_BORDER_SIZE, CELL_BORDER_SIZE)
 end
 
 -------------------------------------------------
@@ -196,13 +219,14 @@ local function UpdatePowerType(button)
     end
 
     button.widgets.powerBar:SetStatusBarColor(r, g, b)
-    button.widgets.powerBarLoss:SetVertexColor(lossR, lossG, lossB)
+    button.widgets.powerBar.bg:SetVertexColor(lossR, lossG, lossB)
 end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdatePowerTexture(button)
+    if not button:HasWidget(const.WIDGET_KIND.POWER_BAR) then return end
     button.widgets.powerBar:SetStatusBarTexture(F:GetBarTexture())
-    button.widgets.powerBarLoss:SetTexture(F:GetBarTexture())
+    button.widgets.powerBar.bg:SetTexture(F:GetBarTexture())
 end
 
 ---@param button CUFUnitButton
@@ -236,6 +260,26 @@ local function Disable(self)
 end
 
 -------------------------------------------------
+-- MARK: Options
+-------------------------------------------------
+
+---@param self PowerBarWidget
+---@param sizeSize SizeOpt
+local function SetSizeStyle(self, sizeSize)
+    -- account for border such that we can properly make 1 pixel power bar
+    -- TODO: this should be prolly be changed in the future as this problem extends
+    -- across all widgets
+    local height = (CELL_BORDER_SIZE * 2) + sizeSize.height
+
+    if self.sameSizeAsHealthBar then
+        self:SetSize(self._owner:GetWidth(), height)
+    else
+        local width = (CELL_BORDER_SIZE * 2) + sizeSize.width
+        self:SetSize(width, height)
+    end
+end
+
+-------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------
 
@@ -246,9 +290,21 @@ function W:CreatePowerBar(button)
     button.widgets.powerBar = powerBar
     powerBar._owner = button
     powerBar.enabled = true
+    powerBar.id = const.WIDGET_KIND.POWER_BAR
+    powerBar.sameSizeAsHealthBar = true
+    powerBar.anchorToParent = true
 
     P.Point(powerBar, "TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
     P.Point(powerBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+
+    powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
+    powerBar.border:SetAllPoints()
+    powerBar.border:SetBackdrop({
+        bgFile = nil,
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = P.Scale(CELL_BORDER_SIZE),
+    })
+    powerBar.border:SetBackdropBorderColor(0, 0, 0, 1)
 
     powerBar:SetStatusBarTexture(Cell.vars.texture)
     powerBar:GetStatusBarTexture():SetDrawLayer("ARTWORK", -7)
@@ -257,11 +313,9 @@ function W:CreatePowerBar(button)
 
     Mixin(powerBar, SmoothStatusBarMixin)
 
-    local powerBarLoss = powerBar:CreateTexture(button:GetName() .. "_PowerBarLoss", "ARTWORK", nil, -7)
-    button.widgets.powerBarLoss = powerBarLoss
-    powerBarLoss:SetPoint("TOPLEFT", powerBar:GetStatusBarTexture(), "TOPRIGHT")
-    powerBarLoss:SetPoint("BOTTOMRIGHT")
-    powerBarLoss:SetTexture(Cell.vars.texture)
+    powerBar.bg = powerBar:CreateTexture(nil, "BACKGROUND")
+    powerBar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
+    powerBar.bg:SetAllPoints()
 
     local gapTexture = powerBar:CreateTexture(nil, "BORDER")
     powerBar.gapTexture = gapTexture
@@ -275,7 +329,16 @@ function W:CreatePowerBar(button)
     powerBar.Enable = Enable
     powerBar.Disable = Disable
 
+    powerBar.SetSizeStyle = SetSizeStyle
+
+    powerBar.SetEnabled = W.SetEnabled
+    powerBar.SetPosition = W.SetDetachedRelativePosition
+    powerBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
+    powerBar._SetIsSelected = W.SetIsSelected
+
     powerBar.UpdatePower = UpdatePower
     powerBar.UpdatePowerMax = UpdatePowerMax
     powerBar.UpdatePowerType = UpdatePowerType
 end
+
+W:RegisterCreateWidgetFunc(const.WIDGET_KIND.POWER_BAR, W.CreatePowerBar)

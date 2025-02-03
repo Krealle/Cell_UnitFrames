@@ -620,7 +620,7 @@ function CUFUnitButton_OnLoad(button)
 
     -- Widgets
     W:CreateHealthBar(button)
-    W:CreatePowerBar(button)
+    --W:CreatePowerBar(button)
 
     -- targetHighlight
     ---@class HighlightWidget: BackdropTemplate, Frame

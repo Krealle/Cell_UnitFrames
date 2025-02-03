@@ -121,13 +121,13 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         U:SetOrientation(button, layout[unit].barOrientation, false)
     end
 
-    if not kind or string.find(kind, "power$") or kind == "barOrientation" then
+    --[[ if not kind or string.find(kind, "power$") or kind == "barOrientation" then
         if layout[unit].sameSizeAsPlayer then
             W:SetPowerSize(button, layout[const.UNIT.PLAYER].powerSize)
         else
             W:SetPowerSize(button, layout[unit].powerSize)
         end
-    end
+    end ]]
 
     if not kind or kind == "position" or kind == "spacing" or kind == "growthDirection" then
         U:UpdateUnitButtonPosition(unit, button)
@@ -187,9 +187,9 @@ end
 function U:SetOrientation(button, orientation, rotateTexture)
     local healthBar = button.widgets.healthBar
     local healthBarLoss = button.widgets.healthBarLoss
-    local powerBar = button.widgets.powerBar
-    local powerBarLoss = button.widgets.powerBarLoss
-    local gapTexture = button.widgets.powerBar.gapTexture
+    --local powerBar = button.widgets.powerBar
+    --local powerBarLoss = button.widgets.powerBarLoss
+    --local gapTexture = button.widgets.powerBar.gapTexture
     --[[ local incomingHeal = button.widgets.incomingHeal
     local damageFlashTex = button.widgets.damageFlashTex
     local gapTexture = button.widgets.gapTexture
@@ -200,25 +200,25 @@ function U:SetOrientation(button, orientation, rotateTexture)
     local overAbsorbGlow = button.widgets.overAbsorbGlow
     local absorbsBar = button.widgets.absorbsBar ]]
 
-    gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
+    --gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
 
     button.orientation = orientation
     if orientation == "vertical_health" then
         healthBar:SetOrientation("VERTICAL")
-        powerBar:SetOrientation("HORIZONTAL")
+        --powerBar:SetOrientation("HORIZONTAL")
     else
         healthBar:SetOrientation(orientation)
-        powerBar:SetOrientation(orientation)
+        --powerBar:SetOrientation(orientation)
     end
     healthBar:SetRotatesTexture(rotateTexture)
-    powerBar:SetRotatesTexture(rotateTexture)
+    --powerBar:SetRotatesTexture(rotateTexture)
 
     if rotateTexture then
         F:RotateTexture(healthBarLoss, 90)
-        F:RotateTexture(powerBarLoss, 90)
+        --F:RotateTexture(powerBarLoss, 90)
     else
         F:RotateTexture(healthBarLoss, 0)
-        F:RotateTexture(powerBarLoss, 0)
+        --F:RotateTexture(powerBarLoss, 0)
     end
 
     if orientation == "horizontal" then
@@ -228,7 +228,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
         P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
         -- update powerBarLoss
-        P.ClearPoints(powerBarLoss)
+        --[[ P.ClearPoints(powerBarLoss)
         P.Point(powerBarLoss, "TOPRIGHT", powerBar)
         P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
@@ -236,7 +236,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
         P.ClearPoints(gapTexture)
         P.Point(gapTexture, "BOTTOMLEFT", powerBar, "TOPLEFT")
         P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "TOPRIGHT")
-        P.Height(gapTexture, CELL_BORDER_SIZE)
+        P.Height(gapTexture, CELL_BORDER_SIZE) ]]
     else -- vertical / vertical_health
         P.ClearPoints(healthBarLoss)
         P.Point(healthBarLoss, "TOPRIGHT", healthBar)
@@ -244,7 +244,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
         if orientation == "vertical" then
             -- update powerBarLoss
-            P.ClearPoints(powerBarLoss)
+            --[[ P.ClearPoints(powerBarLoss)
             P.Point(powerBarLoss, "TOPRIGHT", powerBar)
             P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "TOPLEFT")
 
@@ -252,10 +252,10 @@ function U:SetOrientation(button, orientation, rotateTexture)
             P.ClearPoints(gapTexture)
             P.Point(gapTexture, "TOPRIGHT", powerBar, "TOPLEFT")
             P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "BOTTOMLEFT")
-            P.Width(gapTexture, CELL_BORDER_SIZE)
+            P.Width(gapTexture, CELL_BORDER_SIZE) ]]
         else -- vertical_health
             -- update powerBarLoss
-            P.ClearPoints(powerBarLoss)
+            --[[  P.ClearPoints(powerBarLoss)
             P.Point(powerBarLoss, "TOPRIGHT", powerBar)
             P.Point(powerBarLoss, "BOTTOMLEFT", powerBar:GetStatusBarTexture(), "BOTTOMRIGHT")
 
@@ -263,7 +263,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
             P.ClearPoints(gapTexture)
             P.Point(gapTexture, "BOTTOMLEFT", powerBar, "TOPLEFT")
             P.Point(gapTexture, "BOTTOMRIGHT", powerBar, "TOPRIGHT")
-            P.Height(gapTexture, CELL_BORDER_SIZE)
+            P.Height(gapTexture, CELL_BORDER_SIZE) ]]
         end
     end
 
@@ -294,7 +294,9 @@ local function UpdateAppearance(kind)
         ---@param button CUFUnitButton
         Util:IterateAllUnitButtons(function(button)
             U:UnitFrame_UpdateHealthColor(button, true)
-            button.widgets.powerBar.UpdatePowerType(button)
+            if button:HasWidget(const.WIDGET_KIND.POWER_BAR) then
+                button.widgets.powerBar.UpdatePowerType(button)
+            end
             if button.healthBarColorType == const.UnitButtonColorType.CELL then
                 button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
             else
@@ -310,7 +312,9 @@ local function UpdateAppearance(kind)
             ---@param button CUFUnitButton
             Util:IterateAllUnitButtons(function(button)
                 U:UnitFrame_UpdateHealthColor(button, true)
-                button.widgets.powerBar.UpdatePowerType(button)
+                if button:HasWidget(const.WIDGET_KIND.POWER_BAR) then
+                    button.widgets.powerBar.UpdatePowerType(button)
+                end
             end)
         end)
     end

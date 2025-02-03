@@ -62,20 +62,6 @@ end
 Handler:RegisterWidget(W.UpdatePowerBarWidget, const.WIDGET_KIND.POWER_BAR)
 
 -------------------------------------------------
--- MARK: Layout Update PowerBar
--------------------------------------------------
-
----@param button CUFUnitButton
----@param size number
-function W:SetPowerSize(button, size)
-    --print(GetTime(), "SetPowerSize", button:GetName(), button:IsShown(), button:IsVisible(), size)
-    button.powerSize = size
-
-    ---@diagnostic disable-next-line: param-type-mismatch
-    button.widgets.powerBar:Enable()
-end
-
--------------------------------------------------
 -- MARK: Button Functions
 -------------------------------------------------
 

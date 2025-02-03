@@ -660,6 +660,7 @@ function CUFUnitButton_OnLoad(button)
         -- 2. A numeric `for` loop directly accesses elements by their index, which is faster.
         for i = 1, #handlers do
             local handler = handlers[i]
+            if not handler then return end
 
             -- Perform unit filtering before calling the callback:
             -- Centralizing this logic here is more efficient than repeating it in every callback.

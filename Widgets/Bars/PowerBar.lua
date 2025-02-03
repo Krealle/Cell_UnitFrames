@@ -96,7 +96,7 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.SIZE then
         widget:SetSizeStyle(styleTable.size)
     end
-    --[[ if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
+    if not setting or setting == const.OPTION_KIND.HIDE_OUT_OF_COMBAT then
         widget.hideOutOfCombat = styleTable.hideOutOfCombat
         widget:UpdateEventListeners()
     end
@@ -105,7 +105,7 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.HIDE_IF_FULL then
         widget.hideIfFull = styleTable.hideIfFull
-    end ]]
+    end
 
     if widget.enabled and widget:IsVisible() then
         widget.Update(button)
@@ -190,14 +190,17 @@ local function UpdateVisibility(self)
             end)
             return
         elseif not powerFilterCheck then
-            self:Hide()
-            self:UpdateEventListeners(false)
+            self:HidePowerBar()
             return
         end
     end
 
-    self:Show()
-    self:UpdateEventListeners(true)
+    if self.hideOutOfCombat and not UnitAffectingCombat(self._owner.states.unit) then
+        self:HidePowerBar()
+        return
+    end
+
+    self:ShowPowerBar()
 end
 
 -------------------------------------------------
@@ -210,8 +213,18 @@ end
 ---@param powerType string?
 local function UpdatePower(button, event, unit, powerType)
     unit = unit or button.states.displayedUnit
+    local powerBar = button.widgets.powerBar
 
-    button.widgets.powerBar:SetBarValue(UnitPower(unit))
+    local power = UnitPower(unit)
+
+    if powerBar.hideIfEmpty and power == 0 then
+        powerBar:Hide()
+    elseif powerBar.hideIfFull and power == powerBar.max then
+        powerBar:Hide()
+    elseif powerBar.active then
+        powerBar:Show()
+        powerBar:SetBarValue(power)
+    end
 end
 
 ---@param button CUFUnitButton
@@ -224,6 +237,7 @@ local function UpdatePowerMax(button, event, unit, powerType)
 
     local powerMax = UnitPowerMax(unit)
     if powerMax < 0 then powerMax = 0 end
+    powerBar.max = powerMax
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then
         powerBar:SetMinMaxSmoothedValue(0, powerMax)
@@ -269,18 +283,39 @@ local function Update(button, event, unit)
 end
 
 ---@param self PowerBarWidget
----@param enable boolean
-local function UpdateEventListeners(self, enable)
-    if self.active == enable then return end
+local function HidePowerBar(self)
+    if not self.active then return end
 
-    self.active = enable
+    self.active = false
 
-    if enable then
-        self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
-        self._owner:AddEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
+    self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+
+    self:Hide()
+end
+
+---@param self PowerBarWidget
+local function ShowPowerBar(self)
+    if self.active then return end
+
+    self.active = true
+
+    self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
+    self._owner:AddEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+
+    self:Show()
+end
+
+---@param self PowerBarWidget
+local function UpdateEventListeners(self)
+    if not self.enabled then return end
+
+    if self.enabled and self.hideOutOfCombat then
+        self._owner:AddEventListener("PLAYER_REGEN_DISABLED", self.Update, true)
+        self._owner:AddEventListener("PLAYER_REGEN_ENABLED", self.Update, true)
     else
-        self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
-        self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+        self._owner:RemoveEventListener("PLAYER_REGEN_DISABLED", self.Update)
+        self._owner:RemoveEventListener("PLAYER_REGEN_ENABLED", self.Update)
     end
 end
 
@@ -293,12 +328,14 @@ local function Enable(self)
         self._owner:AddEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
     end
 
+    self:UpdateEventListeners()
+
     return true
 end
 
 ---@param self PowerBarWidget
 local function Disable(self)
-    self:UpdateEventListeners(false)
+    self:UpdateEventListeners()
 
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", self.Update)
     self._owner:RemoveEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
@@ -347,6 +384,10 @@ function W:CreatePowerBar(button)
     powerBar.powerFilter = true
 
     powerBar.active = false
+    powerBar.hideOutOfCombat = false
+    powerBar.hideIfEmpty = false
+    powerBar.hideIfFull = false
+    powerBar.max = 10
 
     powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
     powerBar.border:SetAllPoints()
@@ -384,6 +425,8 @@ function W:CreatePowerBar(button)
     powerBar._SetIsSelected = W.SetIsSelected
 
     powerBar.UpdatePower = UpdatePower
+    powerBar.ShowPowerBar = ShowPowerBar
+    powerBar.HidePowerBar = HidePowerBar
     powerBar.UpdatePowerMax = UpdatePowerMax
     powerBar.UpdatePowerType = UpdatePowerType
     powerBar.UpdateVisibility = UpdateVisibility

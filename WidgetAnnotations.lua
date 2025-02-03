@@ -335,6 +335,9 @@
 ---@field anchorToParent boolean
 ---@field detachedPosition PositionOpt
 ---@field powerFilter boolean
+---@field hideIfEmpty boolean
+---@field hideIfFull boolean
+---@field hideOutOfCombat boolean
 
 -------------------------------------------------
 -- MARK: Misc Widgets

@@ -100,6 +100,7 @@ const.WIDGET_KIND = {
     FADER = "fader",
     HIGHLIGHT = "highlight",
     ALT_POWER_BAR = "altPowerBar",
+    POWER_BAR = "powerBar",
 }
 
 ---@enum OPTION_KIND

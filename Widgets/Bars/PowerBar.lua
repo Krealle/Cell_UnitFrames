@@ -18,6 +18,57 @@ local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
 
+--[[ local SPEC_ROLES = {
+    -- Melee
+    [251] = "DAMAGER", -- Death Knight - Frost
+    [252] = "DAMAGER", -- Death Knight - Unholy
+    [577] = "DAMAGER", -- Demon Hunter - Havoc
+    [103] = "DAMAGER", -- Druid - Feral
+    [255] = "DAMAGER", -- Hunter - Survival
+    [269] = "DAMAGER", -- Monk - Windwalker
+    [70] = "DAMAGER",  -- Paladin - Retribution
+    [259] = "DAMAGER", -- Rogue - Assassination
+    [260] = "DAMAGER", -- Rogue - Combat
+    [261] = "DAMAGER", -- Rogue - Subtlety
+    [263] = "DAMAGER", -- Shaman - Enhancement
+    [71] = "DAMAGER",  -- Warrior - Arms
+    [72] = "DAMAGER",  -- Warrior - Fury
+
+    -- Ranged
+    [253] = "DAMAGER",  -- Hunter - Beast Master
+    [254] = "DAMAGER",  -- Hunter - Marksmanship
+    [102] = "DAMAGER",  -- Druid - Balance
+    [1467] = "DAMAGER", -- Evoker - Devastation
+    [62] = "DAMAGER",   -- Mage - Arcane
+    [63] = "DAMAGER",   -- Mage - Fire
+    [64] = "DAMAGER",   -- Mage - Frost
+    [258] = "DAMAGER",  -- Priest - Shadow
+    [262] = "DAMAGER",  -- Shaman - Elemental
+    [265] = "DAMAGER",  -- Warlock - Affliction
+    [266] = "DAMAGER",  -- Warlock - Demonology
+    [267] = "DAMAGER",  -- Warlock - Destruction
+
+    -- Healer
+    [105] = "HEALER",  -- Druid - Restoration
+    [1468] = "HEALER", -- Evoker - Preservation
+    [270] = "HEALER",  -- Monk - Mistweaver
+    [65] = "HEALER",   -- Paladin - Holy
+    [256] = "HEALER",  -- Priest - Discipline
+    [257] = "HEALER",  -- Priest - Holy
+    [264] = "HEALER",  -- Shaman - Restoration
+
+    -- Tank
+    [250] = "TANK", -- Death Knight - Blood
+    [581] = "TANK", -- Demon Hunter - Vengeance
+    [104] = "TANK", -- Druid - Guardian
+    [268] = "TANK", -- Monk - Brewmaster
+    [66] = "TANK",  -- Paladin - Protection
+    [73] = "TANK",  -- Warrior - Protection
+
+    -- Support
+    [1473] = "DAMAGER", -- Evoker - Augmentation
+} ]]
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -69,15 +120,16 @@ Handler:RegisterWidget(W.UpdatePowerBarWidget, const.WIDGET_KIND.POWER_BAR)
 
 ---@param button CUFUnitButton
 local function GetRole(button)
-    --[[ if button.states.role and button.states.role ~= "NONE" then
-        return button.states.role
-    end ]]
-
+    local role
     local info = LGI and LGI:GetCachedInfo(button.states.guid)
-    if not info then
-        return UnitGroupRolesAssigned(button.states.unit)
+
+    if info then
+        role = info.role
+    else
+        role = UnitGroupRolesAssigned(button.states.unit)
     end
-    return info.role
+
+    return role
 end
 
 ---@param self PowerBarWidget

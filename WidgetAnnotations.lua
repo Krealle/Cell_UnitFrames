@@ -334,6 +334,7 @@
 ---@field position PositionOpt
 ---@field anchorToParent boolean
 ---@field detachedPosition PositionOpt
+---@field powerFilter boolean
 
 -------------------------------------------------
 -- MARK: Misc Widgets

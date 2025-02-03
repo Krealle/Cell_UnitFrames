@@ -56,7 +56,9 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
         widget.hideIfFull = styleTable.hideIfFull
     end ]]
 
-    widget.Update(button)
+    if widget.enabled and widget:IsVisible() then
+        widget.Update(button)
+    end
 end
 
 Handler:RegisterWidget(W.UpdatePowerBarWidget, const.WIDGET_KIND.POWER_BAR)
@@ -67,41 +69,35 @@ Handler:RegisterWidget(W.UpdatePowerBarWidget, const.WIDGET_KIND.POWER_BAR)
 
 ---@param button CUFUnitButton
 local function GetRole(button)
-    if button.states.role and button.states.role ~= "NONE" then
+    --[[ if button.states.role and button.states.role ~= "NONE" then
         return button.states.role
-    end
+    end ]]
 
     local info = LGI and LGI:GetCachedInfo(button.states.guid)
-    if not info then return end
+    if not info then
+        return UnitGroupRolesAssigned(button.states.unit)
+    end
     return info.role
 end
 
----@class CUFUnitButton
----@field ShouldShowPowerBar function
----@param self CUFUnitButton
-local function ShouldShowPowerBar(self)
-    if not self.widgets.powerBar.enabled then return end
-
-    local guid = self.states.guid or UnitGUID(self.states.unit)
-    if not guid then
-        C_Timer.After(0.1, function()
-            self:EnableWidget(self.widgets.powerBar)
-        end)
-        return false
-    end
+---@param self PowerBarWidget
+local function PowerFilterCheck(self)
+    local owner = self._owner
+    local guid = owner.states.guid or UnitGUID(owner.states.unit)
+    if not guid then return end
 
     local class, role
-    if self.states.inVehicle then
+    if owner.states.inVehicle then
         class = "VEHICLE"
     elseif F:IsPlayer(guid) then
-        class = self.states.class
-        role = GetRole(self)
+        class = UnitClassBase(owner.states.unit)
+        role = GetRole(owner)
     elseif F:IsPet(guid) then
         class = "PET"
     elseif F:IsNPC(guid) then
-        if UnitInPartyIsAI(self.states.unit) then
-            class = self.states.class
-            role = GetRole(self)
+        if UnitInPartyIsAI(owner.states.unit) then
+            class = UnitClassBase(owner.states.unit)
+            role = GetRole(owner)
         else
             class = "NPC"
         end
@@ -109,26 +105,21 @@ local function ShouldShowPowerBar(self)
         class = "VEHICLE"
     end
 
-    if CUF.DB.CurrentLayoutTable()[self._baseUnit].powerFilter then
-        if not Cell.vars.currentLayoutTable then
-            C_Timer.After(0.1, function()
-                self:EnableWidget(self.widgets.powerBar)
-            end)
-            return false
-        end
+    if not Cell.vars.currentLayoutTable then return end
 
-        if class and self.states.unit == "player" then
-            if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
-                return Cell.vars.currentLayoutTable["powerFilters"][class]
-            else
-                if role then
-                    return Cell.vars.currentLayoutTable["powerFilters"][class][role]
-                else
-                    C_Timer.After(0.1, function()
-                        self:EnableWidget(self.widgets.powerBar)
-                    end)
-                    return false
+    print("PowerFilterCheck", self._owner.states.unit, class, role)
+
+    if class then
+        if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
+            return Cell.vars.currentLayoutTable["powerFilters"][class]
+        else
+            if role then
+                if role == "NONE" then
+                    return true
                 end
+                return Cell.vars.currentLayoutTable["powerFilters"][class][role]
+            else
+                return
             end
         end
     end
@@ -136,61 +127,65 @@ local function ShouldShowPowerBar(self)
     return true
 end
 
----@class CUFUnitButton
----@field ShowPowerBar function
----@param self CUFUnitButton
-local function ShowPowerBar(self)
-    local powerBar = self.widgets.powerBar
+---@param self PowerBarWidget
+local function UpdateVisibility(self)
+    if self.powerFilter then
+        local powerFilterCheck = PowerFilterCheck(self)
 
-    powerBar:Show()
-
-    if self:IsVisible() then
-        -- update now
-        powerBar.UpdatePowerType(self)
+        if powerFilterCheck == nil then
+            C_Timer.After(0.1, function()
+                self:UpdateVisibility()
+            end)
+            return
+        elseif not powerFilterCheck then
+            self:Hide()
+            self:UpdateEventListeners(false)
+            return
+        end
     end
-end
 
----@class CUFUnitButton
----@field HidePowerBar function
----@param self CUFUnitButton
-local function HidePowerBar(self)
-    self.widgets.powerBar:Hide()
+    self:Show()
+    self:UpdateEventListeners(true)
 end
 
 -------------------------------------------------
--- MARK: Button Update PowerBar
+-- MARK: Power
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-local function UpdatePower(button)
-    local unit = button.states.displayedUnit
+---@param event "UNIT_POWER_FREQUENT"?
+---@param unit UnitToken?
+---@param powerType string?
+local function UpdatePower(button, event, unit, powerType)
+    unit = unit or button.states.displayedUnit
 
-    button.states.power = UnitPower(unit)
-
-    button.widgets.powerBar:SetBarValue(button.states.power)
+    button.widgets.powerBar:SetBarValue(UnitPower(unit))
 end
 
--- Calls UpdatePower
 ---@param button CUFUnitButton
-local function UpdatePowerMax(button)
-    local unit = button.states.displayedUnit
+---@param event "UNIT_MAXPOWER"?
+---@param unit UnitToken?
+---@param powerType string?
+local function UpdatePowerMax(button, event, unit, powerType)
+    unit = unit or button.states.displayedUnit
+    local powerBar = button.widgets.powerBar
 
-    button.states.powerMax = UnitPowerMax(unit)
-    if button.states.powerMax < 0 then button.states.powerMax = 0 end
+    local powerMax = UnitPowerMax(unit)
+    if powerMax < 0 then powerMax = 0 end
 
     if CellDB["appearance"]["barAnimation"] == "Smooth" then
-        button.widgets.powerBar:SetMinMaxSmoothedValue(0, button.states.powerMax)
+        powerBar:SetMinMaxSmoothedValue(0, powerMax)
     else
-        button.widgets.powerBar:SetMinMaxValues(0, button.states.powerMax)
+        powerBar:SetMinMaxValues(0, powerMax)
     end
 
-    UpdatePower(button)
+    powerBar.UpdatePower(button)
 end
 
--- Calls UpdatePowerMax
 ---@param button CUFUnitButton
 local function UpdatePowerType(button)
-    UpdatePowerMax(button)
+    local powerBar = button.widgets.powerBar
+    powerBar.UpdatePowerMax(button)
 
     local unit = button.states.displayedUnit
 
@@ -201,53 +196,71 @@ local function UpdatePowerType(button)
         r, g, b = 0.4, 0.4, 0.4
         lossR, lossG, lossB = 0.4, 0.4, 0.4
     else
-        r, g, b, lossR, lossG, lossB, button.states.powerType = F:GetPowerBarColor(unit, button.states.class)
+        r, g, b, lossR, lossG, lossB = F:GetPowerBarColor(unit, button.states.class)
     end
 
-    button.widgets.powerBar:SetStatusBarColor(r, g, b)
-    button.widgets.powerBar.bg:SetVertexColor(lossR, lossG, lossB)
+    powerBar:SetStatusBarColor(r, g, b)
+    powerBar.bg:SetVertexColor(lossR, lossG, lossB)
 end
 
----@param button CUFUnitButton
-function U:UnitFrame_UpdatePowerTexture(button)
-    if not button:HasWidget(const.WIDGET_KIND.POWER_BAR) then return end
-    button.widgets.powerBar:SetStatusBarTexture(F:GetBarTexture())
-    button.widgets.powerBar.bg:SetTexture(F:GetBarTexture())
-end
+-------------------------------------------------
+-- MARK: Update
+-------------------------------------------------
 
 ---@param button CUFUnitButton
-local function Update(button)
-    UpdatePowerType(button)
+---@param event "UNIT_DISPLAYPOWER"|"PLAYER_SPECIALIZATION_CHANGED"?
+---@param unit UnitToken?
+local function Update(button, event, unit)
+    local powerBar = button.widgets.powerBar
+    powerBar.UpdatePowerType(button)
+    powerBar:UpdateVisibility()
+end
+
+---@param self PowerBarWidget
+---@param enable boolean
+local function UpdateEventListeners(self, enable)
+    if self.active == enable then return end
+
+    self.active = enable
+
+    if enable then
+        self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
+        self._owner:AddEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+    else
+        self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdatePower)
+        self._owner:RemoveEventListener("UNIT_MAXPOWER", self.UpdatePowerMax)
+    end
 end
 
 ---@param self PowerBarWidget
 local function Enable(self)
-    if not ShouldShowPowerBar(self._owner) then
-        self._owner:DisableWidget(self)
-        return false
+    self.Update(self._owner)
+
+    self._owner:AddEventListener("UNIT_DISPLAYPOWER", self.Update)
+    if F:IsPlayer(UnitGUID(self._owner.states.unit)) then
+        self._owner:AddEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
     end
-
-    self._owner:AddEventListener("UNIT_DISPLAYPOWER", UpdatePowerType)
-    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdatePower)
-    self._owner:AddEventListener("UNIT_MAXPOWER", UpdatePowerMax)
-
-    self._owner:ShowPowerBar()
 
     return true
 end
 
 ---@param self PowerBarWidget
 local function Disable(self)
-    self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", UpdatePowerType)
-    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdatePower)
-    self._owner:RemoveEventListener("UNIT_MAXPOWER", UpdatePowerMax)
+    self:UpdateEventListeners(false)
 
-    self._owner:HidePowerBar()
+    self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", self.Update)
+    self._owner:RemoveEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
 end
 
 -------------------------------------------------
 -- MARK: Options
 -------------------------------------------------
+
+---@param button CUFUnitButton
+function U:UnitFrame_UpdatePowerTexture(button)
+    button.widgets.powerBar:SetStatusBarTexture(F:GetBarTexture())
+    button.widgets.powerBar.bg:SetTexture(F:GetBarTexture())
+end
 
 ---@param self PowerBarWidget
 ---@param sizeSize SizeOpt
@@ -279,9 +292,9 @@ function W:CreatePowerBar(button)
     powerBar.id = const.WIDGET_KIND.POWER_BAR
     powerBar.sameSizeAsHealthBar = true
     powerBar.anchorToParent = true
+    powerBar.powerFilter = true
 
-    P.Point(powerBar, "TOPLEFT", button.widgets.healthBar, "BOTTOMLEFT", 0, -1)
-    P.Point(powerBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+    powerBar.active = false
 
     powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
     powerBar.border:SetAllPoints()
@@ -307,10 +320,6 @@ function W:CreatePowerBar(button)
     powerBar.gapTexture = gapTexture
     gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
 
-    button.ShowPowerBar = ShowPowerBar
-    button.HidePowerBar = HidePowerBar
-    button.ShouldShowPowerBar = ShouldShowPowerBar
-
     powerBar.Update = Update
     powerBar.Enable = Enable
     powerBar.Disable = Disable
@@ -325,6 +334,8 @@ function W:CreatePowerBar(button)
     powerBar.UpdatePower = UpdatePower
     powerBar.UpdatePowerMax = UpdatePowerMax
     powerBar.UpdatePowerType = UpdatePowerType
+    powerBar.UpdateVisibility = UpdateVisibility
+    powerBar.UpdateEventListeners = UpdateEventListeners
 end
 
 W:RegisterCreateWidgetFunc(const.WIDGET_KIND.POWER_BAR, W.CreatePowerBar)

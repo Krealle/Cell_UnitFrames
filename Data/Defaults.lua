@@ -765,6 +765,48 @@ Defaults.Widgets = {
             relativePoint = "TOPLEFT",
         },
     },
+    ---@type AltPowerBarWidgetTable
+    altPowerBar = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 200,
+            height = 5,
+        },
+        sameSizeAsHealthBar = true,
+        hideIfEmpty = false,
+        hideIfFull = false,
+        hideOutOfCombat = false,
+        position = {
+            point = "TOPLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "TOPLEFT",
+        },
+    },
+    ---@type PowerBarWidgetTable
+    powerBar = {
+        enabled = true,
+        frameLevel = 10,
+        size = {
+            width = 200,
+            height = 5,
+        },
+        sameSizeAsHealthBar = true,
+        position = {
+            point = "BOTTOMLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+        anchorToParent = true,
+        detachedPosition = {
+            point = "BOTTOMLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+    },
     ---@type HealAbsorbWidgetTable
     healAbsorb = {
         enabled = false,
@@ -788,25 +830,6 @@ Defaults.Widgets = {
         hover = true,
         target = true,
         size = 1,
-    },
-    ---@type AltPowerBarWidgetTable
-    altPowerBar = {
-        enabled = false,
-        frameLevel = 10,
-        size = {
-            width = 200,
-            height = 5,
-        },
-        sameSizeAsHealthBar = true,
-        hideIfEmpty = false,
-        hideIfFull = false,
-        hideOutOfCombat = false,
-        position = {
-            point = "TOPLEFT",
-            offsetY = 0,
-            offsetX = 0,
-            relativePoint = "TOPLEFT",
-        },
     },
 }
 

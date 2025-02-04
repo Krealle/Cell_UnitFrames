@@ -109,7 +109,7 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
         widget.hideIfFull = styleTable.hideIfFull
     end
 
-    if widget.enabled and widget:IsVisible() then
+    if widget.enabled then
         widget.Update(button)
     end
 end

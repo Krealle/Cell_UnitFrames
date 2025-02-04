@@ -150,6 +150,45 @@ function DB:Revise()
             layout.hideBlizzardCastBar = nil
         end)
     end
+    if CUF_DB.version < 17 then
+        CUF:RegisterCallback("AddonLoaded", "AddonLoaded_Revise_17", function()
+            IterateUnitLayouts(function(layout)
+                if not layout.widgets.powerBar then
+                    layout.widgets.powerBar = CUF.Util:CopyDeep(CUF.Defaults.Widgets.powerBar)
+                end
+
+                if layout.powerSize ~= nil then
+                    if layout.powerSize > 0 then
+                        layout.widgets.powerBar.size.height = layout.powerSize
+                        layout.widgets.powerBar.enabled = true
+                    else
+                        layout.widgets.powerBar.enabled = false
+                    end
+                    --layout.powerSize = nil
+                end
+                if layout.powerFilter ~= nil then
+                    layout.widgets.powerBar.powerFilter = layout.powerFilter
+                    --layout.powerFilter = nil
+                end
+                if layout.barOrientation == "vertical" then
+                    layout.widgets.powerBar.orientation = CUF.constants.GROWTH_ORIENTATION.BOTTOM_TO_TOP
+                    layout.widgets.powerBar.sameWidthAsHealthBar = false
+                    layout.widgets.powerBar.sameHeightAsHealthBar = true
+
+                    layout.widgets.powerBar.position.point = "BOTTOMRIGHT"
+                    layout.widgets.powerBar.position.relativePoint = "BOTTOMRIGHT"
+
+                    if layout.powerSize ~= nil and layout.powerSize > 0 then
+                        layout.widgets.powerBar.size.width = layout.powerSize
+                    else
+                        layout.widgets.powerBar.size.width = CUF.Defaults.Widgets.powerBar.size.height
+                    end
+                end
+            end)
+
+            CUF:UnregisterCallback("AddonLoaded", "AddonLoaded_Revise_17")
+        end)
+    end
 
     ShowChangelog()
 end

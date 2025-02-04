@@ -75,7 +75,7 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.POWER_BAR,
     Builder.MenuOptions.FullAnchor,
-    Builder.MenuOptions.Size,
+    Builder.MenuOptions.PowerBar,
     Builder.MenuOptions.FrameLevel)
 
 ---@param button CUFUnitButton

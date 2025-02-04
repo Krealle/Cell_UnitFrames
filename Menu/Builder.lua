@@ -65,6 +65,7 @@ Builder.MenuOptions = {
     IconTexture = 38,
     Highlight = 39,
     AltPower = 40,
+    PowerBar = 41,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2210,6 +2211,44 @@ function Builder:CreateAltPowerOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Power Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return PowerBarOptions
+function Builder:CreatePowerBarOptions(parent, widgetName)
+    ---@class PowerBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 130
+    f.id = "PowerBarOptions"
+
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 1, 500)
+    f.sizeOptions:SetPoint("TOPLEFT", 0, -5)
+
+    f.sameWidthAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameWidthAsHealthBar,
+        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+    self:AnchorBelow(f.sameWidthAsHealthBar, f.sizeOptions)
+    f.sameHeightAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameHeightAsHealthBar,
+        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+    self:AnchorRightOfCB(f.sameHeightAsHealthBar, f.sameWidthAsHealthBar)
+
+    f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
+        const.OPTION_KIND.HIDE_IF_EMPTY)
+    self:AnchorBelowCB(f.hideIfEmpty, f.sameWidthAsHealthBar)
+
+    f.hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
+        const.OPTION_KIND.HIDE_IF_FULL)
+    self:AnchorRightOfCB(f.hideIfFull, f.hideIfEmpty)
+
+    f.hideOutOfCombat = self:CreateCheckBox(f, widgetName, L.HideOutOfCombat,
+        const.OPTION_KIND.HIDE_OUT_OF_COMBAT)
+    self:AnchorBelowCB(f.hideOutOfCombat, f.hideIfEmpty)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2255,4 +2294,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.IconTexture] = Builder.CreateIconTextureOptions,
     [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
     [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
+    [Builder.MenuOptions.PowerBar] = Builder.CreatePowerBarOptions,
 }

@@ -168,7 +168,7 @@ local function PowerFilterCheck(self)
 
     if not Cell.vars.currentLayoutTable then return end
 
-    print("PowerFilterCheck", self._owner.states.unit, class, role)
+    --print("PowerFilterCheck", self._owner.states.unit, class, role)
 
     if class then
         if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
@@ -231,7 +231,7 @@ local function UpdatePower(button, event, unit, powerType)
     elseif powerBar.hideIfFull and power == powerBar.max then
         powerBar:Hide()
     elseif powerBar.active then
-        powerBar:SetBarValue(power)
+        powerBar:SetValue(power)
         powerBar:Show()
     end
 end
@@ -428,18 +428,12 @@ function W:CreatePowerBar(button)
 
     powerBar:SetStatusBarTexture(Cell.vars.texture)
     powerBar:GetStatusBarTexture():SetDrawLayer("ARTWORK", -7)
-    powerBar:SetFrameLevel(button:GetFrameLevel() + 2)
-    powerBar.SetBarValue = powerBar.SetValue
 
     Mixin(powerBar, SmoothStatusBarMixin)
 
     powerBar.bg = powerBar:CreateTexture(nil, "BACKGROUND")
     powerBar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
     powerBar.bg:SetAllPoints()
-
-    local gapTexture = powerBar:CreateTexture(nil, "BORDER")
-    powerBar.gapTexture = gapTexture
-    gapTexture:SetColorTexture(unpack(CELL_BORDER_COLOR))
 
     powerBar.Update = Update
     powerBar.Enable = Enable
@@ -449,9 +443,9 @@ function W:CreatePowerBar(button)
     powerBar.SetOrientationStyle = SetOrientationStyle
 
     powerBar.SetEnabled = W.SetEnabled
+    powerBar._SetIsSelected = W.SetIsSelected
     powerBar.SetPosition = W.SetDetachedRelativePosition
     powerBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
-    powerBar._SetIsSelected = W.SetIsSelected
 
     powerBar.UpdatePower = UpdatePower
     powerBar.ShowPowerBar = ShowPowerBar

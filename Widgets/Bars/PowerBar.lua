@@ -224,8 +224,8 @@ local function UpdatePower(button, event, unit, powerType)
     elseif powerBar.hideIfFull and power == powerBar.max then
         powerBar:Hide()
     elseif powerBar.active then
-        powerBar:Show()
         powerBar:SetBarValue(power)
+        powerBar:Show()
     end
 end
 
@@ -280,8 +280,10 @@ end
 ---@param unit UnitToken?
 local function Update(button, event, unit)
     local powerBar = button.widgets.powerBar
-    powerBar.UpdatePowerType(button)
     powerBar:UpdateVisibility()
+    if powerBar.active then
+        powerBar.UpdatePowerType(button)
+    end
 end
 
 ---@param self PowerBarWidget

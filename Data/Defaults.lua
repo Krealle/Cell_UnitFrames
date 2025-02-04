@@ -792,6 +792,7 @@ Defaults.Widgets = {
         hideIfEmpty = false,
         hideIfFull = false,
         hideOutOfCombat = false,
+        orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
         size = {
             width = 200,
             height = 5,

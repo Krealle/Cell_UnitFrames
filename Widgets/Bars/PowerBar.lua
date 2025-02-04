@@ -75,6 +75,7 @@ local Handler = CUF.Handler
 
 menu:AddWidget(const.WIDGET_KIND.POWER_BAR,
     Builder.MenuOptions.FullAnchor,
+    Builder.MenuOptions.Orientation,
     Builder.MenuOptions.PowerBar,
     Builder.MenuOptions.FrameLevel)
 
@@ -107,6 +108,9 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.HIDE_IF_FULL then
         widget.hideIfFull = styleTable.hideIfFull
+    end
+    if not setting or setting == const.OPTION_KIND.ORIENTATION then
+        widget:SetOrientationStyle(styleTable.orientation)
     end
 
     if widget.enabled then
@@ -369,6 +373,24 @@ local function SetSizeStyle(self, sizeSize)
     self:SetSize(width, height)
 end
 
+---@param self PowerBarWidget
+---@param orientation GrowthOrientation
+local function SetOrientationStyle(self, orientation)
+    if orientation == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
+        self:SetOrientation("HORIZONTAL")
+        self:SetFillStyle("STANDARD")
+    elseif orientation == const.GROWTH_ORIENTATION.RIGHT_TO_LEFT then
+        self:SetOrientation("HORIZONTAL")
+        self:SetFillStyle("REVERSE")
+    elseif orientation == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
+        self:SetOrientation("VERTICAL")
+        self:SetFillStyle("STANDARD")
+    elseif orientation == const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
+        self:SetOrientation("VERTICAL")
+        self:SetFillStyle("REVERSE")
+    end
+end
+
 -------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------
@@ -421,6 +443,7 @@ function W:CreatePowerBar(button)
     powerBar.Disable = Disable
 
     powerBar.SetSizeStyle = SetSizeStyle
+    powerBar.SetOrientationStyle = SetOrientationStyle
 
     powerBar.SetEnabled = W.SetEnabled
     powerBar.SetPosition = W.SetDetachedRelativePosition

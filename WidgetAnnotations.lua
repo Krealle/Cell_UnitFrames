@@ -339,6 +339,7 @@
 ---@field hideIfEmpty boolean
 ---@field hideIfFull boolean
 ---@field hideOutOfCombat boolean
+---@field orientation GrowthOrientation
 
 -------------------------------------------------
 -- MARK: Misc Widgets

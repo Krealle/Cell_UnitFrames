@@ -23,6 +23,7 @@ local INTERRUPTED = INTERRUPTED or "Interrupted"
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.CAST_BAR,
+    Builder.MenuOptions.DetachedAnchor,
     Builder.MenuOptions.CastBarGeneral,
     Builder.MenuOptions.CastBarEmpower,
     Builder.MenuOptions.CastBarTimer,
@@ -99,6 +100,9 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.ONLY_SHOW_INTERRUPT then
         castBar.onlyShowInterrupt = styleTable.onlyShowInterrupt
+    end
+    if not setting or setting == const.OPTION_KIND.ANCHOR_TO_PARENT then
+        castBar:SetPosition(styleTable)
     end
 
     castBar.Update(button)

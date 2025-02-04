@@ -2220,7 +2220,7 @@ end
 function Builder:CreatePowerBarOptions(parent, widgetName)
     ---@class PowerBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 130
+    f.optionHeight = 150
     f.id = "PowerBarOptions"
 
     f.sizeOptions = self:CreateSizeOptions(f, widgetName, 1, 500)
@@ -2231,11 +2231,11 @@ function Builder:CreatePowerBarOptions(parent, widgetName)
     self:AnchorBelow(f.sameWidthAsHealthBar, f.sizeOptions)
     f.sameHeightAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameHeightAsHealthBar,
         const.OPTION_KIND.SAME_HEIGHT_AS_HEALTH_BAR)
-    self:AnchorRightOfCB(f.sameHeightAsHealthBar, f.sameWidthAsHealthBar)
+    self:AnchorBelowCB(f.sameHeightAsHealthBar, f.sameWidthAsHealthBar)
 
     f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
         const.OPTION_KIND.HIDE_IF_EMPTY)
-    self:AnchorBelowCB(f.hideIfEmpty, f.sameWidthAsHealthBar)
+    self:AnchorBelowCB(f.hideIfEmpty, f.sameHeightAsHealthBar)
 
     f.hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
         const.OPTION_KIND.HIDE_IF_FULL)

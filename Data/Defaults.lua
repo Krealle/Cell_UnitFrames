@@ -910,7 +910,6 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 
 ---@class UnitLayout
 ---@field enabled boolean
----@field powerSize number
 ---@field size Size
 ---@field position Position
 ---@field widgets WidgetTables
@@ -921,7 +920,6 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field anchorToParent boolean?
 ---@field anchorPosition ParentAnchor?
 ---@field barOrientation string
----@field powerFilter boolean
 ---@field spacing number?
 ---@field growthDirection GrowthOrientation?
 ---@field alwaysUpdate boolean?
@@ -934,20 +932,17 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 Defaults.Layouts = {
     player = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { -300, -250 },
         widgets = Util:CopyDeep(Defaults.Widgets),
         clickCast = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = "[petbattle] hide;show"
     },
     target = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { 300, -250 },
         widgets = {
@@ -975,14 +970,12 @@ Defaults.Layouts = {
         clickCast = false,
         mirrorPlayer = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     focus = {
         enabled = false,
-        powerSize = 2,
         size = { 100, 30 },
         position = { -300, 125 },
         widgets = {
@@ -1017,14 +1010,12 @@ Defaults.Layouts = {
         sameSizeAsPlayer = false,
         clickCast = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     targettarget = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { 500, -250 },
         widgets = {
@@ -1048,7 +1039,6 @@ Defaults.Layouts = {
             offsetY = 0
         },
         barOrientation = "horizontal",
-        powerFilter = false,
         alwaysUpdate = true,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
@@ -1056,7 +1046,6 @@ Defaults.Layouts = {
     },
     pet = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 30 },
         position = { -300, -300 },
         widgets = {
@@ -1087,14 +1076,12 @@ Defaults.Layouts = {
             offsetY = -5
         },
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     boss = {
         enabled = false,
-        powerSize = 4,
         spacing = 50,
         size = { 160, 40 },
         position = { 600, 300 },

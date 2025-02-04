@@ -750,7 +750,7 @@ function Builder:CreateDetachedAnchorOptions(parent, widgetName, path, minVal, m
     anchorOpt.id = "DetachedAnchor"
 
     local anchorToParent = self:CreateCheckBox(anchorOpt, widgetName, L["Anchor To"] .. " " .. L["Unit Button"],
-        const.OPTION_KIND.ANCHOR_TO_PARENT)
+        const.OPTION_KIND.ANCHOR_TO_PARENT, L.DetachedAnchorEditMode)
     self:AnchorRight(anchorToParent, anchorOpt.relativeDropdown)
 
     local function toggleOptions(anchored)

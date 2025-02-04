@@ -351,6 +351,8 @@ local function Disable(self)
 
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", self.Update)
     self._owner:RemoveEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
+
+    self:HidePowerBar()
 end
 
 -------------------------------------------------

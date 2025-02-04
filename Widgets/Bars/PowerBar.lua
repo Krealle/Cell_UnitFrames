@@ -74,7 +74,7 @@ local Handler = CUF.Handler
 -------------------------------------------------
 
 menu:AddWidget(const.WIDGET_KIND.POWER_BAR,
-    Builder.MenuOptions.FullAnchor,
+    Builder.MenuOptions.DetachedAnchor,
     Builder.MenuOptions.Orientation,
     Builder.MenuOptions.PowerBar,
     Builder.MenuOptions.FrameLevel)
@@ -87,9 +87,6 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     local widget = button.widgets.powerBar
     local styleTable = DB.GetCurrentWidgetTable(const.WIDGET_KIND.POWER_BAR, unit) --[[@as PowerBarWidgetTable]]
 
-    --[[ if not setting or setting == const.OPTION_KIND.COLOR then
-        widget:UpdateColors()
-    end ]]
     if not setting or setting == const.OPTION_KIND.SAME_HEIGHT_AS_HEALTH_BAR
         or setting == const.OPTION_KIND.SAME_WIDTH_AS_HEALTH_BAR then
         widget.sameWidthAsHealthBar = styleTable.sameWidthAsHealthBar
@@ -114,6 +111,9 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.POWER_FILTER then
         widget.powerFilter = styleTable.powerFilter
+    end
+    if not setting or setting == const.OPTION_KIND.ANCHOR_TO_PARENT then
+        widget:SetPosition(styleTable)
     end
 
     if widget.enabled then

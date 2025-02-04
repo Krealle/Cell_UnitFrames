@@ -66,6 +66,7 @@ Builder.MenuOptions = {
     Highlight = 39,
     AltPower = 40,
     PowerBar = 41,
+    DetachedAnchor = 42,
 }
 
 local FAILED = FAILED or "Failed"
@@ -733,6 +734,40 @@ function Builder:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVa
     anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, L.RelativeTo, nil, const.ANCHOR_POINTS,
         path or const.OPTION_KIND.POSITION .. "." .. const.OPTION_KIND.RELATIVE_POINT)
     self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
+
+    return anchorOpt
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param path string?
+---@param minVal number?
+---@param maxVal number?
+---@return DetachedAnchorOptions
+function Builder:CreateDetachedAnchorOptions(parent, widgetName, path, minVal, maxVal)
+    ---@class DetachedAnchorOptions: FullAnchorOptions
+    local anchorOpt = self:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVal)
+    anchorOpt.id = "DetachedAnchor"
+
+    local anchorToParent = self:CreateCheckBox(anchorOpt, widgetName, L["Anchor To"] .. " " .. L["Unit Button"],
+        const.OPTION_KIND.ANCHOR_TO_PARENT)
+    self:AnchorRight(anchorToParent, anchorOpt.relativeDropdown)
+
+    local function toggleOptions(anchored)
+        anchorOpt.anchorDropdown:SetEnabled(anchored)
+        anchorOpt.relativeDropdown:SetEnabled(anchored)
+        anchorOpt.sliderX:SetEnabled(anchored)
+        anchorOpt.sliderY:SetEnabled(anchored)
+    end
+
+    anchorToParent:HookScript("OnClick", function()
+        toggleOptions(anchorToParent:GetChecked())
+    end)
+
+    local function LoadPageDB()
+        toggleOptions(DB.GetSelectedWidgetTable(widgetName).anchorToParent)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "DetachedAnchor_AnchorToggle")
 
     return anchorOpt
 end
@@ -2264,6 +2299,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.ExtraAnchor] = Builder.CreateExtraAnchorOptions,
     [Builder.MenuOptions.FullAnchor] = Builder.CreateFullAnchorOptions,
+    [Builder.MenuOptions.DetachedAnchor] = Builder.CreateDetachedAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,

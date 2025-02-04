@@ -361,10 +361,10 @@ local function SetSizeStyle(self, sizeSize)
     -- account for border such that we can properly make 1 pixel power bar
     -- TODO: this should be prolly be changed in the future as this problem extends
     -- across all widgets
-    local height = self.sameHeightAsHealthBar and self._owner:GetHeight()
-        or ((CELL_BORDER_SIZE * 2) + sizeSize.height)
     local width = self.sameWidthAsHealthBar and self._owner:GetWidth()
-        or ((CELL_BORDER_SIZE * 2) + sizeSize.width)
+        or (CELL_BORDER_SIZE * 2) + sizeSize.width
+    local height = self.sameHeightAsHealthBar and self._owner:GetHeight()
+        or (CELL_BORDER_SIZE * 2) + sizeSize.height
 
     self:SetSize(width, height)
 end

@@ -297,6 +297,7 @@ local function CreateWidgetPositioningPopup()
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).anchorToParent =
             checked
         CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+        CUF:Fire("LoadPageDB")
 
         widgetPositioningPopup.pointDropdown:SetEnabled(checked)
         widgetPositioningPopup.relativeDropdown:SetEnabled(checked)
@@ -328,6 +329,7 @@ local function CreateWidgetPositioningPopup()
                 CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.point =
                     point
                 CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+                CUF:Fire("LoadPageDB")
             end,
         })
         relativePointDropdown:AddItem({
@@ -337,6 +339,7 @@ local function CreateWidgetPositioningPopup()
                 CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.relativePoint =
                     point
                 CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+                CUF:Fire("LoadPageDB")
             end,
         })
     end
@@ -347,6 +350,7 @@ local function CreateWidgetPositioningPopup()
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetX =
             value
         CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+        CUF:Fire("LoadPageDB")
     end
 
     local parentOffsetYSlider = Cell:CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
@@ -355,6 +359,7 @@ local function CreateWidgetPositioningPopup()
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetY =
             value
         CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
+        CUF:Fire("LoadPageDB")
     end
 
     widgetPositioningPopup.parentAnchorFrame = parentAnchorFrame
@@ -492,6 +497,8 @@ local function CreateWidgetOverlayBox(widget, unit, unitOverlay)
 
         local x, y = P.GetPositionRelativeToScreenCenter(widget)
         W.SaveDetachedPosition(widget.id, unit, x, y, false)
+
+        CUF:Fire("LoadPageDB")
 
         UpdateWidgetPositioningPopup()
     end)

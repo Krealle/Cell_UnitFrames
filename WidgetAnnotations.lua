@@ -22,6 +22,7 @@
 ---| FaderWidgetTable
 ---| HighlightWidgetTable
 ---| AltPowerBarWidgetTable
+---| PowerBarWidgetTable
 
 ---@alias Widget
 ---| NameTextWidget
@@ -45,13 +46,13 @@
 ---| FaderWidget
 ---| HighlightWidget
 ---| AltPowerBarWidget
+---| PowerBarWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
 ---@field healthBarLoss Texture
 ---@field deadTex Texture
 ---@field powerBar PowerBarWidget
----@field powerBarLoss Texture
 ---@field powerText PowerTextWidget
 ---@field nameText NameTextWidget
 ---@field targetHighlight HighlightWidget
@@ -324,6 +325,21 @@
 ---@field hideIfEmpty boolean
 ---@field hideIfFull boolean
 ---@field hideOutOfCombat boolean
+
+---@class PowerBarWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field size SizeOpt
+---@field sameWidthAsHealthBar boolean
+---@field sameHeightAsHealthBar boolean
+---@field position PositionOpt
+---@field anchorToParent boolean
+---@field detachedPosition PositionOpt
+---@field powerFilter boolean
+---@field hideIfEmpty boolean
+---@field hideIfFull boolean
+---@field hideOutOfCombat boolean
+---@field orientation GrowthOrientation
 
 -------------------------------------------------
 -- MARK: Misc Widgets

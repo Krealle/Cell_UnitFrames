@@ -65,6 +65,8 @@ Builder.MenuOptions = {
     IconTexture = 38,
     Highlight = 39,
     AltPower = 40,
+    PowerBar = 41,
+    DetachedAnchor = 42,
 }
 
 local FAILED = FAILED or "Failed"
@@ -732,6 +734,40 @@ function Builder:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVa
     anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, L.RelativeTo, nil, const.ANCHOR_POINTS,
         path or const.OPTION_KIND.POSITION .. "." .. const.OPTION_KIND.RELATIVE_POINT)
     self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
+
+    return anchorOpt
+end
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@param path string?
+---@param minVal number?
+---@param maxVal number?
+---@return DetachedAnchorOptions
+function Builder:CreateDetachedAnchorOptions(parent, widgetName, path, minVal, maxVal)
+    ---@class DetachedAnchorOptions: FullAnchorOptions
+    local anchorOpt = self:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVal)
+    anchorOpt.id = "DetachedAnchor"
+
+    local anchorToParent = self:CreateCheckBox(anchorOpt, widgetName, L["Anchor To"] .. " " .. L["Unit Button"],
+        const.OPTION_KIND.ANCHOR_TO_PARENT, L.DetachedAnchorEditMode)
+    self:AnchorRight(anchorToParent, anchorOpt.relativeDropdown)
+
+    local function toggleOptions(anchored)
+        anchorOpt.anchorDropdown:SetEnabled(anchored)
+        anchorOpt.relativeDropdown:SetEnabled(anchored)
+        anchorOpt.sliderX:SetEnabled(anchored)
+        anchorOpt.sliderY:SetEnabled(anchored)
+    end
+
+    anchorToParent:HookScript("OnClick", function()
+        toggleOptions(anchorToParent:GetChecked())
+    end)
+
+    local function LoadPageDB()
+        toggleOptions(DB.GetSelectedWidgetTable(widgetName).anchorToParent)
+    end
+    Handler:RegisterOption(LoadPageDB, widgetName, "DetachedAnchor_AnchorToggle")
 
     return anchorOpt
 end
@@ -2210,6 +2246,48 @@ function Builder:CreateAltPowerOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Power Bar
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return PowerBarOptions
+function Builder:CreatePowerBarOptions(parent, widgetName)
+    ---@class PowerBarOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.optionHeight = 190
+    f.id = "PowerBarOptions"
+
+    f.sizeOptions = self:CreateSizeOptions(f, widgetName, 1, 500)
+    f.sizeOptions:SetPoint("TOPLEFT", 0, -5)
+
+    f.sameWidthAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameWidthAsHealthBar,
+        const.OPTION_KIND.SAME_WIDTH_AS_HEALTH_BAR)
+    self:AnchorBelow(f.sameWidthAsHealthBar, f.sizeOptions)
+    f.sameHeightAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameHeightAsHealthBar,
+        const.OPTION_KIND.SAME_HEIGHT_AS_HEALTH_BAR)
+    self:AnchorBelowCB(f.sameHeightAsHealthBar, f.sameWidthAsHealthBar)
+
+    f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,
+        const.OPTION_KIND.HIDE_IF_EMPTY)
+    self:AnchorBelowCB(f.hideIfEmpty, f.sameHeightAsHealthBar)
+
+    f.hideIfFull = self:CreateCheckBox(f, widgetName, L.HideIfFull,
+        const.OPTION_KIND.HIDE_IF_FULL)
+    self:AnchorRightOfCB(f.hideIfFull, f.hideIfEmpty)
+
+    f.hideOutOfCombat = self:CreateCheckBox(f, widgetName, L.HideOutOfCombat,
+        const.OPTION_KIND.HIDE_OUT_OF_COMBAT)
+    self:AnchorBelowCB(f.hideOutOfCombat, f.hideIfEmpty)
+
+    f.powerFilter = self:CreateCheckBox(f, widgetName, L.PowerFilter,
+        const.OPTION_KIND.POWER_FILTER, L.PowerFilterTooltip)
+    self:AnchorBelowCB(f.powerFilter, f.hideOutOfCombat)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2221,6 +2299,7 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Anchor] = Builder.CreateAnchorOptions,
     [Builder.MenuOptions.ExtraAnchor] = Builder.CreateExtraAnchorOptions,
     [Builder.MenuOptions.FullAnchor] = Builder.CreateFullAnchorOptions,
+    [Builder.MenuOptions.DetachedAnchor] = Builder.CreateDetachedAnchorOptions,
     [Builder.MenuOptions.Font] = Builder.CreateFontOptions,
     [Builder.MenuOptions.HealthFormat] = Builder.CreateHealthFormatOptions,
     [Builder.MenuOptions.PowerFormat] = Builder.CreatePowerFormatOptions,
@@ -2255,4 +2334,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.IconTexture] = Builder.CreateIconTextureOptions,
     [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
     [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
+    [Builder.MenuOptions.PowerBar] = Builder.CreatePowerBarOptions,
 }

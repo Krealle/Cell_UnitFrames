@@ -765,6 +765,54 @@ Defaults.Widgets = {
             relativePoint = "TOPLEFT",
         },
     },
+    ---@type AltPowerBarWidgetTable
+    altPowerBar = {
+        enabled = false,
+        frameLevel = 10,
+        size = {
+            width = 200,
+            height = 5,
+        },
+        sameSizeAsHealthBar = true,
+        hideIfEmpty = false,
+        hideIfFull = false,
+        hideOutOfCombat = false,
+        position = {
+            point = "TOPLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "TOPLEFT",
+        },
+    },
+    ---@type PowerBarWidgetTable
+    powerBar = {
+        enabled = true,
+        frameLevel = 10,
+        powerFilter = false,
+        hideIfEmpty = false,
+        hideIfFull = false,
+        hideOutOfCombat = false,
+        orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
+        size = {
+            width = 200,
+            height = 5,
+        },
+        sameWidthAsHealthBar = true,
+        sameHeightAsHealthBar = false,
+        position = {
+            point = "BOTTOMLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+        anchorToParent = true,
+        detachedPosition = {
+            point = "BOTTOMLEFT",
+            offsetY = 0,
+            offsetX = 0,
+            relativePoint = "BOTTOMLEFT",
+        },
+    },
     ---@type HealAbsorbWidgetTable
     healAbsorb = {
         enabled = false,
@@ -788,25 +836,6 @@ Defaults.Widgets = {
         hover = true,
         target = true,
         size = 1,
-    },
-    ---@type AltPowerBarWidgetTable
-    altPowerBar = {
-        enabled = false,
-        frameLevel = 10,
-        size = {
-            width = 200,
-            height = 5,
-        },
-        sameSizeAsHealthBar = true,
-        hideIfEmpty = false,
-        hideIfFull = false,
-        hideOutOfCombat = false,
-        position = {
-            point = "TOPLEFT",
-            offsetY = 0,
-            offsetX = 0,
-            relativePoint = "TOPLEFT",
-        },
     },
 }
 
@@ -881,7 +910,6 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 
 ---@class UnitLayout
 ---@field enabled boolean
----@field powerSize number
 ---@field size Size
 ---@field position Position
 ---@field widgets WidgetTables
@@ -892,7 +920,6 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field anchorToParent boolean?
 ---@field anchorPosition ParentAnchor?
 ---@field barOrientation string
----@field powerFilter boolean
 ---@field spacing number?
 ---@field growthDirection GrowthOrientation?
 ---@field alwaysUpdate boolean?
@@ -905,20 +932,17 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 Defaults.Layouts = {
     player = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { -300, -250 },
         widgets = Util:CopyDeep(Defaults.Widgets),
         clickCast = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = "[petbattle] hide;show"
     },
     target = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { 300, -250 },
         widgets = {
@@ -940,19 +964,18 @@ Defaults.Layouts = {
             dispels = Defaults.Widgets.dispels,
             fader = Defaults.Widgets.fader,
             highlight = Defaults.Widgets.highlight,
+            powerBar = Defaults.Widgets.powerBar,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
         mirrorPlayer = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     focus = {
         enabled = false,
-        powerSize = 2,
         size = { 100, 30 },
         position = { -300, 125 },
         widgets = {
@@ -974,6 +997,7 @@ Defaults.Layouts = {
             dispels = Defaults.Widgets.dispels,
             fader = Defaults.Widgets.fader,
             highlight = Defaults.Widgets.highlight,
+            powerBar = Defaults.Widgets.powerBar,
         },
         anchorToParent = false,
         parent = CUF.constants.UNIT.PLAYER,
@@ -986,14 +1010,12 @@ Defaults.Layouts = {
         sameSizeAsPlayer = false,
         clickCast = false,
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     targettarget = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 40 },
         position = { 500, -250 },
         widgets = {
@@ -1004,6 +1026,7 @@ Defaults.Layouts = {
             raidIcon = Defaults.Widgets.raidIcon,
             fader = Defaults.Widgets.fader,
             highlight = Defaults.Widgets.highlight,
+            powerBar = Defaults.Widgets.powerBar,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1016,7 +1039,6 @@ Defaults.Layouts = {
             offsetY = 0
         },
         barOrientation = "horizontal",
-        powerFilter = false,
         alwaysUpdate = true,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
@@ -1024,7 +1046,6 @@ Defaults.Layouts = {
     },
     pet = {
         enabled = false,
-        powerSize = 2,
         size = { 200, 30 },
         position = { -300, -300 },
         widgets = {
@@ -1042,6 +1063,7 @@ Defaults.Layouts = {
             dispels = Defaults.Widgets.dispels,
             fader = Defaults.Widgets.fader,
             highlight = Defaults.Widgets.highlight,
+            powerBar = Defaults.Widgets.powerBar,
         },
         sameSizeAsPlayer = false,
         clickCast = false,
@@ -1054,14 +1076,12 @@ Defaults.Layouts = {
             offsetY = -5
         },
         barOrientation = "horizontal",
-        powerFilter = false,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
         visibility = ""
     },
     boss = {
         enabled = false,
-        powerSize = 4,
         spacing = 50,
         size = { 160, 40 },
         position = { 600, 300 },
@@ -1082,6 +1102,7 @@ Defaults.Layouts = {
             castBar = Defaults.Widgets_Boss.castBar,
             fader = Defaults.Widgets.fader,
             highlight = Defaults.Widgets.highlight,
+            powerBar = Defaults.Widgets.powerBar,
         },
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,

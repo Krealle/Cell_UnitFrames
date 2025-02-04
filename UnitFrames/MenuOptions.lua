@@ -25,7 +25,6 @@ local function AddLoadPageDB(unitPage)
         -- size
         unitPage.widthSlider:SetValue(pageDB.size[1])
         unitPage.heightSlider:SetValue(pageDB.size[2])
-        unitPage.powerSizeSlider:SetValue(pageDB.powerSize)
 
         -- same as player
         if not isPlayerPage then
@@ -38,11 +37,9 @@ local function AddLoadPageDB(unitPage)
         if isPlayerPage then
             unitPage.widthSlider:SetEnabled(true)
             unitPage.heightSlider:SetEnabled(true)
-            unitPage.powerSizeSlider:SetEnabled(true)
         else
             unitPage.widthSlider:SetEnabled(not isSameSizeAsPlayer)
             unitPage.heightSlider:SetEnabled(not isSameSizeAsPlayer)
-            unitPage.powerSizeSlider:SetEnabled(not isSameSizeAsPlayer)
         end
 
         -- copy from
@@ -70,8 +67,6 @@ local function AddLoadPageDB(unitPage)
         if pageId == "boss" then
             unitPage.spacingSlider:SetValue(pageDB.spacing)
             unitPage.growthDirectionDropdown:SetSelectedValue(pageDB.growthDirection)
-        else
-            unitPage.powerFilterCB:SetChecked(pageDB.powerFilter)
         end
 
         if pageId == "targettarget" then
@@ -137,7 +132,6 @@ local function AddUnitsToMenu()
                             CUF.DB.SelectedLayoutTable()[unit].sameSizeAsPlayer = checked
                             unitPage.widthSlider:SetEnabled(not checked)
                             unitPage.heightSlider:SetEnabled(not checked)
-                            unitPage.powerSizeSlider:SetEnabled(not checked)
 
                             -- update size and power
                             UpdateSize()
@@ -204,80 +198,9 @@ local function AddUnitsToMenu()
                 end)
                 unitPage.heightSlider:SetPoint("TOPLEFT", unitPage.widthSlider, 0, -55)
 
-                ---@type CellSlider
-                unitPage.powerSizeSlider = Cell:CreateSlider(L["Power Size"], unitPage.frame, 0, 100, 117, 1,
-                    function(value)
-                        CUF.DB.SelectedLayoutTable()[unit].powerSize = value
-                        if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                            CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, unit .. "-power")
-                        end
-                    end)
-                unitPage.powerSizeSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
-
-                if unit == "boss" then
-                    ---@type CellSlider
-                    unitPage.spacingSlider = Cell:CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
-                        function(value)
-                            CUF.DB.SelectedLayoutTable()[unit].spacing = value
-                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "spacing", unit)
-                            end
-                        end)
-                    unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 30, 0)
-
-                    ---@type CellDropdown
-                    unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 117)
-                    unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, 0, -55)
-                    unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
-
-                    for _, orientation in pairs(CUF.constants.GROWTH_ORIENTATION) do
-                        unitPage.growthDirectionDropdown:AddItem({
-                            ["text"] = L[orientation],
-                            ["value"] = orientation,
-                            ["onClick"] = function()
-                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = orientation
-                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
-                            end,
-                        })
-                    end
-
-                    if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
-                        CUF.HelpTips:Show(unitPage.spacingSlider, {
-                            text = string.format(L.HelpTip_BossFramePreview, L.Boss, L.player),
-                            dbKey = "bossFramePreview",
-                            buttonStyle = HelpTip.ButtonStyle.GotIt,
-                            alignment = HelpTip.Alignment.Left,
-                            targetPoint = HelpTip.Point.LeftEdgeCenter,
-                        }, CUF.unitButtons.boss.boss1)
-                    end
-                else
-                    ---@type CheckButton
-                    unitPage.powerFilterCB = Cell:CreateCheckButton(unitPage.frame,
-                        L.PowerFilter,
-                        function(checked)
-                            CUF.DB.SelectedLayoutTable()[unit].powerFilter = checked
-                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                                CUF:Fire("UpdateUnitButtons", unit)
-                            end
-                        end, L.PowerFilterTooltip)
-                    unitPage.powerFilterCB:SetPoint("TOPLEFT", unitPage.powerSizeSlider, "TOPRIGHT", 20, 0)
-
-                    if unit == "targettarget" then
-                        unitPage.alwaysUpdateCB = Cell:CreateCheckButton(unitPage.frame,
-                            L.AlwaysUpdate,
-                            function(checked)
-                                CUF.DB.SelectedLayoutTable()[unit].alwaysUpdate = checked
-                                if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
-                                    CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "alwaysUpdate", unit)
-                                end
-                            end, L.AlwaysUpdate, string.format(L.AlwaysUpdateUnitFrameTooltip, "0.25"))
-                        unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.powerFilterCB, 0, -30)
-                    end
-                end
-
                 ---@type CellDropdown
                 unitPage.healthBarColorTypeDropdown = Cell:CreateDropdown(unitPage.frame, 141)
-                unitPage.healthBarColorTypeDropdown:SetPoint("TOPLEFT", unitPage.heightSlider, 0, -55)
+                unitPage.healthBarColorTypeDropdown:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
                 unitPage.healthBarColorTypeDropdown:SetLabel(L["Health Bar Color"])
                 unitPage.healthBarColorTypeDropdown:SetItems({
                     {
@@ -360,6 +283,57 @@ local function AddUnitsToMenu()
 
                 CUF:SetTooltips(unitPage.healthBarColorTypeDropdown, "ANCHOR_TOPLEFT", 0, 3, L["Health Bar Color"],
                     L.ColorTypeTooltip)
+
+                if unit == "boss" then
+                    ---@type CellSlider
+                    unitPage.spacingSlider = Cell:CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
+                        function(value)
+                            CUF.DB.SelectedLayoutTable()[unit].spacing = value
+                            if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "spacing", unit)
+                            end
+                        end)
+                    unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "BOTTOMLEFT", 0, -35)
+
+                    ---@type CellDropdown
+                    unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 141)
+                    unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, "TOPRIGHT",
+                        30, 0)
+                    unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
+
+                    for _, orientation in pairs(CUF.constants.GROWTH_ORIENTATION) do
+                        unitPage.growthDirectionDropdown:AddItem({
+                            ["text"] = L[orientation],
+                            ["value"] = orientation,
+                            ["onClick"] = function()
+                                CUF.DB.SelectedLayoutTable()[unit].growthDirection = orientation
+                                CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "growthDirection", unit)
+                            end,
+                        })
+                    end
+
+                    if CUF.unitButtons.boss and CUF.unitButtons.boss.boss1 then
+                        CUF.HelpTips:Show(unitPage.spacingSlider, {
+                            text = string.format(L.HelpTip_BossFramePreview, L.Boss, L.player),
+                            dbKey = "bossFramePreview",
+                            buttonStyle = HelpTip.ButtonStyle.GotIt,
+                            alignment = HelpTip.Alignment.Left,
+                            targetPoint = HelpTip.Point.LeftEdgeCenter,
+                        }, CUF.unitButtons.boss.boss1)
+                    end
+                else
+                    if unit == "targettarget" then
+                        unitPage.alwaysUpdateCB = Cell:CreateCheckButton(unitPage.frame,
+                            L.AlwaysUpdate,
+                            function(checked)
+                                CUF.DB.SelectedLayoutTable()[unit].alwaysUpdate = checked
+                                if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
+                                    CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "alwaysUpdate", unit)
+                                end
+                            end, L.AlwaysUpdate, string.format(L.AlwaysUpdateUnitFrameTooltip, "0.25"))
+                        unitPage.alwaysUpdateCB:SetPoint("TOPLEFT", unitPage.heightSlider, 0, -30)
+                    end
+                end
 
                 AddLoadPageDB(unitPage)
                 return unitPage

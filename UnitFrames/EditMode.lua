@@ -615,6 +615,9 @@ local function CreateOverlayBox(button, unit, unitN, parentButton)
     if (not unitN or unitN == 1) and button:HasWidget("castBar") then
         CreateWidgetOverlayBox(button.widgets.castBar, unit, overlay)
     end
+    if (not unitN or unitN == 1) and button:HasWidget("powerBar") then
+        CreateWidgetOverlayBox(button.widgets.powerBar, unit, overlay)
+    end
 
     return overlay
 end

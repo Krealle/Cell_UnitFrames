@@ -177,6 +177,7 @@ L.healAbsorb = "Heal Absorb"
 L.totems = "Totems"
 L.highlight = "Highlight"
 L.altPowerBar = "Alt Power Bar"
+L.powerBar = "Power Bar"
 
 -- Misc
 L.Frame = "Frame"
@@ -196,6 +197,8 @@ L.texture = "Texture"
 L.VerticalFill = "Vertical Fill"
 L.HideOutOfCombat = "Hide Out of Combat"
 L.SameSizeAsHealthBar = "Same Size As Health Bar"
+L.SameHeightAsHealthBar = "Same Height As Health Bar"
+L.SameWidthAsHealthBar = "Same Width As Health Bar"
 L.EditingLayout = "Editing Layout"
 L.MirrorPlayer = "Mirror Player"
 L.Positioning = "Positioning"
@@ -249,6 +252,7 @@ L.TimeToHoldTooltip = "Time in seconds to hold the Cast Bar after the spell has 
 L.Label = "Label"
 L.InterruptedLabelTooltip = [[%s - Type (%s or %s)
 %s - Spell Name]]
+L.DetachedAnchorEditMode = [[Detached positioning changed in Edit Mode]]
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

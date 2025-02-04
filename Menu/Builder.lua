@@ -2227,10 +2227,10 @@ function Builder:CreatePowerBarOptions(parent, widgetName)
     f.sizeOptions:SetPoint("TOPLEFT", 0, -5)
 
     f.sameWidthAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameWidthAsHealthBar,
-        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+        const.OPTION_KIND.SAME_WIDTH_AS_HEALTH_BAR)
     self:AnchorBelow(f.sameWidthAsHealthBar, f.sizeOptions)
     f.sameHeightAsHealthBar = self:CreateCheckBox(f, widgetName, L.SameHeightAsHealthBar,
-        const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR)
+        const.OPTION_KIND.SAME_HEIGHT_AS_HEALTH_BAR)
     self:AnchorRightOfCB(f.sameHeightAsHealthBar, f.sameWidthAsHealthBar)
 
     f.hideIfEmpty = self:CreateCheckBox(f, widgetName, L.HideIfEmpty,

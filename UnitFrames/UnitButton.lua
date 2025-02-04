@@ -124,12 +124,6 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
         U:UpdateUnitButtonPosition(unit, button)
     end
 
-    if kind == "powerFilter" then
-        if button.widgets.powerBar.enabled then
-            button.widgets.powerBar.Update(button)
-        end
-    end
-
     if not kind or kind == "alwaysUpdate" then
         button.alwaysUpdate = layout[unit].alwaysUpdate
     end

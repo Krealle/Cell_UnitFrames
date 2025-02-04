@@ -89,8 +89,10 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     --[[ if not setting or setting == const.OPTION_KIND.COLOR then
         widget:UpdateColors()
     end ]]
-    if not setting or setting == const.OPTION_KIND.SAME_SIZE_AS_HEALTH_BAR then
-        widget.sameSizeAsHealthBar = styleTable.sameSizeAsHealthBar
+    if not setting or setting == const.OPTION_KIND.SAME_HEIGHT_AS_HEALTH_BAR
+        or setting == const.OPTION_KIND.SAME_WIDTH_AS_HEALTH_BAR then
+        widget.sameWidthAsHealthBar = styleTable.sameWidthAsHealthBar
+        widget.sameHeightAsHealthBar = styleTable.sameHeightAsHealthBar
         widget:SetSizeStyle(styleTable.size)
     end
     if not setting or setting == const.OPTION_KIND.SIZE then
@@ -357,14 +359,12 @@ local function SetSizeStyle(self, sizeSize)
     -- account for border such that we can properly make 1 pixel power bar
     -- TODO: this should be prolly be changed in the future as this problem extends
     -- across all widgets
-    local height = (CELL_BORDER_SIZE * 2) + sizeSize.height
+    local height = self.sameHeightAsHealthBar and self._owner:GetHeight()
+        or ((CELL_BORDER_SIZE * 2) + sizeSize.height)
+    local width = self.sameWidthAsHealthBar and self._owner:GetWidth()
+        or ((CELL_BORDER_SIZE * 2) + sizeSize.width)
 
-    if self.sameSizeAsHealthBar then
-        self:SetSize(self._owner:GetWidth(), height)
-    else
-        local width = (CELL_BORDER_SIZE * 2) + sizeSize.width
-        self:SetSize(width, height)
-    end
+    self:SetSize(width, height)
 end
 
 -------------------------------------------------
@@ -379,7 +379,8 @@ function W:CreatePowerBar(button)
     powerBar._owner = button
     powerBar.enabled = true
     powerBar.id = const.WIDGET_KIND.POWER_BAR
-    powerBar.sameSizeAsHealthBar = true
+    powerBar.sameWidthAsHealthBar = true
+    powerBar.sameHeightAsHealthBar = false
     powerBar.anchorToParent = true
     powerBar.powerFilter = true
 

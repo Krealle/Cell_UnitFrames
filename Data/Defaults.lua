@@ -796,7 +796,8 @@ Defaults.Widgets = {
             width = 200,
             height = 5,
         },
-        sameSizeAsHealthBar = true,
+        sameWidthAsHealthBar = true,
+        sameHeightAsHealthBar = false,
         position = {
             point = "BOTTOMLEFT",
             offsetY = 0,

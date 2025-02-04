@@ -330,7 +330,8 @@
 ---@field enabled boolean
 ---@field frameLevel number
 ---@field size SizeOpt
----@field sameSizeAsHealthBar boolean
+---@field sameWidthAsHealthBar boolean
+---@field sameHeightAsHealthBar boolean
 ---@field position PositionOpt
 ---@field anchorToParent boolean
 ---@field detachedPosition PositionOpt

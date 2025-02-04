@@ -188,6 +188,7 @@ const.OPTION_KIND = {
     HOVER                     = "hover",
     SAME_WIDTH_AS_HEALTH_BAR  = "sameWidthAsHealthBar",
     SAME_HEIGHT_AS_HEALTH_BAR = "sameHeightAsHealthBar",
+    POWER_FILTER              = "powerFilter",
 }
 
 ---@enum AURA_OPTION_KIND

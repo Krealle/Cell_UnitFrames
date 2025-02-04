@@ -2220,7 +2220,7 @@ end
 function Builder:CreatePowerBarOptions(parent, widgetName)
     ---@class PowerBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 150
+    f.optionHeight = 190
     f.id = "PowerBarOptions"
 
     f.sizeOptions = self:CreateSizeOptions(f, widgetName, 1, 500)
@@ -2244,6 +2244,10 @@ function Builder:CreatePowerBarOptions(parent, widgetName)
     f.hideOutOfCombat = self:CreateCheckBox(f, widgetName, L.HideOutOfCombat,
         const.OPTION_KIND.HIDE_OUT_OF_COMBAT)
     self:AnchorBelowCB(f.hideOutOfCombat, f.hideIfEmpty)
+
+    f.powerFilter = self:CreateCheckBox(f, widgetName, L.PowerFilter,
+        const.OPTION_KIND.POWER_FILTER, L.PowerFilterTooltip)
+    self:AnchorBelowCB(f.powerFilter, f.hideOutOfCombat)
 
     return f
 end

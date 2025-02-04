@@ -112,6 +112,9 @@ function W.UpdatePowerBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.ORIENTATION then
         widget:SetOrientationStyle(styleTable.orientation)
     end
+    if not setting or setting == const.OPTION_KIND.POWER_FILTER then
+        widget.powerFilter = styleTable.powerFilter
+    end
 
     if widget.enabled then
         widget.Update(button)
@@ -406,7 +409,7 @@ function W:CreatePowerBar(button)
     powerBar.sameWidthAsHealthBar = true
     powerBar.sameHeightAsHealthBar = false
     powerBar.anchorToParent = true
-    powerBar.powerFilter = true
+    powerBar.powerFilter = false
 
     powerBar.active = false
     powerBar.hideOutOfCombat = false

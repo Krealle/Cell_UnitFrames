@@ -260,6 +260,7 @@ end
 ---@param button CUFUnitButton
 local function UpdatePowerType(button)
     local powerBar = button.widgets.powerBar
+    if not powerBar.enabled then return end
     powerBar.UpdatePowerMax(button)
 
     local unit = button.states.displayedUnit

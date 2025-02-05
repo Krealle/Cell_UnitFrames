@@ -190,6 +190,8 @@ const.OPTION_KIND = {
     SAME_HEIGHT_AS_HEALTH_BAR = "sameHeightAsHealthBar",
     POWER_FILTER              = "powerFilter",
     ANCHOR_TO_PARENT          = "anchorToParent",
+    FADE_IN_TIMER             = "fadeInTimer",
+    FADE_OUT_TIMER            = "fadeOutTimer",
 }
 
 ---@enum AURA_OPTION_KIND

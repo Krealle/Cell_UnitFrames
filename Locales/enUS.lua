@@ -253,6 +253,8 @@ L.Label = "Label"
 L.InterruptedLabelTooltip = [[%s - Type (%s or %s)
 %s - Spell Name]]
 L.DetachedAnchorEditMode = [[Detached positioning changed in Edit Mode]]
+L.FadeInTimer = "Fade In Timer"
+L.FadeOutTimer = "Fade Out Timer"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

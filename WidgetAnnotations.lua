@@ -287,6 +287,8 @@
 ---@field interruptedLabel string
 ---@field showInterruptedSpell boolean
 ---@field orientation GrowthOrientation
+---@field fadeInTimer number
+---@field fadeOutTimer number
 
 ---@class CastBarSparkOpt
 ---@field enabled boolean

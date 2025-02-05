@@ -103,6 +103,10 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     if not setting or setting == const.OPTION_KIND.ORIENTATION then
         castBar:SetOrientationStyle(styleTable.orientation)
     end
+    if not setting or setting == const.OPTION_KIND.FADE_IN_TIMER
+        or setting == const.OPTION_KIND.FADE_OUT_TIMER then
+        castBar:SetAnimationStyle(styleTable.fadeInTimer, styleTable.fadeOutTimer)
+    end
 
     castBar.Update(button)
 end
@@ -112,6 +116,38 @@ Handler:RegisterWidget(W.UpdateCastBarWidget, const.WIDGET_KIND.CAST_BAR)
 -------------------------------------------------
 -- MARK: Functions
 -------------------------------------------------
+
+---@param self CastBarWidget
+local function ShowCastBar(self)
+    if not self.useFadeIn then
+        if self.fadeOut:IsPlaying() then
+            self.fadeOut:Stop()
+        end
+
+        self:Show()
+    else
+        if self:IsVisible() and not self.fadeOut:IsPlaying() then return end
+
+        self.fadeIn:Play()
+        if self.fadeOut:IsPlaying() then
+            self.fadeOut:Stop()
+        end
+    end
+end
+
+---@param self CastBarWidget
+local function HideCastBar(self)
+    self:ResetAttributes()
+
+    if not self.useFadeOut then
+        self:Hide()
+    else
+        self.fadeOut:Play()
+        if self.fadeIn:IsPlaying() then
+            self.fadeIn:Stop()
+        end
+    end
+end
 
 ---@param self CastBarWidget
 local function ResetAttributes(self)
@@ -222,8 +258,7 @@ function CastStart(button, event, unit, castGUID)
     end
 
     if (not name) or (castBar.onlyShowInterrupt and notInterruptible) then
-        castBar:ResetAttributes()
-        castBar:Hide()
+        castBar:HideCastBar()
 
         return
     end
@@ -269,7 +304,7 @@ function CastStart(button, event, unit, castGUID)
 
     castBar:UpdateElements()
 
-    castBar:Show()
+    castBar:ShowCastBar()
 
     if castBar.empowering then
         castBar:AddStages(numStages)
@@ -300,8 +335,7 @@ function CastUpdate(button, event, unit, castID, spellID)
     end
 
     if castBar.onlyShowInterrupt and notInterruptible then
-        castBar:ResetAttributes()
-        castBar:Hide()
+        castBar:HideCastBar()
 
         return
     end
@@ -410,21 +444,21 @@ end
 local function onUpdate(self, elapsed)
     self.elapsed = (self.elapsed or 0) + elapsed
 
+    if self.fadeOut:IsPlaying() then return end
+
     if (self.casting or self.channeling or self.empowering) then
         local isCasting = self.casting or self.empowering
         if (isCasting) then
             self.duration = self.duration + elapsed
             if (self.duration >= self.max) then
-                self:ResetAttributes()
-                self:Hide()
+                self:HideCastBar()
 
                 return
             end
         else
             self.duration = self.duration - elapsed
             if (self.duration <= 0) then
-                self:ResetAttributes()
-                self:Hide()
+                self:HideCastBar()
 
                 return
             end
@@ -480,8 +514,7 @@ local function onUpdate(self, elapsed)
     elseif self.holdTime > 0 then
         self.holdTime = self.holdTime - elapsed
     else
-        self:ResetAttributes()
-        self:Hide()
+        self:HideCastBar()
     end
 end
 
@@ -927,6 +960,21 @@ local function SetOrientationStyle(self, orientation)
     self:SetSparkWidth()
 end
 
+---@param self CastBarWidget
+---@param fadeInTimer number
+---@param fadeOutTimer number
+local function SetAnimationStyle(self, fadeInTimer, fadeOutTimer)
+    self.useFadeIn = fadeInTimer > 0
+    self.useFadeOut = fadeOutTimer > 0
+
+    if self.useFadeIn then
+        self:SetFadeInDuration(fadeInTimer)
+    end
+    if self.useFadeOut then
+        self:SetFadeOutDuration(fadeOutTimer)
+    end
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -963,6 +1011,8 @@ function W:CreateCastBar(button)
     castBar.useClassColor = false
     castBar.onlyShowInterrupt = false
     castBar.orientation = const.GROWTH_ORIENTATION.LEFT_TO_RIGHT
+    castBar.useFadeIn = false
+    castBar.useFadeOut = false
 
     castBar.timeToHold = 0
     castBar.holdTime = 0
@@ -1044,6 +1094,34 @@ function W:CreateCastBar(button)
     local border = CreateFrame("Frame", nil, castBar, "BackdropTemplate")
     border:SetFrameLevel(statusBar:GetFrameLevel() + 1)
 
+    castBar.fadeIn = castBar:CreateAnimationGroup()
+    local fadeIn = castBar.fadeIn:CreateAnimation("alpha")
+    fadeIn:SetFromAlpha(0)
+    fadeIn:SetToAlpha(1)
+    fadeIn:SetDuration(0.5)
+    fadeIn:SetSmoothing("OUT")
+    fadeIn:SetScript("OnPlay", function()
+        castBar:Show()
+    end)
+    ---@param duration number
+    castBar.SetFadeInDuration = function(_, duration)
+        fadeIn:SetDuration(duration)
+    end
+
+    castBar.fadeOut = castBar:CreateAnimationGroup()
+    local fadeOut = castBar.fadeOut:CreateAnimation("alpha")
+    fadeOut:SetFromAlpha(1)
+    fadeOut:SetToAlpha(0)
+    fadeOut:SetDuration(0.5)
+    fadeOut:SetSmoothing("IN")
+    fadeOut:SetScript("OnFinished", function()
+        castBar:Hide()
+    end)
+    ---@param duration number
+    castBar.SetFadeOutDuration = function(_, duration)
+        fadeOut:SetDuration(duration)
+    end
+
     castBar.background = background
     castBar.spark = spark
     castBar.timerText = timerText
@@ -1073,6 +1151,8 @@ function W:CreateCastBar(button)
     castBar.ResetAttributes = ResetAttributes
     castBar.UpdateElements = UpdateElements
     castBar.RepointCastBar = RepointCastBar
+    castBar.ShowCastBar = ShowCastBar
+    castBar.HideCastBar = HideCastBar
 
     castBar.SetWidgetSize = function(...)
         W.SetWidgetSize(...)
@@ -1095,6 +1175,7 @@ function W:CreateCastBar(button)
     castBar.SetSparkWidth = SetSparkWidth
     castBar.SetSpellWidth = CUF.Util.UpdateTextWidth
     castBar.SetOrientationStyle = SetOrientationStyle
+    castBar.SetAnimationStyle = SetAnimationStyle
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CAST_BAR, W.CreateCastBar)

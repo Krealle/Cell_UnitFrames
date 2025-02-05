@@ -1612,7 +1612,7 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     ---@class CastBarOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "CastBarOptions"
-    f.optionHeight = 195
+    f.optionHeight = 245
 
     -- Title
     f.title = self:CreateOptionTitle(f, "General")
@@ -1632,6 +1632,7 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
         const.OPTION_KIND.ONLY_SHOW_INTERRUPT)
     self:AnchorBelowCB(f.onlyShowInterruptableCB, f.orientation)
 
+    -- Fourth Row
     f.timeToHoldSlider = self:CreateSlider(f, widgetName, L.TimeToHold, nil, 0, 10, const.OPTION_KIND.TIME_TO_HOLD, false,
         0.1)
     self:AnchorBelow(f.timeToHoldSlider, f.onlyShowInterruptableCB)
@@ -1641,6 +1642,15 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     self:AnchorRight(f.interruptedLabelEditBox, f.timeToHoldSlider)
     CUF:SetTooltips(f.interruptedLabelEditBox, "ANCHOR_TOPLEFT", 0, 3, L.Label,
         string.format(L.InterruptedLabelTooltip, "%t", INTERRUPTED, FAILED, "%s"))
+
+    -- Fifth Row
+    f.fadeIn = self:CreateSlider(f, widgetName, L.FadeInTimer, nil, 0, 10, const.OPTION_KIND.FADE_IN_TIMER, false,
+        0.1)
+    self:AnchorBelow(f.fadeIn, f.timeToHoldSlider)
+
+    f.fadeOut = self:CreateSlider(f, widgetName, L.FadeOutTimer, nil, 0, 10, const.OPTION_KIND.FADE_OUT_TIMER, false,
+        0.1)
+    self:AnchorRight(f.fadeOut, f.fadeIn)
 
     local function LoadPageDB()
         f.onlyShowInterruptableCB:SetEnabled(CUF.vars.selectedUnit ~= const.UNIT.PLAYER)

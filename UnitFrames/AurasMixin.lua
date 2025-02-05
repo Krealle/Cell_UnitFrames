@@ -6,9 +6,6 @@ local LibDispel = LibStub("LibDispel")
 ---@class CUF.Mixin
 local Mixin = CUF.Mixin
 
-local Cell = CUF.Cell
-local I = Cell.iFuncs
-
 local const = CUF.constants
 
 local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID

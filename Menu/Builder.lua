@@ -2150,7 +2150,7 @@ function Builder:CreateDispelsOptions(parent, widgetName)
         ["Bleed"], const.OPTION_KIND.BLEED)
     self:AnchorRightOfCB(bleed, poison)
 
-    local enrage = self:CreateCheckBox(f, widgetName, L["Enrage"], const.OPTION_KIND.ENRAGE)
+    local enrage = self:CreateCheckBox(f, widgetName, L.Enrage, const.OPTION_KIND.ENRAGE)
     self:AnchorRightOfCB(enrage, bleed)
 
     -- Icon Style

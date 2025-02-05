@@ -85,6 +85,8 @@ UnitFrames/UnitButton.lua
 UnitFrames/OnLoad.lua
 UnitFrames/MenuOptions.lua
 UnitFrames/EditMode.lua
+UnitFrames/EventMixin.lua
+UnitFrames/AurasMixin.lua
 
 API/Common.lua
 API/CustomAnchors.lua

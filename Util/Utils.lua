@@ -144,6 +144,15 @@ function Util:SafeImport(imported, current)
     end
 end
 
+--- Deep copies mixins into an existing object
+---@param object table
+---@param ... table[]
+function Util:Mixin(object, ...)
+    for i = 1, select("#", ...) do
+        Mixin(object, Util:CopyDeep(select(i, ...)))
+    end
+end
+
 -------------------------------------------------
 -- MARK: IterateAllUnitButtons
 -------------------------------------------------

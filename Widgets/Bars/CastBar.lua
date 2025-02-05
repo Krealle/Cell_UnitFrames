@@ -551,7 +551,7 @@ local function Enable(self)
     button:AddEventListener("UNIT_SPELLCAST_INTERRUPTED", CastFail)
 
     if button.states.unit == "player" then
-        button:AddEventListener("UNIT_SPELLCAST_SENT", SpellCastSent)
+        button:AddEventListener("UNIT_SPELLCAST_SENT", SpellCastSent, true)
     end
 
     if CUF.vars.isRetail and (button.states.class == "EVOKER"

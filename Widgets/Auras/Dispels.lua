@@ -144,7 +144,6 @@ end
 local function Enable(self)
     self._owner:RegisterAuraCallback("debuffs", self.Update)
 
-    self:UpdateHighlightStyle("current+")
     return true
 end
 

@@ -789,7 +789,7 @@ Defaults.Widgets = {
     ---@type PowerBarWidgetTable
     powerBar = {
         enabled = true,
-        frameLevel = 10,
+        frameLevel = 15,
         powerFilter = false,
         hideIfEmpty = false,
         hideIfFull = false,

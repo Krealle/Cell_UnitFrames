@@ -192,6 +192,7 @@ const.OPTION_KIND = {
     ANCHOR_TO_PARENT          = "anchorToParent",
     FADE_IN_TIMER             = "fadeInTimer",
     FADE_OUT_TIMER            = "fadeOutTimer",
+    ENRAGE                    = "enrage",
 }
 
 ---@enum AURA_OPTION_KIND

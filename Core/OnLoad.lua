@@ -33,6 +33,13 @@ local function OnCellInitialUpdateLayout(_layout)
     CUFMainFrame:SetIgnoreParentScale(true)
     CUF.PixelPerfect.SetPixelScale(CUFMainFrame)
 
+    -- TODO: This is kinda non-ideal and should be looked into
+    -- Mixin in some extra bleeds/enrages
+    -- These values can be overwritten by the user via snippets
+    local LibDispel = LibStub("LibDispel")
+    Mixin(LibDispel.bleed, CUF.Defaults.Values.extraBleeds)
+    Mixin(LibDispel.enrage, CUF.Defaults.Values.extraEnrages)
+
     -- Init Unit Buttons
     CUF.uFuncs:InitUnitButtons()
     CUF:Fire("UpdateUnitButtons")

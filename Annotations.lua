@@ -195,6 +195,7 @@ HelpTip.ButtonStyle = {
 
 ---@class AuraData
 ---@field refreshing boolean
+---@field isDispellable boolean
 
 ---@enum AuraUtil.AuraFilters
 AuraUtil.AuraFilters = {

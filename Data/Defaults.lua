@@ -13,6 +13,21 @@ local Defaults = CUF.Defaults
 Defaults.Values = {
     maxAuraIcons = 20,
     maxLevel = 80,
+    extraBleeds = {
+        [470632] = true, -- 撕裂 - Rend
+        [470154] = true, -- 锁定 - Latched On
+        [469700] = true, -- 刺伤 - Stab
+        [468934] = true, -- 斜掠 - Rake
+        [468885] = true, -- 割裂 - Rip
+        [468873] = true, -- 痛击 - Thrash
+        [465089] = true, -- 霰弹爆破 - Shrapnel Blast
+        [464358] = true, -- 撕裂 - Rend
+        [464181] = true, -- 流血 - Bleeding
+        [463227] = true, -- 破片入体 - Splintered
+    },
+    extraEnrages = {
+        --[61573] = "TEST",
+    },
 }
 
 Defaults.Options = {}
@@ -531,6 +546,7 @@ Defaults.Widgets = {
         magic = true,
         poison = true,
         bleed = true,
+        enrage = true,
         iconStyle = "none",
         size = 12,
         position = {

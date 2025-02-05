@@ -232,6 +232,7 @@
 ---@field magic boolean
 ---@field poison boolean
 ---@field bleed boolean
+---@field enrage boolean
 ---@field iconStyle "none" | "blizzard" | "rhombus"
 ---@field size number
 ---@field position PositionOpt

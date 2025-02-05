@@ -255,6 +255,7 @@ L.InterruptedLabelTooltip = [[%s - Type (%s or %s)
 L.DetachedAnchorEditMode = [[Detached positioning changed in Edit Mode]]
 L.FadeInTimer = "Fade In Timer"
 L.FadeOutTimer = "Fade Out Timer"
+L.Enrage = "Enrage"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

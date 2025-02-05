@@ -28,6 +28,8 @@ CUF.API = {}
 CUF.PixelPerfect = {}
 ---@class CUF.Compat
 CUF.Compat = {}
+---@class CUF.Mixin
+CUF.Mixin = {}
 
 ---@class CUF.vars
 ---@field selectedLayout string

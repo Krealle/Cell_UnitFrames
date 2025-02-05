@@ -531,6 +531,7 @@ Defaults.Widgets = {
         magic = true,
         poison = true,
         bleed = true,
+        enrage = true,
         iconStyle = "none",
         size = 12,
         position = {

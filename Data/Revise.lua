@@ -188,6 +188,19 @@ function DB:Revise()
 
             CUF:UnregisterCallback("AddonLoaded", "AddonLoaded_Revise_17")
         end)
+
+        IterateUnitLayouts(function(layout)
+            if not layout.widgets.castBar
+                or layout.widgets.castBar.reverse == nil then
+                return
+            end
+
+            if layout.widgets.castBar.reverse then
+                layout.widgets.castBar.orientation = CUF.constants.GROWTH_ORIENTATION.RIGHT_TO_LEFT
+            end
+
+            layout.widgets.castBar.reverse = nil
+        end)
     end
 
     ShowChangelog()

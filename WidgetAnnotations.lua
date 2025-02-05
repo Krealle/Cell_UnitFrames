@@ -270,7 +270,6 @@
 ---@field anchorToParent boolean
 ---@field detachedPosition PositionOpt
 ---@field size SizeOpt
----@field reverse boolean
 ---@field timer BigFontOpt
 ---@field timerFormat CastBarTimerFormat
 ---@field spell BigFontOpt
@@ -287,6 +286,7 @@
 ---@field timeToHold number
 ---@field interruptedLabel string
 ---@field showInterruptedSpell boolean
+---@field orientation GrowthOrientation
 
 ---@class CastBarSparkOpt
 ---@field enabled boolean

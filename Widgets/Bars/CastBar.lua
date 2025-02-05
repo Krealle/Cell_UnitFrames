@@ -91,10 +91,6 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
         castBar:SetIconOptions(styleTable.icon)
     end
 
-    if not setting or setting == const.OPTION_KIND.REVERSE then
-        castBar:SetFillStyle(styleTable.reverse)
-    end
-
     if not setting or setting == const.OPTION_KIND.SPELL_WIDTH then
         castBar.spellText.width = styleTable.spellWidth
     end
@@ -103,6 +99,9 @@ function W.UpdateCastBarWidget(button, unit, setting, subSetting, ...)
     end
     if not setting or setting == const.OPTION_KIND.ANCHOR_TO_PARENT then
         castBar:SetPosition(styleTable)
+    end
+    if not setting or setting == const.OPTION_KIND.ORIENTATION then
+        castBar:SetOrientationStyle(styleTable.orientation)
     end
 
     castBar.Update(button)
@@ -194,17 +193,6 @@ local function RepointCastBar(self)
         P.Point(bar, "TOPLEFT", self, "TOPLEFT")
         P.Point(bar, "BOTTOMRIGHT", icon, "BOTTOMLEFT")
     end
-end
-
----@param self CastBarWidget
----@param reversed boolean
-local function SetFillStyle(self, reversed)
-    if reversed then
-        self.statusBar:SetFillStyle("REVERSE")
-    else
-        self.statusBar:SetFillStyle("STANDARD")
-    end
-    self:SetSparkWidth()
 end
 
 ---@param button CUFUnitButton
@@ -808,19 +796,35 @@ local function SetFontPosition(self, styleTable)
 end
 
 ---@param self CastBarWidget
----@param width number?
-local function SetSparkWidth(self, width)
+---@param size number?
+local function SetSparkWidth(self, size)
     local spark = self.spark
-    if spark.enabled then
-        -- Repoint
-        local relativeSide = self.statusBar:GetReverseFill() and "LEFT" or "RIGHT"
-        P.ClearPoints(spark)
-        P.Point(spark, "TOP", self.statusBar:GetStatusBarTexture(), "TOP" .. relativeSide)
-        P.Point(spark, "BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOM" .. relativeSide)
+    if size then
+        spark.size = size
+    end
 
-        -- Resize
-        if width then
-            P.Width(spark, width)
+    if spark.enabled then
+        P.ClearPoints(spark)
+        if self.orientation == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
+            P.Point(spark, "TOP", self.statusBar:GetStatusBarTexture(), "TOPRIGHT")
+            P.Point(spark, "BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+
+            P.Width(spark, spark.size)
+        elseif self.orientation == const.GROWTH_ORIENTATION.RIGHT_TO_LEFT then
+            P.Point(spark, "TOP", self.statusBar:GetStatusBarTexture(), "TOPLEFT")
+            P.Point(spark, "BOTTOM", self.statusBar:GetStatusBarTexture(), "BOTTOMLEFT")
+
+            P.Width(spark, spark.size)
+        elseif self.orientation == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
+            P.Point(spark, "RIGHT", self.statusBar:GetStatusBarTexture(), "TOPRIGHT")
+            P.Point(spark, "LEFT", self.statusBar:GetStatusBarTexture(), "TOPLEFT")
+
+            P.Height(spark, spark.size)
+        elseif const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
+            P.Point(spark, "RIGHT", self.statusBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+            P.Point(spark, "LEFT", self.statusBar:GetStatusBarTexture(), "BOTTOMLEFT")
+
+            P.Height(spark, spark.size)
         end
 
         spark:Show()
@@ -901,6 +905,28 @@ local function SetIconStyle(self, styleTable)
     self:RepointCastBar()
 end
 
+---@param self CastBarWidget
+---@param orientation GrowthOrientation
+local function SetOrientationStyle(self, orientation)
+    self.orientation = orientation
+
+    if orientation == const.GROWTH_ORIENTATION.LEFT_TO_RIGHT then
+        self.statusBar:SetOrientation("HORIZONTAL")
+        self.statusBar:SetFillStyle("STANDARD")
+    elseif orientation == const.GROWTH_ORIENTATION.RIGHT_TO_LEFT then
+        self.statusBar:SetOrientation("HORIZONTAL")
+        self.statusBar:SetFillStyle("REVERSE")
+    elseif orientation == const.GROWTH_ORIENTATION.BOTTOM_TO_TOP then
+        self.statusBar:SetOrientation("VERTICAL")
+        self.statusBar:SetFillStyle("STANDARD")
+    elseif orientation == const.GROWTH_ORIENTATION.TOP_TO_BOTTOM then
+        self.statusBar:SetOrientation("VERTICAL")
+        self.statusBar:SetFillStyle("REVERSE")
+    end
+
+    self:SetSparkWidth()
+end
+
 -------------------------------------------------
 -- MARK: Create
 -------------------------------------------------
@@ -936,6 +962,7 @@ function W:CreateCastBar(button)
     castBar.nonInterruptibleColor = { 1, 1, 0, 0.25 }
     castBar.useClassColor = false
     castBar.onlyShowInterrupt = false
+    castBar.orientation = const.GROWTH_ORIENTATION.LEFT_TO_RIGHT
 
     castBar.timeToHold = 0
     castBar.holdTime = 0
@@ -991,6 +1018,7 @@ function W:CreateCastBar(button)
     spark:SetBlendMode("BLEND")
     spark:SetTexture("Interface\\Buttons\\WHITE8X8")
     spark.enabled = false
+    spark.size = 4
 
     ---@class TimerText: FontString
     local timerText = topLevelFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
@@ -1065,8 +1093,8 @@ function W:CreateCastBar(button)
     castBar.SetIconOptions = SetIconStyle
     castBar.SetSparkColor = SetSparkColor
     castBar.SetSparkWidth = SetSparkWidth
-    castBar.SetFillStyle = SetFillStyle
     castBar.SetSpellWidth = CUF.Util.UpdateTextWidth
+    castBar.SetOrientationStyle = SetOrientationStyle
 end
 
 W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.CAST_BAR, W.CreateCastBar)

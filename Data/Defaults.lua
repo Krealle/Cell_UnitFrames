@@ -681,6 +681,7 @@ Defaults.Widgets = {
         timeToHold = 0,
         interruptedLabel = "%t",
         showInterruptedSpell = false,
+        orientation = CUF.constants.GROWTH_ORIENTATION.LEFT_TO_RIGHT,
         position = {
             point = "TOPLEFT",
             offsetY = -30,
@@ -697,7 +698,6 @@ Defaults.Widgets = {
             width = 200,
             height = 30,
         },
-        reverse = false,
         timer = {
             enabled = true,
             size = 16,

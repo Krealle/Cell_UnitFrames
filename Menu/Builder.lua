@@ -1622,15 +1622,15 @@ function Builder:CreateCastBarGeneralOptions(parent, widgetName)
     self:AnchorBelow(f.sizeOptions, f.title)
 
     -- Third Row
-    f.reverseCB = self:CreateCheckBox(f, widgetName, L.Reverse, const.OPTION_KIND.REVERSE)
-    self:AnchorBelow(f.reverseCB, f.sizeOptions.sizeWidthSlider)
+    f.orientation = self:CreateOrientationOptions(f, widgetName)
+    self:AnchorBelow(f.orientation, f.sizeOptions.sizeWidthSlider)
 
     f.classColorCB = self:CreateCheckBox(f, widgetName, L.UseClassColor, const.OPTION_KIND.USE_CLASS_COLOR)
-    self:AnchorRightOfCB(f.classColorCB, f.reverseCB)
+    self:AnchorRight(f.classColorCB, f.orientation)
 
     f.onlyShowInterruptableCB = self:CreateCheckBox(f, widgetName, L.OnlyShowInterruptableCast,
         const.OPTION_KIND.ONLY_SHOW_INTERRUPT)
-    self:AnchorBelowCB(f.onlyShowInterruptableCB, f.reverseCB)
+    self:AnchorBelowCB(f.onlyShowInterruptableCB, f.orientation)
 
     f.timeToHoldSlider = self:CreateSlider(f, widgetName, L.TimeToHold, nil, 0, 10, const.OPTION_KIND.TIME_TO_HOLD, false,
         0.1)

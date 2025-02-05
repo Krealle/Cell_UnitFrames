@@ -40,6 +40,9 @@ function EventMixin:_OnEvent(event, unit, ...)
     end
 end
 
+-- Simple cache for unit-less events, to prevent trying to register them multiple times.
+local unitLessEvents = {}
+
 --- Register an event listener for the button.
 ---@param event WowEvent
 ---@param callback EventCallbackFn
@@ -47,7 +50,20 @@ end
 function EventMixin:AddEventListener(event, callback, unitLess)
     if not self.eventHandlers[event] then
         self.eventHandlers[event] = {}
-        self:RegisterEvent(event)
+
+        unitLess = unitLess or unitLessEvents[event]
+        if unitLess then
+            self:RegisterEvent(event)
+        else
+            -- In case we try to register a non-unit event we need to catch the error
+            if not pcall(self.RegisterUnitEvent, self, event, self.states.unit) then
+                CUF:Log("Failed to RegisterUnitEvent:", event, "for:", self.states.unit)
+
+                unitLessEvents[event] = true
+
+                self:RegisterEvent(event)
+            end
+        end
     else
         -- Check if the callback is already registered to prevent duplicates
         for i = 1, #self.eventHandlers[event] do

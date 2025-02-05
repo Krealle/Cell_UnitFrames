@@ -20,6 +20,13 @@ local UnitIsFriend = UnitIsFriend
 local UnitCanAttack = UnitCanAttack
 local tinsert = table.insert
 
+local function GetDebuffTypeColor(type)
+    if type == "Enrage" then
+        return 0.05, 0.85, 0.94
+    end
+    return I.GetDebuffTypeColor(type)
+end
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -51,6 +58,7 @@ function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
         or setting == const.OPTION_KIND.MAGIC
         or setting == const.OPTION_KIND.POISON
         or setting == const.OPTION_KIND.BLEED
+        or setting == const.OPTION_KIND.ENRAGE
     then
         widget.dispelTypes = {
             Curse = styleTable.curse,
@@ -58,6 +66,7 @@ function W.UpdateDispelsWidget(button, unit, setting, subSetting, ...)
             Magic = styleTable.magic,
             Poison = styleTable.poison,
             Bleed = styleTable.bleed,
+            Enrage = styleTable.enrage,
         }
     end
 
@@ -85,7 +94,8 @@ Handler:RegisterWidget(W.UpdateDispelsWidget, const.WIDGET_KIND.DISPELS)
 ---@param debuffsChanged boolean?
 ---@param dispelsChanged boolean?
 ---@param fullUpdate boolean?
-local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+---@param stealableChanged boolean?
+local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate, stealableChanged)
     local dispels = button.widgets.dispels
     if not dispels.enabled or not button:IsVisible() then return end
     --CUF:Log("DispelsUpdate", buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
@@ -96,7 +106,7 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
         return
     end
 
-    if not dispelsChanged then
+    if not dispelsChanged and not stealableChanged then
         if dispelsChanged == nil then
             -- This is nil when we are trying to do full update of this widget
             -- So we queue an update to auras
@@ -108,20 +118,23 @@ local function Update(button, buffsChanged, debuffsChanged, dispelsChanged, full
     -- TODO: Add prio? right now we just take first
     local foundDispel = false
 
-    if UnitIsFriend("player", button.states.unit) and not UnitCanAttack("player", button.states.unit) then
-        button:IterateAuras("debuffs", function(aura)
-            if not dispels:ShouldShowDispel(aura.dispelName) then return end
-            foundDispel = true
+    local isFriend = UnitIsFriend("player", button.states.unit) and not UnitCanAttack("player", button.states.unit)
+    if isFriend and not dispelsChanged then return end
+    if not isFriend and not stealableChanged then return end
 
-            dispels:SetDispelHighlight(aura.dispelName)
-            dispels:SetDispelIcon(aura.dispelName)
-            dispels:SetDispelGlow(aura.dispelName)
-            dispels:Show()
+    local type = isFriend and "debuffs" or "buffs"
 
-            return true
-        end)
-    end
-    --CUF:Log("FoundDispel:", foundDispel)
+    button:IterateAuras(type, function(aura)
+        if not dispels:ShouldShowDispel(aura.dispelName, aura.isDispellable) then return end
+        foundDispel = true
+
+        dispels:SetDispelHighlight(aura.dispelName)
+        dispels:SetDispelIcon(aura.dispelName)
+        dispels:SetDispelGlow(aura.dispelName)
+        dispels:Show()
+
+        return true
+    end)
 
     if not foundDispel then
         if dispels.activeIconType then
@@ -143,6 +156,7 @@ end
 ---@param self DispelsWidget
 local function Enable(self)
     self._owner:RegisterAuraCallback("debuffs", self.Update)
+    self._owner:RegisterAuraCallback("buffs", self.Update)
 
     return true
 end
@@ -150,6 +164,7 @@ end
 ---@param self DispelsWidget
 local function Disable(self)
     self._owner:UnregisterAuraCallback("debuffs", self.Update)
+    self._owner:UnregisterAuraCallback("buffs", self.Update)
 end
 
 -------------------------------------------------
@@ -157,11 +172,12 @@ end
 -------------------------------------------------
 
 ---@param self DispelsWidget
----@param dispelType string?
+---@param dispelType string
+---@param isDispellable boolean
 ---@return boolean
-local function ShouldShowDispel(self, dispelType)
-    if not dispelType then return false end
-    if self.onlyShowDispellable and not I.CanDispel(dispelType) then return false end
+local function ShouldShowDispel(self, dispelType, isDispellable)
+    if dispelType == "none" then return false end
+    if self.onlyShowDispellable and not isDispellable then return false end
 
     return self.dispelTypes[dispelType]
 end
@@ -174,7 +190,7 @@ local function SetDispelHighlight_Entire(self, type)
 
     self.activeType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     self.highlight:SetVertexColor(r, g, b, 0.5)
 end
 
@@ -186,7 +202,7 @@ local function SetDispelHighlight_Current(self, type)
 
     self.activeType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     self.highlight:SetVertexColor(r, g, b, 1)
 end
 
@@ -198,7 +214,7 @@ local function SetDispelHighlight_Gradient(self, type)
 
     self.activeType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     self.highlight:SetGradient("VERTICAL", CreateColor(r, g, b, 1), CreateColor(r, g, b, 0))
 end
 
@@ -224,7 +240,7 @@ end
 
 ---@param self DispelsWidget.Icon
 local function SetDispelIcon_Rhombus(self)
-    self:SetVertexColor(I.GetDebuffTypeColor(self.type))
+    self:SetVertexColor(GetDebuffTypeColor(self.type))
     self:Show()
 end
 
@@ -236,7 +252,7 @@ local function SetDispelGlow_Pixel(self, type)
 
     self.activeGlowType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     local glow = self.glow
     Util.GlowStart_Pixel(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, glow.length, glow.thickness)
 end
@@ -249,7 +265,7 @@ local function SetDispelGlow_Shine(self, type)
 
     self.activeGlowType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     local glow = self.glow
     Util.GlowStart_Shine(self.glowLayer, { r, g, b, 1 }, glow.lines, glow.frequency, (glow.scale / 100))
 end
@@ -262,7 +278,7 @@ local function SetDispelGlow_Proc(self, type)
 
     self.activeGlowType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     Util.GlowStart_Proc(self.glowLayer, { r, g, b, 1 }, self.glow.duration)
 end
 
@@ -274,7 +290,7 @@ local function SetDispelGlow_Normal(self, type)
 
     self.activeGlowType = type
 
-    local r, g, b = I.GetDebuffTypeColor(type)
+    local r, g, b = GetDebuffTypeColor(type)
     Util.GlowStart_Normal(self.glowLayer, { r, g, b, 1 }, self.glow.frequency)
 end
 
@@ -433,7 +449,7 @@ end
 -- MARK: CreateDispels
 -------------------------------------------------
 
-local DebuffTypes = { "Magic", "Curse", "Disease", "Poison", "Bleed" }
+local DebuffTypes = { "Magic", "Curse", "Disease", "Poison", "Bleed", "Enrage" }
 
 ---@param button CUFUnitButton
 function W:CreateDispels(button)

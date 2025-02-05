@@ -285,3 +285,5 @@ function AurasMixin:UnregisterAuraCallback(type, callback)
         self:RemoveEventListener("UNIT_AURA", self.UpdateAurasInternal)
     end
 end
+
+---@alias UnitAuraCallbackFn fun(self: CUFUnitButton, buffsChanged: boolean, debuffsChanged: boolean, dispelsChanged: boolean, fullUpdate: boolean, stealableChanged: boolean)

@@ -8,7 +8,13 @@ local Mixin = CUF.Mixin
 local EventMixin = {}
 Mixin.EventMixin = EventMixin
 
----@type table<WowEvent, CUFUnitButton.EventHandler[]>
+---@class EventMixin.EventHandler
+---@field callback EventCallbackFn
+---@field unitLess boolean
+
+---@alias EventCallbackFn fun(self: CUFUnitButton, event: WowEvent, unit: UnitToken, ...: any)
+
+---@type table<WowEvent, EventMixin.EventHandler[]>
 EventMixin.eventHandlers = {}
 
 --- Handles the event dispatching for a button with registered event listeners.

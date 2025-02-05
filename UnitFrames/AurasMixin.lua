@@ -1,6 +1,8 @@
 ---@class CUF
 local CUF = select(2, ...)
 
+local LibDispel = LibStub("LibDispel")
+
 ---@class CUF.Mixin
 local Mixin = CUF.Mixin
 
@@ -25,16 +27,11 @@ AurasMixin._auraDebuffCallbacks = {}
 AurasMixin._ignoreBuffs = true
 AurasMixin._ignoreDebuffs = true
 
-local debuffTypeCache = {}
-
 ---@param dispelName string?
 ---@param spellID number
----@return string?
+---@return string
 local function CheckDebuffType(dispelName, spellID)
-    if not debuffTypeCache[spellID] then
-        debuffTypeCache[spellID] = I.CheckDebuffType(dispelName, spellID)
-    end
-    return debuffTypeCache[spellID]
+    return LibDispel:GetDispelType(spellID, dispelName)
 end
 
 function AurasMixin:ResetAuraTables()
@@ -51,8 +48,9 @@ end
 ---@param aura AuraData
 ---@param ignoreBuffs boolean
 ---@param ignoreDebuffs boolean
+---@param unit UnitToken
 ---@return AuraUtil.AuraUpdateChangedType
-local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
+local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs, unit)
     if aura == nil then
         return AuraUtil.AuraUpdateChangedType.None;
     end
@@ -63,12 +61,17 @@ local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
 
     if aura.isHarmful and not ignoreDebuffs then
         aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
-        if aura.dispelName ~= "" then
+        aura.isDispellable = LibDispel:IsDispelable(unit, aura.spellId, aura.dispelName, true)
+
+        if aura.dispelName ~= "" and aura.dispelName ~= "none" then
             return AuraUtil.AuraUpdateChangedType.Dispel
         end
 
         return AuraUtil.AuraUpdateChangedType.Debuff
     elseif aura.isHelpful and not ignoreBuffs then
+        aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
+        aura.isDispellable = LibDispel:IsDispelable(unit, aura.spellId, aura.dispelName, false)
+
         return AuraUtil.AuraUpdateChangedType.Buff
     end
 
@@ -78,7 +81,8 @@ end
 --- Perform a full aura update for a unit
 ---@param ignoreBuffs boolean
 ---@param ignoreDebuffs boolean
-function AurasMixin:ParseAllAuras(ignoreBuffs, ignoreDebuffs)
+---@param unit UnitToken
+function AurasMixin:ParseAllAuras(ignoreBuffs, ignoreDebuffs, unit)
     wipe(self._auraBuffCache)
     wipe(self._auraDebuffCache)
 
@@ -86,7 +90,7 @@ function AurasMixin:ParseAllAuras(ignoreBuffs, ignoreDebuffs)
     local usePackedAura = true
     ---@param aura AuraData
     local function HandleAura(aura)
-        local type = ProcessAura(aura, ignoreBuffs, ignoreDebuffs)
+        local type = ProcessAura(aura, ignoreBuffs, ignoreDebuffs, unit)
         if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
             self._auraDebuffCache[aura.auraInstanceID] = aura
         elseif type == AuraUtil.AuraUpdateChangedType.Buff then
@@ -115,30 +119,34 @@ end
 function AurasMixin:UpdateAurasInternal(event, unit, unitAuraUpdateInfo)
     self._auraUpdateRequired = nil
     if self._ignoreBuffs and self._ignoreDebuffs then return end
+    unit = unit or self.states.unit
 
     local debuffsChanged = false
     local buffsChanged = false
     local dispelsChanged = false
+    local stealableChanged = false
     local fullUpdate = false
 
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate then
-        self:ParseAllAuras(self._ignoreBuffs, self._ignoreDebuffs)
+        self:ParseAllAuras(self._ignoreBuffs, self._ignoreDebuffs, unit)
         debuffsChanged = true
         buffsChanged = true
         dispelsChanged = true
+        stealableChanged = true
         fullUpdate = true
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                local type = ProcessAura(aura, self._ignoreBuffs, self._ignoreDebuffs)
+                local type = ProcessAura(aura, self._ignoreBuffs, self._ignoreDebuffs, unit)
 
                 if type == AuraUtil.AuraUpdateChangedType.Debuff or type == AuraUtil.AuraUpdateChangedType.Dispel then
                     self._auraDebuffCache[aura.auraInstanceID] = aura
                     debuffsChanged = true
-                    dispelsChanged = type == AuraUtil.AuraUpdateChangedType.Dispel
+                    dispelsChanged = dispelsChanged or type == AuraUtil.AuraUpdateChangedType.Dispel
                 elseif type == AuraUtil.AuraUpdateChangedType.Buff then
                     self._auraBuffCache[aura.auraInstanceID] = aura
                     buffsChanged = true
+                    stealableChanged = stealableChanged or aura.isDispellable
                 end
             end
         end
@@ -149,14 +157,19 @@ function AurasMixin:UpdateAurasInternal(event, unit, unitAuraUpdateInfo)
                     local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
                     if newAura then
                         newAura.dispelName = CheckDebuffType(newAura.dispelName, newAura.spellId)
-                        dispelsChanged = newAura.dispelName ~= nil
+                        dispelsChanged = dispelsChanged or newAura.dispelName ~= "none"
                     else
-                        dispelsChanged = self._auraDebuffCache[auraInstanceID] ~= nil
+                        dispelsChanged = dispelsChanged or self._auraDebuffCache[auraInstanceID].dispelName ~= "none"
                     end
                     self._auraDebuffCache[auraInstanceID] = newAura
                     debuffsChanged = true
                 elseif self._auraBuffCache[auraInstanceID] ~= nil then
                     local newAura = GetAuraDataByAuraInstanceID(self.states.unit, auraInstanceID)
+                    if newAura then
+                        stealableChanged = stealableChanged or newAura.isDispellable
+                    else
+                        stealableChanged = stealableChanged or self._auraBuffCache[auraInstanceID].isDispellable
+                    end
                     self._auraBuffCache[auraInstanceID] = newAura
                     buffsChanged = true
                 end
@@ -166,10 +179,11 @@ function AurasMixin:UpdateAurasInternal(event, unit, unitAuraUpdateInfo)
         if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
                 if self._auraDebuffCache[auraInstanceID] ~= nil then
-                    dispelsChanged = self._auraDebuffCache[auraInstanceID].dispelName ~= nil
+                    dispelsChanged = dispelsChanged or self._auraDebuffCache[auraInstanceID].dispelName ~= "none"
                     self._auraDebuffCache[auraInstanceID] = nil
                     debuffsChanged = true
                 elseif self._auraBuffCache[auraInstanceID] ~= nil then
+                    stealableChanged = stealableChanged or self._auraBuffCache[auraInstanceID].isDispellable
                     self._auraBuffCache[auraInstanceID] = nil
                     buffsChanged = true
                 end
@@ -177,7 +191,7 @@ function AurasMixin:UpdateAurasInternal(event, unit, unitAuraUpdateInfo)
         end
     end
 
-    self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+    self:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate, stealableChanged)
 end
 
 --- Queues an aura update
@@ -194,7 +208,8 @@ end
 ---@param debuffsChanged boolean
 ---@param dispelsChanged boolean
 ---@param fullUpdate boolean
-function AurasMixin:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+---@param stealableChanged boolean
+function AurasMixin:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsChanged, fullUpdate, stealableChanged)
     --CUF:Log("TriggerAuraCallbacks", self.states.unit, buffsChanged, debuffsChanged, fullUpdate)
     if not buffsChanged and not debuffsChanged and not fullUpdate then
         return
@@ -202,12 +217,12 @@ function AurasMixin:TriggerAuraCallbacks(buffsChanged, debuffsChanged, dispelsCh
 
     if buffsChanged then
         for _, callback in pairs(self._auraBuffCallbacks) do
-            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate, stealableChanged)
         end
     end
     if debuffsChanged then
         for _, callback in pairs(self._auraDebuffCallbacks) do
-            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate)
+            callback(self, buffsChanged, debuffsChanged, dispelsChanged, fullUpdate, stealableChanged)
         end
     end
 end
@@ -246,7 +261,7 @@ function AurasMixin:RegisterAuraCallback(type, callback)
         self._ignoreDebuffs = false
     end
 
-    self:UpdateAurasInternal()
+    self:UpdateAurasInternal("UNIT_AURA", self.states.unit)
 end
 
 --- Unregister a callback for auras of a specific type

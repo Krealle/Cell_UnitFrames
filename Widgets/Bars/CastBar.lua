@@ -213,8 +213,6 @@ local function RepointCastBar(self)
         return
     end
 
-    local barHeight = self:GetHeight()
-    icon:SetSize(barHeight, barHeight)
     icon:Show()
 
     P.ClearPoints(icon)
@@ -223,12 +221,40 @@ local function RepointCastBar(self)
 
         P.Point(bar, "TOPLEFT", icon, "TOPRIGHT")
         P.Point(bar, "BOTTOMRIGHT", self, "BOTTOMRIGHT")
-    else
+
+        local barHeight = self:GetHeight()
+        local barWidth = math.min(self:GetWidth() / 2, barHeight)
+        icon:SetSize(barWidth, barHeight)
+    elseif icon.position == "right" then
         P.Point(icon, "TOPRIGHT", self, "TOPRIGHT")
 
         P.Point(bar, "TOPLEFT", self, "TOPLEFT")
         P.Point(bar, "BOTTOMRIGHT", icon, "BOTTOMLEFT")
+
+        local barHeight = self:GetHeight()
+        local barWidth = math.min(self:GetWidth() / 2, barHeight)
+        icon:SetSize(barWidth, barHeight)
+    elseif icon.position == "top" then
+        P.Point(icon, "TOPLEFT", self, "TOPLEFT")
+
+        P.Point(bar, "TOPLEFT", icon, "BOTTOMLEFT")
+        P.Point(bar, "BOTTOMRIGHT", self, "BOTTOMRIGHT")
+
+        local barWidth = self:GetWidth()
+        local barHeight = math.min(self:GetHeight() / 2, barWidth)
+        icon:SetSize(barWidth, barHeight)
+    elseif icon.position == "bottom" then
+        P.Point(icon, "BOTTOMLEFT", self, "BOTTOMLEFT")
+
+        P.Point(bar, "BOTTOMLEFT", icon, "TOPLEFT")
+        P.Point(bar, "TOPRIGHT", self, "TOPRIGHT")
+
+        local barWidth = self:GetWidth()
+        local barHeight = math.min(self:GetHeight() / 2, barWidth)
+        icon:SetSize(barWidth, barHeight)
     end
+
+    self:UpdateElements()
 end
 
 ---@param button CUFUnitButton

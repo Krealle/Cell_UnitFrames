@@ -298,7 +298,7 @@
 
 ---@class CastBarIconOpt
 ---@field enabled boolean
----@field position "left"|"right"
+---@field position "left"|"right"|"top"|"bottom"
 ---@field zoom number
 
 ---@class EmpowerOpt

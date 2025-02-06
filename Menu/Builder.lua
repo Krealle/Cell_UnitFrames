@@ -1839,7 +1839,7 @@ function Builder:CreateCastBarIconOptions(parent, widgetName)
     self:AnchorRightOfCB(f.zoom, f.showIcon)
 
     f.position = self:CreateDropdown(f, widgetName, L["Position"], nil,
-        { "left", "right" }, iconPath .. const.OPTION_KIND.POSITION)
+        { "left", "right", "top", "bottom" }, iconPath .. const.OPTION_KIND.POSITION)
     self:AnchorRight(f.position, f.zoom)
 
     return f

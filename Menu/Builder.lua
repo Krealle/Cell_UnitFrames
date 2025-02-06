@@ -67,7 +67,7 @@ Builder.MenuOptions = {
     AltPower = 40,
     PowerBar = 41,
     DetachedAnchor = 42,
-    HealPredictOptions = 43,
+    HealPredictionOptions = 43,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2302,16 +2302,16 @@ function Builder:CreatePowerBarOptions(parent, widgetName)
 end
 
 -------------------------------------------------
--- MARK: Heal Predict
+-- MARK: Heal Prediction
 -------------------------------------------------
 
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
----@return HealPredictOptions
-function Builder:CreateHealPredictOptions(parent, widgetName)
-    ---@class HealPredictOptions: OptionsFrame
+---@return HealPredictionOptions
+function Builder:CreateHealPredictionOptions(parent, widgetName)
+    ---@class HealPredictionOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.id = "HealPredictOptions"
+    f.id = "HealPredictionOptions"
     f.optionHeight = 25
 
     -- First Row
@@ -2389,5 +2389,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
     [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
     [Builder.MenuOptions.PowerBar] = Builder.CreatePowerBarOptions,
-    [Builder.MenuOptions.HealPredictOptions] = Builder.CreateHealPredictOptions,
+    [Builder.MenuOptions.HealPredictionOptions] = Builder.CreateHealPredictionOptions,
 }

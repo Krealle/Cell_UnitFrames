@@ -47,7 +47,7 @@
 ---| HighlightWidget
 ---| AltPowerBarWidget
 ---| PowerBarWidget
----| HealPredictWidget
+---| HealPredictionWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -78,7 +78,7 @@
 ---@field fader FaderWidget
 ---@field highlight HighlightWidget
 ---@field altPowerBar AltPowerBarWidget
----@field healPredict HealPredictWidget
+---@field healPrediction HealPredictionWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -346,7 +346,7 @@
 ---@field hideOutOfCombat boolean
 ---@field orientation GrowthOrientation
 
----@class HealPredictWidgetTable
+---@class HealPredictionWidgetTable
 ---@field enabled boolean
 ---@field frameLevel number
 ---@field point "RIGHT"|"LEFT"|"healthBar"

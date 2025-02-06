@@ -153,6 +153,7 @@ Defaults.Options.glow = {
 ---| "unitFrames"
 ---| "classBar"
 ---| "highlight"
+---| "healPredict"
 
 ---@class Defaults.Colors
 Defaults.Colors = {
@@ -240,7 +241,12 @@ Defaults.Colors = {
     highlight = {
         target = { 1, 0.3, 0.3, 1 },
         hover = { 1, 1, 1, 1 }
-    }
+    },
+    healPredict = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        color = { 0, 1, 0.5, 0.25 },
+        overHeal = { 1, 1, 1, 1 },
+    },
 }
 
 Defaults.ColorsMenuOrder = {
@@ -306,6 +312,11 @@ Defaults.ColorsMenuOrder = {
         { "texture",    "texture" },
         { "color",      "rgb" },
         { "overShield", "rgb" },
+    },
+    healPredict = {
+        { "texture",  "texture" },
+        { "color",    "rgb" },
+        { "overHeal", "rgb" },
     },
     healAbsorb = {
         { "texture",     "texture" },

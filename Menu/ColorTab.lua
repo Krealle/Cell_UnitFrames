@@ -72,7 +72,8 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
     cp:SetColor(colorTable[colorName])
     cp.onChange = function(r, g, b, a)
         DB.SetColor(which, colorName, { r, g, b, a })
-        if which == "castBar" or which == "shieldBar" or which == "healAbsorb" or which == "highlight" then
+        if which == "castBar" or which == "shieldBar" or which == "healAbsorb" or which == "highlight"
+            or which == "healPredict" then
             CUF:Fire("UpdateWidget", DB.GetMasterLayout(), nil, which, const.OPTION_KIND.COLOR)
         elseif which == "essence"
             or which == "classResources"

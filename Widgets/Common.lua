@@ -83,7 +83,8 @@ function W.SetDetachedRelativePosition(widget, styleTable)
         return
     end
 
-    P.Point(widget, styleTable.position.point, widget:GetParent(),
+    P.Point(widget, styleTable.position.point,
+        widget._parentAnchor or widget:GetParent(),
         styleTable.position.relativePoint,
         styleTable.position.offsetX,
         styleTable.position.offsetY)

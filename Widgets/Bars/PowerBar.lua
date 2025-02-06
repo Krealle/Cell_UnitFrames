@@ -371,10 +371,10 @@ local function SetSizeStyle(self, sizeSize)
     -- account for border such that we can properly make 1 pixel power bar
     -- TODO: this should be prolly be changed in the future as this problem extends
     -- across all widgets
-    local width = self.sameWidthAsHealthBar and self._owner:GetWidth()
-        or (CELL_BORDER_SIZE * 2) + sizeSize.width
-    local height = self.sameHeightAsHealthBar and self._owner:GetHeight()
-        or (CELL_BORDER_SIZE * 2) + sizeSize.height
+    local width = self.sameWidthAsHealthBar and self._parentAnchor:GetWidth()
+        or sizeSize.width
+    local height = self.sameHeightAsHealthBar and self._parentAnchor:GetHeight()
+        or sizeSize.height
 
     self:SetSize(width, height)
 end
@@ -420,14 +420,20 @@ function W:CreatePowerBar(button)
     powerBar.hideIfFull = false
     powerBar.max = 10
 
-    powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
-    powerBar.border:SetAllPoints()
-    powerBar.border:SetBackdrop({
-        bgFile = nil,
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = P.Scale(CELL_BORDER_SIZE),
-    })
-    powerBar.border:SetBackdropBorderColor(0, 0, 0, 1)
+    if CELL_BORDER_SIZE > 0 then
+        powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
+        powerBar.border:SetAllPoints()
+        powerBar.border:SetBackdrop({
+            bgFile = nil,
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = P.Scale(CELL_BORDER_SIZE),
+        })
+        powerBar.border:SetBackdropBorderColor(0, 0, 0, 1)
+
+        powerBar._parentAnchor = button
+    else
+        powerBar._parentAnchor = button.widgets.healthBar:GetStatusBarTexture()
+    end
 
     powerBar:SetStatusBarTexture(Cell.vars.texture)
     powerBar:GetStatusBarTexture():SetDrawLayer("ARTWORK", -7)

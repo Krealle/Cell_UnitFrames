@@ -445,7 +445,7 @@ function W:CreatePowerBar(button)
 
     Mixin(powerBar, SmoothStatusBarMixin)
 
-    powerBar.bg = powerBar:CreateTexture(nil, "ARTWORK")
+    powerBar.bg = powerBar:CreateTexture(nil, "ARTWORK", nil, -1)
     powerBar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
     powerBar.bg:SetAllPoints()
 

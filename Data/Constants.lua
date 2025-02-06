@@ -194,6 +194,7 @@ const.OPTION_KIND = {
     FADE_IN_TIMER             = "fadeInTimer",
     FADE_OUT_TIMER            = "fadeOutTimer",
     ENRAGE                    = "enrage",
+    OVER_HEAL                 = "overHeal",
 }
 
 ---@enum AURA_OPTION_KIND

@@ -98,9 +98,17 @@
 -------------------------------------------------
 
 ---@class SmoothStatusBar: StatusBar
----@field SetMinMaxSmoothedValue number
----@field ResetSmoothedValue number
----@field SetSmoothedValue number
+local SmoothStatusBar = {}
+
+---@param min number
+---@param max number
+function SmoothStatusBar:SetMinMaxSmoothedValue(min, max) end
+
+---@param value number
+function SmoothStatusBar:ResetSmoothedValue(value) end
+
+---@param value number
+function SmoothStatusBar:SetSmoothedValue(value) end
 
 -------------------------------------------------
 -- MARK: Misc

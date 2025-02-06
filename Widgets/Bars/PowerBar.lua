@@ -231,7 +231,12 @@ local function UpdatePower(button, event, unit, powerType)
     elseif powerBar.hideIfFull and power == powerBar.max then
         powerBar:Hide()
     elseif powerBar.active then
-        powerBar:SetValue(power)
+        if CellDB["appearance"]["barAnimation"] == "Smooth" then
+            powerBar:SetSmoothedValue(power)
+        else
+            powerBar:SetValue(power)
+        end
+
         powerBar:Show()
     end
 end

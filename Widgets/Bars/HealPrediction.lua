@@ -294,11 +294,11 @@ local function Repoint(bar, anchorPoint)
 end
 
 -------------------------------------------------
--- MARK: CreateHealPredict
+-- MARK: CreateHealPrediction
 -------------------------------------------------
 
 ---@param button CUFUnitButton
-function W:CreateHealPredict(button)
+function W:CreateHealPrediction(button)
     ---@class HealPredictionWidget: Frame, BaseWidget, BackdropTemplate
     local healPrediction = CreateFrame("Frame", button:GetName() .. "_HealPrediction", button, "BackdropTemplate")
     button.widgets.healPrediction = healPrediction
@@ -387,4 +387,4 @@ function W:CreateHealPredict(button)
     healPrediction.Disable = Disable
 end
 
-W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.HEAL_PREDICTION, W.CreateHealPredict)
+W:RegisterCreateWidgetFunc(CUF.constants.WIDGET_KIND.HEAL_PREDICTION, W.CreateHealPrediction)

@@ -101,6 +101,7 @@ const.WIDGET_KIND = {
     HIGHLIGHT = "highlight",
     ALT_POWER_BAR = "altPowerBar",
     POWER_BAR = "powerBar",
+    HEAL_PREDICT = "healPredict",
 }
 
 ---@enum OPTION_KIND

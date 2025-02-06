@@ -846,7 +846,7 @@ Defaults.Widgets = {
     healPrediction = {
         enabled = false,
         frameLevel = 9,
-        point = "RIGHT",
+        point = "healthBar",
         reverseFill = false,
         overHeal = false,
     },

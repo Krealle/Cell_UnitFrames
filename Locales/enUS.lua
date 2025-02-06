@@ -19,6 +19,7 @@ L.none = L["None"]
 L.pixel = L["Pixel"]
 L.shine = L["Shine"]
 L.proc = L["Proc"]
+L.healPrediction = L["Heal Prediction"]
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"
@@ -258,6 +259,7 @@ L.DetachedAnchorEditMode = [[Detached positioning changed in Edit Mode]]
 L.FadeInTimer = "Fade In Timer"
 L.FadeOutTimer = "Fade Out Timer"
 L.Enrage = "Enrage"
+L.overHeal = "Over Heal"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

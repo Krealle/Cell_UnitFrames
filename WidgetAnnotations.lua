@@ -47,6 +47,7 @@
 ---| HighlightWidget
 ---| AltPowerBarWidget
 ---| PowerBarWidget
+---| HealPredictionWidget
 
 ---@class CUFUnitButton.Widgets
 ---@field healthBar HealthBarWidget
@@ -77,6 +78,7 @@
 ---@field fader FaderWidget
 ---@field highlight HighlightWidget
 ---@field altPowerBar AltPowerBarWidget
+---@field healPrediction HealPredictionWidget
 
 ---@class BaseWidget
 ---@field enabled boolean
@@ -343,6 +345,13 @@
 ---@field hideIfFull boolean
 ---@field hideOutOfCombat boolean
 ---@field orientation GrowthOrientation
+
+---@class HealPredictionWidgetTable
+---@field enabled boolean
+---@field frameLevel number
+---@field point "RIGHT"|"LEFT"|"healthBar"
+---@field reverseFill boolean
+---@field overHeal boolean
 
 -------------------------------------------------
 -- MARK: Misc Widgets

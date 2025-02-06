@@ -101,6 +101,7 @@ const.WIDGET_KIND = {
     HIGHLIGHT = "highlight",
     ALT_POWER_BAR = "altPowerBar",
     POWER_BAR = "powerBar",
+    HEAL_PREDICTION = "healPrediction",
 }
 
 ---@enum OPTION_KIND
@@ -193,6 +194,7 @@ const.OPTION_KIND = {
     FADE_IN_TIMER             = "fadeInTimer",
     FADE_OUT_TIMER            = "fadeOutTimer",
     ENRAGE                    = "enrage",
+    OVER_HEAL                 = "overHeal",
 }
 
 ---@enum AURA_OPTION_KIND

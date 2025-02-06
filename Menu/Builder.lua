@@ -67,6 +67,7 @@ Builder.MenuOptions = {
     AltPower = 40,
     PowerBar = 41,
     DetachedAnchor = 42,
+    HealPredictionOptions = 43,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2301,6 +2302,46 @@ function Builder:CreatePowerBarOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Heal Prediction
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return HealPredictionOptions
+function Builder:CreateHealPredictionOptions(parent, widgetName)
+    ---@class HealPredictionOptions: OptionsFrame
+    local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
+    f.id = "HealPredictionOptions"
+    f.optionHeight = 25
+
+    -- First Row
+    local anchorItems = {
+        "RIGHT",
+        "LEFT",
+        "healthBar"
+    }
+    f.anchorOptions = self:CreateDropdown(f, widgetName, L["Anchor Point"], 117, anchorItems,
+        const.OPTION_KIND.ANCHOR_POINT)
+    f.anchorOptions:SetPoint("TOPLEFT", 0, -5)
+
+    f.reverseFill = self:CreateCheckBox(f, widgetName, L["Reverse Fill"],
+        const.OPTION_KIND.REVERSE_FILL)
+    self:AnchorRight(f.reverseFill, f.anchorOptions)
+
+    f.overHeal = self:CreateCheckBox(f, widgetName, L["Over Heal"],
+        const.OPTION_KIND.OVER_HEAL)
+    self:AnchorRightOfCB(f.overHeal, f.reverseFill)
+
+    -- Dirty hook, should be made generic really
+    hooksecurefunc(f.anchorOptions.text, "SetText", function(_, text)
+        f.reverseFill:SetEnabled(text == L.healthBar)
+        f.overHeal:SetEnabled(text == L.healthBar)
+    end)
+
+    return f
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2348,4 +2389,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.Highlight] = Builder.CreateHighlightOptions,
     [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
     [Builder.MenuOptions.PowerBar] = Builder.CreatePowerBarOptions,
+    [Builder.MenuOptions.HealPredictionOptions] = Builder.CreateHealPredictionOptions,
 }

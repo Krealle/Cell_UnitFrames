@@ -831,6 +831,14 @@ Defaults.Widgets = {
             relativePoint = "BOTTOMLEFT",
         },
     },
+    ---@type HealPredictWidgetTable
+    healPredict = {
+        enabled = false,
+        frameLevel = 9,
+        point = "RIGHT",
+        reverseFill = false,
+        overHeal = false,
+    },
     ---@type HealAbsorbWidgetTable
     healAbsorb = {
         enabled = false,

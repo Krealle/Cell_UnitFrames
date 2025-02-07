@@ -271,7 +271,6 @@ local function UpdatePowerType(button)
     local unit = button.states.displayedUnit
 
     local r, g, b, lossR, lossG, lossB
-    local a = Cell.loaded and CellDB["appearance"]["lossAlpha"] or 1
 
     if not UnitIsConnected(unit) then
         r, g, b = 0.4, 0.4, 0.4
@@ -280,8 +279,8 @@ local function UpdatePowerType(button)
         r, g, b, lossR, lossG, lossB = F:GetPowerBarColor(unit, button.states.class)
     end
 
-    powerBar:SetStatusBarColor(r, g, b)
-    powerBar.bg:SetVertexColor(lossR, lossG, lossB)
+    powerBar:SetStatusBarColor(r, g, b, powerBar.barA)
+    powerBar.bg:SetVertexColor(lossR, lossG, lossB, powerBar.lossA)
 end
 
 -------------------------------------------------
@@ -402,6 +401,16 @@ local function SetOrientationStyle(self, orientation)
     end
 end
 
+---@param self PowerBarWidget
+local function UpdateColorOptions(self)
+    local colors = DB.GetColors()
+
+    self.barA = colors.unitFrames.powerBarAlpha
+    self.lossA = colors.unitFrames.powerLossAlpha
+
+    self.UpdatePowerType(self._owner)
+end
+
 -------------------------------------------------
 -- MARK: CreatePowerBar
 -------------------------------------------------
@@ -424,6 +433,9 @@ function W:CreatePowerBar(button)
     powerBar.hideIfEmpty = false
     powerBar.hideIfFull = false
     powerBar.max = 10
+
+    powerBar.barA = 1
+    powerBar.lossA = 1
 
     if CELL_BORDER_SIZE > 0 then
         powerBar.border = CreateFrame("Frame", nil, powerBar, "BackdropTemplate")
@@ -455,6 +467,8 @@ function W:CreatePowerBar(button)
 
     powerBar.SetSizeStyle = SetSizeStyle
     powerBar.SetOrientationStyle = SetOrientationStyle
+
+    powerBar.UpdateColorOptions = UpdateColorOptions
 
     powerBar.SetEnabled = W.SetEnabled
     powerBar._SetIsSelected = W.SetIsSelected

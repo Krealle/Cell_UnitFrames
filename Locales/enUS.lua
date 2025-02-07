@@ -384,6 +384,8 @@ L.hostileUnits = "Hostile Units"
 L.swapHostileHealthAndLossColors = "Swap Health and Health Loss Colors"
 L.deathColor = "Death Color"
 L.fullColor = "Full Color"
+L.powerBarAlpha = "Power Bar Alpha"
+L.powerLossAlpha = "Power Loss Alpha"
 
 L.reaction = "Reaction"
 L.friendly = "Friendly"

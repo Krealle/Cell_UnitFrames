@@ -234,6 +234,8 @@ Defaults.Colors = {
         barAlpha = 1,
         lossAlpha = 1,
         backgroundAlpha = 1,
+        powerBarAlpha = 1,
+        powerLossAlpha = 1,
     },
     classBar = {
         texture = "Interface\\Buttons\\WHITE8X8",
@@ -337,6 +339,8 @@ Defaults.ColorsMenuOrder = {
         { "barAlpha",        "slider-percent" },
         { "lossAlpha",       "slider-percent" },
         { "backgroundAlpha", "slider-percent" },
+        { "powerBarAlpha",   "slider-percent" },
+        { "powerLossAlpha",  "slider-percent" },
     },
     classBar = {
         { "texture", "texture" },

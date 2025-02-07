@@ -226,13 +226,12 @@ local function UpdateAppearance(kind)
         ---@param button CUFUnitButton
         Util:IterateAllUnitButtons(function(button)
             U:UnitFrame_UpdateHealthColor(button, true)
-            button.widgets.powerBar.UpdatePowerType(button)
+            button.widgets.powerBar:UpdateColorOptions()
             if button.healthBarColorType == const.UnitButtonColorType.CELL then
                 button:SetBackdropColor(0, 0, 0, CellDB["appearance"]["bgAlpha"])
             else
                 button:SetBackdropColor(0, 0, 0, DB.GetColors().unitFrames.backgroundAlpha)
             end
-            U:UnitFrame_UpdateHealthColor(button, true)
         end)
     end
     if not kind or kind == "fullColor" then
@@ -242,7 +241,7 @@ local function UpdateAppearance(kind)
             ---@param button CUFUnitButton
             Util:IterateAllUnitButtons(function(button)
                 U:UnitFrame_UpdateHealthColor(button, true)
-                button.widgets.powerBar.UpdatePowerType(button)
+                button.widgets.powerBar:UpdateColorOptions()
             end)
         end)
     end

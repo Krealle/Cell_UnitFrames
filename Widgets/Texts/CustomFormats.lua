@@ -481,7 +481,7 @@ end, "Health", "-10000")
 W:AddTag("defhp:short", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     local deficit = UnitHealth(unit) - UnitHealthMax(unit)
     if not deficit or deficit == 0 then return end
-    return FormatText(deficit)
+    return FormatText(deficit, nil, false, true)
 end, "Health", "-10K")
 W:AddTag("perdefhp", "UNIT_HEALTH UNIT_MAXHEALTH", function(unit)
     local maxhp = UnitHealthMax(unit)

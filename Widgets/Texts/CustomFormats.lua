@@ -777,7 +777,7 @@ end, "Classification", (L.rare .. ", " .. L.rareelite .. ", " .. L.elite .. ", "
 W:AddTag("classification:icon", "UNIT_CLASSIFICATION_CHANGED", function(unit)
     if UnitIsPlayer(unit) then return end
     return Util:GetUnitClassificationIcon(unit)
-end, "Classification")
+end, "Classification", "|A:nameplates-icon-elite-gold:16:16|a |A:nameplates-icon-elite-silver:16:16|a")
 
 -- MARK: Name
 for type, length in pairs(nameLengths) do

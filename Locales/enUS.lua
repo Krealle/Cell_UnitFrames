@@ -350,6 +350,7 @@ L["tag_perdefaltmana"] = "Displays the alt mana deficit as a percentage."
 L["tag_perdefaltmana:short"] = "Displays alt mana deficit percentage without decimals."
 
 L["tag_classification"] = "Displays the classification of the unit."
+L["tag_classification:icon"] = "Displays the classification of the unit as an icon."
 
 L["tag_group"] = "Displays the subgroup of the unit."
 L["tag_group:raid"] = "Displays the subgroup of the unit. Only shows in raid."

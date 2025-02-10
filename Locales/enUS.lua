@@ -273,6 +273,8 @@ L.worldboss = "Boss"
 
 L.AFK = "AFK"
 
+-- MARK: Tags
+
 L["tag_curhp"] = "Displays the current HP."
 L["tag_curhp:short"] = "Displays the current HP as a shortvalue."
 L["tag_perhp"] = "Displays the current HP as a percentage."
@@ -320,6 +322,32 @@ L["tag_defpp"] = "Displays the power deficit."
 L["tag_defpp:short"] = "Displays power deficit as a shortvalue."
 L["tag_perdefpp"] = "Displays the power deficit as a percentage."
 L["tag_perdefpp:short"] = "Displays power deficit percentage without decimals."
+
+L["tag_curmana"] = "Displays the current mana."
+L["tag_curmana:short"] = "Displays the current mana as a shortvalue."
+L["tag_permana"] = "Displays the current mana as a percentage."
+L["tag_permana:short"] = "Displays mana percentage without decimals."
+
+L["tag_maxmana"] = "Displays the maximum mana."
+L["tag_maxmana:short"] = "Displays the maximum mana as a shortvalue."
+
+L["tag_defmana"] = "Displays the mana deficit."
+L["tag_defmana:short"] = "Displays mana deficit as a shortvalue."
+L["tag_perdefmana"] = "Displays the mana deficit as a percentage."
+L["tag_perdefmana:short"] = "Displays mana deficit percentage without decimals."
+
+L["tag_curaltmana"] = "Displays the current alt mana."
+L["tag_curaltmana:short"] = "Displays the current alt mana as a shortvalue."
+L["tag_peraltmana"] = "Displays the current alt mana as a percentage."
+L["tag_peraltmana:short"] = "Displays alt mana percentage without decimals."
+
+L["tag_maxaltmana"] = "Displays the maximum alt mana."
+L["tag_maxaltmana:short"] = "Displays the maximum alt mana as a shortvalue."
+
+L["tag_defaltmana"] = "Displays the alt mana deficit."
+L["tag_defaltmana:short"] = "Displays alt mana deficit as a shortvalue."
+L["tag_perdefaltmana"] = "Displays the alt mana deficit as a percentage."
+L["tag_perdefaltmana:short"] = "Displays alt mana deficit percentage without decimals."
 
 L["tag_classification"] = "Displays the classification of the unit."
 

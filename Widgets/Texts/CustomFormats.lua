@@ -652,6 +652,108 @@ W:AddTag("perdefpp:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER"
     return FormatText(max, deficit, true, true)
 end, "Power", "-20%")
 
+-- MARK: Power Mana
+
+local MANA_POWER_TYPE = Enum.PowerType.Mana
+
+W:AddTag("curmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)
+    return FormatText(UnitPower(unit, MANA_POWER_TYPE))
+end, "Power", "12000")
+W:AddTag("curmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)
+    return FormatText(UnitPower(unit, MANA_POWER_TYPE), nil, false, true)
+end, "Power", "12K")
+W:AddTag("permana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), UnitPower(unit, MANA_POWER_TYPE), true)
+end, "Power", "80.20%")
+W:AddTag("permana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), UnitPower(unit, MANA_POWER_TYPE), true, true)
+end, "Power", "80%")
+
+W:AddTag("maxmana", "UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE))
+end, "Power", "15000")
+W:AddTag("maxmana:short", "UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), nil, false, true)
+end, "Power", "15K")
+
+W:AddTag("defmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - UnitPowerMax(unit, MANA_POWER_TYPE)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit)
+end, "Power", "-3000")
+W:AddTag("defmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - UnitPowerMax(unit, MANA_POWER_TYPE)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit, nil, false, true)
+end, "Power", "-3K")
+W:AddTag("perdefmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    local max = UnitPowerMax(unit, MANA_POWER_TYPE)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - max
+    if not deficit or deficit == 0 then return end
+    return FormatText(max, deficit, true)
+end, "Power", "-20.20%")
+W:AddTag("perdefmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    local max = UnitPowerMax(unit, MANA_POWER_TYPE)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - max
+    if not deficit or deficit == 0 then return end
+    return FormatText(max, deficit, true, true)
+end, "Power", "-20%")
+
+-- MARK: Power Alt Mana
+
+W:AddTag("curaltmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPower(unit, MANA_POWER_TYPE))
+end, "Power", "12000")
+W:AddTag("curaltmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPower(unit, MANA_POWER_TYPE), nil, false, true)
+end, "Power", "12K")
+W:AddTag("peraltmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), UnitPower(unit, MANA_POWER_TYPE), true)
+end, "Power", "80.20%")
+W:AddTag("peraltmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), UnitPower(unit, MANA_POWER_TYPE), true, true)
+end, "Power", "80%")
+
+W:AddTag("maxaltmana", "UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE))
+end, "Power", "15000")
+W:AddTag("maxaltmana:short", "UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    return FormatText(UnitPowerMax(unit, MANA_POWER_TYPE), nil, false, true)
+end, "Power", "15K")
+
+W:AddTag("defaltmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - UnitPowerMax(unit, MANA_POWER_TYPE)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit)
+end, "Power", "-3000")
+W:AddTag("defaltmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - UnitPowerMax(unit, MANA_POWER_TYPE)
+    if not deficit or deficit == 0 then return end
+    return FormatText(deficit, nil, false, true)
+end, "Power", "-3K")
+W:AddTag("perdefaltmana", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    local max = UnitPowerMax(unit, MANA_POWER_TYPE)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - max
+    if not deficit or deficit == 0 then return end
+    return FormatText(max, deficit, true)
+end, "Power", "-20.20%")
+W:AddTag("perdefaltmana:short", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER UNIT_MAXPOWER", function(unit)
+    if UnitPowerType(unit) == MANA_POWER_TYPE then return end
+    local max = UnitPowerMax(unit, MANA_POWER_TYPE)
+    local deficit = UnitPower(unit, MANA_POWER_TYPE) - max
+    if not deficit or deficit == 0 then return end
+    return FormatText(max, deficit, true, true)
+end, "Power", "-20%")
+
 -- MARK: Group
 W:AddTag("group", "GROUP_ROSTER_UPDATE", function(unit)
     local subgroup = Util:GetUnitSubgroup(unit)

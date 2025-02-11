@@ -20,6 +20,8 @@ L.pixel = L["Pixel"]
 L.shine = L["Shine"]
 L.proc = L["Proc"]
 L.healPrediction = L["Heal Prediction"]
+L.shieldTexture = L["Shield Texture"]
+L.overshieldTexture = L["Overshield Texture"]
 
 -- Tabs
 L.unitFramesTab = "Unit Frames"
@@ -408,6 +410,11 @@ L.essence = "Essence"
 L.classResources = "Class Resources"
 L.useClassColorForPet = "Use Class Color for Pet"
 L.overShield = "Overshield"
+L.overlayTexture = "Overlay Texture"
+L.shieldColor = "Shield Color"
+L.overshieldColor = "Overshield Color"
+L.overlayColor = "Overlay Color"
+L.useOverlay = "Use Overlay"
 L.overAbsorb = "Overabsorb"
 L.hostileUnits = "Hostile Units"
 L.swapHostileHealthAndLossColors = "Swap Health and Health Loss Colors"

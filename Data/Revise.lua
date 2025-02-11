@@ -209,6 +209,25 @@ function DB:Revise()
             layout.widgets.castBar.reverse = nil
         end)
     end
+    if CUF_DB.version < 18 then
+        local colors = DB.GetColors()
+        if colors then
+            if colors.shieldBar then
+                if colors.shieldBar.texture then
+                    colors.shieldBar.shieldTexture = colors.shieldBar.texture
+                    colors.shieldBar.texture = nil
+                end
+                if colors.shieldBar.color then
+                    colors.shieldBar.shieldColor = colors.shieldBar.color
+                    colors.shieldBar.color = nil
+                end
+                if colors.shieldBar.overShield then
+                    colors.shieldBar.overshieldColor = colors.shieldBar.overShield
+                    colors.shieldBar.overShield = nil
+                end
+            end
+        end
+    end
 
     ShowChangelog()
 end

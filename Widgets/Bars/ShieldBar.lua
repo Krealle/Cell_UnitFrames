@@ -50,8 +50,8 @@ function W.UpdateShieldBarWidget(button, unit, setting, subSetting, ...)
     end
 
     if widget.enabled and button:IsVisible() then
-        widget.overShieldGlow:Hide()
-        widget.overShieldGlowReverse:Hide()
+        widget.overshieldGlow:Hide()
+        widget.overshieldGlowReverse:Hide()
         widget.shield:Hide()
         widget.shieldReverse:Hide()
 
@@ -76,8 +76,8 @@ local function Update(button)
         return
     end
     if not shieldBar.showOverShield or shieldBar.currentPoint ~= "healthBar" then
-        shieldBar.overShieldGlow:Hide()
-        shieldBar.overShieldGlowReverse:Hide()
+        shieldBar.overshieldGlow:Hide()
+        shieldBar.overshieldGlowReverse:Hide()
     end
 
     -- Preview
@@ -150,7 +150,7 @@ local function ShieldBar_SetValue_Horizontal(bar, percent, healthPercent)
             bar.shield:Hide()
 
             if bar.showOverShield then
-                bar.overShieldGlowReverse:Show()
+                bar.overshieldGlowReverse:Show()
             end
 
             bar.shieldReverse:SetWidth(barWidth)
@@ -166,14 +166,14 @@ local function ShieldBar_SetValue_Horizontal(bar, percent, healthPercent)
             end
 
             if bar.showOverShield then
-                bar.overShieldGlow:Show()
+                bar.overshieldGlow:Show()
             end
         end
     else
         bar.shield:Show()
         bar.shieldReverse:Hide()
-        bar.overShieldGlow:Hide()
-        bar.overShieldGlowReverse:Hide()
+        bar.overshieldGlow:Hide()
+        bar.overshieldGlowReverse:Hide()
 
         bar.shield:SetWidth(barWidth)
     end
@@ -203,7 +203,7 @@ local function ShieldBar_SetValue_Vertical(bar, percent, healthPercent)
             bar.shield:Hide()
 
             if bar.showOverShield then
-                bar.overShieldGlowReverse:Show()
+                bar.overshieldGlowReverse:Show()
             end
 
             bar.shieldReverse:SetHeight(barHeight)
@@ -219,14 +219,14 @@ local function ShieldBar_SetValue_Vertical(bar, percent, healthPercent)
             end
 
             if bar.showOverShield then
-                bar.overShieldGlow:Show()
+                bar.overshieldGlow:Show()
             end
         end
     else
         bar.shield:Show()
         bar.shieldReverse:Hide()
-        bar.overShieldGlow:Hide()
-        bar.overShieldGlowReverse:Hide()
+        bar.overshieldGlow:Hide()
+        bar.overshieldGlowReverse:Hide()
 
         bar.shield:SetHeight(barHeight)
     end
@@ -237,13 +237,13 @@ end
 local function Repoint(bar, anchorPoint)
     P.ClearPoints(bar.shield)
     P.ClearPoints(bar.shieldReverse)
-    P.ClearPoints(bar.overShieldGlow)
-    P.ClearPoints(bar.overShieldGlowReverse)
+    P.ClearPoints(bar.overshieldGlow)
+    P.ClearPoints(bar.overshieldGlowReverse)
 
     bar.shield:Hide()
     bar.shieldReverse:Hide()
-    bar.overShieldGlow:Hide()
-    bar.overShieldGlowReverse:Hide()
+    bar.overshieldGlow:Hide()
+    bar.overshieldGlowReverse:Hide()
 
     -- Only the shield bar is used if not anchored to Health Bar
     if not bar.anchorToHealthBar then
@@ -265,15 +265,16 @@ local function Repoint(bar, anchorPoint)
         P.Point(bar.shield, "TOPLEFT", bar.parentHealthBarLoss)
         P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overShieldGlow, "TOPRIGHT", bar.parentHealthBar)
-        P.Point(bar.overShieldGlow, "BOTTOMRIGHT", bar.parentHealthBar)
-        F:RotateTexture(bar.overShieldGlow, 0)
-        P.Width(bar.overShieldGlow, 4)
+        P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
+        P.Point(bar.overshieldGlow, "BOTTOMRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
+        F:RotateTexture(bar.overshieldGlow, 0)
+        P.Width(bar.overshieldGlow, bar.overshieldGlow.size)
 
-        P.Point(bar.overShieldGlowReverse, "TOP", bar.shieldReverse, "TOPLEFT")
-        P.Point(bar.overShieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMLEFT")
-        F:RotateTexture(bar.overShieldGlowReverse, 0)
-        P.Width(bar.overShieldGlowReverse, 4)
+        P.Point(bar.overshieldGlowReverse, "TOP", bar.shieldReverse, "TOPLEFT", bar.overshieldGlowReverse.offset, 0)
+        P.Point(bar.overshieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMLEFT", bar.overshieldGlowReverse.offset,
+            0)
+        F:RotateTexture(bar.overshieldGlowReverse, 0)
+        P.Width(bar.overshieldGlowReverse, bar.overshieldGlowReverse.size)
     else
         bar.SetValue = ShieldBar_SetValue_Vertical
 
@@ -283,16 +284,83 @@ local function Repoint(bar, anchorPoint)
         P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
         P.Point(bar.shield, "BOTTOMRIGHT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overShieldGlow, "TOPLEFT", bar.parentHealthBar)
-        P.Point(bar.overShieldGlow, "TOPRIGHT", bar.parentHealthBar)
-        F:RotateTexture(bar.overShieldGlow, 90)
-        P.Height(bar.overShieldGlow, 4)
+        P.Point(bar.overshieldGlow, "TOPLEFT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
+        P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
+        F:RotateTexture(bar.overshieldGlow, 90)
+        P.Height(bar.overshieldGlow, bar.overshieldGlow.size)
 
-        P.Point(bar.overShieldGlowReverse, "LEFT", bar.shieldReverse, "BOTTOMLEFT")
-        P.Point(bar.overShieldGlowReverse, "RIGHT", bar.shieldReverse, "BOTTOMRIGHT")
-        F:RotateTexture(bar.overShieldGlowReverse, 90)
-        P.Height(bar.overShieldGlowReverse, 4)
+        P.Point(bar.overshieldGlowReverse, "LEFT", bar.shieldReverse, "BOTTOMLEFT", 0, bar.overshieldGlowReverse.offset)
+        P.Point(bar.overshieldGlowReverse, "RIGHT", bar.shieldReverse, "BOTTOMRIGHT", 0, bar.overshieldGlowReverse
+            .offset)
+        F:RotateTexture(bar.overshieldGlowReverse, 90)
+        P.Height(bar.overshieldGlowReverse, bar.overshieldGlowReverse.size)
     end
+end
+
+---@param self ShieldBarWidget
+local function UpdateStyle(self)
+    local colors = DB.GetColors().shieldBar
+
+    if colors.shieldTexture == "Interface\\AddOns\\Cell\\Media\\shield" then
+        self.shield.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
+        self.shield.tex:SetHorizTile(true)
+        self.shield.tex:SetVertTile(true)
+
+        self.shieldReverse.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
+        self.shieldReverse.tex:SetHorizTile(true)
+        self.shieldReverse.tex:SetVertTile(true)
+    elseif colors.shieldTexture == "Interface\\RaidFrame\\Shield-Fill" then
+        self.shield.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
+        self.shield.tex:SetHorizTile(false)
+        self.shield.tex:SetVertTile(false)
+
+        self.shieldReverse.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
+        self.shieldReverse.tex:SetHorizTile(false)
+        self.shieldReverse.tex:SetVertTile(false)
+    else
+        self.shield.tex:SetTexture(colors.shieldTexture)
+        self.shield.tex:SetHorizTile(false)
+        self.shield.tex:SetVertTile(false)
+
+        self.shieldReverse.tex:SetTexture(colors.shieldTexture)
+        self.shieldReverse.tex:SetHorizTile(false)
+        self.shieldReverse.tex:SetVertTile(false)
+    end
+
+    if colors.useOverlay then
+        self.shieldOverlay:SetTexture(colors.overlayTexture)
+        self.shieldReverseOverlay:SetTexture(colors.overlayTexture)
+
+        self.shieldOverlay:SetVertexColor(unpack(colors.overlayColor))
+        self.shieldReverseOverlay:SetVertexColor(unpack(colors.overlayColor))
+
+        self.shieldOverlay:Show()
+        self.shieldReverseOverlay:Show()
+    else
+        self.shieldOverlay:Hide()
+        self.shieldReverseOverlay:Hide()
+    end
+
+    self.overshieldGlow:SetTexture(colors.overshieldTexture)
+    self.overshieldGlowReverse:SetTexture(colors.overshieldTexture)
+
+    if colors.overshieldTexture == "Interface\\RaidFrame\\Shield-Overshield" then
+        self.overshieldGlow.size = 16
+        self.overshieldGlow.offset = 7
+        self.overshieldGlowReverse.size = 16
+        self.overshieldGlowReverse.offset = 0
+    else
+        self.overshieldGlow.size = 4
+        self.overshieldGlow.offset = 0
+        self.overshieldGlowReverse.size = 4
+        self.overshieldGlowReverse.offset = 0
+    end
+
+    self.shield.tex:SetVertexColor(unpack(colors.shieldColor))
+    self.shieldReverse.tex:SetVertexColor(unpack(colors.shieldColor))
+
+    self.overshieldGlow:SetVertexColor(unpack(colors.overshieldColor))
+    self.overshieldGlowReverse:SetVertexColor(unpack(colors.overshieldColor))
 end
 
 -------------------------------------------------
@@ -323,47 +391,37 @@ function W:CreateShieldBar(button)
     shieldReverse.tex = shieldReverse:CreateTexture(nil, "BORDER", nil, -7)
     shieldReverse.tex:SetAllPoints()
 
+    local shieldReverseOverlay = shieldReverse:CreateTexture(nil, "OVERLAY", nil, -6)
+    shieldBar.shieldReverseOverlay = shieldReverseOverlay
+    shieldReverseOverlay:SetTexture("Interface\\RaidFrame\\Shield-Overlay")
+    shieldReverseOverlay:SetAllPoints()
+
     local shield = CreateFrame("Frame", button:GetName() .. "_ShieldBar_Shield", shieldBar)
     shieldBar.shield = shield
     shield.tex = shield:CreateTexture(nil, "BORDER", nil, -7)
     shield.tex:SetAllPoints()
 
-    local overShieldGlow = shieldBar:CreateTexture(nil, "ARTWORK", nil, -4)
-    overShieldGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
-    overShieldGlow:Hide()
-    shieldBar.overShieldGlow = overShieldGlow
+    local shieldOverlay = shield:CreateTexture(nil, "OVERLAY", nil, -6)
+    shieldBar.shieldOverlay = shieldOverlay
+    shieldOverlay:SetTexture("Interface\\RaidFrame\\Shield-Overlay")
+    shieldOverlay:SetAllPoints()
 
-    local overShieldGlowReverse = shieldReverse:CreateTexture(nil, "ARTWORK", nil, -4)
-    overShieldGlowReverse:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
-    overShieldGlowReverse:Hide()
-    shieldBar.overShieldGlowReverse = overShieldGlowReverse
+    ---@class OvershieldGlow: Texture
+    local overshieldGlow = shieldBar:CreateTexture(nil, "ARTWORK")
+    overshieldGlow.size = 4
+    overshieldGlow.offset = 0
+    overshieldGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overshieldGlow:Hide()
+    overshieldGlow:SetBlendMode("ADD")
+    shieldBar.overshieldGlow = overshieldGlow
 
-    function shieldBar:UpdateStyle()
-        local colors = DB.GetColors().shieldBar
-
-        if colors.texture == "Interface\\AddOns\\Cell\\Media\\shield" then
-            shield.tex:SetTexture(colors.texture, "REPEAT", "REPEAT")
-            shield.tex:SetHorizTile(true)
-            shield.tex:SetVertTile(true)
-
-            shieldReverse.tex:SetTexture(colors.texture, "REPEAT", "REPEAT")
-            shieldReverse.tex:SetHorizTile(true)
-            shieldReverse.tex:SetVertTile(true)
-        else
-            shield.tex:SetTexture(colors.texture)
-            shield.tex:SetHorizTile(false)
-            shield.tex:SetVertTile(false)
-
-            shieldReverse.tex:SetTexture(colors.texture)
-            shieldReverse.tex:SetHorizTile(false)
-            shieldReverse.tex:SetVertTile(false)
-        end
-
-        shield.tex:SetVertexColor(unpack(colors.color))
-        shieldReverse.tex:SetVertexColor(unpack(colors.color))
-        overShieldGlow:SetVertexColor(unpack(colors.overShield))
-        overShieldGlowReverse:SetVertexColor(unpack(colors.overShield))
-    end
+    local overshieldGlowReverse = shieldReverse:CreateTexture(nil, "ARTWORK") --[[@as OvershieldGlow]]
+    overshieldGlowReverse.size = 4
+    overshieldGlowReverse.offset = 0
+    overshieldGlowReverse:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overshieldGlowReverse:Hide()
+    overshieldGlowReverse:SetBlendMode("ADD")
+    shieldBar.overshieldGlowReverse = overshieldGlowReverse
 
     ---@param styleTable ShieldBarWidgetTable
     function shieldBar:UpdatePosition(styleTable)
@@ -383,6 +441,7 @@ function W:CreateShieldBar(button)
     shieldBar.SetEnabled = W.SetEnabled
     shieldBar.SetWidgetFrameLevel = W.SetWidgetFrameLevel
     shieldBar.Repoint = Repoint
+    shieldBar.UpdateStyle = UpdateStyle
 
     shieldBar.Update = Update
     shieldBar.Enable = Enable

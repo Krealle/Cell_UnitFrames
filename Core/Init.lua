@@ -2,7 +2,7 @@
 local CUF = select(2, ...)
 _G.CUF = CUF
 
-CUF.version = 17
+CUF.version = 18
 
 CUF.Cell = Cell
 

@@ -92,11 +92,11 @@ local function CreateColorPicker(which, colorName, colorTable, parent)
     return cp, cpWidth
 end
 
---- Create a sperator title
+--- Create a separator title
 ---@param title string
 ---@param parent Frame
 ---@return Frame
-local function CreateSperatorTitle(title, parent)
+local function CreateSeparatorTitle(title, parent)
     local sectionTitle = CUF:CreateFrame(nil, parent, 1, 1, true, true) --[[@as OptionTitle]]
     sectionTitle:SetPoint("TOPLEFT")
     sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
@@ -255,8 +255,8 @@ function ColorTab:CreateSections()
             local colorName, colorType = info[1], info[2]
             local element, elementWidth
 
-            if colorType == "seperator" then
-                element = CreateSperatorTitle(colorName, section)
+            if colorType == "separator" then
+                element = CreateSeparatorTitle(colorName, section)
                 gridLayout.currentColumn = 1
                 gridLayout.currentColumnWidth = section:GetWidth()
                 gridLayout.currentRow = gridLayout.currentRow + 1

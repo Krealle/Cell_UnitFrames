@@ -262,7 +262,7 @@ Defaults.ColorsMenuOrder = {
         { "background",       "rgb" },
         { "interruptible",    "rgb" },
         { "nonInterruptible", "rgb" },
-        { "Empowers",         "seperator" },
+        { "Empowers",         "separator" },
         { "stageZero",        "rgb" },
         { "stageOne",         "rgb" },
         { "stageTwo",         "rgb" },
@@ -276,7 +276,7 @@ Defaults.ColorsMenuOrder = {
         { "neutral",                        "rgb" },
         { "pet",                            "rgb" },
         { "useClassColorForPet",            "toggle" },
-        { "hostileUnits",                   "seperator" },
+        { "hostileUnits",                   "separator" },
         { "swapHostileHealthAndLossColors", "toggle" }
     },
     essence = {

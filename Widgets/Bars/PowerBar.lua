@@ -132,7 +132,12 @@ local function GetRole(button)
     local role
     local info = LGI and LGI:GetCachedInfo(button.states.guid)
 
-    if info then
+    if button.states.unit == "player" then
+        local classID = select(2, UnitClassBase("player"))
+        if classID then
+            role = select(5, GetSpecializationInfoForClassID(classID, GetSpecialization()))
+        end
+    elseif info then
         role = info.role
     else
         role = UnitGroupRolesAssigned(button.states.unit)

@@ -327,19 +327,19 @@ function W:CreateHealPrediction(button)
     heal.tex:SetAllPoints()
 
     local overHealGlow = healPrediction:CreateTexture(nil, "ARTWORK", nil, -4)
-    overHealGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overHealGlow:SetTexture(CUF.constants.Textures.CELL_OVERSHIELD)
     overHealGlow:Hide()
     healPrediction.overHealGlow = overHealGlow
 
     local overHealGlowReverse = healReverse:CreateTexture(nil, "ARTWORK", nil, -4)
-    overHealGlowReverse:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overHealGlowReverse:SetTexture(CUF.constants.Textures.CELL_OVERSHIELD)
     overHealGlowReverse:Hide()
     healPrediction.overHealGlowReverse = overHealGlowReverse
 
     function healPrediction:UpdateStyle()
         local colors = DB.GetColors().healPrediction
 
-        if colors.texture == "Interface\\AddOns\\Cell\\Media\\shield" then
+        if colors.texture == CUF.constants.Textures.CELL_SHIELD then
             heal.tex:SetTexture(colors.texture, "REPEAT", "REPEAT")
             heal.tex:SetHorizTile(true)
             heal.tex:SetVertTile(true)

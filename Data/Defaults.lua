@@ -158,7 +158,7 @@ Defaults.Options.glow = {
 ---@class Defaults.Colors
 Defaults.Colors = {
     castBar = {
-        texture = "Interface\\Buttons\\WHITE8X8",
+        texture = CUF.constants.Textures.SOLID,
         interruptible = { 0.2, 0.57, 0.5, 1 },
         nonInterruptible = { 0.43, 0.43, 0.43, 1 },
         background = { 0, 0, 0, 0.8 },
@@ -214,17 +214,17 @@ Defaults.Colors = {
         unholyRune = { 0.24, 1.0, 0.24, 1 },
     },
     shieldBar = {
-        shieldTexture = "Interface\\Buttons\\WHITE8X8",
-        overshieldTexture = "Interface\\AddOns\\Cell\\Media\\overshield",
-        overlayTexture = "Interface\\RaidFrame\\Shield-Overlay",
+        shieldTexture = CUF.constants.Textures.SOLID,
+        overshieldTexture = CUF.constants.Textures.CELL_OVERSHIELD,
+        overlayTexture = CUF.constants.Textures.BLIZZARD_SHIELD_OVERLAY,
         shieldColor = { 1, 1, 0, 0.25 },
         overshieldColor = { 1, 1, 1, 1 },
         overlayColor = { 1, 1, 1, 1 },
         useOverlay = false,
     },
     healAbsorb = {
-        absorbTexture = "Interface\\AddOns\\Cell\\Media\\shield",
-        overabsorbTexture = "Interface\\AddOns\\Cell\\Media\\overabsorb",
+        absorbTexture = CUF.constants.Textures.CELL_SHIELD,
+        overabsorbTexture = CUF.constants.Textures.CELL_OVERABSORB,
         absorbColor = { 1, 0.1, 0.1, 1 },
         overabsorbColor = { 1, 1, 1, 1 },
         invertColor = false,
@@ -243,14 +243,14 @@ Defaults.Colors = {
         powerLossAlpha = 1,
     },
     classBar = {
-        texture = "Interface\\Buttons\\WHITE8X8",
+        texture = CUF.constants.Textures.SOLID,
     },
     highlight = {
         target = { 1, 0.3, 0.3, 1 },
         hover = { 1, 1, 1, 1 }
     },
     healPrediction = {
-        texture = "Interface\\Buttons\\WHITE8X8",
+        texture = CUF.constants.Textures.SOLID,
         color = { 0, 1, 0.5, 0.25 },
         overHeal = { 1, 1, 1, 1 },
     },

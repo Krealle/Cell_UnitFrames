@@ -442,7 +442,7 @@ function W:CreatePowerBar(button)
         powerBar.border:SetAllPoints()
         powerBar.border:SetBackdrop({
             bgFile = nil,
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = CUF.constants.Textures.SOLID,
             edgeSize = P.Scale(CELL_BORDER_SIZE),
         })
         powerBar.border:SetBackdropBorderColor(0, 0, 0, 1)
@@ -458,7 +458,7 @@ function W:CreatePowerBar(button)
     Mixin(powerBar, SmoothStatusBarMixin)
 
     powerBar.bg = powerBar:CreateTexture(nil, "ARTWORK", nil, -1)
-    powerBar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
+    powerBar.bg:SetTexture(CUF.constants.Textures.SOLID)
     powerBar.bg:SetAllPoints()
 
     powerBar.Update = Update

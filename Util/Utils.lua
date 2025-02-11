@@ -647,7 +647,7 @@ function Util:GetWeaponEnchantInfo()
 end
 
 local LSM = LibStub("LibSharedMedia-3.0", true)
-LSM:Register("statusbar", "Cell Shield", "Interface\\AddOns\\Cell\\Media\\shield")
+LSM:Register("statusbar", "Cell Shield", const.Textures.CELL_SHIELD)
 
 local textures
 Util.textureToName = {}

@@ -301,7 +301,7 @@ end
 local function UpdateStyle(self)
     local colors = DB.GetColors().shieldBar
 
-    if colors.shieldTexture == "Interface\\AddOns\\Cell\\Media\\shield" then
+    if colors.shieldTexture == CUF.constants.Textures.CELL_SHIELD then
         self.shield.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
         self.shield.tex:SetHorizTile(true)
         self.shield.tex:SetVertTile(true)
@@ -309,7 +309,7 @@ local function UpdateStyle(self)
         self.shieldReverse.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
         self.shieldReverse.tex:SetHorizTile(true)
         self.shieldReverse.tex:SetVertTile(true)
-    elseif colors.shieldTexture == "Interface\\RaidFrame\\Shield-Fill" then
+    elseif colors.shieldTexture == CUF.constants.Textures.BLIZZARD_SHIELD_FILL then
         self.shield.tex:SetTexture(colors.shieldTexture, "REPEAT", "REPEAT")
         self.shield.tex:SetHorizTile(false)
         self.shield.tex:SetVertTile(false)
@@ -344,7 +344,7 @@ local function UpdateStyle(self)
     self.overshieldGlow:SetTexture(colors.overshieldTexture)
     self.overshieldGlowReverse:SetTexture(colors.overshieldTexture)
 
-    if colors.overshieldTexture == "Interface\\RaidFrame\\Shield-Overshield" then
+    if colors.overshieldTexture == CUF.constants.Textures.BLIZZARD_OVERSHIELD then
         self.overshieldGlow.size = 16
         self.overshieldGlow.offset = 7
         self.overshieldGlowReverse.size = 16
@@ -393,7 +393,7 @@ function W:CreateShieldBar(button)
 
     local shieldReverseOverlay = shieldReverse:CreateTexture(nil, "OVERLAY", nil, -6)
     shieldBar.shieldReverseOverlay = shieldReverseOverlay
-    shieldReverseOverlay:SetTexture("Interface\\RaidFrame\\Shield-Overlay")
+    shieldReverseOverlay:SetTexture(const.Textures.BLIZZARD_SHIELD_OVERLAY)
     shieldReverseOverlay:SetAllPoints()
 
     local shield = CreateFrame("Frame", button:GetName() .. "_ShieldBar_Shield", shieldBar)
@@ -403,14 +403,14 @@ function W:CreateShieldBar(button)
 
     local shieldOverlay = shield:CreateTexture(nil, "OVERLAY", nil, -6)
     shieldBar.shieldOverlay = shieldOverlay
-    shieldOverlay:SetTexture("Interface\\RaidFrame\\Shield-Overlay")
+    shieldOverlay:SetTexture(const.Textures.BLIZZARD_SHIELD_OVERLAY)
     shieldOverlay:SetAllPoints()
 
     ---@class OvershieldGlow: Texture
     local overshieldGlow = shieldBar:CreateTexture(nil, "ARTWORK")
     overshieldGlow.size = 4
     overshieldGlow.offset = 0
-    overshieldGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overshieldGlow:SetTexture(const.Textures.CELL_OVERSHIELD)
     overshieldGlow:Hide()
     overshieldGlow:SetBlendMode("ADD")
     shieldBar.overshieldGlow = overshieldGlow
@@ -418,7 +418,7 @@ function W:CreateShieldBar(button)
     local overshieldGlowReverse = shieldReverse:CreateTexture(nil, "ARTWORK") --[[@as OvershieldGlow]]
     overshieldGlowReverse.size = 4
     overshieldGlowReverse.offset = 0
-    overshieldGlowReverse:SetTexture("Interface\\AddOns\\Cell\\Media\\overshield")
+    overshieldGlowReverse:SetTexture(const.Textures.CELL_OVERSHIELD)
     overshieldGlowReverse:Hide()
     overshieldGlowReverse:SetBlendMode("ADD")
     shieldBar.overshieldGlowReverse = overshieldGlowReverse

@@ -290,17 +290,17 @@ function W:CreateAltPowerBar(button)
         "BackdropTemplate")
     button.widgets.altPowerBar = altPowerBar
 
-    altPowerBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+    altPowerBar:SetStatusBarTexture(CUF.constants.Textures.SOLID)
 
     altPowerBar.bg = altPowerBar:CreateTexture(nil, "BACKGROUND")
-    altPowerBar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
+    altPowerBar.bg:SetTexture(CUF.constants.Textures.SOLID)
     altPowerBar.bg:SetAllPoints()
 
     altPowerBar.border = CreateFrame("Frame", nil, altPowerBar, "BackdropTemplate")
     altPowerBar.border:SetAllPoints()
     altPowerBar.border:SetBackdrop({
         bgFile = nil,
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = CUF.constants.Textures.SOLID,
         edgeSize = P.Scale(CELL_BORDER_SIZE),
     })
     altPowerBar.border:SetBackdropBorderColor(0, 0, 0, 1)

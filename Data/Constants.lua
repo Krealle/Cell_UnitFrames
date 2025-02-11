@@ -361,3 +361,16 @@ const.GlowType = {
     SHINE = "shine",
     PROC = "proc",
 }
+
+---@enum Textures
+const.Textures = {
+    SOLID = "Interface\\Buttons\\WHITE8X8",
+    CELL_SHIELD = "Interface\\AddOns\\Cell\\Media\\shield",
+    CELL_OVERSHIELD = "Interface\\AddOns\\Cell\\Media\\overshield",
+    CELL_OVERABSORB = "Interface\\AddOns\\Cell\\Media\\overabsorb",
+    BLIZZARD_SHIELD_FILL = "Interface\\RaidFrame\\Shield-Fill",
+    BLIZZARD_SHIELD_OVERLAY = "Interface\\RaidFrame\\Shield-Overlay",
+    BLIZZARD_OVERSHIELD = "Interface\\RaidFrame\\Shield-Overshield",
+    BLIZZARD_ABSORB_FILL = "Interface\\RaidFrame\\Absorb-Fill",
+    BLIZZARD_OVERABSORB = "Interface\\RaidFrame\\Absorb-Overabsorb",
+}

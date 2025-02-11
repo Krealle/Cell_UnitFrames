@@ -939,7 +939,7 @@ local function SetBorderStyle(self, styleTable)
 
     border:SetBackdrop({
         bgFile = nil,
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = CUF.constants.Textures.SOLID,
         edgeSize = P.Scale(styleTable.size),
     })
 
@@ -1092,7 +1092,7 @@ function W:CreateCastBar(button)
     local spark = topLevelFrame:CreateTexture(nil, "OVERLAY")
     spark:SetWidth(2)
     spark:SetBlendMode("BLEND")
-    spark:SetTexture("Interface\\Buttons\\WHITE8X8")
+    spark:SetTexture(CUF.constants.Textures.SOLID)
     spark.enabled = false
     spark.size = 4
 

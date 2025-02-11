@@ -638,18 +638,18 @@ function W:CreateClassBar(button)
         classBar[i] = bar
         bar.index = i
 
-        bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+        bar:SetStatusBarTexture(CUF.constants.Textures.SOLID)
         bar:SetMinMaxValues(0, 1)
 
         bar.bg = bar:CreateTexture(nil, "BACKGROUND")
-        bar.bg:SetTexture("Interface\\Buttons\\WHITE8X8")
+        bar.bg:SetTexture(CUF.constants.Textures.SOLID)
         bar.bg:SetAllPoints()
 
         bar.border = CreateFrame("Frame", nil, bar, "BackdropTemplate")
         bar.border:SetAllPoints()
         bar.border:SetBackdrop({
             bgFile = nil,
-            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = CUF.constants.Textures.SOLID,
             edgeSize = P.Scale(CELL_BORDER_SIZE),
         })
         bar.border:SetBackdropBorderColor(0, 0, 0, 1)

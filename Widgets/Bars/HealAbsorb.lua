@@ -183,11 +183,11 @@ local function UpdateStyle(self)
 
     self.absorbInvertColor = colors.invertColor
 
-    if colors.absorbTexture == "Interface\\AddOns\\Cell\\Media\\shield" then
+    if colors.absorbTexture == CUF.constants.Textures.CELL_SHIELD then
         self.tex:SetTexture(colors.absorbTexture, "REPEAT", "REPEAT")
         self.tex:SetHorizTile(true)
         self.tex:SetVertTile(true)
-    elseif colors.absorbTexture == "Interface\\RaidFrame\\Absorb-Fill" then
+    elseif colors.absorbTexture == CUF.constants.Textures.BLIZZARD_ABSORB_FILL then
         -- TODO: This is prolly not correct
         self.tex:SetTexture(colors.absorbTexture)
         self.tex:SetHorizTile(true)
@@ -203,7 +203,7 @@ local function UpdateStyle(self)
     self.overabsorbGlow:SetTexture(colors.overabsorbTexture)
     self.overabsorbGlow:SetVertexColor(unpack(colors.overabsorbColor))
 
-    if colors.overabsorbTexture == "Interface\\RaidFrame\\Absorb-Overabsorb" then
+    if colors.overabsorbTexture == CUF.constants.Textures.BLIZZARD_OVERABSORB then
         self.overabsorbGlow.size = 16
     else
         self.overabsorbGlow.size = 4
@@ -237,7 +237,7 @@ function W:CreateHealAbsorb(button)
 
     ---@class OverabsorbGlow: Texture
     local overabsorbGlow = healAbsorb:CreateTexture(nil, "ARTWORK", nil, -4)
-    overabsorbGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overabsorb")
+    overabsorbGlow:SetTexture(CUF.constants.Textures.CELL_OVERABSORB)
     overabsorbGlow:Hide()
     overabsorbGlow:SetBlendMode("ADD")
     healAbsorb.overabsorbGlow = overabsorbGlow

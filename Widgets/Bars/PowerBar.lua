@@ -292,6 +292,8 @@ end
 ---@param unit UnitToken?
 local function Update(button, event, unit)
     local powerBar = button.widgets.powerBar
+    if not powerBar.enabled then return end
+
     powerBar:UpdateVisibility()
     if powerBar.active then
         powerBar.UpdatePowerType(button)

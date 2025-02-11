@@ -116,7 +116,7 @@ end
 ---@return Frame
 local function CreateTextureDropdown(which, colorName, colorTable, parent)
     ---@class CUF.ColorSection.Dropdown: CellDropdown
-    local textureDropdown = Cell:CreateDropdown(parent, 160, "texture")
+    local textureDropdown = Cell:CreateDropdown(parent, 200, "texture")
     textureDropdown:SetLabel(L[colorName])
     textureDropdown.id = colorName
 

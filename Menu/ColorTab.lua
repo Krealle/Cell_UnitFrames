@@ -8,7 +8,6 @@ local DB = CUF.DB
 local Menu = CUF.Menu
 local Util = CUF.Util
 local const = CUF.constants
-local Builder = CUF.Builder
 
 ---@class ColorTab: Menu.Tab
 local ColorTab = {}
@@ -122,7 +121,7 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
     textureDropdown.id = colorName
 
     local textureDropdownItems = {}
-    for name, tex in pairs(Builder:GetTextures()) do
+    for name, tex in pairs(Util:GetTextures()) do
         table.insert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
@@ -133,7 +132,7 @@ local function CreateTextureDropdown(which, colorName, colorTable, parent)
         })
     end
     textureDropdown:SetItems(textureDropdownItems)
-    textureDropdown:SetSelected(Builder.textureToName[colorTable[colorName]], colorTable[colorName])
+    textureDropdown:SetSelected(Util.textureToName[colorTable[colorName]], colorTable[colorName])
 
     return textureDropdown
 end
@@ -199,7 +198,7 @@ function ColorTab:UpdateColors()
             end
         end
         for _, dropdown in pairs(section.dropdowns) do
-            dropdown:SetSelected(Builder.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
+            dropdown:SetSelected(Util.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
         end
     end
 end

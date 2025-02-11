@@ -646,6 +646,24 @@ function Util:GetWeaponEnchantInfo()
     end
 end
 
+local LSM = LibStub("LibSharedMedia-3.0", true)
+LSM:Register("statusbar", "Cell Shield", "Interface\\AddOns\\Cell\\Media\\shield")
+
+local textures
+Util.textureToName = {}
+
+---@return table<string,string>
+function Util:GetTextures()
+    if textures then return textures end
+
+    textures = F:Copy(LSM:HashTable("statusbar"))
+    for name, texture in pairs(textures) do
+        self.textureToName[texture] = name
+    end
+
+    return textures
+end
+
 -------------------------------------------------
 -- MARK: Unit Info
 -------------------------------------------------

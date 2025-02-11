@@ -1178,23 +1178,6 @@ end
 -- MARK: Texture Dropdown
 -----------------------------------------------
 
-local LSM = LibStub("LibSharedMedia-3.0", true)
-LSM:Register("statusbar", "Cell Shield", "Interface\\AddOns\\Cell\\Media\\shield")
-local textures
-Builder.textureToName = {}
-
----@return table<string,string>
-function Builder:GetTextures()
-    if textures then return textures end
-
-    textures = F:Copy(LSM:HashTable("statusbar"))
-    for name, texture in pairs(textures) do
-        Builder.textureToName[texture] = name
-    end
-
-    return textures
-end
-
 ---@param parent Frame
 ---@param widgetName WIDGET_KIND
 ---@param path string
@@ -1211,7 +1194,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
     textureDropdown.Get_DB = HandleWidgetOption
 
     local textureDropdownItems = {}
-    for name, tex in pairs(self:GetTextures()) do
+    for name, tex in pairs(Util:GetTextures()) do
         table.insert(textureDropdownItems, {
             ["text"] = name,
             ["texture"] = tex,
@@ -1224,7 +1207,7 @@ function Builder:CreateTextureDropdown(parent, widgetName, path)
 
     local function LoadPageDB()
         local tex = textureDropdown.Get_DB(widgetName, path)
-        textureDropdown:SetSelected(Builder.textureToName[tex], tex)
+        textureDropdown:SetSelected(Util.textureToName[tex], tex)
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "TextureDropdown_" .. path)
 

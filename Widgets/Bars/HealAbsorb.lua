@@ -111,16 +111,16 @@ local function SetValue_Horizontal(self, healAbsorbPercent, healthPercent)
     if self.absorbInvertColor then
         local r, g, b = F:InvertColor(self.parentHealthBar:GetStatusBarColor())
         self.tex:SetVertexColor(r, g, b)
-        self.overAbsorbGlow:SetVertexColor(r, g, b)
+        self.overabsorbGlow:SetVertexColor(r, g, b)
     end
 
     local barWidth = self.parentHealthBar:GetWidth()
     if healAbsorbPercent > healthPercent then
         self:SetWidth(healthPercent * barWidth)
-        self.overAbsorbGlow:Show()
+        self.overabsorbGlow:Show()
     else
         self:SetWidth(healAbsorbPercent * barWidth)
-        self.overAbsorbGlow:Hide()
+        self.overabsorbGlow:Hide()
     end
     self:Show()
 end
@@ -132,16 +132,16 @@ local function SetValue_Vertical(self, healAbsorbPercent, healthPercent)
     if self.absorbInvertColor then
         local r, g, b = F:InvertColor(self.parentHealthBar:GetStatusBarColor())
         self.tex:SetVertexColor(r, g, b)
-        self.overAbsorbGlow:SetVertexColor(r, g, b)
+        self.overabsorbGlow:SetVertexColor(r, g, b)
     end
 
     local barHeight = self.parentHealthBar:GetHeight()
     if healAbsorbPercent > healthPercent then
         self:SetHeight(healthPercent * barHeight)
-        self.overAbsorbGlow:Show()
+        self.overabsorbGlow:Show()
     else
         self:SetHeight(healAbsorbPercent * barHeight)
-        self.overAbsorbGlow:Hide()
+        self.overabsorbGlow:Hide()
     end
     self:Show()
 end
@@ -150,31 +150,64 @@ end
 ---@param orientation string?
 local function SetOrientation(self, orientation)
     P.ClearPoints(self)
-    P.ClearPoints(self.overAbsorbGlow)
+    P.ClearPoints(self.overabsorbGlow)
 
     if orientation == "horizontal" then
         P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
         P.Point(self, "BOTTOMRIGHT", self.parentHealthBar:GetStatusBarTexture())
 
-        P.Point(self.overAbsorbGlow, "TOPLEFT", self.parentHealthBar)
-        P.Point(self.overAbsorbGlow, "BOTTOMLEFT", self.parentHealthBar)
-        P.Width(self.overAbsorbGlow, 4)
-        F:RotateTexture(self.overAbsorbGlow, 0)
+        P.Point(self.overabsorbGlow, "TOP", self.parentHealthBar, "TOPLEFT")
+        P.Point(self.overabsorbGlow, "BOTTOM", self.parentHealthBar, "BOTTOMLEFT")
+        P.Width(self.overabsorbGlow, self.overabsorbGlow.size)
+        F:RotateTexture(self.overabsorbGlow, 0)
 
         self.SetValue = SetValue_Horizontal
     else
         P.Point(self, "TOPLEFT", self.parentHealthBar:GetStatusBarTexture())
         P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
 
-        P.Point(self.overAbsorbGlow, "BOTTOMLEFT", self.parentHealthBar)
-        P.Point(self.overAbsorbGlow, "BOTTOMRIGHT", self.parentHealthBar)
-        P.Height(self.overAbsorbGlow, 4)
-        F:RotateTexture(self.overAbsorbGlow, 90)
+        P.Point(self.overabsorbGlow, "LEFT", self.parentHealthBar, "BOTTOMLEFT")
+        P.Point(self.overabsorbGlow, "RIGHT", self.parentHealthBar, "BOTTOMRIGHT")
+        P.Height(self.overabsorbGlow, self.overabsorbGlow.size)
+        F:RotateTexture(self.overabsorbGlow, 90)
 
         self.SetValue = SetValue_Vertical
     end
 
     self.Update(self._owner)
+end
+
+---@param self HealAbsorbWidget
+local function UpdateStyle(self)
+    local colors = DB.GetColors().healAbsorb
+
+    self.absorbInvertColor = colors.invertColor
+
+    if colors.absorbTexture == "Interface\\AddOns\\Cell\\Media\\shield" then
+        self.tex:SetTexture(colors.absorbTexture, "REPEAT", "REPEAT")
+        self.tex:SetHorizTile(true)
+        self.tex:SetVertTile(true)
+    elseif colors.absorbTexture == "Interface\\RaidFrame\\Absorb-Fill" then
+        -- TODO: This is prolly not correct
+        self.tex:SetTexture(colors.absorbTexture)
+        self.tex:SetHorizTile(true)
+        self.tex:SetVertTile(true)
+    else
+        self.tex:SetTexture(colors.absorbTexture)
+        self.tex:SetHorizTile(false)
+        self.tex:SetVertTile(false)
+    end
+
+    self.tex:SetVertexColor(unpack(colors.absorbColor))
+
+    self.overabsorbGlow:SetTexture(colors.overabsorbTexture)
+    self.overabsorbGlow:SetVertexColor(unpack(colors.overabsorbColor))
+
+    if colors.overabsorbTexture == "Interface\\RaidFrame\\Absorb-Overabsorb" then
+        self.overabsorbGlow.size = 16
+    else
+        self.overabsorbGlow.size = 4
+    end
 end
 
 -------------------------------------------------
@@ -193,7 +226,7 @@ function W:CreateHealAbsorb(button)
     healAbsorb.parentHealthBar = button.widgets.healthBar
     healAbsorb._owner = button
 
-    healAbsorb.showOverAbsorbGlow = false
+    healAbsorb.showOverabsorbGlow = false
     healAbsorb.absorbInvertColor = false
 
     healAbsorb:Hide()
@@ -202,29 +235,13 @@ function W:CreateHealAbsorb(button)
     tex:SetAllPoints()
     healAbsorb.tex = tex
 
-    local overAbsorbGlow = healAbsorb:CreateTexture(nil, "ARTWORK", nil, -4)
-    overAbsorbGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overabsorb")
-    overAbsorbGlow:Hide()
-    healAbsorb.overAbsorbGlow = overAbsorbGlow
-
-    function healAbsorb:UpdateStyle()
-        local colors = DB.GetColors().healAbsorb
-
-        if colors.texture == "Interface\\AddOns\\Cell\\Media\\shield" then
-            tex:SetTexture(colors.texture, "REPEAT", "REPEAT")
-            tex:SetHorizTile(true)
-            tex:SetVertTile(true)
-        else
-            tex:SetTexture(colors.texture)
-            tex:SetHorizTile(false)
-            tex:SetVertTile(false)
-        end
-
-        tex:SetVertexColor(unpack(colors.color))
-        overAbsorbGlow:SetVertexColor(unpack(colors.overAbsorb))
-
-        healAbsorb.absorbInvertColor = colors.invertColor
-    end
+    ---@class OverabsorbGlow: Texture
+    local overabsorbGlow = healAbsorb:CreateTexture(nil, "ARTWORK", nil, -4)
+    overabsorbGlow:SetTexture("Interface\\AddOns\\Cell\\Media\\overabsorb")
+    overabsorbGlow:Hide()
+    overabsorbGlow:SetBlendMode("ADD")
+    healAbsorb.overabsorbGlow = overabsorbGlow
+    overabsorbGlow.size = 4
 
     ---@param bar HealAbsorbWidget
     ---@param val boolean
@@ -237,6 +254,7 @@ function W:CreateHealAbsorb(button)
     healAbsorb.SetEnabled = W.SetEnabled
     healAbsorb.SetWidgetFrameLevel = W.SetWidgetFrameLevel
     healAbsorb.SetOrientation = SetOrientation
+    healAbsorb.UpdateStyle = UpdateStyle
 
     healAbsorb.Update = Update
     healAbsorb.Enable = Enable

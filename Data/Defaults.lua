@@ -223,9 +223,10 @@ Defaults.Colors = {
         useOverlay = false,
     },
     healAbsorb = {
-        texture = "Interface\\AddOns\\Cell\\Media\\shield",
-        color = { 1, 0.1, 0.1, 1 },
-        overAbsorb = { 1, 1, 1, 1 },
+        absorbTexture = "Interface\\AddOns\\Cell\\Media\\shield",
+        overabsorbTexture = "Interface\\AddOns\\Cell\\Media\\overabsorb",
+        absorbColor = { 1, 0.1, 0.1, 1 },
+        overabsorbColor = { 1, 1, 1, 1 },
         invertColor = false,
     },
     unitFrames = {
@@ -330,10 +331,12 @@ Defaults.ColorsMenuOrder = {
         { "overHeal", "rgb" },
     },
     healAbsorb = {
-        { "texture",     "texture" },
-        { "color",       "rgb" },
-        { "overAbsorb",  "rgb" },
-        { "invertColor", "toggle" },
+        { "absorbTexture",     "texture" },
+        { "overabsorbTexture", "texture" },
+        { "absorbColor",       "rgb" },
+        { "overabsorbColor",   "rgb" },
+        { "",                  "newline" },
+        { "invertColor",       "toggle" },
     },
     unitFrames = {
         { "barColor",        "rgb" },

@@ -226,6 +226,21 @@ function DB:Revise()
                     colors.shieldBar.overShield = nil
                 end
             end
+
+            if colors.healAbsorb then
+                if colors.healAbsorb.texture then
+                    colors.healAbsorb.absorbTexture = colors.healAbsorb.texture
+                    colors.healAbsorb.texture = nil
+                end
+                if colors.healAbsorb.color then
+                    colors.healAbsorb.absorbColor = colors.healAbsorb.color
+                    colors.healAbsorb.color = nil
+                end
+                if colors.healAbsorb.overAbsorb then
+                    colors.healAbsorb.overabsorbColor = colors.healAbsorb.overAbsorb
+                    colors.healAbsorb.overAbsorb = nil
+                end
+            end
         end
     end
 

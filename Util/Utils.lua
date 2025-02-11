@@ -648,6 +648,13 @@ end
 
 local LSM = LibStub("LibSharedMedia-3.0", true)
 LSM:Register("statusbar", "Cell Shield", const.Textures.CELL_SHIELD)
+LSM:Register("statusbar", "Cell Overshield", const.Textures.CELL_OVERSHIELD)
+LSM:Register("statusbar", "Cell Overabsorb", const.Textures.CELL_OVERABSORB)
+LSM:Register("statusbar", "Blizzard Shield Fill", const.Textures.BLIZZARD_SHIELD_FILL)
+LSM:Register("statusbar", "Blizzard Shield Overlay", const.Textures.BLIZZARD_SHIELD_OVERLAY)
+LSM:Register("statusbar", "Blizzard Overshield", const.Textures.BLIZZARD_OVERSHIELD)
+LSM:Register("statusbar", "Blizzard Absorb Fill", const.Textures.BLIZZARD_ABSORB_FILL)
+LSM:Register("statusbar", "Blizzard Overabsorb", const.Textures.BLIZZARD_OVERABSORB)
 
 local textures
 Util.textureToName = {}

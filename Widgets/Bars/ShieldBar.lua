@@ -328,8 +328,12 @@ local function UpdateStyle(self)
     end
 
     if colors.useOverlay then
-        self.shieldOverlay:SetTexture(colors.overlayTexture)
-        self.shieldReverseOverlay:SetTexture(colors.overlayTexture)
+        self.shieldOverlay:SetTexture(colors.overlayTexture, "REPEAT", "REPEAT")
+        self.shieldReverseOverlay:SetTexture(colors.overlayTexture, "REPEAT", "REPEAT")
+        self.shieldOverlay:SetHorizTile(true)
+        self.shieldOverlay:SetVertTile(true)
+        self.shieldReverseOverlay:SetHorizTile(true)
+        self.shieldReverseOverlay:SetVertTile(true)
 
         self.shieldOverlay:SetVertexColor(unpack(colors.overlayColor))
         self.shieldReverseOverlay:SetVertexColor(unpack(colors.overlayColor))

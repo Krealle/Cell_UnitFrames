@@ -391,7 +391,7 @@ function W:CreateShieldBar(button)
     shieldReverse.tex = shieldReverse:CreateTexture(nil, "BORDER", nil, -7)
     shieldReverse.tex:SetAllPoints()
 
-    local shieldReverseOverlay = shieldReverse:CreateTexture(nil, "OVERLAY", nil, -6)
+    local shieldReverseOverlay = shieldReverse:CreateTexture(nil, "ARTWORK", nil, -6)
     shieldBar.shieldReverseOverlay = shieldReverseOverlay
     shieldReverseOverlay:SetTexture(const.Textures.BLIZZARD_SHIELD_OVERLAY)
     shieldReverseOverlay:SetAllPoints()
@@ -401,7 +401,7 @@ function W:CreateShieldBar(button)
     shield.tex = shield:CreateTexture(nil, "BORDER", nil, -7)
     shield.tex:SetAllPoints()
 
-    local shieldOverlay = shield:CreateTexture(nil, "OVERLAY", nil, -6)
+    local shieldOverlay = shield:CreateTexture(nil, "ARTWORK", nil, -6)
     shieldBar.shieldOverlay = shieldOverlay
     shieldOverlay:SetTexture(const.Textures.BLIZZARD_SHIELD_OVERLAY)
     shieldOverlay:SetAllPoints()

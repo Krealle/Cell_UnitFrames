@@ -192,12 +192,21 @@ function U:SetOrientation(button, orientation, rotateTexture)
         F:RotateTexture(healthBarLoss, 0)
     end
 
+    P.ClearPoints(button.widgets.healthBar)
     if orientation == "horizontal" then
+        P.Point(button.widgets.healthBar, "TOPLEFT", button, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P.Point(button.widgets.healthBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
+            CELL_BORDER_SIZE)
+
         -- update healthBarLoss
         P.ClearPoints(healthBarLoss)
         P.Point(healthBarLoss, "TOPRIGHT", healthBar)
         P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
     else -- vertical / vertical_health
+        P.Point(button.widgets.healthBar, "TOPLEFT", button, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
+        P.Point(button.widgets.healthBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
+            CELL_BORDER_SIZE)
+
         P.ClearPoints(healthBarLoss)
         P.Point(healthBarLoss, "TOPRIGHT", healthBar)
         P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")

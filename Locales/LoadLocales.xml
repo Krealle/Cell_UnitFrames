@@ -11,4 +11,6 @@
     <Script file="esMX.lua"/>
     <Script file="frFR.lua"/>
     <Script file="itIT.lua"/>
+    
+    <Script file="Aliases.lua"/>
 </Ui>

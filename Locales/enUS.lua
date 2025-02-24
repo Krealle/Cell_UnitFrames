@@ -5,24 +5,6 @@ local CUF = select(2, ...)
 local L = Cell.L
 CUF.L = L
 
--- Forwards from Cell
-L.invertColor = L["Invert Color"]
-L.dispels = L["Dispels"]
-L.barColor = L["Health Bar Color"]
-L.lossColor = L["Health Loss Color"]
-L.useFullColor = L["Enable Full Health Color"]
-L.useDeathColor = L["Enable Death Color"]
-L.barAlpha = L["Health Bar Alpha"]
-L.lossAlpha = L["Health Loss Alpha"]
-L.backgroundAlpha = L["Background Alpha"]
-L.none = L["None"]
-L.pixel = L["Pixel"]
-L.shine = L["Shine"]
-L.proc = L["Proc"]
-L.healPrediction = L["Heal Prediction"]
-L.shieldTexture = L["Shield Texture"]
-L.overshieldTexture = L["Overshield Texture"]
-
 -- Tabs
 L.unitFramesTab = "Unit Frames"
 L.generalTab = "General"
@@ -445,8 +427,3 @@ Click for more options.]]
 L.HelpTip_TagHintButton = "Click here to see available tags"
 L.HelpTip_BossFramePreview = "When editing %s frames, they will display the %s."
 L.HelpTip_BlizzardFramesToggle = "Click here to toggle Blizzard Frames"
-
--- Aliases
--- !!DO NOT ADD TO CURSEFORGE!!
-L.unitFrames = L.UnitFrames
-L.hover = L.Hover

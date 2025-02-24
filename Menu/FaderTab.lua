@@ -127,7 +127,7 @@ function FaderTab:Create()
     checkBoxSection:SetPoint("TOPLEFT", self.window, "TOPLEFT", 5, -5)
 
     ---@type CellCheckButton
-    local enabledCB = Cell:CreateCheckButton(checkBoxSection, L["Enabled"], function(checked, cb)
+    local enabledCB = Cell.CreateCheckButton(checkBoxSection, L["Enabled"], function(checked, cb)
         self:SetOption("enabled", checked)
         self:SetEnabled(checked)
     end)
@@ -135,28 +135,28 @@ function FaderTab:Create()
     self.enabledCB = enabledCB
 
     ---@type CellCheckButton
-    local combatCB = Cell:CreateCheckButton(checkBoxSection, L.Combat, function(checked, cb)
+    local combatCB = Cell.CreateCheckButton(checkBoxSection, L.Combat, function(checked, cb)
         self:SetOption("combat", checked)
     end)
     combatCB:SetPoint("TOPLEFT", enabledCB, "BOTTOMLEFT", 0, -20)
     self.combatCB = combatCB
 
     ---@type CellCheckButton
-    local hoverCB = Cell:CreateCheckButton(checkBoxSection, L.Hover, function(checked, cb)
+    local hoverCB = Cell.CreateCheckButton(checkBoxSection, L.Hover, function(checked, cb)
         self:SetOption("hover", checked)
     end)
     hoverCB:SetPoint("TOPLEFT", combatCB, "TOPRIGHT", 100, 0)
     self.hoverCB = hoverCB
 
     ---@type CellCheckButton
-    local targetCB = Cell:CreateCheckButton(checkBoxSection, L.target, function(checked, cb)
+    local targetCB = Cell.CreateCheckButton(checkBoxSection, L.target, function(checked, cb)
         self:SetOption("target", checked)
     end)
     targetCB:SetPoint("TOPLEFT", hoverCB, "TOPRIGHT", 100, 0)
     self.targetCB = targetCB
 
     ---@type CellCheckButton
-    local rangeCB = Cell:CreateCheckButton(checkBoxSection, L.Range, function(checked, cb)
+    local rangeCB = Cell.CreateCheckButton(checkBoxSection, L.Range, function(checked, cb)
         self:SetOption("range", checked)
         self:SetEnabled(nil, checked)
     end)
@@ -164,7 +164,7 @@ function FaderTab:Create()
     self.rangeCB = rangeCB
 
     ---@type CellCheckButton
-    local unitTargetCB = Cell:CreateCheckButton(checkBoxSection, L.UnitTarget, function(checked, cb)
+    local unitTargetCB = Cell.CreateCheckButton(checkBoxSection, L.UnitTarget, function(checked, cb)
         self:SetOption("unitTarget", checked)
     end)
     unitTargetCB:SetPoint("TOPLEFT", rangeCB, "TOPRIGHT", 100, 0)
@@ -175,21 +175,21 @@ function FaderTab:Create()
     sliderSection:SetPoint("TOPLEFT", checkBoxSection, "BOTTOMLEFT", 0, -10)
 
     ---@type CellSlider
-    local fadeDurationSlider = Cell:CreateSlider(L.FadeDuration, sliderSection, 0, 4, 117, 0.01, function(value)
+    local fadeDurationSlider = Cell.CreateSlider(L.FadeDuration, sliderSection, 0, 4, 117, 0.01, function(value)
         self:SetOption("fadeDelay", value)
     end)
     fadeDurationSlider:SetPoint("TOPLEFT", sliderSection, "TOPLEFT", 5, -25)
     self.fadeDurationSlider = fadeDurationSlider
 
     ---@type CellSlider
-    local minAlphaSlider = Cell:CreateSlider(L.MinAlpha, sliderSection, 0, 1, 117, 0.01, function(value)
+    local minAlphaSlider = Cell.CreateSlider(L.MinAlpha, sliderSection, 0, 1, 117, 0.01, function(value)
         self:SetOption("minAlpha", value)
     end)
     minAlphaSlider:SetPoint("TOPLEFT", fadeDurationSlider, "TOPRIGHT", 30, 0)
     self.minAlphaSlider = minAlphaSlider
 
     ---@type CellSlider
-    local maxAlphaSlider = Cell:CreateSlider(L.MaxAlpha, sliderSection, 0, 1, 117, 0.01, function(value)
+    local maxAlphaSlider = Cell.CreateSlider(L.MaxAlpha, sliderSection, 0, 1, 117, 0.01, function(value)
         self:SetOption("maxAlpha", value)
     end)
     maxAlphaSlider:SetPoint("TOPLEFT", minAlphaSlider, "TOPRIGHT", 30, 0)

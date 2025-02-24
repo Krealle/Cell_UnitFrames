@@ -39,7 +39,7 @@ function ColorTab:CreateImportExport()
             return Util:IsValidCopy(imported, CUF.Defaults.Colors, true)
         end)
 
-    local pane = Cell:CreateTitledPane(section, L.ImportExportColors, section:GetWidth(), self.paneHeight)
+    local pane = Cell.CreateTitledPane(section, L.ImportExportColors, section:GetWidth(), self.paneHeight)
     pane:SetPoint("TOPLEFT")
 
     local buttonWidth = (section:GetWidth() / 2) - 5
@@ -66,7 +66,7 @@ end
 ---@return CUF.ColorSection.ColorPicker, number
 local function CreateColorPicker(which, colorName, colorTable, parent)
     ---@class CUF.ColorSection.ColorPicker: CellColorPicker
-    local cp = Cell:CreateColorPicker(parent, L[colorName], true)
+    local cp = Cell.CreateColorPicker(parent, L[colorName], true)
     cp.id = colorName
     cp:SetColor(colorTable[colorName])
     cp.onChange = function(r, g, b, a)
@@ -116,7 +116,7 @@ end
 ---@return Frame
 local function CreateTextureDropdown(which, colorName, colorTable, parent)
     ---@class CUF.ColorSection.Dropdown: CellDropdown
-    local textureDropdown = Cell:CreateDropdown(parent, 200, "texture")
+    local textureDropdown = Cell.CreateDropdown(parent, 200, "texture")
     textureDropdown:SetLabel(L[colorName])
     textureDropdown.id = colorName
 
@@ -146,7 +146,7 @@ end
 ---@return CUF.ColorSection.Slider
 local function CreateSlider(which, colorName, colorTable, parent, percent)
     ---@class CUF.ColorSection.Slider: CellSlider
-    local slider = Cell:CreateSlider(L[colorName], parent, 0, 100, 200, 1, function(value)
+    local slider = Cell.CreateSlider(L[colorName], parent, 0, 100, 200, 1, function(value)
         DB.SetColor(which, colorName, value / (percent and 100 or 1))
         CUF:Fire("UpdateAppearance", "color")
     end, nil, percent)
@@ -166,7 +166,7 @@ end
 ---@return CUF.ColorSection.Checkbox, number
 local function CreateCheckbox(which, colorName, colorTable, parent)
     ---@class CUF.ColorSection.Checkbox: CellCheckButton
-    local cb = Cell:CreateCheckButton(parent, L[colorName], function(checked)
+    local cb = Cell.CreateCheckButton(parent, L[colorName], function(checked)
         DB.SetColor(which, colorName, checked)
         CUF:Fire("UpdateAppearance", "color")
         CUF:Fire("UpdateWidget", DB.GetMasterLayout())
@@ -215,7 +215,7 @@ function ColorTab:CreateSections()
         self.window:GetHeight() - self.importExportSection:GetHeight() - (sectionGap * 2), true, true)
     colorSection:SetPoint("TOPLEFT", self.importExportSection, "BOTTOMLEFT", 0, -sectionGap)
 
-    Cell:CreateScrollFrame(colorSection)
+    Cell.CreateScrollFrame(colorSection)
     colorSection.scrollFrame:SetScrollStep(50)
 
     self.colorSections = {} ---@type CUF.ColorSection[]

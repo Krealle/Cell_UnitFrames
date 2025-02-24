@@ -138,13 +138,13 @@ end
 ---@param icons CellAuraIcons
 ---@param blacklist table<number>
 local function Icons_SetBlacklist(icons, blacklist)
-    icons.blacklist = F:ConvertTable(blacklist)
+    icons.blacklist = F.ConvertTable(blacklist)
 end
 
 ---@param icons CellAuraIcons
 ---@param whitelist table<number>
 local function Icons_SetWhitelist(icons, whitelist)
-    icons.whitelist = F:ConvertTable(whitelist)
+    icons.whitelist = F.ConvertTable(whitelist)
 end
 
 ---@param icons CellAuraIcons

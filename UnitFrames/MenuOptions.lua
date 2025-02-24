@@ -106,7 +106,7 @@ local function AddUnitsToMenu()
                 -- First row
 
                 ---@type CheckButton
-                unitPage.enabledCB = Cell:CreateCheckButton(unitPage.frame,
+                unitPage.enabledCB = Cell.CreateCheckButton(unitPage.frame,
                     L["Enable"],
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].enabled = checked
@@ -117,7 +117,7 @@ local function AddUnitsToMenu()
                     end)
                 unitPage.enabledCB:SetPoint("TOPLEFT", 5, -10)
 
-                unitPage.clickCastCB = Cell:CreateCheckButton(unitPage.frame, L["Click Casting"],
+                unitPage.clickCastCB = Cell.CreateCheckButton(unitPage.frame, L["Click Casting"],
                     function(checked)
                         CUF.DB.SelectedLayoutTable()[unit].clickCast = checked
                         CUF:Fire("UpdateClickCasting", false, false, unit)
@@ -127,7 +127,7 @@ local function AddUnitsToMenu()
                 if unit ~= CUF.constants.UNIT.PLAYER then
                     -- same size as player
                     ---@type CheckButton?
-                    unitPage.sameSizeAsPlayerCB = Cell:CreateCheckButton(unitPage.frame, L["Use Same Size As Player"],
+                    unitPage.sameSizeAsPlayerCB = Cell.CreateCheckButton(unitPage.frame, L["Use Same Size As Player"],
                         function(checked)
                             CUF.DB.SelectedLayoutTable()[unit].sameSizeAsPlayer = checked
                             unitPage.widthSlider:SetEnabled(not checked)
@@ -145,21 +145,21 @@ local function AddUnitsToMenu()
                 -- Second row
 
                 ---@type CellSlider
-                unitPage.widthSlider = Cell:CreateSlider(L["Width"], unitPage.frame, 5, 500, 117, 1, function(value)
+                unitPage.widthSlider = Cell.CreateSlider(L["Width"], unitPage.frame, 5, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[1] = value
                     UpdateSize()
                 end)
                 unitPage.widthSlider:SetPoint("TOPLEFT", unitPage.enabledCB, 0, -50)
 
                 ---@type CellDropdown
-                unitPage.copyFromDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                unitPage.copyFromDropdown = Cell.CreateDropdown(unitPage.frame, 117)
                 unitPage.copyFromDropdown:SetPoint("TOPLEFT", unitPage.widthSlider, "TOPRIGHT", 30, 0)
                 unitPage.copyFromDropdown:SetLabel(L.CopyWidgetsFrom)
                 CUF:SetTooltips(unitPage.copyFromDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyWidgetsFrom,
                     L.CopyWidgetsFromTooltip)
 
                 ---@type CellDropdown
-                unitPage.barOrientationDropdown = Cell:CreateDropdown(unitPage.frame, 117)
+                unitPage.barOrientationDropdown = Cell.CreateDropdown(unitPage.frame, 117)
                 unitPage.barOrientationDropdown:SetPoint("TOPLEFT", unitPage.copyFromDropdown, "TOPRIGHT", 40, 0)
                 unitPage.barOrientationDropdown:SetLabel(L["Bar Orientation"])
                 unitPage.barOrientationDropdown:SetItems({
@@ -192,14 +192,14 @@ local function AddUnitsToMenu()
                 -- Third row
 
                 ---@type CellSlider
-                unitPage.heightSlider = Cell:CreateSlider(L["Height"], unitPage.frame, 5, 500, 117, 1, function(value)
+                unitPage.heightSlider = Cell.CreateSlider(L["Height"], unitPage.frame, 5, 500, 117, 1, function(value)
                     CUF.DB.SelectedLayoutTable()[unit].size[2] = value
                     UpdateSize()
                 end)
                 unitPage.heightSlider:SetPoint("TOPLEFT", unitPage.widthSlider, 0, -55)
 
                 ---@type CellDropdown
-                unitPage.healthBarColorTypeDropdown = Cell:CreateDropdown(unitPage.frame, 141)
+                unitPage.healthBarColorTypeDropdown = Cell.CreateDropdown(unitPage.frame, 141)
                 unitPage.healthBarColorTypeDropdown:SetPoint("TOPLEFT", unitPage.heightSlider, "TOPRIGHT", 30, 0)
                 unitPage.healthBarColorTypeDropdown:SetLabel(L["Health Bar Color"])
                 unitPage.healthBarColorTypeDropdown:SetItems({
@@ -246,7 +246,7 @@ local function AddUnitsToMenu()
                 })
 
                 ---@type CellDropdown
-                unitPage.healthLossColorTypeDropdown = Cell:CreateDropdown(unitPage.frame, 141)
+                unitPage.healthLossColorTypeDropdown = Cell.CreateDropdown(unitPage.frame, 141)
                 unitPage.healthLossColorTypeDropdown:SetPoint("TOPLEFT", unitPage.heightSlider, 0, -55)
                 unitPage.healthLossColorTypeDropdown:SetLabel(L["Health Loss Color"])
                 unitPage.healthLossColorTypeDropdown:SetItems({
@@ -286,7 +286,7 @@ local function AddUnitsToMenu()
 
                 if unit == "boss" then
                     ---@type CellSlider
-                    unitPage.spacingSlider = Cell:CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
+                    unitPage.spacingSlider = Cell.CreateSlider(L["Spacing"], unitPage.frame, 0, 100, 117, 1,
                         function(value)
                             CUF.DB.SelectedLayoutTable()[unit].spacing = value
                             if CUF.vars.selectedLayout == CUF.DB.GetMasterLayout() then
@@ -296,7 +296,7 @@ local function AddUnitsToMenu()
                     unitPage.spacingSlider:SetPoint("TOPLEFT", unitPage.heightSlider, "BOTTOMLEFT", 0, -35)
 
                     ---@type CellDropdown
-                    unitPage.growthDirectionDropdown = Cell:CreateDropdown(unitPage.frame, 141)
+                    unitPage.growthDirectionDropdown = Cell.CreateDropdown(unitPage.frame, 141)
                     unitPage.growthDirectionDropdown:SetPoint("TOPLEFT", unitPage.spacingSlider, "TOPRIGHT",
                         30, 0)
                     unitPage.growthDirectionDropdown:SetLabel(L.GrowthDirection)
@@ -323,7 +323,7 @@ local function AddUnitsToMenu()
                     end
                 else
                     if unit == "targettarget" then
-                        unitPage.alwaysUpdateCB = Cell:CreateCheckButton(unitPage.frame,
+                        unitPage.alwaysUpdateCB = Cell.CreateCheckButton(unitPage.frame,
                             L.AlwaysUpdate,
                             function(checked)
                                 CUF.DB.SelectedLayoutTable()[unit].alwaysUpdate = checked

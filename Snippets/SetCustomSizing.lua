@@ -13,4 +13,4 @@ local function SetCustomSizing()
         CUF.API:SetCustomUnitFrameSize("player", 600, 100)
     end
 end
-Cell:RegisterCallback("CUF_FramesInitialized", "Snippet_SetCustomSizing", SetCustomSizing)
+Cell.RegisterCallback("CUF_FramesInitialized", "Snippet_SetCustomSizing", SetCustomSizing)

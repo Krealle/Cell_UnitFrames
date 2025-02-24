@@ -110,16 +110,16 @@ local function FormatNumberNoZeroes(num)
     return FormatNumber(num)
 end
 
--- Formats a number using F:FormatNumber
+-- Formats a number using F.FormatNumber
 --
 -- eg. 12.3k, 12.3M or 12.3B
 ---@param num number
 ---@return string
 local function FormatNumberShort(num)
-    return F:FormatNumber(num)
+    return F.FormatNumber(num)
 end
 
--- Formats a number using F:FormatNumber
+-- Formats a number using F.FormatNumber
 --
 -- eg. 12.3k, 12.3M or 12.3B
 --
@@ -198,7 +198,7 @@ function W.ShowTooltipFrame()
         title:SetText(L.TagTooltipsTitle)
         title:SetTextScale(1.5)
 
-        local closeBtn = Cell:CreateButton(tooltipFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+        local closeBtn = Cell.CreateButton(tooltipFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
             "CELL_FONT_SPECIAL")
         closeBtn:SetPoint("TOPRIGHT", -5, -1)
         closeBtn:SetScript("OnClick", function() tooltipFrame:Hide() end)
@@ -209,7 +209,7 @@ function W.ShowTooltipFrame()
             tooltipFrame:GetWidth() - 10, 450, true, true)
         settingsFrame:SetPoint("TOPLEFT", tooltipFrame, "TOPLEFT", 0, -40)
 
-        Cell:CreateScrollFrame(settingsFrame)
+        Cell.CreateScrollFrame(settingsFrame)
         settingsFrame.scrollFrame:SetScrollStep(50)
 
         local tagText = settingsFrame.scrollFrame.content:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)

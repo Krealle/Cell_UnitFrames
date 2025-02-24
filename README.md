@@ -59,7 +59,7 @@ Click-Casting is fully supported, and can be toggled on/off on a per-unit basis.
 
 This plugin fully supports **Cell**'s snippet system!
 
-These two Callbacks can be used with `Cell:RegisterCallback()`
+These two Callbacks can be used with `Cell.RegisterCallback()`
 
 `CUF_AddonLoaded` - Fired when the addon is fully loaded, before Frames & Widgets are initialized.
 

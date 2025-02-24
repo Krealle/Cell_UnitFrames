@@ -38,4 +38,4 @@ local function AddTag()
         return tostring(UnitHealth(unit))
     end)
 end
-Cell:RegisterCallback("CUF_AddonLoaded", "Snippet_AddCustomTag", AddTag)
+Cell.RegisterCallback("CUF_AddonLoaded", "Snippet_AddCustomTag", AddTag)

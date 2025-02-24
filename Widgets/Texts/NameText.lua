@@ -63,7 +63,7 @@ local function Update(button)
     if not unit then return end
 
     button.states.name = UnitName(unit)
-    button.states.fullName = F:UnitFullName(unit)
+    button.states.fullName = F.UnitFullName(unit)
     button.states.guid = UnitGUID(unit)
     button.states.isPlayer = UnitIsPlayer(unit)
     button.states.class = UnitClassBase(unit) --! update class or it may be nil
@@ -106,7 +106,7 @@ function W:CreateNameText(button)
         if CELL_NICKTAG_ENABLED and Cell.NickTag then
             name = Cell.NickTag:GetNickname(button.states.name, nil, true)
         end
-        name = name or F:GetNickname(button.states.name, button.states.fullName)
+        name = name or F.GetNickname(button.states.name, button.states.fullName)
 
         if self.format ~= CUF.constants.NameFormat.FULL_NAME then
             name = self.FormatName(name, self.format)

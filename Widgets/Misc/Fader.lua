@@ -68,7 +68,7 @@ local DEFAULT_HARM_SPELLS = {
 ---@param self FaderWidget
 ---@param unit UnitToken
 local function RangeCheck(self, unit)
-    local inRange = F:IsInRange(unit)
+    local inRange = F.IsInRange(unit)
 
     -- Hack to circumvent override issue with C_Spell.IsSpellInRange and override spells
     if not inRange and UnitCanAttack("player", unit) then
@@ -132,12 +132,12 @@ local function Update(button, event, unit)
     if shouldFadeIn then
         if fader.isFadedIn ~= shouldFadeIn then
             fader.isFadedIn = true
-            A:FrameFadeIn(button, 0.25, button:GetAlpha(), fader.maxAlpha)
+            A.FrameFadeIn(button, 0.25, button:GetAlpha(), fader.maxAlpha)
         end
     else
         if fader.isFadedIn ~= shouldFadeIn then
             fader.isFadedIn = false
-            A:FrameFadeOut(button, 0.25, button:GetAlpha(), fader.minAlpha)
+            A.FrameFadeOut(button, 0.25, button:GetAlpha(), fader.minAlpha)
         end
     end
 end

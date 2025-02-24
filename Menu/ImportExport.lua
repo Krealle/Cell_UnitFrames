@@ -67,27 +67,27 @@ function ImportExport:CreateImportExportFrame(which, importFn, exportFn, verifyF
     importExportFrame.exportFn = exportFn
 
     importExportFrame:Hide()
-    Cell:StylizeFrame(importExportFrame, nil, Cell:GetAccentColorTable())
+    Cell.StylizeFrame(importExportFrame, nil, Cell.GetAccentColorTable())
     importExportFrame:EnableMouse(true)
     importExportFrame:SetFrameLevel(Menu.window:GetFrameLevel() + 50)
     importExportFrame:SetSize(Menu.window:GetWidth() - 5, 170)
     importExportFrame:SetPoint("CENTER", 1, 0)
 
     -- close
-    local closeBtn = Cell:CreateButton(importExportFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+    local closeBtn = Cell.CreateButton(importExportFrame, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
     closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() importExportFrame:Hide() end)
 
     -- import
-    local importBtn = Cell:CreateButton(importExportFrame, L["Import"], "green", { 57, 18 })
+    local importBtn = Cell.CreateButton(importExportFrame, L["Import"], "green", { 57, 18 })
     importBtn:Hide()
     importBtn:SetPoint("TOPRIGHT", closeBtn, "TOPLEFT", 1, 0)
     importBtn:SetScript("OnClick", function()
         -- lower frame level
         importExportFrame:SetFrameLevel(Menu.window:GetFrameLevel() + 20)
 
-        local popup = Cell:CreateConfirmPopup(Menu.window, 200, L["Overwrite "] .. L[which] .. "?",
+        local popup = Cell.CreateConfirmPopup(Menu.window, 200, L["Overwrite "] .. L[which] .. "?",
             function()
                 importFn(importExportFrame.imported)
                 importExportFrame:Hide()
@@ -103,7 +103,7 @@ function ImportExport:CreateImportExportFrame(which, importFn, exportFn, verifyF
     importExportFrame.title = title
 
     -- textArea
-    local textArea = Cell:CreateScrollEditBox(importExportFrame, function(eb, userChanged)
+    local textArea = Cell.CreateScrollEditBox(importExportFrame, function(eb, userChanged)
         if userChanged then
             if importExportFrame.isImport then
                 importExportFrame.imported = {}
@@ -143,7 +143,7 @@ function ImportExport:CreateImportExportFrame(which, importFn, exportFn, verifyF
             end
         end
     end)
-    Cell:StylizeFrame(textArea.scrollFrame, { 0, 0, 0, 0 }, Cell:GetAccentColorTable())
+    Cell.StylizeFrame(textArea.scrollFrame, { 0, 0, 0, 0 }, Cell.GetAccentColorTable())
     textArea:SetPoint("TOPLEFT", 5, -20)
     textArea:SetPoint("BOTTOMRIGHT", -5, 5)
 

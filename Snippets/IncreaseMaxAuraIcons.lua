@@ -6,4 +6,4 @@ local function IncreaseMaxAuraIcons()
 
     CUF.Defaults.Values.maxAuraIcons = 40
 end
-Cell:RegisterCallback("CUF_AddonLoaded", "Snippet_IncreaseMaxAuraIcons", IncreaseMaxAuraIcons)
+Cell.RegisterCallback("CUF_AddonLoaded", "Snippet_IncreaseMaxAuraIcons", IncreaseMaxAuraIcons)

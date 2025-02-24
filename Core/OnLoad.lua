@@ -47,34 +47,34 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF.Compat:InitDummyAnchors()
 
     -- Register callbacks
-    Cell:RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
+    Cell.RegisterCallback("UpdateIndicators", "CUF_UpdateIndicators",
         function(layout) CUF:Fire("UpdateWidget", layout) end)
 
-    Cell:RegisterCallback("UpdateLayout", "CUF_UpdateLayout",
+    Cell.RegisterCallback("UpdateLayout", "CUF_UpdateLayout",
         function(layout, kind) CUF:Fire("UpdateLayout", layout, kind) end)
 
-    Cell:RegisterCallback("ShowOptionsTab", "CUF_ShowOptionsTab",
+    Cell.RegisterCallback("ShowOptionsTab", "CUF_ShowOptionsTab",
         function(tab) CUF:Fire("ShowOptionsTab", tab) end)
 
-    Cell:RegisterCallback("UpdateMenu", "CUF_UpdateMenu",
+    Cell.RegisterCallback("UpdateMenu", "CUF_UpdateMenu",
         function(kind) CUF:Fire("UpdateMenu", kind) end)
 
-    Cell:RegisterCallback("UpdatePixelPerfect", "CUF_UpdatePixelPerfect",
+    Cell.RegisterCallback("UpdatePixelPerfect", "CUF_UpdatePixelPerfect",
         function() CUF:Fire("UpdatePixelPerfect") end)
 
-    Cell:RegisterCallback("UpdateVisibility", "CUF_UpdateVisibility",
+    Cell.RegisterCallback("UpdateVisibility", "CUF_UpdateVisibility",
         function(which) CUF:Fire("UpdateVisibility", which) end)
 
-    Cell:RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance",
+    Cell.RegisterCallback("UpdateAppearance", "CUF_UpdateAppearance",
         function(kind) CUF:Fire("UpdateAppearance", kind) end)
 
-    Cell:RegisterCallback("UpdateQueuedClickCastings", "CUF_UpdateQueuedClickCastings",
+    Cell.RegisterCallback("UpdateQueuedClickCastings", "CUF_UpdateQueuedClickCastings",
         function() CUF:Fire("UpdateClickCasting", true, true) end)
-    Cell:RegisterCallback("UpdateClickCastings", "CUF_UpdateClickCastings",
+    Cell.RegisterCallback("UpdateClickCastings", "CUF_UpdateClickCastings",
         function(noReload, onlyqueued) CUF:Fire("UpdateClickCasting", noReload, onlyqueued) end)
 
     -- Hook Cell's UpdateLayout function so we can ensure full updates properly
-    hooksecurefunc(Cell.funcs, "UpdateLayout", function(_, layout)
+    hooksecurefunc(Cell.funcs, "UpdateLayout", function(layout)
         CUF:Log("|cff00ff00F:UpdateLayout:|r", layout)
         if InCombatLockdown() then return end
         CUF:Fire("UpdateWidget")
@@ -85,9 +85,9 @@ local function OnCellInitialUpdateLayout(_layout)
     CUF:Fire("UpdateWidget", CUF.DB.GetMasterLayout())
 
     -- Callback used to make it easier for Cell snippets to know when the frames are initialized
-    Cell:Fire("CUF_FramesInitialized")
+    Cell.Fire("CUF_FramesInitialized")
 
-    Cell:UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
+    Cell.UnregisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout")
 end
 
 -------------------------------------------------
@@ -113,12 +113,12 @@ local function OnAddonLoaded(owner, loadedAddonName)
 
         CUF_DB.version = CUF.version
 
-        Cell:RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
+        Cell.RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 
         CUF:Fire("AddonLoaded")
 
         -- Use this to allow Cell snippets to manipulate functions before we start using them
-        Cell:Fire("CUF_AddonLoaded")
+        Cell.Fire("CUF_AddonLoaded")
 
         return true
     end

@@ -109,7 +109,7 @@ end
 ---@param healthPercent number
 local function SetValue_Horizontal(self, healAbsorbPercent, healthPercent)
     if self.absorbInvertColor then
-        local r, g, b = F:InvertColor(self.parentHealthBar:GetStatusBarColor())
+        local r, g, b = F.InvertColor(self.parentHealthBar:GetStatusBarColor())
         self.tex:SetVertexColor(r, g, b)
         self.overabsorbGlow:SetVertexColor(r, g, b)
     end
@@ -130,7 +130,7 @@ end
 ---@param healthPercent number
 local function SetValue_Vertical(self, healAbsorbPercent, healthPercent)
     if self.absorbInvertColor then
-        local r, g, b = F:InvertColor(self.parentHealthBar:GetStatusBarColor())
+        local r, g, b = F.InvertColor(self.parentHealthBar:GetStatusBarColor())
         self.tex:SetVertexColor(r, g, b)
         self.overabsorbGlow:SetVertexColor(r, g, b)
     end
@@ -159,7 +159,7 @@ local function SetOrientation(self, orientation)
         P.Point(self.overabsorbGlow, "TOP", self.parentHealthBar, "TOPLEFT")
         P.Point(self.overabsorbGlow, "BOTTOM", self.parentHealthBar, "BOTTOMLEFT")
         P.Width(self.overabsorbGlow, self.overabsorbGlow.size)
-        F:RotateTexture(self.overabsorbGlow, 0)
+        F.RotateTexture(self.overabsorbGlow, 0)
 
         self.SetValue = SetValue_Horizontal
     else
@@ -169,7 +169,7 @@ local function SetOrientation(self, orientation)
         P.Point(self.overabsorbGlow, "LEFT", self.parentHealthBar, "BOTTOMLEFT")
         P.Point(self.overabsorbGlow, "RIGHT", self.parentHealthBar, "BOTTOMRIGHT")
         P.Height(self.overabsorbGlow, self.overabsorbGlow.size)
-        F:RotateTexture(self.overabsorbGlow, 90)
+        F.RotateTexture(self.overabsorbGlow, 90)
 
         self.SetValue = SetValue_Vertical
     end

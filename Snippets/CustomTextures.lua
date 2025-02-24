@@ -35,4 +35,4 @@ local function CustomTextures()
         end
     end
 end
-Cell:RegisterCallback("CUF_AddonLoaded", "Snippet_CustomTextures", CustomTextures)
+Cell.RegisterCallback("CUF_AddonLoaded", "Snippet_CustomTextures", CustomTextures)

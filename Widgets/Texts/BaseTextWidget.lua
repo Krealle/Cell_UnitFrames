@@ -34,7 +34,7 @@ function W.CreateBaseTextWidget(button, kind)
 
     ---@param styleTable WidgetTable
     function textWidget:SetFontStyle(styleTable)
-        local font = F:GetFont(styleTable.font.style)
+        local font = F.GetFont(styleTable.font.style)
 
         local fontFlags ---@type TBFFlags|nil
         if styleTable.font.outline == "Outline" then

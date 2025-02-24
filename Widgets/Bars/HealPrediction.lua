@@ -265,12 +265,12 @@ local function Repoint(bar, anchorPoint)
 
         P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
         P.Point(bar.overHealGlow, "BOTTOMRIGHT", bar.parentHealthBar)
-        F:RotateTexture(bar.overHealGlow, 0)
+        F.RotateTexture(bar.overHealGlow, 0)
         P.Width(bar.overHealGlow, 4)
 
         P.Point(bar.overHealGlowReverse, "TOP", bar.healReverse, "TOPLEFT")
         P.Point(bar.overHealGlowReverse, "BOTTOM", bar.healReverse, "BOTTOMLEFT")
-        F:RotateTexture(bar.overHealGlowReverse, 0)
+        F.RotateTexture(bar.overHealGlowReverse, 0)
         P.Width(bar.overHealGlowReverse, 4)
     else
         bar.SetValue = HealPredict_SetValue_Vertical
@@ -283,12 +283,12 @@ local function Repoint(bar, anchorPoint)
 
         P.Point(bar.overHealGlow, "TOPLEFT", bar.parentHealthBar)
         P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
-        F:RotateTexture(bar.overHealGlow, 90)
+        F.RotateTexture(bar.overHealGlow, 90)
         P.Height(bar.overHealGlow, 4)
 
         P.Point(bar.overHealGlowReverse, "LEFT", bar.healReverse, "BOTTOMLEFT")
         P.Point(bar.overHealGlowReverse, "RIGHT", bar.healReverse, "BOTTOMRIGHT")
-        F:RotateTexture(bar.overHealGlowReverse, 90)
+        F.RotateTexture(bar.overHealGlowReverse, 90)
         P.Height(bar.overHealGlowReverse, 4)
     end
 end

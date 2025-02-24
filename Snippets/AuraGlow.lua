@@ -34,4 +34,4 @@ local function AuraGlow()
         end
     end)
 end
-Cell:RegisterCallback("CUF_FramesInitialized", "Snippet_AuraGlow", AuraGlow)
+Cell.RegisterCallback("CUF_FramesInitialized", "Snippet_AuraGlow", AuraGlow)

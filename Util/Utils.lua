@@ -407,7 +407,7 @@ end
 -- Returns a table of all fonts.
 ---@return string[]
 function Util:GetFontItems()
-    local items, fonts, defaultFontName, defaultFont = F:GetFontItems()
+    local items, fonts, defaultFontName, defaultFont = F.GetFontItems()
 
     local newItems = {}
     for idx, item in pairs(items) do
@@ -447,11 +447,11 @@ end
 
 -- Returns rgb values for a unit's power color
 --
--- Doesn't return type prop from F:GetPowerColor
+-- Doesn't return type prop from F.GetPowerColor
 ---@param unit Unit
 ---@return number, number, number
 function Util:GetPowerColor(unit)
-    local r, g, b, type = F:GetPowerColor(unit)
+    local r, g, b, type = F.GetPowerColor(unit)
 
     return r, g, b
 end
@@ -466,7 +466,7 @@ function Util:GetUnitClassColor(unit, class, guid)
 
     -- Player
     if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then
-        return F:GetClassColor(class)
+        return F.GetClassColor(class)
     end
 
     local selectionType = UnitSelectionType(unit)
@@ -488,7 +488,7 @@ function Util:GetUnitClassColor(unit, class, guid)
         end
 
         if unit == "pet" and DB.GetColors().reaction.useClassColorForPet then
-            return F:GetClassColor(select(2, UnitClass("player")))
+            return F.GetClassColor(select(2, UnitClass("player")))
         end
 
         return unpack(DB.GetColors().reaction.pet)
@@ -568,7 +568,7 @@ end
 ---@return number lossB
 function Util:GetHealthBarColor(healthBarColorType, healthLossColorType, percent, isDeadOrGhost, r, g, b)
     if healthBarColorType == const.UnitButtonColorType.CELL then
-        return F:GetHealthBarColor(percent, isDeadOrGhost, r, g, b)
+        return F.GetHealthBarColor(percent, isDeadOrGhost, r, g, b)
     end
 
     local barR, barG, barB, lossR, lossG, lossB
@@ -663,7 +663,7 @@ Util.textureToName = {}
 function Util:GetTextures()
     if textures then return textures end
 
-    textures = F:Copy(LSM:HashTable("statusbar"))
+    textures = F.Copy(LSM:HashTable("statusbar"))
     for name, texture in pairs(textures) do
         self.textureToName[texture] = name
     end
@@ -734,7 +734,7 @@ end
 ---@param template? string
 ---@return Frame
 function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, template)
-    local f = Cell:CreateFrame(name, parent, width, height, isTransparent, template)
+    local f = Cell.CreateFrame(name, parent, width, height, isTransparent, template)
     if isShown then f:Show() end
     return f
 end
@@ -753,7 +753,7 @@ end
 ---@return CellButton
 function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, noBackground, fontNormal, fontDisable,
                           template, ...)
-    local b = Cell:CreateButton(parent, text, (buttonColor or "accent-hover"), size or 16, noBorder, noBackground,
+    local b = Cell.CreateButton(parent, text, (buttonColor or "accent-hover"), size or 16, noBorder, noBackground,
         fontNormal,
         fontDisable,
         template,
@@ -776,7 +776,7 @@ end
 ---@param font? string
 ---@return EditBox
 function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLine, isNumeric, font)
-    local editBox = Cell:CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
+    local editBox = Cell.CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
 
     if text then
         local label = editBox:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIDGET)
@@ -796,7 +796,7 @@ end
 ---@param hasEditBox boolean?
 ---@param dropdowns boolean?
 function CUF:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
-    return Cell:CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
+    return Cell.CreateConfirmPopup(parent, width, text, onAccept, onReject, mask, hasEditBox, dropdowns)
 end
 
 --- Create a pop up frame with a header and a text area
@@ -814,7 +814,7 @@ function CUF:CreateInformationPopupFrame(title, width, ...)
     f:SetWidth(width)
     f:SetPoint("CENTER")
     f:Hide()
-    Cell:StylizeFrame(f)
+    Cell.StylizeFrame(f)
 
     -- header
     local header = CreateFrame("Frame", nil, f, "BackdropTemplate")
@@ -830,13 +830,13 @@ function CUF:CreateInformationPopupFrame(title, width, ...)
     header:SetPoint("RIGHT")
     header:SetPoint("BOTTOM", f, "TOP", 0, -1)
     header:SetHeight(20)
-    Cell:StylizeFrame(header, { 0.115, 0.115, 0.115, 1 })
+    Cell.StylizeFrame(header, { 0.115, 0.115, 0.115, 1 })
 
     header.text = header:CreateFontString(nil, "OVERLAY", const.FONTS.CLASS_TITLE)
     header.text:SetText("Cell UnitFrames - " .. (title or L.Info))
     header.text:SetPoint("CENTER", header)
 
-    header.closeBtn = Cell:CreateButton(header, "×", "red", { 20, 20 }, false, false, "CELL_FONT_SPECIAL",
+    header.closeBtn = Cell.CreateButton(header, "×", "red", { 20, 20 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
     header.closeBtn:SetPoint("TOPRIGHT")
     header.closeBtn:SetScript("OnClick", function() f:Hide() end)
@@ -867,12 +867,12 @@ end
 ---@param y number
 ---@param ... any
 function CUF:SetTooltips(frame, anchor, x, y, ...)
-    Cell:SetTooltips(frame, anchor, x, y, ...)
+    Cell.SetTooltips(frame, anchor, x, y, ...)
 end
 
 ---@param frame Frame
 function CUF:ClearTooltips(frame)
-    Cell:ClearTooltips(frame)
+    Cell.ClearTooltips(frame)
 end
 
 ---@param icon Texture
@@ -1184,7 +1184,7 @@ function Util.FormatText(max, min, percent, short)
 
     isPositive = max >= 0
     if short then
-        return F:FormatNumber(max), isPositive
+        return F.FormatNumber(max), isPositive
     end
 
     return tostring(max), isPositive

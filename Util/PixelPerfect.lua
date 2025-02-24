@@ -39,11 +39,11 @@ function PixelPerfect.DebugInfo()
         relativeScale,
         PixelPerfect.GetPixelScale(),
         CellScale,
-        CellP:GetPixelPerfectScale(),
-        CellP:GetEffectiveScale(),
-        CellP:Scale(1),
-        CellP:Scale(0.1),
-        CellP:Scale(220)
+        CellP.GetPixelPerfectScale(),
+        CellP.GetEffectiveScale(),
+        CellP.Scale(1),
+        CellP.Scale(0.1),
+        CellP.Scale(220)
     )
 
     return info
@@ -99,7 +99,7 @@ end
 ---@return number
 function PixelPerfect.Scale(num)
     if CUF_DB.useScaling then
-        return CellP:Scale(num)
+        return CellP.Scale(num)
     end
 
     return num
@@ -114,7 +114,7 @@ function PixelPerfect.Size(frame, width, height)
     height = height or width
 
     if CUF_DB.useScaling then
-        CellP:Size(frame, width, height)
+        CellP.Size(frame, width, height)
     else
         frame:SetSize(width, height)
     end
@@ -126,7 +126,7 @@ function PixelPerfect.Width(frame, width)
     if not width then return end
 
     if CUF_DB.useScaling then
-        CellP:Width(frame, width)
+        CellP.Width(frame, width)
     else
         frame:SetWidth(width)
     end
@@ -138,7 +138,7 @@ function PixelPerfect.Height(frame, height)
     if not height then return end
 
     if CUF_DB.useScaling then
-        CellP:Height(frame, height)
+        CellP.Height(frame, height)
     else
         frame:SetHeight(height)
     end
@@ -154,7 +154,7 @@ end
 ---@overload fun(frame: Frame, point: FramePoint, relativeTo: Frame, offsetX: uiUnit, offsetY: uiUnit)
 function PixelPerfect.Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
     if CUF_DB.useScaling then
-        CellP:Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
+        CellP.Point(frame, point, relativeTo, relativePoint, offsetX, offsetY)
     else
         frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
     end
@@ -163,7 +163,7 @@ end
 ---@param frame Frame|Texture|table
 function PixelPerfect.ClearPoints(frame)
     if CUF_DB.useScaling then
-        CellP:ClearPoints(frame)
+        CellP.ClearPoints(frame)
     else
         frame:ClearAllPoints()
     end

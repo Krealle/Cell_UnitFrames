@@ -21,4 +21,4 @@ local function OverrideHideBlizzard()
         _HideBlizzardUnitFrame(self, unit)
     end
 end
-Cell:RegisterCallback("CUF_AddonLoaded", "Snippet_OverrideHideBlizzard", OverrideHideBlizzard)
+Cell.RegisterCallback("CUF_AddonLoaded", "Snippet_OverrideHideBlizzard", OverrideHideBlizzard)

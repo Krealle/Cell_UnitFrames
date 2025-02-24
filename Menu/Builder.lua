@@ -241,7 +241,7 @@ end
 ---@return CUFCheckBox
 function Builder:CreateCheckBox(parent, widgetName, title, path, tooltip)
     ---@class CUFCheckBox: CellCheckButton
-    local checkbox = Cell:CreateCheckButton(parent, L[title], function(checked, cb)
+    local checkbox = Cell.CreateCheckButton(parent, L[title], function(checked, cb)
         cb.Set_DB(widgetName, path, checked)
     end, tooltip)
 
@@ -291,7 +291,7 @@ end
 ---@return CUFSlider
 function Builder:CreateSlider(parent, widgetName, title, width, minVal, maxVal, path, percentage, step)
     ---@class CUFSlider: CellSlider
-    local slider = Cell:CreateSlider(L[title], parent, minVal, maxVal, width or 117, step or 1, nil, nil, percentage)
+    local slider = Cell.CreateSlider(L[title], parent, minVal, maxVal, width or 117, step or 1, nil, nil, percentage)
     slider.id = "Slider"
 
     slider.Set_DB = HandleWidgetOption
@@ -327,7 +327,7 @@ end
 ---@return CUFDropdown
 function Builder:CreateDropdown(parent, widgetName, title, width, items, path, postUpdate)
     ---@class CUFDropdown: CellDropdown
-    local dropdown = Cell:CreateDropdown(parent, width or 117)
+    local dropdown = Cell.CreateDropdown(parent, width or 117)
     dropdown.optionHeight = 20
     dropdown.id = "Dropdown"
     dropdown:SetLabel(L[title])
@@ -406,7 +406,7 @@ end
 ---@return CUFColorPicker
 function Builder:CreateColorPickerOptions(parent, widgetName, title, path)
     ---@class CUFColorPicker: CellColorPicker, OptionsFrame
-    local colorPicker = Cell:CreateColorPicker(parent, title or L["Color"], true)
+    local colorPicker = Cell.CreateColorPicker(parent, title or L["Color"], true)
     colorPicker.id = "ColorPicker"
     colorPicker.optionHeight = 25
 
@@ -459,7 +459,7 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
 
     local dropdown, percentDropdown, lengthEB, lengthEB2
 
-    dropdown = Cell:CreateDropdown(f, 117)
+    dropdown = Cell.CreateDropdown(f, 117)
     dropdown:SetPoint("TOPLEFT", f)
     dropdown:SetLabel(L["Text Width"])
     dropdown:SetItems({
@@ -511,16 +511,16 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
     percentDropdown = self:CreateDropdown(f, widgetName, "", 75, percentItems,
         (path or const.OPTION_KIND.WIDTH) .. ".value")
     percentDropdown:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
-    Cell:SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
+    Cell.SetTooltips(percentDropdown.button, "ANCHOR_TOP", 0, 3, L["Name Width / UnitButton Width"])
 
-    lengthEB = Cell:CreateEditBox(f, 34, 20, false, false, true)
+    lengthEB = Cell.CreateEditBox(f, 34, 20, false, false, true)
     lengthEB:SetPoint("TOPLEFT", dropdown, "TOPRIGHT", self.spacingX, 0)
 
     lengthEB.text = lengthEB:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     lengthEB.text:SetText(L["En"])
     lengthEB.text:SetPoint("BOTTOMLEFT", lengthEB, "TOPLEFT", 0, 1)
 
-    lengthEB.confirmBtn = Cell:CreateButton(lengthEB, "OK", "accent", { 27, 20 })
+    lengthEB.confirmBtn = Cell.CreateButton(lengthEB, "OK", "accent", { 27, 20 })
     lengthEB.confirmBtn:SetPoint("TOPLEFT", lengthEB, "TOPRIGHT", -1, 0)
     lengthEB.confirmBtn:Hide()
     lengthEB.confirmBtn:SetScript("OnHide", function()
@@ -547,14 +547,14 @@ function Builder:CreateTextWidthOption(parent, widgetName, path)
         end
     end)
 
-    lengthEB2 = Cell:CreateEditBox(f, 33, 20, false, false, true)
+    lengthEB2 = Cell.CreateEditBox(f, 33, 20, false, false, true)
     lengthEB2:SetPoint("TOPLEFT", lengthEB, "TOPRIGHT", 25, 0)
 
     lengthEB2.text = lengthEB2:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     lengthEB2.text:SetText(L["Non-En"])
     lengthEB2.text:SetPoint("BOTTOMLEFT", lengthEB2, "TOPLEFT", 0, 1)
 
-    lengthEB2.confirmBtn = Cell:CreateButton(lengthEB2, "OK", "accent", { 27, 20 })
+    lengthEB2.confirmBtn = Cell.CreateButton(lengthEB2, "OK", "accent", { 27, 20 })
     lengthEB2.confirmBtn:SetPoint("TOPLEFT", lengthEB2, "TOPRIGHT", -1, 0)
     lengthEB2.confirmBtn:Hide()
     lengthEB2.confirmBtn:SetScript("OnHide", function()
@@ -650,7 +650,7 @@ function Builder:CreateTextColorOptions(parent, widgetName, includePowerType)
         end
     end
 
-    f.colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
+    f.colorPicker = Cell.CreateColorPicker(f, "", false, function(r, g, b, a)
         HandleWidgetOption(widgetName, "color.rgb", { r, g, b })
     end)
     f.colorPicker:SetPoint("LEFT", f.dropdown, "RIGHT", 2, 0)
@@ -845,7 +845,7 @@ function Builder:CreateBigFontOptions(parent, widgetName, title, path)
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
-    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+    f.colorPicker = Cell.CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
         HandleWidgetOption(widgetName, path .. ".rgb", { r, g, b })
     end)
     self:AnchorBelow(f.colorPicker, f.fontOptions.sizeSlider)
@@ -878,21 +878,21 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
             const.HealthTextFormat.PERCENTAGE_DEFICIT },
         { "21377",
             const.HealthTextFormat.NUMBER },
-        { F:FormatNumber(21377),
+        { F.FormatNumber(21377),
             const.HealthTextFormat.NUMBER_SHORT },
-        { F:FormatNumber(21377) .. "+" .. F:FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
+        { F.FormatNumber(21377) .. "+" .. F.FormatNumber(16384) .. " |cFFA7A7A7+" .. L["shields"],
             const.HealthTextFormat.NUMBER_ABSORBS_SHORT },
-        { F:FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
+        { F.FormatNumber(21377 + 16384) .. " |cFFA7A7A7+" .. L["shields"],
             const.HealthTextFormat.NUMBER_ABSORBS_MERGED_SHORT },
         { "-44158",
             const.HealthTextFormat.NUMBER_DEFICIT },
-        { F:FormatNumber(-44158),
+        { F.FormatNumber(-44158),
             const.HealthTextFormat.NUMBER_DEFICIT_SHORT },
-        { F:FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
+        { F.FormatNumber(21377) .. " 32% |cFFA7A7A7HP",
             const.HealthTextFormat.CURRENT_SHORT_PERCENTAGE },
         { "16384 |cFFA7A7A7" .. L["shields"],
             const.HealthTextFormat.ABSORBS_ONLY },
-        { F:FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
+        { F.FormatNumber(16384) .. " |cFFA7A7A7" .. L["shields"],
             const.HealthTextFormat.ABSORBS_ONLY_SHORT },
         { "25% |cFFA7A7A7" .. L["shields"],
             const.HealthTextFormat.ABSORBS_ONLY_PERCENTAGE },
@@ -959,7 +959,7 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
     local powerFormatItems = {
         { "32%",                 const.PowerTextFormat.PERCENTAGE, },
         { "21377",               const.PowerTextFormat.NUMBER, },
-        { F:FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, },
+        { F.FormatNumber(21377), const.PowerTextFormat.NUMBER_SHORT, },
         { L["Custom"],           const.PowerTextFormat.CUSTOM }
     }
 
@@ -1024,7 +1024,7 @@ function Builder:CreateNameFormatOptions(parent, widgetName)
         const.OPTION_KIND.FORMAT)
     f.formatDropdown:SetPoint("TOPLEFT", f)
 
-    Cell:SetTooltips(f.formatDropdown, "ANCHOR_TOPLEFT", 0, 3, L.NameFormats, unpack(tooltips))
+    Cell.SetTooltips(f.formatDropdown, "ANCHOR_TOPLEFT", 0, 3, L.NameFormats, unpack(tooltips))
 
     return f
 end
@@ -1184,7 +1184,7 @@ end
 ---@return TextureDropdown
 function Builder:CreateTextureDropdown(parent, widgetName, path)
     ---@class TextureDropdown: CUFDropdown
-    local textureDropdown = Cell:CreateDropdown(parent, 160, "texture")
+    local textureDropdown = Cell.CreateDropdown(parent, 160, "texture")
 
     textureDropdown.optionHeight = 20
     textureDropdown.id = "TextureDropdown"
@@ -1421,7 +1421,7 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     self:AnchorBelow(f.fontOptions, f.anchorOptions)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
-    f.colorPicker = Cell:CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
+    f.colorPicker = Cell.CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
         DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[1] = r
         DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[2] = g
         DB.GetSelectedWidgetTable(widgetName).font[kind].rgb[3] = b
@@ -1927,7 +1927,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     end
 
     ---@type CellDropdown
-    local textDropdown = Cell:CreateDropdown(parent, 200)
+    local textDropdown = Cell.CreateDropdown(parent, 200)
     textDropdown:SetLabel(L.customText)
     textDropdown:SetPoint("TOPLEFT", f)
 
@@ -1970,11 +1970,11 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     }
 
     ---@type CellDropdown
-    local colorDropdown = Cell:CreateDropdown(parent, 200)
+    local colorDropdown = Cell.CreateDropdown(parent, 200)
     colorDropdown:SetLabel(L["Color"])
     self:AnchorBelow(colorDropdown, formatEditBox)
 
-    local colorPicker = Cell:CreateColorPicker(f, "", false, function(r, g, b, a)
+    local colorPicker = Cell.CreateColorPicker(f, "", false, function(r, g, b, a)
         Set_DB(widgetName, "color.rgb", { r, g, b })
     end)
     colorPicker:SetPoint("LEFT", colorDropdown, "RIGHT", 2, 0)
@@ -2018,7 +2018,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     local sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 5, 50, "font.size")
     self:AnchorRight(sizeSlider, outlineDropdown)
 
-    local shadowCB = Cell:CreateCheckButton(parent, L["Shadow"], function(checked, cb)
+    local shadowCB = Cell.CreateCheckButton(parent, L["Shadow"], function(checked, cb)
         Set_DB(widgetName, "font.shadow", checked)
     end)
     shadowCB:SetPoint("TOPLEFT", styleDropdown, "BOTTOMLEFT", 0, -10)
@@ -2148,7 +2148,7 @@ function Builder:CreateDispelsOptions(parent, widgetName)
     for _, t in pairs(types) do
         blizzard = blizzard .. blizzard_icon:format(t) .. " "
 
-        local r, g, b = F:ConvertRGB_256(I.GetDebuffTypeColor(t))
+        local r, g, b = F.ConvertRGB_256(I.GetDebuffTypeColor(t))
         rhombus = rhombus .. rhombus_icon:format(r, g, b) .. " "
     end
 

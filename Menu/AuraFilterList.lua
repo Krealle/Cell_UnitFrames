@@ -22,7 +22,7 @@ local function GetExportString(t)
     local n = 0
     for i, id in ipairs(t) do
         if type(id) == "table" then id = id[1] end
-        local name = F:GetSpellInfo(id)
+        local name = F.GetSpellInfo(id)
         if name then
             s = s .. (i == 1 and "" or "\n") .. id .. ", -- " .. name
             n = n + 1
@@ -43,7 +43,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
     if not parent.popupEditBox then
         ---@class CUFEditBox: EditBox
         ---@field SetTips fun(self, text: string)
-        local popup = Cell:CreatePopupEditBox(parent)
+        local popup = Cell.CreatePopupEditBox(parent)
         popup:SetNumeric(true)
 
         popup:SetScript("OnTextChanged", function()
@@ -53,7 +53,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
                 return
             end
 
-            local name, tex = F:GetSpellInfo(spellId)
+            local name, tex = F.GetSpellInfo(spellId)
             if not name then
                 CellSpellTooltip:Hide()
                 return
@@ -72,16 +72,16 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
 
     -- new
     if not auraButtons[0] then
-        auraButtons[0] = Cell:CreateButton(parent, "", "transparent-accent", { 20, 20 })
+        auraButtons[0] = Cell.CreateButton(parent, "", "transparent-accent", { 20, 20 })
         auraButtons[0]:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\new", { 16, 16 }, { "RIGHT", -1, 0 })
         auraButtons[0]:SetPoint("BOTTOMLEFT")
         auraButtons[0]:SetPoint("RIGHT")
     end
 
     auraButtons[0]:SetScript("OnClick", function(self)
-        local popup = Cell:CreatePopupEditBox(parent, function(text)
+        local popup = Cell.CreatePopupEditBox(parent, function(text)
             local spellId = tonumber(text)
-            local spellName = F:GetSpellInfo(spellId)
+            local spellName = F.GetSpellInfo(spellId)
             if (spellId and spellName) then
                 -- update db
                 table.insert(auraTable, spellId)
@@ -90,7 +90,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
                 CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons, updateHeightFunc)
                 updateHeightFunc(19)
             else
-                F:Print(L["Invalid spell id."])
+                F.Print(L["Invalid spell id."])
             end
         end)
         popup:SetPoint("TOPLEFT", self)
@@ -104,7 +104,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
     for i, spell in ipairs(auraTable) do
         -- creation
         if not auraButtons[i] then
-            auraButtons[i] = Cell:CreateButton(parent, "", "transparent-accent", { 20, 20 })
+            auraButtons[i] = Cell.CreateButton(parent, "", "transparent-accent", { 20, 20 })
 
             -- spellIcon
             auraButtons[i].spellIconBg = auraButtons[i]:CreateTexture(nil, "BORDER")
@@ -134,7 +134,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             auraButtons[i].spellNameText:SetJustifyH("LEFT")
 
             -- del
-            auraButtons[i].del = Cell:CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
+            auraButtons[i].del = Cell.CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
             auraButtons[i].del:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\delete", { 16, 16 }, { "CENTER", 0, 0 })
             auraButtons[i].del:SetPoint("RIGHT")
             auraButtons[i].del.tex:SetVertexColor(0.6, 0.6, 0.6, 1)
@@ -148,7 +148,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             end)
 
             -- edit
-            -- auraButtons[i].edit = Cell:CreateButton(auraButtons[i], "", "none", {18, 20}, true, true)
+            -- auraButtons[i].edit = Cell.CreateButton(auraButtons[i], "", "none", {18, 20}, true, true)
             -- auraButtons[i].edit:SetPoint("RIGHT", auraButtons[i].del, "LEFT", 1, 0)
             -- auraButtons[i].edit:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\info", {16, 16}, {"CENTER", 0, 0})
             -- auraButtons[i].edit.tex:SetVertexColor(0.6, 0.6, 0.6, 1)
@@ -162,7 +162,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             -- end)
 
             -- down
-            auraButtons[i].down = Cell:CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
+            auraButtons[i].down = Cell.CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
             auraButtons[i].down:SetPoint("RIGHT", auraButtons[i].del, "LEFT", 1, 0)
             auraButtons[i].down:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\down", { 16, 16 }, { "CENTER", 0, 0 })
             auraButtons[i].down.tex:SetVertexColor(0.6, 0.6, 0.6, 1)
@@ -176,7 +176,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             end)
 
             -- up
-            auraButtons[i].up = Cell:CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
+            auraButtons[i].up = Cell.CreateButton(auraButtons[i], "", "none", { 18, 20 }, true, true)
             auraButtons[i].up:SetPoint("RIGHT", auraButtons[i].down, "LEFT", 1, 0)
             auraButtons[i].up:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\up", { 16, 16 }, { "CENTER", 0, 0 })
             auraButtons[i].up.tex:SetVertexColor(0.6, 0.6, 0.6, 1)
@@ -190,7 +190,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             end)
 
             -- color
-            auraButtons[i].colorPicker = Cell:CreateColorPicker(auraButtons[i], "", true)
+            auraButtons[i].colorPicker = Cell.CreateColorPicker(auraButtons[i], "", true)
             auraButtons[i].colorPicker:SetPoint("RIGHT", auraButtons[i].up, "LEFT", -1, 0)
             auraButtons[i].colorPicker:SetPoint("TOP", 0, -3)
             auraButtons[i].colorPicker:HookScript("OnEnter", function()
@@ -204,7 +204,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             auraButtons[i]:HookScript("OnEnter", function(self)
                 if parent.popupEditBox:IsShown() then return end
 
-                local name = F:GetSpellInfo(self.spellId)
+                local name = F.GetSpellInfo(self.spellId)
                 if not name then
                     CellSpellTooltip:Hide()
                     return
@@ -229,7 +229,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
             auraButtons[i].spellIconBg:Hide()
             auraButtons[i].spellIcon:Hide()
         else
-            local name, icon = F:GetSpellInfo(spell)
+            local name, icon = F.GetSpellInfo(spell)
             auraButtons[i].spellIdText:SetText(spell)
             auraButtons[i].spellId = spell
             auraButtons[i].spellTex = icon
@@ -290,12 +290,12 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
 
         -- functions
         auraButtons[i]:SetScript("OnClick", function()
-            local popup = Cell:CreatePopupEditBox(parent, function(text)
+            local popup = Cell.CreatePopupEditBox(parent, function(text)
                 local spellId = tonumber(text)
                 if spellId == 0 then
-                    F:Print(L["Invalid spell id."])
+                    F.Print(L["Invalid spell id."])
                 else
-                    local spellName, spellIcon = F:GetSpellInfo(spellId)
+                    local spellName, spellIcon = F.GetSpellInfo(spellId)
                     if spellId and spellName then
                         -- update text
                         auraButtons[i].spellIdText:SetText(spellId)
@@ -314,7 +314,7 @@ local function CreateAuraButtons(parent, auraButtons, auraTable, noUpDownButtons
                             auraButtons[i].spellIcon:Hide()
                         end
                     else
-                        F:Print(L["Invalid spell id."])
+                        F.Print(L["Invalid spell id."])
                     end
                 end
             end)
@@ -373,7 +373,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     if not auraImportExportFrame then
         ---@class Cell.auraImportExportFrame: Frame, BackdropTemplate
         auraImportExportFrame = CUF:CreateFrame(nil, parent, 1, 200)
-        auraImportExportFrame:SetBackdropBorderColor(Cell:GetAccentColorRGB())
+        auraImportExportFrame:SetBackdropBorderColor(Cell.GetAccentColorRGB())
         auraImportExportFrame:EnableMouse(true)
         auraImportExportFrame:Hide()
 
@@ -389,17 +389,17 @@ function Builder.CreateSetting_Auras(parent, which, kind)
             auraImportExportFrame:Hide()
         end)
 
-        auraImportExportFrame.textArea = Cell:CreateScrollEditBox(auraImportExportFrame, function(eb, userChanged)
+        auraImportExportFrame.textArea = Cell.CreateScrollEditBox(auraImportExportFrame, function(eb, userChanged)
             if userChanged then
                 if auraImportExportFrame.isImport then
                     local data = string.gsub(eb:GetText(), "[^%d]+", ",")
                     if data ~= "" then
-                        auraImportExportFrame.data = F:StringToTable(data, ",", true)
-                        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() ..
+                        auraImportExportFrame.data = F.StringToTable(data, ",", true)
+                        auraImportExportFrame.info:SetText(Cell.GetAccentColorString() ..
                             L["Spells"] .. ":|r " .. #auraImportExportFrame.data)
                         auraImportExportFrame.importBtn:SetEnabled(true)
                     else
-                        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() .. L["Spells"] .. ":|r 0")
+                        auraImportExportFrame.info:SetText(Cell.GetAccentColorString() .. L["Spells"] .. ":|r 0")
                         auraImportExportFrame.importBtn:SetEnabled(false)
                     end
                 else
@@ -409,7 +409,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
                 end
             end
         end)
-        Cell:StylizeFrame(auraImportExportFrame.textArea.scrollFrame, { 0, 0, 0, 0 }, Cell:GetAccentColorTable())
+        Cell.StylizeFrame(auraImportExportFrame.textArea.scrollFrame, { 0, 0, 0, 0 }, Cell.GetAccentColorTable())
         auraImportExportFrame.textArea:SetPoint("TOPLEFT", 5, -22)
         auraImportExportFrame.textArea:SetPoint("BOTTOMRIGHT", -5, 5)
         auraImportExportFrame.textArea.eb:SetAutoFocus(true)
@@ -425,12 +425,12 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.info = auraImportExportFrame:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
         auraImportExportFrame.info:SetPoint("BOTTOMLEFT", auraImportExportFrame.textArea, "TOPLEFT", 0, 3)
 
-        auraImportExportFrame.closeBtn = Cell:CreateButton(auraImportExportFrame, "×", "red", { 18, 18 }, false, false,
+        auraImportExportFrame.closeBtn = Cell.CreateButton(auraImportExportFrame, "×", "red", { 18, 18 }, false, false,
             "CELL_FONT_SPECIAL", "CELL_FONT_SPECIAL")
         auraImportExportFrame.closeBtn:SetPoint("BOTTOMRIGHT", auraImportExportFrame.textArea, "TOPRIGHT", 0, 1)
         auraImportExportFrame.closeBtn:SetScript("OnClick", function() auraImportExportFrame:Hide() end)
 
-        auraImportExportFrame.importBtn = Cell:CreateButton(auraImportExportFrame, L["Import"], "green", { 57, 18 })
+        auraImportExportFrame.importBtn = Cell.CreateButton(auraImportExportFrame, L["Import"], "green", { 57, 18 })
         auraImportExportFrame.importBtn:SetPoint("TOPRIGHT", auraImportExportFrame.closeBtn, "TOPLEFT", 1, 0)
         auraImportExportFrame.importBtn:SetScript("OnClick", function(self)
             local curIds = {}
@@ -467,13 +467,13 @@ function Builder.CreateSetting_Auras(parent, which, kind)
     widget.frame:SetPoint("TOPLEFT", 5, -22)
     widget.frame:SetPoint("RIGHT", -5, 0)
     widget.frame:Show()
-    Cell:StylizeFrame(widget.frame, { 0.15, 0.15, 0.15, 1 })
+    Cell.StylizeFrame(widget.frame, { 0.15, 0.15, 0.15, 1 })
 
     widget.text = widget:CreateFontString(nil, "OVERLAY", const.FONTS.CELL_WIDGET)
     widget.text:SetPoint("BOTTOMLEFT", widget.frame, "TOPLEFT", 0, 3)
     widget.text:SetText(L[kind])
 
-    widget.export = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Export"])
+    widget.export = Cell.CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Export"])
     widget.export:SetPoint("BOTTOMRIGHT", widget.frame, "TOPRIGHT", 0, 1)
     widget.export:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\export", { 15, 15 }, { "CENTER", 0, 0 })
     widget.export:SetScript("OnClick", function()
@@ -481,7 +481,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.parent = widget
         local n
         auraImportExportFrame.exported, n = GetExportString(widget.t)
-        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() .. L["Spells"] .. ":|r " .. n)
+        auraImportExportFrame.info:SetText(Cell.GetAccentColorString() .. L["Spells"] .. ":|r " .. n)
         auraImportExportFrame.textArea:SetText(auraImportExportFrame.exported)
         auraImportExportFrame.importBtn:Hide()
         auraImportExportFrame:ShowUp()
@@ -491,7 +491,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         end
     end)
 
-    widget.import = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
+    widget.import = Cell.CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
         L["Import"] .. " (" .. L.Override .. ")", L.OverrideImportTooltip)
     widget.import:SetPoint("BOTTOMRIGHT", widget.export, "BOTTOMLEFT", -1, 0)
     widget.import:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\import", { 15, 15 }, { "CENTER", 0, 0 })
@@ -499,7 +499,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.isImport = true
         auraImportExportFrame.parent = widget
         auraImportExportFrame.textArea:SetText("")
-        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() .. L["Spells"] .. ":|r 0")
+        auraImportExportFrame.info:SetText(Cell.GetAccentColorString() .. L["Spells"] .. ":|r 0")
         auraImportExportFrame.importBtn:Show()
         auraImportExportFrame.importBtn:SetEnabled(false)
         auraImportExportFrame:ShowUp()
@@ -510,7 +510,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         end
     end)
 
-    widget.importAdditive = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
+    widget.importAdditive = Cell.CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil,
         L["Import"] .. " (" .. L.Additive .. ")", L.AdditiveImportTooltip)
     widget.importAdditive:SetPoint("BOTTOMRIGHT", widget.import, "BOTTOMLEFT", -1, 0)
     widget.importAdditive:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\import", { 15, 15 }, { "CENTER", 0, 0 })
@@ -518,7 +518,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         auraImportExportFrame.isImport = true
         auraImportExportFrame.parent = widget
         auraImportExportFrame.textArea:SetText("")
-        auraImportExportFrame.info:SetText(Cell:GetAccentColorString() .. L["Spells"] .. ":|r 0")
+        auraImportExportFrame.info:SetText(Cell.GetAccentColorString() .. L["Spells"] .. ":|r 0")
         auraImportExportFrame.importBtn:Show()
         auraImportExportFrame.importBtn:SetEnabled(false)
         auraImportExportFrame:ShowUp()
@@ -529,7 +529,7 @@ function Builder.CreateSetting_Auras(parent, which, kind)
         end
     end)
 
-    widget.clear = Cell:CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Clear"],
+    widget.clear = Cell.CreateButton(widget, nil, "accent-hover", { 21, 17 }, nil, nil, nil, nil, nil, L["Clear"],
         "|cffffb5c5Ctrl+" .. L["Left-Click"])
     widget.clear:SetPoint("BOTTOMRIGHT", widget.importAdditive, "BOTTOMLEFT", -1, 0)
     widget.clear:SetTexture("Interface\\AddOns\\Cell\\Media\\Icons\\trash", { 15, 15 }, { "CENTER", 0, 0 })

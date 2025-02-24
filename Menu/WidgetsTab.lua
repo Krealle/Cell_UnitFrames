@@ -165,7 +165,7 @@ function WidgetsTab.LoadWidgetList(unit)
 
     WidgetsTab.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
 
-    Cell:CreateButtonGroup(WidgetsTab.listButtons, function(widget, b)
+    Cell.CreateButtonGroup(WidgetsTab.listButtons, function(widget, b)
         WidgetsTab:SetWidget(widget)
     end)
 
@@ -217,7 +217,7 @@ function WidgetsTab:Create()
         sectionWidth, self.height - 10, true, true)
     self.settingsFrame:SetPoint("TOPLEFT")
 
-    Cell:CreateScrollFrame(self.settingsFrame)
+    Cell.CreateScrollFrame(self.settingsFrame)
     self.settingsFrame.scrollFrame:SetScrollStep(50)
 
     self:InitWidgets()
@@ -229,8 +229,8 @@ function WidgetsTab:Create()
     widgetListWindow:SetPoint("BOTTOMRIGHT", self.window, "BOTTOMLEFT", -5 + 1, 0)
 
     -- Give the widget list a mask and hook it to the menu's mask
-    F:ApplyCombatProtectionToFrame(widgetListWindow)
-    Cell:CreateMask(widgetListWindow, nil, { 1, -1, -1, 1 })
+    F.ApplyCombatProtectionToFrame(widgetListWindow)
+    Cell.CreateMask(widgetListWindow, nil, { 1, -1, -1, 1 })
     widgetListWindow.mask:Hide()
 
     hooksecurefunc(Menu.window.mask, "Show", function()
@@ -247,6 +247,6 @@ function WidgetsTab:Create()
         widgetListWindow:GetHeight(), false, true)
     self.widgetListFrame:SetPoint("TOPLEFT", widgetListWindow, "TOPLEFT", 0, 0)
 
-    Cell:CreateScrollFrame(self.widgetListFrame)
+    Cell.CreateScrollFrame(self.widgetListFrame)
     self.widgetListFrame.scrollFrame:SetScrollStep(25)
 end

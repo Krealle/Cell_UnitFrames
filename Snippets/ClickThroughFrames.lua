@@ -42,4 +42,4 @@ local function ClickThroughFrames()
         end)
     end)
 end
-Cell:RegisterCallback("CUF_FramesInitialized", "Snippet_ClickThroughFrames", ClickThroughFrames)
+Cell.RegisterCallback("CUF_FramesInitialized", "Snippet_ClickThroughFrames", ClickThroughFrames)

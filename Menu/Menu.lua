@@ -150,7 +150,7 @@ function menu:InitTabs()
         table.insert(self.tabButtons, tabButton)
     end
 
-    Cell:CreateButtonGroup(self.tabButtons, function(which, b)
+    Cell.CreateButtonGroup(self.tabButtons, function(which, b)
         self:SetTab(which)
     end)
 end
@@ -238,8 +238,8 @@ function menu:CreateMenu()
     end)
 
     -- mask
-    F:ApplyCombatProtectionToFrame(self.window)
-    Cell:CreateMask(self.window, nil, { 1, -1, -1, 1 })
+    F.ApplyCombatProtectionToFrame(self.window)
+    Cell.CreateMask(self.window, nil, { 1, -1, -1, 1 })
     self.window.mask:Hide()
 
     -- Title
@@ -267,7 +267,7 @@ function menu:CreateMenu()
     layoutTitle:SetTextScale(1)
 
     -- Tabs
-    self.tabPane = Cell:CreateTitledPane(self.window, nil, self.baseWidth, self.paneHeight)
+    self.tabPane = Cell.CreateTitledPane(self.window, nil, self.baseWidth, self.paneHeight)
     self.tabPane:SetPoint("TOPLEFT")
 
     -- Repoint so it's anchored to bottom
@@ -282,7 +282,7 @@ function menu:CreateMenu()
 
     self:InitTabs()
 
-    local editModeButton = Cell:CreateButton(self.tabPane, L.EditMode, "accent",
+    local editModeButton = Cell.CreateButton(self.tabPane, L.EditMode, "accent",
         { 100, 25 })
     editModeButton:SetPoint("TOPLEFT", self.tabPane, "BOTTOMLEFT", 0, 0)
     CUF:SetTooltips(editModeButton, "ANCHOR_TOPLEFT", 0, 3, L.ToggleEditMode,
@@ -378,7 +378,7 @@ local function UpdatePreview()
     menu:LoadLayoutDB(layoutDropdown:GetSelected())
 
     -- Unhook
-    Cell:UnregisterCallback("UpdatePreview", "CUF_UpdatePreview")
+    Cell.UnregisterCallback("UpdatePreview", "CUF_UpdatePreview")
 end
 
 ---@param tab string
@@ -392,7 +392,7 @@ local function ShowTab(tab)
         menu:HideMenu()
     elseif not menu.init then
         -- Inital hook
-        Cell:RegisterCallback("UpdatePreview", "CUF_UpdatePreview", UpdatePreview)
+        Cell.RegisterCallback("UpdatePreview", "CUF_UpdatePreview", UpdatePreview)
     end
 end
 CUF:RegisterCallback("ShowOptionsTab", "ShowTab", ShowTab)

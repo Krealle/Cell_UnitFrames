@@ -39,7 +39,7 @@ local function CreatePositioningPopup()
         self:StopMovingOrSizing()
     end)
 
-    local closeBtn = Cell:CreateButton(positioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+    local closeBtn = Cell.CreateButton(positioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
     closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() positioningPopup:Hide() end)
@@ -53,7 +53,7 @@ local function CreatePositioningPopup()
     local xVal = maxX / 2
     local yVal = maxY / 2
 
-    positioningPopup.xPosSlider = Cell:CreateSlider(L["X Offset"], positioningPopup, -xVal, xVal, 150, 1)
+    positioningPopup.xPosSlider = Cell.CreateSlider(L["X Offset"], positioningPopup, -xVal, xVal, 150, 1)
     positioningPopup.xPosSlider:SetPoint("TOPLEFT", 10, -45)
     positioningPopup.xPosSlider.onValueChangedFn = function(value)
         CUF.DB.CurrentLayoutTable()[positioningPopup.unit].position[1] = value
@@ -64,7 +64,7 @@ local function CreatePositioningPopup()
         end
     end
 
-    positioningPopup.yPosSlider = Cell:CreateSlider(L["Y Offset"], positioningPopup, -yVal, yVal, 150, 1)
+    positioningPopup.yPosSlider = Cell.CreateSlider(L["Y Offset"], positioningPopup, -yVal, yVal, 150, 1)
     positioningPopup.yPosSlider:SetPoint("TOPLEFT", positioningPopup.xPosSlider, "TOPRIGHT", 20, 0)
 
     positioningPopup.yPosSlider.onValueChangedFn = function(value)
@@ -78,7 +78,7 @@ local function CreatePositioningPopup()
 
     -- Mirror
     ---@type CheckButton
-    local mirrorCB = Cell:CreateCheckButton(positioningPopup, L.MirrorPlayer, function(checked)
+    local mirrorCB = Cell.CreateCheckButton(positioningPopup, L.MirrorPlayer, function(checked)
         CUF.DB.CurrentLayoutTable()[const.UNIT.TARGET].mirrorPlayer = checked
         U:UpdateUnitButtonPosition("target", CUF.unitButtons.target)
         positioningPopup.xPosSlider:SetEnabled(not checked)
@@ -91,7 +91,7 @@ local function CreatePositioningPopup()
     local parentAnchorFrame = CreateFrame("Frame", nil, positioningPopup)
 
     ---@type CellCheckButton
-    local anchorToParentCB = Cell:CreateCheckButton(parentAnchorFrame, "", function(checked)
+    local anchorToParentCB = Cell.CreateCheckButton(parentAnchorFrame, "", function(checked)
         CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorToParent = checked
         U:UpdateUnitButtonPosition("target", CUF.unitButtons.target)
         CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
@@ -108,12 +108,12 @@ local function CreatePositioningPopup()
     positioningPopup.anchorToParentCB = anchorToParentCB
 
     ---@type CellDropdown
-    local pointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    local pointDropdown = Cell.CreateDropdown(parentAnchorFrame, 117)
     pointDropdown:SetPoint("TOPLEFT", anchorToParentCB, "BOTTOMLEFT", 0, -30)
     pointDropdown:SetLabel(L["Anchor Point"])
 
     ---@type CellDropdown
-    local relativePointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    local relativePointDropdown = Cell.CreateDropdown(parentAnchorFrame, 117)
     relativePointDropdown:SetPoint("TOPLEFT", pointDropdown, "TOPRIGHT", 30, 0)
     relativePointDropdown:SetLabel(L["To UnitButton's"])
 
@@ -136,14 +136,14 @@ local function CreatePositioningPopup()
         })
     end
 
-    local parentOffsetXSlider = Cell:CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
+    local parentOffsetXSlider = Cell.CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
     parentOffsetXSlider:SetPoint("TOPLEFT", pointDropdown, "BOTTOMLEFT", 0, -30)
     parentOffsetXSlider.onValueChangedFn = function(value)
         CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.offsetX = value
         CUF:Fire("UpdateLayout", nil, "position", positioningPopup.unit)
     end
 
-    local parentOffsetYSlider = Cell:CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
+    local parentOffsetYSlider = Cell.CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
     parentOffsetYSlider:SetPoint("TOPLEFT", parentOffsetXSlider, "TOPRIGHT", 20, 0)
     parentOffsetYSlider.onValueChangedFn = function(value)
         CUF.DB.CurrentLayoutTable()[positioningPopup.unit].anchorPosition.offsetY = value
@@ -258,7 +258,7 @@ local function CreateWidgetPositioningPopup()
         self:StopMovingOrSizing()
     end)
 
-    local closeBtn = Cell:CreateButton(widgetPositioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+    local closeBtn = Cell.CreateButton(widgetPositioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
     closeBtn:SetPoint("TOPRIGHT", CellP:Scale(-5), CellP:Scale(-1))
     closeBtn:SetScript("OnClick", function() widgetPositioningPopup:Hide() end)
@@ -272,7 +272,7 @@ local function CreateWidgetPositioningPopup()
     local xVal = maxX / 2
     local yVal = maxY / 2
 
-    widgetPositioningPopup.xPosSlider = Cell:CreateSlider(L["X Offset"], widgetPositioningPopup, -xVal, xVal, 150, 1)
+    widgetPositioningPopup.xPosSlider = Cell.CreateSlider(L["X Offset"], widgetPositioningPopup, -xVal, xVal, 150, 1)
     widgetPositioningPopup.xPosSlider:SetPoint("TOPLEFT", 10, -45)
     widgetPositioningPopup.xPosSlider.onValueChangedFn = function(value)
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).detachedPosition.offsetX =
@@ -280,7 +280,7 @@ local function CreateWidgetPositioningPopup()
         CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
     end
 
-    widgetPositioningPopup.yPosSlider = Cell:CreateSlider(L["Y Offset"], widgetPositioningPopup, -yVal, yVal, 150, 1)
+    widgetPositioningPopup.yPosSlider = Cell.CreateSlider(L["Y Offset"], widgetPositioningPopup, -yVal, yVal, 150, 1)
     widgetPositioningPopup.yPosSlider:SetPoint("TOPLEFT", widgetPositioningPopup.xPosSlider, "TOPRIGHT", 20, 0)
 
     widgetPositioningPopup.yPosSlider.onValueChangedFn = function(value)
@@ -293,7 +293,7 @@ local function CreateWidgetPositioningPopup()
     local parentAnchorFrame = CreateFrame("Frame", nil, widgetPositioningPopup)
 
     ---@type CellCheckButton
-    local anchorToParentCB = Cell:CreateCheckButton(parentAnchorFrame, "", function(checked)
+    local anchorToParentCB = Cell.CreateCheckButton(parentAnchorFrame, "", function(checked)
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).anchorToParent =
             checked
         CUF:Fire("UpdateWidget", nil, widgetPositioningPopup.unit, widgetPositioningPopup.widget, "position")
@@ -312,12 +312,12 @@ local function CreateWidgetPositioningPopup()
     widgetPositioningPopup.anchorToParentCB = anchorToParentCB
 
     ---@type CellDropdown
-    local pointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    local pointDropdown = Cell.CreateDropdown(parentAnchorFrame, 117)
     pointDropdown:SetPoint("TOPLEFT", anchorToParentCB, "BOTTOMLEFT", 0, -30)
     pointDropdown:SetLabel(L["Anchor Point"])
 
     ---@type CellDropdown
-    local relativePointDropdown = Cell:CreateDropdown(parentAnchorFrame, 117)
+    local relativePointDropdown = Cell.CreateDropdown(parentAnchorFrame, 117)
     relativePointDropdown:SetPoint("TOPLEFT", pointDropdown, "TOPRIGHT", 30, 0)
     relativePointDropdown:SetLabel(L["To UnitButton's"])
 
@@ -344,7 +344,7 @@ local function CreateWidgetPositioningPopup()
         })
     end
 
-    local parentOffsetXSlider = Cell:CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
+    local parentOffsetXSlider = Cell.CreateSlider(L["X Offset"], parentAnchorFrame, -xVal, xVal, 150, 1)
     parentOffsetXSlider:SetPoint("TOPLEFT", pointDropdown, "BOTTOMLEFT", 0, -30)
     parentOffsetXSlider.onValueChangedFn = function(value)
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetX =
@@ -353,7 +353,7 @@ local function CreateWidgetPositioningPopup()
         CUF:Fire("LoadPageDB")
     end
 
-    local parentOffsetYSlider = Cell:CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
+    local parentOffsetYSlider = Cell.CreateSlider(L["Y Offset"], parentAnchorFrame, -yVal, yVal, 150, 1)
     parentOffsetYSlider:SetPoint("TOPLEFT", parentOffsetXSlider, "TOPRIGHT", 20, 0)
     parentOffsetYSlider.onValueChangedFn = function(value)
         CUF.DB.GetCurrentWidgetTable(widgetPositioningPopup.widget, widgetPositioningPopup.unit).position.offsetY =
@@ -767,7 +767,7 @@ local function CreateCellEditModePopup()
         self:StopMovingOrSizing()
     end)
 
-    local closeBtn = Cell:CreateButton(cellPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
+    local closeBtn = Cell.CreateButton(cellPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
     closeBtn:SetPoint("TOPRIGHT", -5, -1)
     closeBtn:SetScript("OnClick", function() cellPopup:Hide() end)
@@ -782,16 +782,16 @@ local function CreateCellEditModePopup()
     subTitle:SetScale(0.9)
 
     ---@type CellDropdown
-    local frameDropdown = Cell:CreateDropdown(cellPopup, 200)
+    local frameDropdown = Cell.CreateDropdown(cellPopup, 200)
     frameDropdown:SetPoint("TOPLEFT", 10, -60)
     frameDropdown:SetLabel(L.Frame)
 
     -- Offsets
     local maxX, maxY = GetPhysicalScreenSize()
 
-    local xPosSlider = Cell:CreateSlider(L["X Offset"], cellPopup, 0, maxX, 150, 1)
+    local xPosSlider = Cell.CreateSlider(L["X Offset"], cellPopup, 0, maxX, 150, 1)
     xPosSlider:SetPoint("TOPLEFT", frameDropdown, "BOTTOMLEFT", 0, -30)
-    local yPosSlider = Cell:CreateSlider(L["Y Offset"], cellPopup, 0, maxY, 150, 1)
+    local yPosSlider = Cell.CreateSlider(L["Y Offset"], cellPopup, 0, maxY, 150, 1)
     yPosSlider:SetPoint("TOPLEFT", xPosSlider, "TOPRIGHT", 20, 0)
 
     yPosSlider.onValueChangedFn = UpdateCellFramePosition

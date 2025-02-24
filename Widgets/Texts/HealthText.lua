@@ -202,7 +202,7 @@ local function SetHealth_Number_Absorbs_Short(self, current, max, totalAbsorbs)
     if totalAbsorbs == 0 then
         self:SetText(F:FormatNumber(current))
     else
-        self:SetFormattedText("%s+%s", F:FormatNumber(current), F:FormatNumber(totalAbsorbs))
+        self:SetFormattedText("%s+%s", F.FormatNumber(current), F.FormatNumber(totalAbsorbs))
     end
 end
 
@@ -235,7 +235,7 @@ end
 ---@param max number
 ---@param totalAbsorbs number
 local function SetHealth_Current_Short_Percentage(self, current, max, totalAbsorbs)
-    self:SetFormattedText("%s %d%%", F:FormatNumber(current), (current / max * 100))
+    self:SetFormattedText("%s %d%%", F.FormatNumber(current), (current / max * 100))
 end
 
 ---@param self HealthTextWidget

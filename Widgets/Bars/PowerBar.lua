@@ -155,19 +155,19 @@ local function PowerFilterCheck(self)
     local class, role
     if owner.states.inVehicle then
         class = "VEHICLE"
-    elseif F:IsPlayer(guid) then
+    elseif F.IsPlayer(guid) then
         class = UnitClassBase(owner.states.unit)
         role = GetRole(owner)
-    elseif F:IsPet(guid) then
+    elseif F.IsPet(guid) then
         class = "PET"
-    elseif F:IsNPC(guid) then
+    elseif F.IsNPC(guid) then
         if UnitInPartyIsAI(owner.states.unit) then
             class = UnitClassBase(owner.states.unit)
             role = GetRole(owner)
         else
             class = "NPC"
         end
-    elseif F:IsVehicle(guid) then
+    elseif F.IsVehicle(guid) then
         class = "VEHICLE"
     end
 
@@ -281,7 +281,7 @@ local function UpdatePowerType(button)
         r, g, b = 0.4, 0.4, 0.4
         lossR, lossG, lossB = 0.4, 0.4, 0.4
     else
-        r, g, b, lossR, lossG, lossB = F:GetPowerBarColor(unit, button.states.class)
+        r, g, b, lossR, lossG, lossB = F.GetPowerBarColor(unit, button.states.class)
     end
 
     powerBar:SetStatusBarColor(r, g, b, powerBar.barA)
@@ -347,7 +347,7 @@ local function Enable(self)
     self.Update(self._owner)
 
     self._owner:AddEventListener("UNIT_DISPLAYPOWER", self.Update)
-    if F:IsPlayer(UnitGUID(self._owner.states.unit)) then
+    if F.IsPlayer(UnitGUID(self._owner.states.unit)) then
         self._owner:AddEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
     end
 

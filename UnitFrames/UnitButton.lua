@@ -187,9 +187,9 @@ function U:SetOrientation(button, orientation, rotateTexture)
     healthBar:SetRotatesTexture(rotateTexture)
 
     if rotateTexture then
-        F:RotateTexture(healthBarLoss, 90)
+        F.RotateTexture(healthBarLoss, 90)
     else
-        F:RotateTexture(healthBarLoss, 0)
+        F.RotateTexture(healthBarLoss, 0)
     end
 
     P.ClearPoints(button.widgets.healthBar)
@@ -316,10 +316,10 @@ function U.UpdateClickCasting(noReload, onlyqueued, which)
     Util:IterateAllUnitButtons(function(button, unit)
         if not which or which == unit then
             if CUF.DB.CurrentLayoutTable()[unit].clickCast then
-                F:UpdateClickCastings(noReload, onlyqueued)
-                local snippet = F:GetBindingSnippet()
+                F.UpdateClickCastings(noReload, onlyqueued)
+                local snippet = F.GetBindingSnippet()
                 --CUF:DevAdd(snippet, "snippet")
-                F:UpdateClickCastOnFrame(button, snippet)
+                F.UpdateClickCastOnFrame(button, snippet)
             else
                 ClearClickCastings(button)
 
@@ -329,7 +329,7 @@ function U.UpdateClickCasting(noReload, onlyqueued, which)
         end
     end)
 
-    previousClickCastings = F:Copy(Cell.vars.clickCastings["useCommon"] and Cell.vars.clickCastings["common"] or
+    previousClickCastings = F.Copy(Cell.vars.clickCastings["useCommon"] and Cell.vars.clickCastings["common"] or
         Cell.vars.clickCastings[Cell.vars.playerSpecID])
 end
 

@@ -177,7 +177,7 @@ function unitFramesTab:InitTabs()
         table.insert(self.tabButtons, tabButton)
     end
 
-    Cell:CreateButtonGroup(self.tabButtons, function(which, b)
+    Cell.CreateButtonGroup(self.tabButtons, function(which, b)
         self:SetTab(which)
     end)
 end
@@ -215,7 +215,7 @@ function unitFramesTab:Create()
     self.window:SetPoint("TOPLEFT", Menu.tabAnchor, "TOPLEFT")
 
     -- Unit Buttons
-    self.unitPane = Cell:CreateTitledPane(self.window, L.UnitFrames, sectionWidth,
+    self.unitPane = Cell.CreateTitledPane(self.window, L.UnitFrames, sectionWidth,
         self.paneHeight)
     self.unitPane:SetPoint("TOPLEFT")
 
@@ -231,12 +231,12 @@ function unitFramesTab:Create()
     self.unitSection:SetPoint("TOPLEFT", self.unitPane, "BOTTOMLEFT")
 
     self:InitUnits()
-    Cell:CreateButtonGroup(self.unitPageButtons, function(unit, b)
+    Cell.CreateButtonGroup(self.unitPageButtons, function(unit, b)
         self:SetUnitPage(unit)
     end)
 
     -- Tabs
-    self.tabPane = Cell:CreateTitledPane(self.window, nil, sectionWidth, self.paneHeight)
+    self.tabPane = Cell.CreateTitledPane(self.window, nil, sectionWidth, self.paneHeight)
     self.tabPane:SetPoint("TOPLEFT", self.unitSection, "BOTTOMLEFT")
 
     -- Repoint so it's anchored to bottom

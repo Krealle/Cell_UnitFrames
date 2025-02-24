@@ -86,7 +86,7 @@ local function UnitFrame_RegisterEvents(self)
 
     local success, result = pcall(UnitFrame_UpdateAll, self)
     if not success then
-        F:Debug("UnitFrame_UpdateAll |cffff0000FAILED:|r", self:GetName(), result)
+        F.Debug("UnitFrame_UpdateAll |cffff0000FAILED:|r", self:GetName(), result)
     end
 end
 
@@ -155,7 +155,7 @@ local function UnitFrame_OnHide(self)
         self.__unitName = nil
     end
     self.__displayedGuid = nil
-    F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
+    F.RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
 
     self:DisableWidgets()
 end
@@ -173,7 +173,7 @@ local function UnitFrame_OnEnter(self)
     local unit = self.states.displayedUnit
     if not unit then return end
 
-    F:ShowTooltips(self, "unit", unit)
+    F.ShowTooltips(self, "unit", unit)
 end
 
 -------------------------------------------------
@@ -204,7 +204,7 @@ local function UnitFrame_OnTick(self)
             local displayedGuid = UnitGUID(self.states.displayedUnit)
             if displayedGuid ~= self.__displayedGuid then
                 -- NOTE: displayed unit entity changed
-                F:RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
+                F.RemoveElementsExceptKeys(self.states, "unit", "displayedUnit")
                 self.__displayedGuid = displayedGuid
                 self._powerBarUpdateRequired = true
                 self._updateRequired = true

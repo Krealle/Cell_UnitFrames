@@ -822,7 +822,7 @@ end
 ---@param self TimerText|SpellText
 ---@param styleTable BigFontOpt
 local function SetFontStyle(self, styleTable)
-    local font = F:GetFont(styleTable.style)
+    local font = F.GetFont(styleTable.style)
 
     local fontFlags ---@type TBFFlags|nil
     if styleTable.outline == "Outline" then

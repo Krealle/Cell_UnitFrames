@@ -69,11 +69,11 @@ function copyLayoutFrom:Create()
     self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
     self.frame:SetPoint("TOPRIGHT")
 
-    local pane = Cell:CreateTitledPane(self.frame, L.CopyLayoutFrom, sectionWidth, generalTab.paneHeight)
+    local pane = Cell.CreateTitledPane(self.frame, L.CopyLayoutFrom, sectionWidth, generalTab.paneHeight)
     pane:SetPoint("TOPLEFT")
 
     ---@type CellDropdown
-    self.layoutDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
+    self.layoutDropdown = Cell.CreateDropdown(self.frame, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", pane, "BOTTOMLEFT", 5, -10)
     CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.CopyLayoutFrom, L.CopyFromTooltip)
 end
@@ -125,11 +125,11 @@ function layoutProfile:Create()
     self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
     self.frame:SetPoint("TOPLEFT")
 
-    local layoutPane = Cell:CreateTitledPane(self.frame, L.MasterLayout, sectionWidth, generalTab.paneHeight)
+    local layoutPane = Cell.CreateTitledPane(self.frame, L.MasterLayout, sectionWidth, generalTab.paneHeight)
     layoutPane:SetPoint("TOPLEFT")
 
     ---@type CellDropdown
-    self.layoutDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
+    self.layoutDropdown = Cell.CreateDropdown(self.frame, sectionWidth - 10)
     self.layoutDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -10)
     CUF:SetTooltips(self.layoutDropdown, "ANCHOR_TOPLEFT", 0, 3, L.MasterLayout, L.MasterLayoutTooltip)
 end
@@ -188,11 +188,11 @@ function layoutBackup:Create()
     self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 85, true, true)
     self.frame:SetPoint("TOPLEFT", layoutProfile.frame, "BOTTOMLEFT", 0, -20)
 
-    local layoutPane = Cell:CreateTitledPane(self.frame, L.Backups, sectionWidth, generalTab.paneHeight)
+    local layoutPane = Cell.CreateTitledPane(self.frame, L.Backups, sectionWidth, generalTab.paneHeight)
     layoutPane:SetPoint("TOPLEFT")
 
     ---@type CellDropdown
-    self.restoreDropdown = Cell:CreateDropdown(self.frame, sectionWidth - 10)
+    self.restoreDropdown = Cell.CreateDropdown(self.frame, sectionWidth - 10)
     self.restoreDropdown:SetPoint("TOPLEFT", layoutPane, "BOTTOMLEFT", 5, -20)
     self.restoreDropdown:SetLabel(L.RestoreBackup)
 
@@ -224,7 +224,7 @@ local Misc = {}
 
 ---@param type string
 function Misc:AddBlizzardFrame(type)
-    local checkBox = Cell:CreateCheckButton(self.blizzardFramesPopup,
+    local checkBox = Cell.CreateCheckButton(self.blizzardFramesPopup,
         L["Hide"] .. " " .. L[type],
         function(checked)
             CUF_DB.blizzardFrames[type] = checked
@@ -288,7 +288,7 @@ function Misc:AddDummyAnchor(unit)
         CUF_DB.dummyAnchors[parentName].dummyName = value
     end)
 
-    local checkBox = Cell:CreateCheckButton(self.dummyAnchorsPopup, "",
+    local checkBox = Cell.CreateCheckButton(self.dummyAnchorsPopup, "",
         function(checked)
             CUF_DB.dummyAnchors[parentName].enabled = checked
             if checked then
@@ -344,10 +344,10 @@ function Misc:Create()
     self.frame = CUF:CreateFrame(nil, generalTab.window, sectionWidth, 50, true, true)
     self.frame:SetPoint("TOPLEFT", copyLayoutFrom.frame, "BOTTOMLEFT", 0, -20)
 
-    local pane = Cell:CreateTitledPane(self.frame, L["Misc"], sectionWidth, generalTab.paneHeight)
+    local pane = Cell.CreateTitledPane(self.frame, L["Misc"], sectionWidth, generalTab.paneHeight)
     pane:SetPoint("TOPLEFT")
 
-    self.useScalingCB = Cell:CreateCheckButton(self.frame,
+    self.useScalingCB = Cell.CreateCheckButton(self.frame,
         L.UseScaling,
         function(checked)
             DB.SetUseScaling(checked)
@@ -372,7 +372,7 @@ function Misc:Create()
     self.blizzardFramesPopup = CUF:CreateFrame("CUF_Misc_BlizzardFramesPopup", self.frame, 195, 10)
     self.blizzardFramesPopup:SetPoint("BOTTOMRIGHT", self.blizzardFramesButton, "BOTTOMLEFT", -5, 0)
     self.blizzardFramesPopup:SetFrameLevel(generalTab.window:GetFrameLevel() + 50)
-    self.blizzardFramesPopup:SetBackdropBorderColor(unpack(Cell:GetAccentColorTable()))
+    self.blizzardFramesPopup:SetBackdropBorderColor(unpack(Cell.GetAccentColorTable()))
 
     self.blizzardFramesPopup:SetScript("OnHide", function()
         self.blizzardFramesPopup:Hide()
@@ -394,7 +394,7 @@ function Misc:Create()
     self.dummyAnchorsPopup = CUF:CreateFrame("CUF_Misc_DummyAnchorsPopup", self.frame, 400, 10)
     self.dummyAnchorsPopup:SetPoint("BOTTOMRIGHT", self.dummyAnchorsButton, "BOTTOMLEFT", -5, 0)
     self.dummyAnchorsPopup:SetFrameLevel(generalTab.window:GetFrameLevel() + 50)
-    self.dummyAnchorsPopup:SetBackdropBorderColor(unpack(Cell:GetAccentColorTable()))
+    self.dummyAnchorsPopup:SetBackdropBorderColor(unpack(Cell.GetAccentColorTable()))
 
     self.dummyAnchorsPopup:SetScript("OnHide", function()
         self.dummyAnchorsPopup:Hide()

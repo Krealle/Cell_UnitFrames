@@ -372,8 +372,8 @@ end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdatePowerTexture(button)
-    button.widgets.powerBar:SetStatusBarTexture(F:GetBarTexture())
-    button.widgets.powerBar.bg:SetTexture(F:GetBarTexture())
+    button.widgets.powerBar:SetStatusBarTexture(F.GetBarTexture())
+    button.widgets.powerBar.bg:SetTexture(F.GetBarTexture())
 end
 
 ---@param self PowerBarWidget

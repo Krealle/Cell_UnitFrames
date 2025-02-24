@@ -3,7 +3,6 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 local DB = CUF.DB
 local L = CUF.L
 

@@ -62,7 +62,7 @@ end
 ---@param frame Frame
 function PixelPerfect.SetPixelScale(frame)
     if CUF_DB.useScaling then
-        CellP:SetEffectiveScale(frame)
+        CellP.SetEffectiveScale(frame)
     else
         frame:SetScale(PixelPerfect.GetPixelScale())
     end

@@ -2,8 +2,6 @@
 local CUF = select(2, ...)
 
 local L = CUF.L
-local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 local Menu = CUF.Menu
 
 local Serializer = LibStub:GetLibrary("LibSerialize")

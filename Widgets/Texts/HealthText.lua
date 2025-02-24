@@ -191,7 +191,7 @@ end
 ---@param max number
 ---@param totalAbsorbs number
 local function SetHealth_Number_Short(self, current, max, totalAbsorbs)
-    self:SetText(F:FormatNumber(current))
+    self:SetText(F.FormatNumber(current))
 end
 
 ---@param self HealthTextWidget
@@ -200,7 +200,7 @@ end
 ---@param totalAbsorbs number
 local function SetHealth_Number_Absorbs_Short(self, current, max, totalAbsorbs)
     if totalAbsorbs == 0 then
-        self:SetText(F:FormatNumber(current))
+        self:SetText(F.FormatNumber(current))
     else
         self:SetFormattedText("%s+%s", F.FormatNumber(current), F.FormatNumber(totalAbsorbs))
     end
@@ -211,7 +211,7 @@ end
 ---@param max number
 ---@param totalAbsorbs number
 local function SetHealth_Number_Absorbs_Merged_Short(self, current, max, totalAbsorbs)
-    self:SetText(F:FormatNumber(current + totalAbsorbs))
+    self:SetText(F.FormatNumber(current + totalAbsorbs))
 end
 
 ---@param self HealthTextWidget
@@ -227,7 +227,7 @@ end
 ---@param max number
 ---@param totalAbsorbs number
 local function SetHealth_Number_Deficit_Short(self, current, max, totalAbsorbs)
-    self:SetText(F:FormatNumber(current - max))
+    self:SetText(F.FormatNumber(current - max))
 end
 
 ---@param self HealthTextWidget
@@ -258,7 +258,7 @@ local function SetHealth_Absorbs_Only_Short(self, current, max, totalAbsorbs)
     if totalAbsorbs == 0 then
         self:SetText("")
     else
-        self:SetText(F:FormatNumber(totalAbsorbs))
+        self:SetText(F.FormatNumber(totalAbsorbs))
     end
 end
 

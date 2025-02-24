@@ -119,7 +119,7 @@ end
 ---@param current number
 ---@param max number
 local function SetPower_Number_Short(self, current, max)
-    self:SetText(F:FormatNumber(current))
+    self:SetText(F.FormatNumber(current))
 end
 
 -------------------------------------------------
@@ -206,7 +206,7 @@ function W:CreatePowerText(button)
         if not unit then return end
 
         if self.colorType == const.PowerColorType.CLASS_COLOR then
-            self:SetTextColor(F:GetClassColor(button.states.class))
+            self:SetTextColor(F.GetClassColor(button.states.class))
         elseif self.colorType == const.PowerColorType.POWER_COLOR then
             self:SetTextColor(Util:GetPowerColor(unit))
         else

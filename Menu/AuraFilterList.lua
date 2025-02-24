@@ -4,7 +4,6 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local L = CUF.L
 local F = Cell.funcs
-local P = Cell.pixelPerfectFuncs
 
 local Handler = CUF.Handler
 local const = CUF.constants

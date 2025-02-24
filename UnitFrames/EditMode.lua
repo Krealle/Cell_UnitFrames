@@ -260,7 +260,7 @@ local function CreateWidgetPositioningPopup()
 
     local closeBtn = Cell.CreateButton(widgetPositioningPopup, "×", "red", { 18, 18 }, false, false, "CELL_FONT_SPECIAL",
         "CELL_FONT_SPECIAL")
-    closeBtn:SetPoint("TOPRIGHT", CellP:Scale(-5), CellP:Scale(-1))
+    closeBtn:SetPoint("TOPRIGHT", CellP.Scale(-5), CellP.Scale(-1))
     closeBtn:SetScript("OnClick", function() widgetPositioningPopup:Hide() end)
 
     local title = widgetPositioningPopup:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS")
@@ -744,11 +744,11 @@ local function UpdateCellFramePosition()
     local anchorFrame, key = GetAnchorFrame()
 
     -- Use Cell functions directly to reduce chance of error
-    CellP:LoadPosition(anchorFrame, { x, y })
+    CellP.LoadPosition(anchorFrame, { x, y })
     if key then
-        CellP:SavePosition(anchorFrame, Cell.vars.currentLayoutTable[key].position)
+        CellP.SavePosition(anchorFrame, Cell.vars.currentLayoutTable[key].position)
     else
-        CellP:SavePosition(anchorFrame, CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
+        CellP.SavePosition(anchorFrame, CellDB["quickAssist"][Cell.vars.playerSpecID].layout.position)
     end
 end
 

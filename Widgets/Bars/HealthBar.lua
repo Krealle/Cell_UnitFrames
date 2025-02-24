@@ -170,8 +170,8 @@ end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateHealthTexture(button)
-    button.widgets.healthBar:SetStatusBarTexture(F:GetBarTexture())
-    button.widgets.healthBarLoss:SetTexture(F:GetBarTexture())
+    button.widgets.healthBar:SetStatusBarTexture(F.GetBarTexture())
+    button.widgets.healthBarLoss:SetTexture(F.GetBarTexture())
 end
 
 ---@param button CUFUnitButton

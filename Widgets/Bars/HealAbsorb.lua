@@ -187,11 +187,15 @@ local function UpdateStyle(self)
         self.tex:SetTexture(colors.absorbTexture, "REPEAT", "REPEAT")
         self.tex:SetHorizTile(true)
         self.tex:SetVertTile(true)
-    elseif colors.absorbTexture == CUF.constants.Textures.BLIZZARD_ABSORB_FILL then
+        --[[ elseif colors.absorbTexture == CUF.constants.Textures.BLIZZARD_ABSORB_FILL then
         -- TODO: This is prolly not correct
         self.tex:SetTexture(colors.absorbTexture)
         self.tex:SetHorizTile(true)
-        self.tex:SetVertTile(true)
+        self.tex:SetVertTile(true) ]]
+    elseif colors.absorbTexture == CUF.constants.Textures.BLIZZARD_SHIELD_FILL then
+        self.tex:SetTexture(colors.absorbTexture, "REPEAT", "REPEAT")
+        self.tex:SetHorizTile(false)
+        self.tex:SetVertTile(false)
     else
         self.tex:SetTexture(colors.absorbTexture)
         self.tex:SetHorizTile(false)

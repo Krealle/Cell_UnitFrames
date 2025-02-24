@@ -146,8 +146,8 @@ end
 ---@return CUF.ColorSection.Slider
 local function CreateSlider(which, colorName, colorTable, parent, percent)
     ---@class CUF.ColorSection.Slider: CellSlider
-    local slider = Cell:CreateSlider(L[colorName], parent, 0, 100, 141, 1, function(value)
-        DB.SetColor(which, colorName, value / 100)
+    local slider = Cell:CreateSlider(L[colorName], parent, 0, 100, 200, 1, function(value)
+        DB.SetColor(which, colorName, value / (percent and 100 or 1))
         CUF:Fire("UpdateAppearance", "color")
     end, nil, percent)
     slider.id = colorName
@@ -288,8 +288,8 @@ function ColorTab:CreateSections()
                 baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
 
                 table.insert(section.dropdowns, element)
-            elseif colorType == "slider-percent" then
-                element = CreateSlider(which, colorName, colorTable, section, true)
+            elseif colorType:match("slider") then
+                element = CreateSlider(which, colorName, colorTable, section, colorType:match("percent"))
                 gridLayout.currentColumn = 1
                 gridLayout.currentColumnWidth = section:GetWidth()
 

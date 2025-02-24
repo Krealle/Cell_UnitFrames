@@ -348,17 +348,10 @@ local function UpdateStyle(self)
     self.overshieldGlow:SetTexture(colors.overshieldTexture)
     self.overshieldGlowReverse:SetTexture(colors.overshieldTexture)
 
-    if colors.overshieldTexture == CUF.constants.Textures.BLIZZARD_OVERSHIELD then
-        self.overshieldGlow.size = 16
-        self.overshieldGlow.offset = 7
-        self.overshieldGlowReverse.size = 16
-        self.overshieldGlowReverse.offset = 0
-    else
-        self.overshieldGlow.size = 4
-        self.overshieldGlow.offset = 0
-        self.overshieldGlowReverse.size = 4
-        self.overshieldGlowReverse.offset = 0
-    end
+    self.overshieldGlow.offset = colors.overshieldOffset
+    self.overshieldGlow.size = colors.overshieldSize
+    self.overshieldGlowReverse.offset = colors.overshieldReverseOffset
+    self.overshieldGlowReverse.size = colors.overshieldSize
 
     self.shield.tex:SetVertexColor(unpack(colors.shieldColor))
     self.shieldReverse.tex:SetVertexColor(unpack(colors.shieldColor))

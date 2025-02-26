@@ -99,6 +99,12 @@ end
 ---@return number
 function PixelPerfect.Scale(num)
     if CUF_DB.useScaling then
+        -- Not sure why but Cell returns 1 instead of proper scaled values when
+        -- Scale is set to >= 2
+        -- This is a hotfix to said problem
+        if num == 1 and CellDB["appearance"]["scale"] >= 2 then
+            return 1 / CellDB["appearance"]["scale"]
+        end
         return CellP.Scale(num)
     end
 

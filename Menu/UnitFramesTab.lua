@@ -151,7 +151,7 @@ function unitFramesTab:InitTabs()
         self.tabs[tab.id] = tab
 
         ---@class Menu.TabButton: CellButton
-        local tabButton = CUF:CreateButton(self.window, L[tab.id], { 85, 17 })
+        local tabButton = CUF:CreateButton(self.window, L[tab.id], { 100, 17 })
         tabButton.id = tab.id
 
         if prevButton then

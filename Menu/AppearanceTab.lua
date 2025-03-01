@@ -216,7 +216,7 @@ function AppearanceTab:Create()
         DB.SelectedLayoutTable()[self.unit].useHealthBarTexture = checked
         healthTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")
-    end)
+    end, L.TextureOverwriteTooltip)
     healthTextureEnable:SetPoint("LEFT", healthTextureDropdown, "RIGHT", 5, 0)
     self.healthTextureEnable = healthTextureEnable
 
@@ -242,7 +242,7 @@ function AppearanceTab:Create()
         DB.SelectedLayoutTable()[self.unit].useHealthLossTexture = checked
         healthLossTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")
-    end)
+    end, L.TextureOverwriteTooltip)
     healthLossTextureEnable:SetPoint("LEFT", healthLossTextureDropdown, "RIGHT", 5, 0)
     self.healthLossTextureEnable = healthLossTextureEnable
 
@@ -272,7 +272,7 @@ function AppearanceTab:Create()
         DB.SelectedLayoutTable()[self.unit].usePowerBarTexture = checked
         powerBarTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")
-    end)
+    end, L.TextureOverwriteTooltip)
     powerBarTextureEnable:SetPoint("LEFT", powerBarTextureDropdown, "RIGHT", 5, 0)
     self.powerBarTextureEnable = powerBarTextureEnable
 
@@ -298,7 +298,7 @@ function AppearanceTab:Create()
         DB.SelectedLayoutTable()[self.unit].usePowerLossTexture = checked
         powerLossTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")
-    end)
+    end, L.TextureOverwriteTooltip)
     powerLossTextureEnable:SetPoint("LEFT", powerLossTextureDropdown, "RIGHT", 5, 0)
     self.powerLossTextureEnable = powerLossTextureEnable
 end

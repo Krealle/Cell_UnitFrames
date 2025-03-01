@@ -2,6 +2,7 @@
 --
 -- See documentation for valid units here:
 -- https://github.com/Krealle/Cell_UnitFrames/blob/master/Data/Constants.lua#L19
+---@deprecated by version 1.4.47
 local function CustomTextures()
     -- Make sure CUF is actually loaded
     local CUF = _G["CUF"]

@@ -989,6 +989,10 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field useHealthBarTexture boolean
 ---@field healthLossTexture string
 ---@field useHealthLossTexture boolean
+---@field powerBarTexture string
+---@field usePowerBarTexture boolean
+---@field powerLossTexture string
+---@field usePowerLossTexture boolean
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -1007,6 +1011,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     target = {
         enabled = false,
@@ -1044,6 +1052,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     focus = {
         enabled = false,
@@ -1088,6 +1100,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     targettarget = {
         enabled = false,
@@ -1122,6 +1138,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     pet = {
         enabled = false,
@@ -1162,6 +1182,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     boss = {
         enabled = false,
@@ -1194,6 +1218,10 @@ Defaults.Layouts = {
         useHealthBarTexture = false,
         healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     }
 }
 

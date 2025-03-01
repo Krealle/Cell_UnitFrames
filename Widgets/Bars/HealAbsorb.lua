@@ -153,21 +153,37 @@ local function SetOrientation(self, orientation)
     P.ClearPoints(self.overabsorbGlow)
 
     if orientation == "horizontal" then
-        P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
-        P.Point(self, "BOTTOMRIGHT", self.parentHealthBar:GetStatusBarTexture())
+        if self.parentHealthBar:GetReverseFill() then
+            P.Point(self, "TOPLEFT", self.parentHealthBar:GetStatusBarTexture())
+            P.Point(self, "BOTTOMLEFT", self.parentHealthBar:GetStatusBarTexture())
 
-        P.Point(self.overabsorbGlow, "TOP", self.parentHealthBar, "TOPLEFT")
-        P.Point(self.overabsorbGlow, "BOTTOM", self.parentHealthBar, "BOTTOMLEFT")
+            P.Point(self.overabsorbGlow, "TOP", self.parentHealthBar, "TOPRIGHT")
+            P.Point(self.overabsorbGlow, "BOTTOM", self.parentHealthBar, "BOTTOMRIGHT")
+        else
+            P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
+            P.Point(self, "BOTTOMRIGHT", self.parentHealthBar:GetStatusBarTexture())
+
+            P.Point(self.overabsorbGlow, "TOP", self.parentHealthBar, "TOPLEFT")
+            P.Point(self.overabsorbGlow, "BOTTOM", self.parentHealthBar, "BOTTOMLEFT")
+        end
         P.Width(self.overabsorbGlow, self.overabsorbGlow.size)
         F.RotateTexture(self.overabsorbGlow, 0)
 
         self.SetValue = SetValue_Horizontal
     else
-        P.Point(self, "TOPLEFT", self.parentHealthBar:GetStatusBarTexture())
-        P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
+        if self.parentHealthBar:GetReverseFill() then
+            P.Point(self, "BOTTOMLEFT", self.parentHealthBar:GetStatusBarTexture())
+            P.Point(self, "BOTTOMRIGHT", self.parentHealthBar:GetStatusBarTexture())
 
-        P.Point(self.overabsorbGlow, "LEFT", self.parentHealthBar, "BOTTOMLEFT")
-        P.Point(self.overabsorbGlow, "RIGHT", self.parentHealthBar, "BOTTOMRIGHT")
+            P.Point(self.overabsorbGlow, "LEFT", self.parentHealthBar, "TOPLEFT")
+            P.Point(self.overabsorbGlow, "RIGHT", self.parentHealthBar, "TOPRIGHT")
+        else
+            P.Point(self, "TOPLEFT", self.parentHealthBar:GetStatusBarTexture())
+            P.Point(self, "TOPRIGHT", self.parentHealthBar:GetStatusBarTexture())
+
+            P.Point(self.overabsorbGlow, "LEFT", self.parentHealthBar, "BOTTOMLEFT")
+            P.Point(self.overabsorbGlow, "RIGHT", self.parentHealthBar, "BOTTOMRIGHT")
+        end
         P.Height(self.overabsorbGlow, self.overabsorbGlow.size)
         F.RotateTexture(self.overabsorbGlow, 90)
 

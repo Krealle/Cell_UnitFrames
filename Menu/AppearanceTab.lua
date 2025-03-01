@@ -16,7 +16,7 @@ local unitFramesTab = Menu.unitFramesTab
 ---@class AppearanceTab: Menu.Tab
 local AppearanceTab = {}
 AppearanceTab.id = "Appearance"
-AppearanceTab.height = 280
+AppearanceTab.height = 315
 AppearanceTab.paneHeight = 17
 
 unitFramesTab:AddTab(AppearanceTab)
@@ -82,6 +82,8 @@ function AppearanceTab.LoadUnit(unit)
         layout.powerLossTexture)
     AppearanceTab.powerLossTextureDropdown:SetEnabled(layout.usePowerLossTexture)
     AppearanceTab.powerLossTextureEnable:SetChecked(layout.usePowerLossTexture)
+
+    AppearanceTab.reverseHealthFill:SetChecked(layout.reverseHealthFill)
 end
 
 CUF:RegisterCallback("LoadPageDB", "AppearanceTab_LoadUnit", AppearanceTab.LoadUnit)
@@ -301,4 +303,14 @@ function AppearanceTab:Create()
     end, L.TextureOverwriteTooltip)
     powerLossTextureEnable:SetPoint("LEFT", powerLossTextureDropdown, "RIGHT", 5, 0)
     self.powerLossTextureEnable = powerLossTextureEnable
+
+    -- reverse health fill
+
+    ---@type CellCheckButton
+    local reverseHealthFill = Cell.CreateCheckButton(section, L.reverseHealthFill, function(checked, cb)
+        DB.SelectedLayoutTable()[self.unit].reverseHealthFill = checked
+        CUF:Fire("UpdateLayout", CUF.vars.selectedLayout, "barOrientation", self.unit)
+    end)
+    reverseHealthFill:SetPoint("TOPLEFT", powerLossTextureDropdown, "BOTTOMLEFT", 0, -20)
+    self.reverseHealthFill = reverseHealthFill
 end

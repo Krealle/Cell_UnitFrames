@@ -117,7 +117,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
     end
 
     if not kind or kind == "barOrientation" then
-        U:SetOrientation(button, layout[unit].barOrientation, false)
+        U:SetOrientation(button, layout[unit].barOrientation, false, layout[unit].reverseHealthFill)
     end
 
     if not kind or kind == "position" or kind == "spacing" or kind == "growthDirection" then
@@ -174,7 +174,8 @@ end
 ---@param button CUFUnitButton
 ---@param orientation string
 ---@param rotateTexture boolean
-function U:SetOrientation(button, orientation, rotateTexture)
+---@param reverseHealthFill boolean
+function U:SetOrientation(button, orientation, rotateTexture, reverseHealthFill)
     local healthBar = button.widgets.healthBar
     local healthBarLoss = button.widgets.healthBarLoss
 
@@ -185,6 +186,7 @@ function U:SetOrientation(button, orientation, rotateTexture)
         healthBar:SetOrientation(orientation)
     end
     healthBar:SetRotatesTexture(rotateTexture)
+    healthBar:SetReverseFill(reverseHealthFill)
 
     if rotateTexture then
         F.RotateTexture(healthBarLoss, 90)
@@ -200,16 +202,26 @@ function U:SetOrientation(button, orientation, rotateTexture)
 
         -- update healthBarLoss
         P.ClearPoints(healthBarLoss)
-        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
-        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        if reverseHealthFill then
+            P.Point(healthBarLoss, "TOPLEFT", healthBar)
+            P.Point(healthBarLoss, "BOTTOMRIGHT", healthBar:GetStatusBarTexture(), "BOTTOMLEFT")
+        else
+            P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+            P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "BOTTOMRIGHT")
+        end
     else -- vertical / vertical_health
         P.Point(button.widgets.healthBar, "TOPLEFT", button, "TOPLEFT", CELL_BORDER_SIZE, -CELL_BORDER_SIZE)
         P.Point(button.widgets.healthBar, "BOTTOMRIGHT", button, "BOTTOMRIGHT", -CELL_BORDER_SIZE,
             CELL_BORDER_SIZE)
 
         P.ClearPoints(healthBarLoss)
-        P.Point(healthBarLoss, "TOPRIGHT", healthBar)
-        P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+        if reverseHealthFill then
+            P.Point(healthBarLoss, "BOTTOMRIGHT", healthBar)
+            P.Point(healthBarLoss, "TOPLEFT", healthBar:GetStatusBarTexture(), "BOTTOMLEFT")
+        else
+            P.Point(healthBarLoss, "TOPRIGHT", healthBar)
+            P.Point(healthBarLoss, "BOTTOMLEFT", healthBar:GetStatusBarTexture(), "TOPLEFT")
+        end
     end
 
     -- update actions
@@ -220,6 +232,9 @@ function U:SetOrientation(button, orientation, rotateTexture)
     end
     if button:HasWidget(const.WIDGET_KIND.HEAL_ABSORB) then
         button.widgets.healAbsorb:SetOrientation(orientation)
+    end
+    if button:HasWidget(const.WIDGET_KIND.HEAL_PREDICTION) then
+        W.UpdateHealPredictionWidget(button, button._baseUnit)
     end
 end
 

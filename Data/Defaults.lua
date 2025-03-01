@@ -993,6 +993,7 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field usePowerBarTexture boolean
 ---@field powerLossTexture string
 ---@field usePowerLossTexture boolean
+---@field reverseHealthFill boolean
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -1015,6 +1016,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     },
     target = {
         enabled = false,
@@ -1056,6 +1058,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     },
     focus = {
         enabled = false,
@@ -1104,6 +1107,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     },
     targettarget = {
         enabled = false,
@@ -1142,6 +1146,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     },
     pet = {
         enabled = false,
@@ -1186,6 +1191,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     },
     boss = {
         enabled = false,
@@ -1222,6 +1228,7 @@ Defaults.Layouts = {
         usePowerBarTexture = false,
         powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
         usePowerLossTexture = false,
+        reverseHealthFill = false,
     }
 }
 

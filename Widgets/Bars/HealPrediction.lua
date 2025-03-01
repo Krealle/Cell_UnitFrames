@@ -257,39 +257,71 @@ local function Repoint(bar, anchorPoint)
     if bar._owner.orientation == "horizontal" then
         bar.SetValue = HealPredict_SetValue_Horizontal
 
-        P.Point(bar.healReverse, "TOPRIGHT", bar.parentHealthBar)
-        P.Point(bar.healReverse, "BOTTOMRIGHT", bar.parentHealthBar)
+        if bar.parentHealthBar:GetReverseFill() then
+            P.Point(bar.healReverse, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.healReverse, "BOTTOMLEFT", bar.parentHealthBar)
 
-        P.Point(bar.heal, "TOPLEFT", bar.parentHealthBarLoss)
-        P.Point(bar.heal, "BOTTOMLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "TOPRIGHT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "BOTTOMRIGHT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
-        P.Point(bar.overHealGlow, "BOTTOMRIGHT", bar.parentHealthBar)
+            P.Point(bar.overHealGlow, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.overHealGlow, "BOTTOMLEFT", bar.parentHealthBar)
+
+            P.Point(bar.overHealGlowReverse, "TOP", bar.healReverse, "TOPRIGHT")
+            P.Point(bar.overHealGlowReverse, "BOTTOM", bar.healReverse, "BOTTOMRIGHT")
+        else
+            P.Point(bar.healReverse, "TOPRIGHT", bar.parentHealthBar)
+            P.Point(bar.healReverse, "BOTTOMRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.heal, "TOPLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "BOTTOMLEFT", bar.parentHealthBarLoss)
+
+            P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
+            P.Point(bar.overHealGlow, "BOTTOMRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.overHealGlowReverse, "TOP", bar.healReverse, "TOPLEFT")
+            P.Point(bar.overHealGlowReverse, "BOTTOM", bar.healReverse, "BOTTOMLEFT")
+        end
+
         F.RotateTexture(bar.overHealGlow, 0)
         P.Width(bar.overHealGlow, 4)
 
-        P.Point(bar.overHealGlowReverse, "TOP", bar.healReverse, "TOPLEFT")
-        P.Point(bar.overHealGlowReverse, "BOTTOM", bar.healReverse, "BOTTOMLEFT")
         F.RotateTexture(bar.overHealGlowReverse, 0)
         P.Width(bar.overHealGlowReverse, 4)
     else
         bar.SetValue = HealPredict_SetValue_Vertical
 
-        P.Point(bar.healReverse, "TOPLEFT", bar.parentHealthBar)
-        P.Point(bar.healReverse, "TOPRIGHT", bar.parentHealthBar)
+        if bar.parentHealthBar:GetReverseFill() then
+            P.Point(bar.healReverse, "BOTTOMLEFT", bar.parentHealthBar)
+            P.Point(bar.healReverse, "BOTTOMRIGHT", bar.parentHealthBar)
 
-        P.Point(bar.heal, "BOTTOMLEFT", bar.parentHealthBarLoss)
-        P.Point(bar.heal, "BOTTOMRIGHT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "TOPLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "TOPRIGHT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overHealGlow, "TOPLEFT", bar.parentHealthBar)
-        P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
-        F.RotateTexture(bar.overHealGlow, 90)
-        P.Height(bar.overHealGlow, 4)
+            P.Point(bar.overHealGlow, "BOTTOMLEFT", bar.parentHealthBar)
+            P.Point(bar.overHealGlow, "BOTTOMRIGHT", bar.parentHealthBar)
 
-        P.Point(bar.overHealGlowReverse, "LEFT", bar.healReverse, "BOTTOMLEFT")
-        P.Point(bar.overHealGlowReverse, "RIGHT", bar.healReverse, "BOTTOMRIGHT")
+            P.Point(bar.overHealGlowReverse, "LEFT", bar.healReverse, "TOPLEFT")
+            P.Point(bar.overHealGlowReverse, "RIGHT", bar.healReverse, "TOPRIGHT")
+        else
+            P.Point(bar.healReverse, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.healReverse, "TOPRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.heal, "BOTTOMLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.heal, "BOTTOMRIGHT", bar.parentHealthBarLoss)
+
+            P.Point(bar.overHealGlow, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.overHealGlow, "TOPRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.overHealGlowReverse, "LEFT", bar.healReverse, "BOTTOMLEFT")
+            P.Point(bar.overHealGlowReverse, "RIGHT", bar.healReverse, "BOTTOMRIGHT")
+        end
+
         F.RotateTexture(bar.overHealGlowReverse, 90)
         P.Height(bar.overHealGlowReverse, 4)
+
+        F.RotateTexture(bar.overHealGlow, 90)
+        P.Height(bar.overHealGlow, 4)
     end
 end
 

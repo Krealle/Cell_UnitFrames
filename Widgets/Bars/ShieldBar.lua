@@ -259,39 +259,75 @@ local function Repoint(bar, anchorPoint)
     if bar._owner.orientation == "horizontal" then
         bar.SetValue = ShieldBar_SetValue_Horizontal
 
-        P.Point(bar.shieldReverse, "TOPRIGHT", bar.parentHealthBar)
-        P.Point(bar.shieldReverse, "BOTTOMRIGHT", bar.parentHealthBar)
+        if bar.parentHealthBar:GetReverseFill() then
+            P.Point(bar.shieldReverse, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.shieldReverse, "BOTTOMLEFT", bar.parentHealthBar)
 
-        P.Point(bar.shield, "TOPLEFT", bar.parentHealthBarLoss)
-        P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "TOPRIGHT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "BOTTOMRIGHT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
-        P.Point(bar.overshieldGlow, "BOTTOMRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
+            P.Point(bar.overshieldGlow, "TOPLEFT", bar.parentHealthBar, -bar.overshieldGlow.offset, 0)
+            P.Point(bar.overshieldGlow, "BOTTOMLEFT", bar.parentHealthBar, -bar.overshieldGlow.offset, 0)
+
+            P.Point(bar.overshieldGlowReverse, "TOP", bar.shieldReverse, "TOPRIGHT", bar.overshieldGlowReverse.offset, 0)
+            P.Point(bar.overshieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMRIGHT",
+                bar.overshieldGlowReverse.offset,
+                0)
+        else
+            P.Point(bar.shieldReverse, "TOPRIGHT", bar.parentHealthBar)
+            P.Point(bar.shieldReverse, "BOTTOMRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.shield, "TOPLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
+
+            P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
+            P.Point(bar.overshieldGlow, "BOTTOMRIGHT", bar.parentHealthBar, bar.overshieldGlow.offset, 0)
+
+            P.Point(bar.overshieldGlowReverse, "TOP", bar.shieldReverse, "TOPLEFT", bar.overshieldGlowReverse.offset, 0)
+            P.Point(bar.overshieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMLEFT",
+                bar.overshieldGlowReverse.offset,
+                0)
+        end
         F.RotateTexture(bar.overshieldGlow, 0)
         P.Width(bar.overshieldGlow, bar.overshieldGlow.size)
 
-        P.Point(bar.overshieldGlowReverse, "TOP", bar.shieldReverse, "TOPLEFT", bar.overshieldGlowReverse.offset, 0)
-        P.Point(bar.overshieldGlowReverse, "BOTTOM", bar.shieldReverse, "BOTTOMLEFT", bar.overshieldGlowReverse.offset,
-            0)
         F.RotateTexture(bar.overshieldGlowReverse, 0)
         P.Width(bar.overshieldGlowReverse, bar.overshieldGlowReverse.size)
     else
         bar.SetValue = ShieldBar_SetValue_Vertical
 
-        P.Point(bar.shieldReverse, "TOPLEFT", bar.parentHealthBar)
-        P.Point(bar.shieldReverse, "TOPRIGHT", bar.parentHealthBar)
+        if bar.parentHealthBar:GetReverseFill() then
+            P.Point(bar.shieldReverse, "BOTTOMLEFT", bar.parentHealthBar)
+            P.Point(bar.shieldReverse, "BOTTOMRIGHT", bar.parentHealthBar)
 
-        P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
-        P.Point(bar.shield, "BOTTOMRIGHT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "TOPLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "TOPRIGHT", bar.parentHealthBarLoss)
 
-        P.Point(bar.overshieldGlow, "TOPLEFT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
-        P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
+            P.Point(bar.overshieldGlow, "BOTTOMLEFT", bar.parentHealthBar, 0, -bar.overshieldGlow.offset)
+            P.Point(bar.overshieldGlow, "BOTTOMRIGHT", bar.parentHealthBar, 0, -bar.overshieldGlow.offset)
+
+            P.Point(bar.overshieldGlowReverse, "LEFT", bar.shieldReverse, "TOPLEFT", 0,
+                bar.overshieldGlowReverse.offset)
+            P.Point(bar.overshieldGlowReverse, "RIGHT", bar.shieldReverse, "TOPRIGHT", 0, bar.overshieldGlowReverse
+                .offset)
+        else
+            P.Point(bar.shieldReverse, "TOPLEFT", bar.parentHealthBar)
+            P.Point(bar.shieldReverse, "TOPRIGHT", bar.parentHealthBar)
+
+            P.Point(bar.shield, "BOTTOMLEFT", bar.parentHealthBarLoss)
+            P.Point(bar.shield, "BOTTOMRIGHT", bar.parentHealthBarLoss)
+
+            P.Point(bar.overshieldGlow, "TOPLEFT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
+            P.Point(bar.overshieldGlow, "TOPRIGHT", bar.parentHealthBar, 0, bar.overshieldGlow.offset)
+
+            P.Point(bar.overshieldGlowReverse, "LEFT", bar.shieldReverse, "BOTTOMLEFT", 0,
+                bar.overshieldGlowReverse.offset)
+            P.Point(bar.overshieldGlowReverse, "RIGHT", bar.shieldReverse, "BOTTOMRIGHT", 0, bar.overshieldGlowReverse
+                .offset)
+        end
         F.RotateTexture(bar.overshieldGlow, 90)
         P.Height(bar.overshieldGlow, bar.overshieldGlow.size)
 
-        P.Point(bar.overshieldGlowReverse, "LEFT", bar.shieldReverse, "BOTTOMLEFT", 0, bar.overshieldGlowReverse.offset)
-        P.Point(bar.overshieldGlowReverse, "RIGHT", bar.shieldReverse, "BOTTOMRIGHT", 0, bar.overshieldGlowReverse
-            .offset)
         F.RotateTexture(bar.overshieldGlowReverse, 90)
         P.Height(bar.overshieldGlowReverse, bar.overshieldGlowReverse.size)
     end

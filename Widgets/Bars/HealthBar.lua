@@ -170,8 +170,18 @@ end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdateHealthTexture(button)
-    button.widgets.healthBar:SetStatusBarTexture(F.GetBarTexture())
-    button.widgets.healthBarLoss:SetTexture(F.GetBarTexture())
+    local layout = DB.SelectedLayoutTable()[button._baseUnit]
+    if layout.useHealthBarTexture then
+        button.widgets.healthBar:SetStatusBarTexture(layout.healthBarTexture)
+    else
+        button.widgets.healthBar:SetStatusBarTexture(F.GetBarTexture())
+    end
+
+    if layout.useHealthLossTexture then
+        button.widgets.healthBarLoss:SetTexture(layout.healthLossTexture)
+    else
+        button.widgets.healthBarLoss:SetTexture(F.GetBarTexture())
+    end
 end
 
 ---@param button CUFUnitButton

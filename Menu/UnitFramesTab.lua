@@ -21,7 +21,7 @@ unitFramesTab.id = "unitFramesTab"
 unitFramesTab.unitPages = {}
 unitFramesTab.unitsToAdd = {}
 unitFramesTab.unitPageButtons = {}
-unitFramesTab.unitHeight = 200
+unitFramesTab.unitHeight = 160
 unitFramesTab.paneHeight = 17
 
 Menu.unitFramesTab = unitFramesTab

@@ -985,6 +985,14 @@ Defaults.Widgets_Boss.castBar.spell.offsetX = 0
 ---@field healthBarColorType UnitButtonColorType
 ---@field healthLossColorType UnitButtonColorType
 ---@field visibility string
+---@field healthBarTexture string
+---@field useHealthBarTexture boolean
+---@field healthLossTexture string
+---@field useHealthLossTexture boolean
+---@field powerBarTexture string
+---@field usePowerBarTexture boolean
+---@field powerLossTexture string
+---@field usePowerLossTexture boolean
 
 ---@alias UnitLayoutTable table<Unit, UnitLayout>
 ---@type UnitLayoutTable
@@ -998,7 +1006,15 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = "[petbattle] hide;show"
+        visibility = "[petbattle] hide;show",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     target = {
         enabled = false,
@@ -1031,7 +1047,15 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = ""
+        visibility = "",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     focus = {
         enabled = false,
@@ -1071,7 +1095,15 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = ""
+        visibility = "",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     targettarget = {
         enabled = false,
@@ -1101,7 +1133,15 @@ Defaults.Layouts = {
         alwaysUpdate = true,
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = ""
+        visibility = "",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     pet = {
         enabled = false,
@@ -1137,7 +1177,15 @@ Defaults.Layouts = {
         barOrientation = "horizontal",
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = ""
+        visibility = "",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     },
     boss = {
         enabled = false,
@@ -1165,7 +1213,15 @@ Defaults.Layouts = {
         },
         healthBarColorType = CUF.constants.UnitButtonColorType.CELL,
         healthLossColorType = CUF.constants.UnitButtonColorType.CUSTOM,
-        visibility = ""
+        visibility = "",
+        healthBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthBarTexture = false,
+        healthLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        useHealthLossTexture = false,
+        powerBarTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerBarTexture = false,
+        powerLossTexture = "Interface\\AddOns\\Cell\\Media\\statusbar.tga",
+        usePowerLossTexture = false,
     }
 }
 

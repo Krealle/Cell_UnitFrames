@@ -46,6 +46,7 @@ Menu/GeneralTab.lua
 Menu/UnitFramesTab.lua
 Menu/WidgetsTab.lua
 Menu/FaderTab.lua
+Menu/AppearanceTab.lua
 Menu/ColorTab.lua
 Menu/VisibilityTab.lua
 

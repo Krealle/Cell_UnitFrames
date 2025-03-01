@@ -372,8 +372,18 @@ end
 
 ---@param button CUFUnitButton
 function U:UnitFrame_UpdatePowerTexture(button)
-    button.widgets.powerBar:SetStatusBarTexture(F.GetBarTexture())
-    button.widgets.powerBar.bg:SetTexture(F.GetBarTexture())
+    local layout = DB.SelectedLayoutTable()[button._baseUnit]
+    if layout.usePowerBarTexture then
+        button.widgets.powerBar:SetStatusBarTexture(layout.powerBarTexture)
+    else
+        button.widgets.powerBar:SetStatusBarTexture(F.GetBarTexture())
+    end
+
+    if layout.usePowerLossTexture then
+        button.widgets.powerBar.bg:SetTexture(layout.powerLossTexture)
+    else
+        button.widgets.powerBar.bg:SetTexture(F.GetBarTexture())
+    end
 end
 
 ---@param self PowerBarWidget

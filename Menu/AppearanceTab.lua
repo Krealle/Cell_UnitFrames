@@ -16,7 +16,7 @@ local unitFramesTab = Menu.unitFramesTab
 ---@class AppearanceTab: Menu.Tab
 local AppearanceTab = {}
 AppearanceTab.id = "Appearance"
-AppearanceTab.height = 300
+AppearanceTab.height = 180
 AppearanceTab.paneHeight = 17
 
 unitFramesTab:AddTab(AppearanceTab)
@@ -91,7 +91,7 @@ function AppearanceTab:Create()
     self.unit = const.UNIT.PLAYER
 
     local section = CUF:CreateFrame("CUF_Menu_UnitFrame_Appearance_Section", self.window, sectionWidth - 10,
-        200, false, true)
+        self.height - 25, false, true)
     section:SetPoint("TOPLEFT", self.window, "TOPLEFT", 5, -5)
 
     ---@type CellDropdown
@@ -201,7 +201,7 @@ function AppearanceTab:Create()
     healthTextureDropdown:SetItems(textureDropdownItems)
 
     ---@type CellCheckButton
-    local healthTextureEnable = Cell.CreateCheckButton(section, L["Enabled"], function(checked, cb)
+    local healthTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
         DB.SelectedLayoutTable()[self.unit].useHealthBarTexture = checked
         healthTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")
@@ -229,7 +229,7 @@ function AppearanceTab:Create()
     healthLossTextureDropdown:SetItems(textureDropdownItems)
 
     ---@type CellCheckButton
-    local healthLossTextureEnable = Cell.CreateCheckButton(section, L["Enabled"], function(checked, cb)
+    local healthLossTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
         DB.SelectedLayoutTable()[self.unit].useHealthLossTexture = checked
         healthLossTextureDropdown:SetEnabled(checked)
         CUF:Fire("UpdateAppearance", "texture")

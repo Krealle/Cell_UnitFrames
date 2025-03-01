@@ -16,7 +16,7 @@ local unitFramesTab = Menu.unitFramesTab
 ---@class AppearanceTab: Menu.Tab
 local AppearanceTab = {}
 AppearanceTab.id = "Appearance"
-AppearanceTab.height = 180
+AppearanceTab.height = 280
 AppearanceTab.paneHeight = 17
 
 unitFramesTab:AddTab(AppearanceTab)
@@ -73,6 +73,15 @@ function AppearanceTab.LoadUnit(unit)
         layout.healthLossTexture)
     AppearanceTab.healthLossTextureDropdown:SetEnabled(layout.useHealthLossTexture)
     AppearanceTab.healthLossTextureEnable:SetChecked(layout.useHealthLossTexture)
+
+    AppearanceTab.powerTextureDropdown:SetSelected(Util.textureToName[layout.powerBarTexture], layout.powerBarTexture)
+    AppearanceTab.powerTextureDropdown:SetEnabled(layout.usePowerBarTexture)
+    AppearanceTab.powerBarTextureEnable:SetChecked(layout.usePowerBarTexture)
+
+    AppearanceTab.powerLossTextureDropdown:SetSelected(Util.textureToName[layout.powerLossTexture],
+        layout.powerLossTexture)
+    AppearanceTab.powerLossTextureDropdown:SetEnabled(layout.usePowerLossTexture)
+    AppearanceTab.powerLossTextureEnable:SetChecked(layout.usePowerLossTexture)
 end
 
 CUF:RegisterCallback("LoadPageDB", "AppearanceTab_LoadUnit", AppearanceTab.LoadUnit)
@@ -181,15 +190,18 @@ function AppearanceTab:Create()
     CUF:SetTooltips(healthBarColorTypeDropdown, "ANCHOR_TOPLEFT", 0, 3, L["Health Bar Color"],
         L.ColorTypeTooltip)
 
+    --------------------------
+    --- Health Bar Texture ---
+    --------------------------
+
     ---@type CellDropdown
     local healthTextureDropdown = Cell.CreateDropdown(section, 200, "texture")
     self.healthTextureDropdown = healthTextureDropdown
     healthTextureDropdown:SetPoint("TOPLEFT", healthBarColorTypeDropdown, "BOTTOMLEFT", 0, -30)
     healthTextureDropdown:SetLabel(L.healthBarTexture)
 
-    local textureDropdownItems = {}
     for name, tex in pairs(Util:GetTextures()) do
-        table.insert(textureDropdownItems, {
+        healthTextureDropdown:AddItem({
             ["text"] = name,
             ["texture"] = tex,
             ["onClick"] = function()
@@ -198,7 +210,6 @@ function AppearanceTab:Create()
             end,
         })
     end
-    healthTextureDropdown:SetItems(textureDropdownItems)
 
     ---@type CellCheckButton
     local healthTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
@@ -215,9 +226,8 @@ function AppearanceTab:Create()
     healthLossTextureDropdown:SetPoint("TOPLEFT", healthTextureDropdown, "BOTTOMLEFT", 0, -30)
     healthLossTextureDropdown:SetLabel(L.healthLossTexture)
 
-    table.wipe(textureDropdownItems)
     for name, tex in pairs(Util:GetTextures()) do
-        table.insert(textureDropdownItems, {
+        healthLossTextureDropdown:AddItem({
             ["text"] = name,
             ["texture"] = tex,
             ["onClick"] = function()
@@ -226,7 +236,6 @@ function AppearanceTab:Create()
             end,
         })
     end
-    healthLossTextureDropdown:SetItems(textureDropdownItems)
 
     ---@type CellCheckButton
     local healthLossTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
@@ -236,4 +245,60 @@ function AppearanceTab:Create()
     end)
     healthLossTextureEnable:SetPoint("LEFT", healthLossTextureDropdown, "RIGHT", 5, 0)
     self.healthLossTextureEnable = healthLossTextureEnable
+
+    --------------------------
+    --- Power Bar Texture ---
+    --------------------------
+
+    ---@type CellDropdown
+    local powerBarTextureDropdown = Cell.CreateDropdown(section, 200, "texture")
+    self.powerTextureDropdown = powerBarTextureDropdown
+    powerBarTextureDropdown:SetPoint("TOPLEFT", healthLossTextureDropdown, "BOTTOMLEFT", 0, -30)
+    powerBarTextureDropdown:SetLabel(L.powerBarTexture)
+
+    for name, tex in pairs(Util:GetTextures()) do
+        powerBarTextureDropdown:AddItem({
+            ["text"] = name,
+            ["texture"] = tex,
+            ["onClick"] = function()
+                DB.SelectedLayoutTable()[self.unit].powerBarTexture = tex
+                CUF:Fire("UpdateAppearance", "texture")
+            end,
+        })
+    end
+
+    ---@type CellCheckButton
+    local powerBarTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
+        DB.SelectedLayoutTable()[self.unit].usePowerBarTexture = checked
+        powerBarTextureDropdown:SetEnabled(checked)
+        CUF:Fire("UpdateAppearance", "texture")
+    end)
+    powerBarTextureEnable:SetPoint("LEFT", powerBarTextureDropdown, "RIGHT", 5, 0)
+    self.powerBarTextureEnable = powerBarTextureEnable
+
+    ---@type CellDropdown
+    local powerLossTextureDropdown = Cell.CreateDropdown(section, 200, "texture")
+    self.powerLossTextureDropdown = powerLossTextureDropdown
+    powerLossTextureDropdown:SetPoint("TOPLEFT", powerBarTextureDropdown, "BOTTOMLEFT", 0, -30)
+    powerLossTextureDropdown:SetLabel(L.powerLossTexture)
+
+    for name, tex in pairs(Util:GetTextures()) do
+        powerLossTextureDropdown:AddItem({
+            ["text"] = name,
+            ["texture"] = tex,
+            ["onClick"] = function()
+                DB.SelectedLayoutTable()[self.unit].powerLossTexture = tex
+                CUF:Fire("UpdateAppearance", "texture")
+            end,
+        })
+    end
+
+    ---@type CellCheckButton
+    local powerLossTextureEnable = Cell.CreateCheckButton(section, "", function(checked, cb)
+        DB.SelectedLayoutTable()[self.unit].usePowerLossTexture = checked
+        powerLossTextureDropdown:SetEnabled(checked)
+        CUF:Fire("UpdateAppearance", "texture")
+    end)
+    powerLossTextureEnable:SetPoint("LEFT", powerLossTextureDropdown, "RIGHT", 5, 0)
+    self.powerLossTextureEnable = powerLossTextureEnable
 end

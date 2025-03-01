@@ -244,6 +244,11 @@ L.FadeInTimer = "Fade In Timer"
 L.FadeOutTimer = "Fade Out Timer"
 L.Enrage = "Enrage"
 L.overHeal = "Over Heal"
+L.healthBarTexture = "Health Bar Texture"
+L.healthLossTexture = "Health Loss Texture"
+L.powerBarTexture = "Power Bar Texture"
+L.powerLossTexture = "Power Loss Texture"
+L.TextureOverwriteTooltip = "Enable to overwrite texture set in Cell"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

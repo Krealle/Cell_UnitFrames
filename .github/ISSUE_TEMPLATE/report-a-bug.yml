@@ -29,6 +29,26 @@ body:
         - Retail Beta
     validations:
       required: true
+  # https://develop.battle.net/documentation/world-of-warcraft/guides/localization
+  - type: dropdown
+    id: localization
+    attributes:
+      label: Localization
+      description: Which localization did this happen on?
+      options:
+        - English
+        - Spanish (Mexico)
+        - Portuguese
+        - German
+        - Spanish (Spain)
+        - French
+        - Italian
+        - Russian
+        - Korean
+        - Chinese (Traditional)
+        - Chinese (Simplified)
+    validations:
+      required: true
   - type: textarea
     id: bug-description
     attributes:

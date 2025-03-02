@@ -41,6 +41,8 @@ function DB:Revise()
 
     if CUF_DB.version < 3 then
         IterateUnitLayouts(function(layout)
+            if not layout.widgets then return end
+
             local castBar = layout.widgets.castBar
             if not castBar then return end
 
@@ -106,6 +108,8 @@ function DB:Revise()
     end
     if CUF_DB.version < 7 then
         IterateUnitLayouts(function(layout)
+            if not layout.widgets then return end
+
             if not layout.widgets.healthText then return end
             if layout.widgets.healthText.hideIfEmptyOrFull == nil then return end
 
@@ -153,6 +157,8 @@ function DB:Revise()
     if CUF_DB.version < 17 then
         CUF:RegisterCallback("AddonLoaded", "AddonLoaded_Revise_17", function()
             IterateUnitLayouts(function(layout)
+                if not layout.widgets then return end
+
                 if not layout.widgets.powerBar then
                     layout.widgets.powerBar = CUF.Util:CopyDeep(CUF.Defaults.Widgets.powerBar)
                 end
@@ -197,6 +203,8 @@ function DB:Revise()
         end)
 
         IterateUnitLayouts(function(layout)
+            if not layout.widgets then return end
+
             if not layout.widgets.castBar
                 or layout.widgets.castBar.reverse == nil then
                 return

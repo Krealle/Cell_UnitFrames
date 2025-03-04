@@ -30,7 +30,6 @@ local function OnCellInitialUpdateLayout(_layout)
     ---@class CUFMainFrame: Frame
     local CUFMainFrame = CreateFrame("Frame", "CUFMainFrame", UIParent, "SecureFrameTemplate")
     CUF.mainFrame = CUFMainFrame
-    CUFMainFrame:SetIgnoreParentScale(true)
     CUF.PixelPerfect.SetPixelScale(CUFMainFrame)
 
     -- TODO: This is kinda non-ideal and should be looked into

@@ -250,7 +250,7 @@ local function Icon_OnUpdate(frame, elapsed)
         if Cell.vars.iconDurationRoundUp then
             frame.duration:SetFormattedText("%d", ceil(frame._remain))
         else
-            if frame._remain < Cell.vars.iconDurationDecimal then
+            if frame._remain < (Cell.vars.iconDurationDecimal or 0) then
                 frame.duration:SetFormattedText("%.1f", frame._remain)
             else
                 frame.duration:SetFormattedText("%d", frame._remain)

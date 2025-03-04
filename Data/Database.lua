@@ -98,10 +98,14 @@ end
 function DB.GetMasterLayout(rawValue)
     local layout = CUF_DB.masterLayout
     if layout == "CUFLayoutMasterNone" and not rawValue then
+        if Cell.vars.currentLayout == "hide" then
+            return CUF.Defaults.Values.fallbackLayout
+        end
+
         return Cell.vars.currentLayout
     end
 
-    return CUF_DB.masterLayout
+    return layout
 end
 
 --- Returns the colors table from DB

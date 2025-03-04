@@ -28,6 +28,9 @@ Defaults.Values = {
     extraEnrages = {
         --[61573] = "TEST",
     },
+    -- Fallback layout to use for Master Layout
+    -- Used for when Cell's layout is set to "Hide"
+    fallbackLayout = "default"
 }
 
 Defaults.Options = {}

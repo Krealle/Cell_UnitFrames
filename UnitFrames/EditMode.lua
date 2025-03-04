@@ -860,7 +860,7 @@ function U:EditMode(show)
 
     if CUF.vars.inEditMode then
         ShowOverlays()
-        ShowCellEditModePopup()
+        --ShowCellEditModePopup()
         eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
     else
         HideOverlays()

@@ -17,17 +17,18 @@ function PixelPerfect.DebugInfo()
     local UIParentCenterX, UIParentCenterY = UIParent:GetCenter()
     local relativeScale = 1 / UIParent:GetEffectiveScale()
 
-    local CellScale = CellDB["appearance"]["scale"] or -1
+    local CellDBScale = CellDB["appearance"]["scale"] or -1
 
     local info = string.format(
         [[Screen size: %d x %d
     UIParent size: %d x %d
     UIParent center: %d x %d
-    UIParent effective scale: %.6f
-    Relative scale: %.6f
+    UIParent:GetEffectiveScale: %.6f
+    UIParent Relative scale: %.6f
+    CUF.mainFrame:GetEffectiveScale: %.6f
     GetPixelScale: %.6f
     Cell.Scale: %.3f
-    Cell.GetPixelPerfectScale: %.6f | Cell.GetEffectiveScale: %.6f
+    CellParent:GetEffectiveScale: %.6f
     Cell.Scale(1): %.3f
     Cell.Scale(0.1): %.3f
     Cell.Scale(220): %.3f
@@ -37,10 +38,10 @@ function PixelPerfect.DebugInfo()
         UIParentCenterX, UIParentCenterY,
         UIParentScale,
         relativeScale,
+        CUF.mainFrame:GetEffectiveScale(),
         PixelPerfect.GetPixelScale(),
-        CellScale,
-        CellP.GetPixelPerfectScale(),
-        CellP.GetEffectiveScale(),
+        CellDBScale,
+        CellParent:GetEffectiveScale(),
         CellP.Scale(1),
         CellP.Scale(0.1),
         CellP.Scale(220)
@@ -64,7 +65,7 @@ function PixelPerfect.SetPixelScale(frame)
     if CUF_DB.useScaling then
         frame:SetScale(CellDB["appearance"]["scale"])
     else
-        frame:SetScale(PixelPerfect.GetPixelScale())
+        frame:SetScale(1)
     end
 end
 
@@ -75,22 +76,17 @@ function PixelPerfect.GetNearestPixelSize(number)
     return PixelUtil.GetNearestPixelSize(number, 1)
 end
 
---- Calculates the relative position of a frame to the center of the UIParent
+--- Calculates the relative position of a frame to the center of CUFMainFrame
 ---@param frame Frame
 ---@return number, number
 function PixelPerfect.GetPositionRelativeToScreenCenter(frame)
     -- Get the center of the frame and normalize the coords
     -- We need to round the coords to reduce any small pixel discrepancies
+    local centerX, centerY = CUF.mainFrame:GetCenter()
     local frameX, frameY = frame:GetCenter()
-    local normX = math.floor(PixelPerfect.GetNearestPixelSize(frameX))
-    local normY = math.floor(PixelPerfect.GetNearestPixelSize(frameY))
 
-    local physicalScreenWidth, physicalScreenHeight = GetPhysicalScreenSize()
-
-    local scale = PixelPerfect.Scale(1)
-
-    local relativeX = normX - ((physicalScreenWidth / 2) * scale)
-    local relativeY = normY - ((physicalScreenHeight / 2) * scale)
+    local relativeX = math.floor(PixelPerfect.GetNearestPixelSize(frameX - centerX))
+    local relativeY = math.floor(PixelPerfect.GetNearestPixelSize(frameY - centerY))
 
     return relativeX, relativeY
 end

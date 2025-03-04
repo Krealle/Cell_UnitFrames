@@ -42,6 +42,7 @@
     "MAX_BOSS_FRAMES",
     "RegisterAttributeDriver",
     "FAILED",
-    "INTERRUPTED"
+    "INTERRUPTED",
+    "CellParent"
   ]
 }

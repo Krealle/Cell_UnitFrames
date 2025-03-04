@@ -29,6 +29,7 @@ local function OnCellInitialUpdateLayout(_layout)
     -- Main Frame
     ---@class CUFMainFrame: Frame
     local CUFMainFrame = CreateFrame("Frame", "CUFMainFrame", UIParent, "SecureFrameTemplate")
+    CUFMainFrame:SetAllPoints(UIParent)
     CUF.mainFrame = CUFMainFrame
     CUF.PixelPerfect.SetPixelScale(CUFMainFrame)
 

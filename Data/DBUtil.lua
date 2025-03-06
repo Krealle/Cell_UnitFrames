@@ -257,12 +257,11 @@ function DB.VerifyUnitPositions()
     local xVal = maxX / 2
     local yVal = maxY / 2
 
-    for _, layoutTable in pairs(CellDB.layouts) do
-        for unit, unitLayout in pairs(layoutTable.CUFUnits) do
-            local x, y = unpack(unitLayout.position)
-            if x > xVal or y > yVal then
-                unitLayout.position = Defaults.Layouts[unit].position
-            end
+    Util.IterateAllUnitLayouts(function(layout, unit)
+        if not layout.position then return end
+        local x, y = unpack(layout.position)
+        if x > xVal or y > yVal then
+            layout.position = Defaults.Layouts[unit].position
         end
-    end
+    end)
 end

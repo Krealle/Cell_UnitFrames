@@ -7,17 +7,7 @@ local addonName = select(1, ...)
 local DB = CUF.DB
 
 local L = CUF.L
-
----@param func fun(layout: UnitLayout, unit: Unit)
-local function IterateUnitLayouts(func)
-    for _, layoutTable in pairs(CellDB.layouts) do
-        if layoutTable.CUFUnits then
-            for unit, unitLayout in pairs(layoutTable.CUFUnits) do
-                func(unitLayout, unit)
-            end
-        end
-    end
-end
+local Util = CUF.Util
 
 local changelog = {}
 local function AddToChangelog(text)
@@ -40,7 +30,7 @@ function DB:Revise()
     if not CUF_DB.version then return end
 
     if CUF_DB.version < 3 then
-        IterateUnitLayouts(function(layout)
+        Util.IterateAllUnitLayouts(function(layout)
             if not layout.widgets then return end
 
             local castBar = layout.widgets.castBar
@@ -65,7 +55,7 @@ function DB:Revise()
             local sHeight = GetScreenHeight() / 2
             local buffer = 14
 
-            IterateUnitLayouts(function(layout)
+            Util.IterateAllUnitLayouts(function(layout)
                 if not layout.point then return end
                 local anchorPoint = layout.point
 
@@ -107,7 +97,7 @@ function DB:Revise()
         end)
     end
     if CUF_DB.version < 7 then
-        IterateUnitLayouts(function(layout)
+        Util.IterateAllUnitLayouts(function(layout)
             if not layout.widgets then return end
 
             if not layout.widgets.healthText then return end
@@ -124,7 +114,7 @@ function DB:Revise()
         AddToChangelog("Custom Tag formats have been changed in a recent update. You may need to update your tags.")
     end
     if CUF_DB.version < 11 then
-        IterateUnitLayouts(function(layout, unit)
+        Util.IterateAllUnitLayouts(function(layout, unit)
             if unit == "boss" and layout.growthDirection then
                 if layout.growthDirection == "up" then
                     layout.growthDirection = CUF.constants.GROWTH_ORIENTATION.BOTTOM_TO_TOP
@@ -150,13 +140,13 @@ function DB:Revise()
             end
         end
 
-        IterateUnitLayouts(function(layout)
+        Util.IterateAllUnitLayouts(function(layout)
             layout.hideBlizzardCastBar = nil
         end)
     end
     if CUF_DB.version < 17 then
         CUF:RegisterCallback("AddonLoaded", "AddonLoaded_Revise_17", function()
-            IterateUnitLayouts(function(layout)
+            Util.IterateAllUnitLayouts(function(layout)
                 if not layout.widgets then return end
 
                 if not layout.widgets.powerBar then
@@ -202,7 +192,7 @@ function DB:Revise()
             CUF:UnregisterCallback("AddonLoaded", "AddonLoaded_Revise_17")
         end)
 
-        IterateUnitLayouts(function(layout)
+        Util.IterateAllUnitLayouts(function(layout)
             if not layout.widgets then return end
 
             if not layout.widgets.castBar

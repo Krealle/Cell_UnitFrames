@@ -172,6 +172,17 @@ function Util:IterateAllUnitButtons(func, unitToIterate, ...)
     end
 end
 
+---@param func fun(layout: UnitLayout, unit: Unit)
+function Util.IterateAllUnitLayouts(func)
+    for _, layoutTable in pairs(CellDB.layouts) do
+        if layoutTable.CUFUnits then
+            for unit, unitLayout in pairs(layoutTable.CUFUnits) do
+                func(unitLayout, unit)
+            end
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: Compat
 -------------------------------------------------

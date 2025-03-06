@@ -220,7 +220,7 @@ function DB.VerifyDB()
 
         for unit, unitLayout in pairs(CUF.Defaults.Layouts) do
             if type(layoutTable.CUFUnits[unit]) ~= "table" then
-                layoutTable.CUFUnits[unit] = Cell.funcs:Copy(unitLayout)
+                layoutTable.CUFUnits[unit] = Cell.funcs.Copy(unitLayout)
             else
                 Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
             end

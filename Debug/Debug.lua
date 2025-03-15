@@ -3,7 +3,7 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 
----@class CFU.Debug
+---@class CUF.Debug
 local Debug = CUF.Debug
 
 function Debug:InitDebugWindow()

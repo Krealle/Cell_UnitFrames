@@ -18,7 +18,7 @@ CUF.DB = {}
 CUF.constants = {}
 ---@class CUF.defaults
 CUF.Defaults = {}
----@class CFU.Debug
+---@class CUF.Debug
 CUF.Debug = {}
 ---@class CUF.builder
 CUF.Builder = {}

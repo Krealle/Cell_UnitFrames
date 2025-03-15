@@ -24,6 +24,9 @@ Defaults.Values = {
         [464358] = true, -- 撕裂 - Rend
         [464181] = true, -- 流血 - Bleeding
         [463227] = true, -- 破片入体 - Splintered
+        [257544] = true,
+        [1213141] = true,
+        [1215411] = true,
     },
     extraEnrages = {
         --[61573] = "TEST",
@@ -101,6 +104,7 @@ Defaults.Options.smallFontOpt = {
     outline = "Outline",
     shadow = false,
     style = "Cell Default",
+    alignment = "CENTER",
 }
 ---@type BigFontOpt
 Defaults.Options.auraStacksFontOpt = {
@@ -112,6 +116,7 @@ Defaults.Options.auraStacksFontOpt = {
     offsetX = 2,
     offsetY = -1,
     rgb = { 1, 1, 1 },
+    alignment = "CENTER",
 }
 ---@type BigFontOpt
 Defaults.Options.auraDurationFontOpt = {
@@ -123,6 +128,7 @@ Defaults.Options.auraDurationFontOpt = {
     offsetX = 0,
     offsetY = 0,
     rgb = { 1, 1, 1 },
+    alignment = "CENTER",
 }
 ---@type FontWidthOpt
 Defaults.Options.fontWidth = {
@@ -762,6 +768,7 @@ Defaults.Widgets = {
             offsetY = -3,
             offsetX = 0,
             rgb = { 1, 1, 1 },
+            alignment = "CENTER",
         },
         timerFormat = "normal",
         spell = {
@@ -774,6 +781,7 @@ Defaults.Widgets = {
             offsetY = 0,
             offsetX = 4,
             rgb = { 1, 1, 1 },
+            alignment = "CENTER",
         },
         spellWidth = Defaults.Options.fontWidth,
         showSpell = true,

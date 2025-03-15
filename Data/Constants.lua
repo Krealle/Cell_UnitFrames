@@ -36,6 +36,17 @@ const.TITLE_CASED_UNITS = {
     ["boss"] = "Boss",
 }
 
+-- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/708
+-- The game fires events for arenaX when it actually should be sending for boss(X+5)
+---@enum BrokenUnitMap
+const.BROKEN_UNIT_MAP = {
+    arena1 = "boss6",
+    arena2 = "boss7",
+    arena3 = "boss8",
+    arena4 = "boss9",
+    arena5 = "boss10"
+}
+
 ---@enum PowerColorType
 const.PowerColorType = {
     CLASS_COLOR = "class_color",

@@ -17,6 +17,8 @@ Mixin.EventMixin = EventMixin
 ---@type table<WowEvent, EventMixin.EventHandler[]>
 EventMixin.eventHandlers = {}
 
+local brokenUnitMap = CUF.constants.BROKEN_UNIT_MAP
+
 --- Handles the event dispatching for a button with registered event listeners.
 --- Filters events based on whether they are unit-specific or unit-less.
 ---@param event WowEvent
@@ -36,6 +38,12 @@ function EventMixin:_OnEvent(event, unit, ...)
     for i = 1, #handlers do
         local handler = handlers[i]
         if not handler then return end
+
+        -- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/708
+        -- The game fires events for arenaX when it actually should be sending for boss(X+5)
+        if brokenUnitMap[unit] == self._unit and not UnitExists(unit) then
+            unit = brokenUnitMap[unit]
+        end
 
         -- Perform unit filtering before calling the callback:
         -- Centralizing this logic here is more efficient than repeating it in every callback.
@@ -61,9 +69,15 @@ function EventMixin:AddEventListener(event, callback, unitLess)
         if unitLess then
             self:RegisterEvent(event)
         else
+            -- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/708
+            -- The game fires events for arenaX when it actually should be sending for boss(X+5)
+            local unit = self._unit
+            if brokenUnitMap[unit] and not UnitExists(unit) then
+                unit = brokenUnitMap[unit]
+            end
             -- In case we try to register a non-unit event we need to catch the error
-            if not pcall(self.RegisterUnitEvent, self, event, self.states.unit) then
-                CUF:Log("Failed to RegisterUnitEvent:", event, "for:", self.states.unit)
+            if not pcall(self.RegisterUnitEvent, self, event, unit) then
+                CUF:Log("Failed to RegisterUnitEvent:", event, "for:", unit)
 
                 unitLessEvents[event] = true
 

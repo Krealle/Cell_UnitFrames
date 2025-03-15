@@ -13,7 +13,7 @@ local Util = CUF.Util
 local DB = CUF.DB
 local P = CUF.PixelPerfect
 
-local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
+local MAX_BOSS_FRAMES = 10 -- MAX_BOSS_FRAMES or 5
 
 -------------------------------------------------
 -- MARK: Button Position

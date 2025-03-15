@@ -155,6 +155,7 @@ end
 local function Disable(self)
     self:UpdateListeners(false)
     self.optCount = 0
+    self.isFadedIn = false
 
     -- Reset Alpha
     self._owner:SetAlpha(1)

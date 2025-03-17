@@ -523,6 +523,7 @@ Defaults.Widgets = {
             personal = true,
             boss = false,
             tempEnchant = false,
+            dispellable = false,
         },
         position = {
             point = "BOTTOMLEFT",
@@ -569,6 +570,7 @@ Defaults.Widgets = {
             personal = true,
             boss = false,
             tempEnchant = false,
+            dispellable = false,
         },
         position = {
             point = "BOTTOMRIGHT",

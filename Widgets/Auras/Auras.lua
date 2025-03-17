@@ -190,6 +190,12 @@ local function Icons_SetPersonal(icons, personal)
 end
 
 ---@param icons CellAuraIcons
+---@param dispellable boolean
+local function Icons_SetUseDispellable(icons, dispellable)
+    icons.dispellable = dispellable
+end
+
+---@param icons CellAuraIcons
 ---@param priority boolean
 local function Icons_SetWhiteListPriority(icons, priority)
     icons.whiteListPriority = priority
@@ -340,6 +346,8 @@ local function CheckFilter(icon, auraData)
     if icon.hideNoDuration and duration == 0 then return false end
     if icon.minDuration and duration < icon.minDuration then return false end
     if icon.maxDuration and duration > icon.maxDuration then return false end
+
+    if icon.dispellable and auraData.isDispellable then return true end
 
     -- Personal / Non-Personal Check
     if icon.nonPersonal and auraData.sourceUnit ~= "player" then return true end
@@ -703,6 +711,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetCastByNPC = Icons_SetCastByNPC
     auraIcons.SetNonPersonal = Icons_SetNonPersonal
     auraIcons.SetPersonal = Icons_SetPersonal
+    auraIcons.SetDispellable = Icons_SetUseDispellable
     auraIcons.ShowDuration = Icons_ShowDuration
 
     auraIcons.ShowPreview = Icons_ShowPreview
@@ -812,3 +821,4 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field Dispellable boolean
 ---@field nonPersonal boolean
 ---@field personal boolean
+---@field dispellable boolean

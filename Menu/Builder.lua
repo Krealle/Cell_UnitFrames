@@ -1486,7 +1486,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     ---@class AuraFilterOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "AuraFilterOptions"
-    f.optionHeight = 195
+    f.optionHeight = 230
 
     -- Title
     f.title = self:CreateOptionTitle(f, "Filter")
@@ -1535,9 +1535,15 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
     self:AnchorRightOfCB(f.castByNPC, f.castByPlayers)
 
     -- Fourth Row
+    f.dispellableCB = self:CreateCheckBox(f, widgetName, L.Dispellable,
+        const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.DISPELLABLE,
+        L.DispellableTooltip)
+    self:AnchorBelowCB(f.dispellableCB, f.boss)
+
+    -- Fifth Row
     f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist,
         const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.USE_BLACKLIST)
-    self:AnchorBelowCB(f.useBlacklistCB, f.boss)
+    self:AnchorBelowCB(f.useBlacklistCB, f.dispellableCB)
 
     f.useWhitelistCB = self:CreateCheckBox(f, widgetName, L.UseWhitelist,
         const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.USE_WHITELIST)

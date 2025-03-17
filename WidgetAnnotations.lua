@@ -219,6 +219,7 @@
 ---@field personal boolean
 ---@field boss boolean
 ---@field tempEnchant boolean
+---@field dispellable boolean
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

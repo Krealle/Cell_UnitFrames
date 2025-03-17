@@ -94,6 +94,8 @@ L.AdditiveImportTooltip = "Will add to the current list"
 
 L.tempEnchant = "Temporary Enchants"
 L.tempEnchantTooltip = "Show temporary enchants"
+L.Dispellable = "Dispellable"
+L.DispellableTooltip = "Show auras dispellable by you"
 
 -- Cast Bar
 L.Reverse = "Reverse"

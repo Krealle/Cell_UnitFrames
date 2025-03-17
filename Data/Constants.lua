@@ -243,6 +243,7 @@ const.AURA_OPTION_KIND = {
     HIDE_IN_COMBAT = "hideInCombat",
     WHITE_LIST_PRIORITY = "whiteListPriority",
     TEMP_ENCHANT = "tempEnchant",
+    DISPELLABLE = "dispellable",
 }
 
 ---@enum GrowthOrientation

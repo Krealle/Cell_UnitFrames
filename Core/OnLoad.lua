@@ -26,13 +26,6 @@ local function OnCellInitialUpdateLayout(_layout)
         end
     end
 
-    -- Main Frame
-    ---@class CUFMainFrame: Frame
-    local CUFMainFrame = CreateFrame("Frame", "CUFMainFrame", UIParent, "SecureFrameTemplate")
-    CUFMainFrame:SetAllPoints(UIParent)
-    CUF.mainFrame = CUFMainFrame
-    CUF.PixelPerfect.SetPixelScale(CUFMainFrame)
-
     -- TODO: This is kinda non-ideal and should be looked into
     -- Mixin in some extra bleeds/enrages
     -- These values can be overwritten by the user via snippets
@@ -112,6 +105,13 @@ local function OnAddonLoaded(owner, loadedAddonName)
         CUF.DB.VerifyUnitPositions()
 
         CUF_DB.version = CUF.version
+
+        -- Main Frame
+        ---@class CUFMainFrame: Frame
+        local CUFMainFrame = CreateFrame("Frame", "CUFMainFrame", UIParent, "SecureFrameTemplate")
+        CUFMainFrame:SetAllPoints(UIParent)
+        CUF.mainFrame = CUFMainFrame
+        CUF.PixelPerfect.SetPixelScale(CUFMainFrame)
 
         Cell.RegisterCallback("UpdateLayout", "CUF_Initial_UpdateLayout", OnCellInitialUpdateLayout)
 

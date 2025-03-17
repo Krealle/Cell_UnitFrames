@@ -214,7 +214,7 @@ function menu:CreateMenu()
     local optionsFrame = Cell.frames.optionsFrame
 
     ---@class CellCombatFrame
-    self.window = CUF:CreateFrame("CUF_Menu", optionsFrame, self.baseWidth, 300)
+    self.window = CUF:CreateFrame("CUF_Menu", CUF.mainFrame, self.baseWidth, 300)
     self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -self.inset)
 
     -- Draggable
@@ -234,7 +234,8 @@ function menu:CreateMenu()
         local centerOffset = self.window:GetHeight() / 2
 
         -- Set point to TOP so height grows downwards
-        self.window:SetPoint("TOP", nil, "CENTER", x, y + centerOffset)
+        P.ClearPoints(self.window)
+        P.Point(self.window, "TOP", UIParent, "CENTER", x, y + centerOffset)
     end)
 
     -- mask

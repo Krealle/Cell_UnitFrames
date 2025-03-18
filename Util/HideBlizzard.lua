@@ -7,13 +7,29 @@ local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES or 5
 local hiddenParent = CreateFrame("Frame", nil, _G.UIParent)
 hiddenParent:SetAllPoints()
 hiddenParent:Hide()
+local hookedFrames = {}
 
-local function HideFrame(frame)
+local function resetParent(self, parent)
+    if parent ~= hiddenParent then
+        self:SetParent(hiddenParent)
+    end
+end
+
+local function HideFrame(frame, doNotReParent)
     if not frame then return end
 
     frame:UnregisterAllEvents()
     frame:Hide()
-    frame:SetParent(hiddenParent)
+
+    if not doNotReParent then
+        frame:SetParent(hiddenParent)
+
+        if not hookedFrames[frame] then
+            hooksecurefunc(frame, "SetParent", resetParent)
+
+            hookedFrames[frame] = true
+        end
+    end
 
     local health = frame.healthBar or frame.healthbar
     if health then
@@ -64,7 +80,9 @@ function CUF:HideBlizzardUnitFrame(type)
     elseif type == "boss" then
         HideFrame(_G.BossTargetFrameContainer)
         for i = 1, MAX_BOSS_FRAMES do
-            HideFrame(_G["Boss" .. i .. "TargetFrame"])
+            -- Can't re-parent frames inside containers, or edit mode
+            -- will go crazy trying to calculate the positions for snapping
+            HideFrame(_G["Boss" .. i .. "TargetFrame"], true)
         end
     elseif type == "buffFrame" then
         HideFrame(_G.BuffFrame)

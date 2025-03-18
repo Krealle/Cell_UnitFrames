@@ -384,6 +384,10 @@ function W.GetTagFunction(textFormat, categoryFilter)
     local lastEnd = 1
     local onUpdateTimer
 
+    -- For some reason "|" inputs are being interpreted as "||"
+    -- This breaks color codes, so we need to strip away the extra "|" for them
+    textFormat = textFormat:gsub("||([cr])", "|%1")
+
     -- Process the text format and find all bracketed tags
     for bracketed in textFormat:gmatch("%b[]") do
         local startPos, endPos = textFormat:find("%b[]", lastEnd)
@@ -899,3 +903,7 @@ W:AddTag("dead", "PLAYER_FLAGS_CHANGED UNIT_FLAGS", function(unit)
         return L["Dead"]
     end
 end, "Status")
+
+W:AddTag("test", "UNIT_TARGET", function(unit)
+    return "|cFFFF0000This is |cFFFFFFFFwhite|r red text"
+end)

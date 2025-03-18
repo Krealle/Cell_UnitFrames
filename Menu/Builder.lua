@@ -718,7 +718,7 @@ end
 function Builder:CreateExtraAnchorOptions(parent, widgetName, path)
     ---@class ExtraAnchorOptions: AnchorOptions
     return self:CreateDropdown(parent, widgetName, L["To UnitButton's"], nil, const.ANCHOR_POINTS,
-        path or const.OPTION_KIND.POSITION .. "." .. const.OPTION_KIND.RELATIVE_POINT)
+        (path or const.OPTION_KIND.POSITION) .. "." .. const.OPTION_KIND.RELATIVE_POINT)
 end
 
 ---@param parent Frame
@@ -734,7 +734,7 @@ function Builder:CreateFullAnchorOptions(parent, widgetName, path, minVal, maxVa
     anchorOpt.id = "FullAnchor"
 
     anchorOpt.relativeDropdown = self:CreateDropdown(parent, widgetName, L.RelativeTo, nil, const.ANCHOR_POINTS,
-        path or const.OPTION_KIND.POSITION .. "." .. const.OPTION_KIND.RELATIVE_POINT)
+        (path or const.OPTION_KIND.POSITION) .. "." .. const.OPTION_KIND.RELATIVE_POINT)
     self:AnchorBelow(anchorOpt.relativeDropdown, anchorOpt.anchorDropdown)
 
     return anchorOpt

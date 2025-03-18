@@ -92,7 +92,6 @@ Defaults.Options.smallFontOpt = {
     outline = "Outline",
     shadow = false,
     style = "Cell Default",
-    alignment = "CENTER",
 }
 ---@type BigFontOpt
 Defaults.Options.auraStacksFontOpt = {
@@ -101,10 +100,10 @@ Defaults.Options.auraStacksFontOpt = {
     shadow = false,
     style = "Cell Default",
     point = "BOTTOMRIGHT",
+    relativePoint = "BOTTOMRIGHT",
     offsetX = 2,
     offsetY = -1,
     rgb = { 1, 1, 1 },
-    alignment = "CENTER",
 }
 ---@type BigFontOpt
 Defaults.Options.auraDurationFontOpt = {
@@ -113,10 +112,10 @@ Defaults.Options.auraDurationFontOpt = {
     shadow = false,
     style = "Cell Default",
     point = "CENTER",
+    relativePoint = "CENTER",
     offsetX = 0,
     offsetY = 0,
     rgb = { 1, 1, 1 },
-    alignment = "CENTER",
 }
 ---@type FontWidthOpt
 Defaults.Options.fontWidth = {
@@ -756,10 +755,10 @@ Defaults.Widgets = {
             shadow = true,
             style = "Cell Default",
             point = "RIGHT",
+            relativePoint = "RIGHT",
             offsetY = -3,
             offsetX = 0,
             rgb = { 1, 1, 1 },
-            alignment = "CENTER",
         },
         timerFormat = "normal",
         spell = {
@@ -769,10 +768,10 @@ Defaults.Widgets = {
             shadow = true,
             style = "Cell Default",
             point = "LEFT",
+            relativePoint = "LEFT",
             offsetY = 0,
             offsetX = 4,
             rgb = { 1, 1, 1 },
-            alignment = "CENTER",
         },
         spellWidth = Defaults.Options.fontWidth,
         showSpell = true,

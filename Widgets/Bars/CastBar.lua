@@ -851,6 +851,7 @@ end
 local function SetFontPosition(self, styleTable)
     P.ClearPoints(self)
     P.Point(self, styleTable.point, self:GetParent(),
+        styleTable.relativePoint,
         styleTable.offsetX, styleTable.offsetY)
 end
 

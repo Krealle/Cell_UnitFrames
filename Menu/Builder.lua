@@ -833,17 +833,17 @@ function Builder:CreateBigFontOptions(parent, widgetName, title, path)
     ---@class BigFontOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "BigFontOptions"
-    f.optionHeight = 160
+    f.optionHeight = 210
 
     -- Title
     f.title = self:CreateOptionTitle(f, title .. " Font")
 
     --- Top Options
-    f.anchorOptions = self:CreateAnchorOptions(f, widgetName, path)
+    f.anchorOptions = self:CreateFullAnchorOptions(f, widgetName, path)
     self:AnchorBelow(f.anchorOptions, f.title)
 
     f.fontOptions = self:CreateFontOptions(f, widgetName, path)
-    self:AnchorBelow(f.fontOptions, f.anchorOptions)
+    self:AnchorBelow(f.fontOptions, f.anchorOptions.relativeDropdown)
     self:AnchorBelow(f.fontOptions.shadowCB, f.fontOptions.outlineDropdown)
 
     f.colorPicker = Cell.CreateColorPicker(f, L["Color"], false, function(r, g, b, a)
@@ -1922,7 +1922,7 @@ end
 function Builder:CreateCustomTextOptions(parent, widgetName)
     ---@class CustomTextOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 270
+    f.optionHeight = 300
     f.id = "CustomTextOptions"
     f.selectedIndex = 1
 
@@ -2003,11 +2003,13 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     end
 
     -- Anchor
-    local anchorOptions = self:CreateAnchorOptions(parent, widgetName)
+    local anchorOptions = self:CreateFullAnchorOptions(parent, widgetName)
     self:AnchorBelow(anchorOptions, colorDropdown)
 
     anchorOptions.anchorDropdown.Set_DB = Set_DB
     anchorOptions.anchorDropdown.Get_DB = Get_DB
+    anchorOptions.relativeDropdown.Set_DB = Set_DB
+    anchorOptions.relativeDropdown.Get_DB = Get_DB
     anchorOptions.sliderX.Set_DB = Set_DB
     anchorOptions.sliderX.Get_DB = Get_DB
     anchorOptions.sliderY.Set_DB = Set_DB
@@ -2017,7 +2019,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     local fontItems = Util:GetFontItems()
 
     local styleDropdown = self:CreateDropdown(parent, widgetName, "Font", nil, fontItems, "font.style")
-    self:AnchorBelow(styleDropdown, anchorOptions)
+    self:AnchorBelow(styleDropdown, anchorOptions.relativeDropdown)
 
     local outlineDropdown = self:CreateDropdown(parent, widgetName, "Outline", nil, const.OUTLINES, "font.outline")
     self:AnchorRight(outlineDropdown, styleDropdown)
@@ -2060,6 +2062,7 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
 
         -- Anchor
         anchorOptions.anchorDropdown:SetSelectedValue(widgetTable.position.point)
+        anchorOptions.relativeDropdown:SetSelectedValue(widgetTable.position.relativePoint)
         anchorOptions.sliderX:SetValue(widgetTable.position.offsetX)
         anchorOptions.sliderY:SetValue(widgetTable.position.offsetY)
 
@@ -2339,14 +2342,14 @@ end
 ---@param widgetName WIDGET_KIND
 ---@return PowerTextAnchorOptions
 function Builder:CreatePowerTextAnchorOptions(parent, widgetName)
-    ---@class PowerTextAnchorOptions: AnchorOptions
-    local anchorOpt = self:CreateAnchorOptions(parent, widgetName)
+    ---@class PowerTextAnchorOptions: FullAnchorOptions
+    local anchorOpt = self:CreateFullAnchorOptions(parent, widgetName)
     anchorOpt.optionHeight = 70
     anchorOpt.id = "PowerTextAnchor"
 
     anchorOpt.anchorToPowerBarCB = self:CreateCheckBox(parent, widgetName, L.AnchorToPowerBar,
         const.OPTION_KIND.ANCHOR_TO_POWER_BAR)
-    self:AnchorBelow(anchorOpt.anchorToPowerBarCB, anchorOpt.anchorDropdown)
+    self:AnchorRight(anchorOpt.anchorToPowerBarCB, anchorOpt.relativeDropdown)
 
     return anchorOpt
 end

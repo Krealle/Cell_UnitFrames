@@ -241,6 +241,66 @@ function DB:Revise()
             end
         end
     end
+    if CUF_DB.version < 23 then
+        local textWidgets = {
+            CUF.constants.WIDGET_KIND.NAME_TEXT,
+            CUF.constants.WIDGET_KIND.HEALTH_TEXT,
+            CUF.constants.WIDGET_KIND.POWER_TEXT,
+            CUF.constants.WIDGET_KIND.LEVEL_TEXT,
+        }
+        local auraWidgets = {
+            CUF.constants.WIDGET_KIND.BUFFS,
+            CUF.constants.WIDGET_KIND.DEBUFFS,
+            CUF.constants.WIDGET_KIND.TOTEMS,
+        }
+
+        Util.IterateAllUnitLayouts(function(layout)
+            if not layout.widgets then return end
+
+            for _, widgetName in pairs(textWidgets) do
+                if layout.widgets[widgetName].position
+                    and layout.widgets[widgetName].position.point then
+                    layout.widgets[widgetName].position.relativePoint = layout.widgets[widgetName].position.point
+                end
+            end
+
+            if layout.widgets.customText then
+                for _, text in pairs(layout.widgets.customText.texts) do
+                    if text.position and text.position.point then
+                        text.position.relativePoint = text.position.point
+                    end
+                end
+            end
+
+            for _, auraWidgetName in pairs(auraWidgets) do
+                if layout.widgets[auraWidgetName] then
+                    if layout.widgets[auraWidgetName].font then
+                        if layout.widgets[auraWidgetName].font.stacks
+                            and layout.widgets[auraWidgetName].font.stacks.point then
+                            layout.widgets[auraWidgetName].font.stacks.relativePoint = layout.widgets[auraWidgetName]
+                                .font
+                                .stacks.point
+                        end
+                        if layout.widgets[auraWidgetName].font.duration
+                            and layout.widgets[auraWidgetName].font.duration.point then
+                            layout.widgets[auraWidgetName].font.duration.relativePoint = layout.widgets[auraWidgetName]
+                                .font
+                                .duration.point
+                        end
+                    end
+                end
+            end
+
+            if layout.widgets.castBar then
+                if layout.widgets.castBar.timer and layout.widgets.castBar.timer.point then
+                    layout.widgets.castBar.timer.relativePoint = layout.widgets.castBar.timer.point
+                end
+                if layout.widgets.castBar.spell and layout.widgets.castBar.spell.point then
+                    layout.widgets.castBar.spell.relativePoint = layout.widgets.castBar.spell.point
+                end
+            end
+        end)
+    end
 
     ShowChangelog()
 end

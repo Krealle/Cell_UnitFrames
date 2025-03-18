@@ -211,6 +211,7 @@ function W:CreatePowerText(button)
         if styleTable.anchorToPowerBar then
             P.ClearPoints(self.text)
             P.Point(self.text, styleTable.position.point, button.widgets.powerBar,
+                styleTable.position.relativePoint,
                 styleTable.position.offsetX, styleTable.position.offsetY)
         else
             powerText:_SetPosition(styleTable)

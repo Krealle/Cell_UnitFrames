@@ -28,7 +28,7 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT,
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.TextWidth,
     Builder.MenuOptions.NameFormat,
-    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
 

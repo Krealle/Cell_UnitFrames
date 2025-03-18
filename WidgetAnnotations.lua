@@ -418,6 +418,7 @@
 ---@field style string
 ---@field shadow boolean
 ---@field point FramePoint
+---@field relativePoint FramePoint
 ---@field offsetY number
 ---@field offsetX number
 ---@field size number

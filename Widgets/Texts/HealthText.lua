@@ -28,7 +28,7 @@ local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
 menu:AddWidget(const.WIDGET_KIND.HEALTH_TEXT,
     Builder.MenuOptions.TextColor,
     Builder.MenuOptions.HealthFormat,
-    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
 

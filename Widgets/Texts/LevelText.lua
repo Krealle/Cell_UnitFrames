@@ -20,7 +20,7 @@ local const = CUF.constants
 -------------------------------------------------
 menu:AddWidget(const.WIDGET_KIND.LEVEL_TEXT,
     Builder.MenuOptions.TextColor,
-    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.FullAnchor,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
 

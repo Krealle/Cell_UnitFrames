@@ -74,6 +74,7 @@ function W.CreateBaseTextWidget(button, kind)
     function textWidget:SetPosition(styleTable)
         P.ClearPoints(self.text)
         P.Point(self.text, styleTable.position.point, button,
+            styleTable.position.relativePoint,
             styleTable.position.offsetX, styleTable.position.offsetY)
     end
 

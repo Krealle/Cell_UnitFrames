@@ -206,6 +206,7 @@ const.OPTION_KIND = {
     FADE_OUT_TIMER            = "fadeOutTimer",
     ENRAGE                    = "enrage",
     OVER_HEAL                 = "overHeal",
+    ANCHOR_TO_POWER_BAR       = "anchorToPowerBar"
 }
 
 ---@enum AURA_OPTION_KIND

@@ -122,6 +122,7 @@
 ---@field format string
 ---@field font SmallFontOpt
 ---@field textFormat string
+---@field anchorToPowerBar boolean
 
 ---@class LevelTextWidgetTable
 ---@field enabled boolean

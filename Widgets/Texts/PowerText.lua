@@ -15,6 +15,7 @@ local menu = CUF.Menu
 local const = CUF.constants
 local DB = CUF.DB
 local Util = CUF.Util
+local P = CUF.PixelPerfect
 
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
@@ -26,7 +27,7 @@ local UnitPowerMax = UnitPowerMax
 menu:AddWidget(const.WIDGET_KIND.POWER_TEXT,
     Builder.MenuOptions.TextColorWithPowerType,
     Builder.MenuOptions.PowerFormat,
-    Builder.MenuOptions.Anchor,
+    Builder.MenuOptions.PowerTextAnchorOptions,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
 
@@ -47,6 +48,9 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     end
     if not setting or setting == const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL then
         widget.hideIfEmptyOrFull = styleTable.hideIfEmptyOrFull
+    end
+    if not setting or setting == const.OPTION_KIND.ANCHOR_TO_POWER_BAR then
+        widget:SetPosition(styleTable)
     end
 
     if widget.enabled and button:IsVisible() then
@@ -198,6 +202,18 @@ function W:CreatePowerText(button)
             button.widgets.powerText:Show()
         else
             button.widgets.powerText:Hide()
+        end
+    end
+
+    powerText._SetPosition = powerText.SetPosition
+    ---@param styleTable PowerTextWidgetTable
+    function powerText:SetPosition(styleTable)
+        if styleTable.anchorToPowerBar then
+            P.ClearPoints(self.text)
+            P.Point(self.text, styleTable.position.point, button.widgets.powerBar,
+                styleTable.position.offsetX, styleTable.position.offsetY)
+        else
+            powerText:_SetPosition(styleTable)
         end
     end
 

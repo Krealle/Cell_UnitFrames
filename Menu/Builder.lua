@@ -68,6 +68,7 @@ Builder.MenuOptions = {
     PowerBar = 41,
     DetachedAnchor = 42,
     HealPredictionOptions = 43,
+    PowerTextAnchorOptions = 44,
 }
 
 local FAILED = FAILED or "Failed"
@@ -2331,6 +2332,26 @@ function Builder:CreateHealPredictionOptions(parent, widgetName)
 end
 
 -------------------------------------------------
+-- MARK: Power Text Anchor
+-------------------------------------------------
+
+---@param parent Frame
+---@param widgetName WIDGET_KIND
+---@return PowerTextAnchorOptions
+function Builder:CreatePowerTextAnchorOptions(parent, widgetName)
+    ---@class PowerTextAnchorOptions: AnchorOptions
+    local anchorOpt = self:CreateAnchorOptions(parent, widgetName)
+    anchorOpt.optionHeight = 70
+    anchorOpt.id = "PowerTextAnchor"
+
+    anchorOpt.anchorToPowerBarCB = self:CreateCheckBox(parent, widgetName, L.AnchorToPowerBar,
+        const.OPTION_KIND.ANCHOR_TO_POWER_BAR)
+    self:AnchorBelow(anchorOpt.anchorToPowerBarCB, anchorOpt.anchorDropdown)
+
+    return anchorOpt
+end
+
+-------------------------------------------------
 -- MARK: MenuBuilder.MenuFuncs
 -- Down here because of annotations
 -------------------------------------------------
@@ -2379,4 +2400,5 @@ Builder.MenuFuncs = {
     [Builder.MenuOptions.AltPower] = Builder.CreateAltPowerOptions,
     [Builder.MenuOptions.PowerBar] = Builder.CreatePowerBarOptions,
     [Builder.MenuOptions.HealPredictionOptions] = Builder.CreateHealPredictionOptions,
+    [Builder.MenuOptions.PowerTextAnchorOptions] = Builder.CreatePowerTextAnchorOptions,
 }

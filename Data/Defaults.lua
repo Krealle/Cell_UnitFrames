@@ -439,6 +439,7 @@ Defaults.Widgets = {
         color = Defaults.Options.colorOpt,
         format = "percentage",
         hideIfEmptyOrFull = false,
+        anchorToPowerBar = false,
         textFormat = "",
         frameLevel = 10,
         position = {

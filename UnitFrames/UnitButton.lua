@@ -243,7 +243,7 @@ end
 -- MARK: Update Appearance
 -------------------------------------------------
 
----@param kind ("texture"|"color"|"fullColor"|"deathColor"|"animation"|"highlightColor"|"highlightSize"|"alpha"|"outOfRangeAlpha"|"shields")?
+---@param kind ("texture"|"color"|"fullColor"|"deathColor"|"animation"|"highlightColor"|"highlightSize"|"alpha"|"outOfRangeAlpha"|"shields"|"scale")?
 local function UpdateAppearance(kind)
     if not kind or kind == "texture" then
         Util:IterateAllUnitButtons(function(button)
@@ -278,6 +278,15 @@ local function UpdateAppearance(kind)
         -- Full update for everything
         -- Needs to be delayed
         C_Timer.After(0.1, function()
+            if InCombatLockdown() then
+                CUF:AddEventListener("PLAYER_REGEN_ENABLED", function()
+                    UpdateAppearance("scale")
+                    return true
+                end)
+
+                return
+            end
+
             CUF.PixelPerfect.SetPixelScale(CUF.mainFrame)
             CUF:Fire("UpdateUnitButtons")
         end)

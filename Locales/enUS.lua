@@ -96,6 +96,8 @@ L.tempEnchant = "Temporary Enchants"
 L.tempEnchantTooltip = "Show temporary enchants"
 L.Dispellable = "Dispellable"
 L.DispellableTooltip = "Show auras dispellable by you"
+L.Raid = "Raid"
+L.RaidTooltip = "Show raid auras"
 
 -- Cast Bar
 L.Reverse = "Reverse"

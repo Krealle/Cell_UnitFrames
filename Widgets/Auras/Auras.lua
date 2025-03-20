@@ -196,6 +196,12 @@ local function Icons_SetUseDispellable(icons, dispellable)
 end
 
 ---@param icons CellAuraIcons
+---@param raid boolean
+local function Icons_SetRaid(icons, raid)
+    icons.raid = raid
+end
+
+---@param icons CellAuraIcons
 ---@param priority boolean
 local function Icons_SetWhiteListPriority(icons, priority)
     icons.whiteListPriority = priority
@@ -355,6 +361,7 @@ local function CheckFilter(icon, auraData)
 
     -- Source Unit Check
     if icon.boss and auraData.isBossAura then return true end
+    if icon.raid and auraData.isRaid then return true end
     if icon.castByPlayers and auraData.isFromPlayerOrPlayerPet then return true end
     if icon.castByNPC and auraData.sourceUnit == "npc" then return true end
 
@@ -712,6 +719,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetNonPersonal = Icons_SetNonPersonal
     auraIcons.SetPersonal = Icons_SetPersonal
     auraIcons.SetDispellable = Icons_SetUseDispellable
+    auraIcons.SetRaid = Icons_SetRaid
     auraIcons.ShowDuration = Icons_ShowDuration
 
     auraIcons.ShowPreview = Icons_ShowPreview
@@ -822,3 +830,4 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field nonPersonal boolean
 ---@field personal boolean
 ---@field dispellable boolean
+---@field raid boolean

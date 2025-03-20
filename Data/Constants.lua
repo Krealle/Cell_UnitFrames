@@ -245,6 +245,7 @@ const.AURA_OPTION_KIND = {
     WHITE_LIST_PRIORITY = "whiteListPriority",
     TEMP_ENCHANT = "tempEnchant",
     DISPELLABLE = "dispellable",
+    RAID = "raid",
 }
 
 ---@enum GrowthOrientation

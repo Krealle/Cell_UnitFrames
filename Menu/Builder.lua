@@ -1541,6 +1541,11 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         L.DispellableTooltip)
     self:AnchorBelowCB(f.dispellableCB, f.boss)
 
+    f.raidCB = self:CreateCheckBox(f, widgetName, L.Raid,
+        const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.RAID,
+        L.RaidTooltip)
+    self:AnchorRightOfCB(f.raidCB, f.dispellableCB)
+
     -- Fifth Row
     f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist,
         const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.USE_BLACKLIST)

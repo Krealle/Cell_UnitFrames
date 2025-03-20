@@ -221,6 +221,7 @@
 ---@field boss boolean
 ---@field tempEnchant boolean
 ---@field dispellable boolean
+---@field raid boolean
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

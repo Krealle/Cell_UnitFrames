@@ -216,6 +216,8 @@ function menu:CreateMenu()
     ---@class CellCombatFrame
     self.window = CUF:CreateFrame("CUF_Menu", CUF.mainFrame, self.baseWidth, 300)
     self.window:SetPoint("TOPRIGHT", CellLayoutsPreviewButton, "BOTTOMRIGHT", 0, -self.inset)
+    self.window:SetFrameStrata(optionsFrame:GetFrameStrata())
+    self.window:GetFrameLevel(optionsFrame:GetFrameLevel())
 
     -- Draggable
     self.window:SetMovable(true)

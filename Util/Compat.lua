@@ -4,6 +4,8 @@ local CUF = select(2, ...)
 ---@class CUF.Compat
 local Compat = CUF.Compat
 
+local dummyAnchors = {}
+
 ---@param name string
 ---@param parent string
 function Compat:CreateDummyAnchor(name, parent)
@@ -12,8 +14,20 @@ function Compat:CreateDummyAnchor(name, parent)
         return
     end
 
-    if type(parent) ~= "string" then return end
-    if not _G[parent] then return end
+    if type(parent) ~= "string" then
+        CUF:Warn("Invalid dummy anchor parent:", "'" .. parent .. "'")
+        return
+    end
+    if not _G[parent] then
+        CUF:Warn("Parent frame with name:", "'" .. parent .. "'", "does not exist! Unable to create dummy anchor.")
+        return
+    end
+
+    if dummyAnchors[name] then
+        CUF:Log("Anchor with name:", "'" .. name .. "'", "already created.")
+        dummyAnchors[name]:SetAllPoints(_G[parent])
+        return
+    end
 
     if _G[name] then
         CUF:Warn("Frame with name:", "'" .. name .. "'", "already exists! Unable to create dummy anchor.")
@@ -22,6 +36,9 @@ function Compat:CreateDummyAnchor(name, parent)
 
     local dummy = CreateFrame("Frame", name, _G[parent])
     dummy:SetAllPoints(_G[parent])
+    CUF:Log("Created dummy anchor:", "'" .. name .. "'")
+
+    dummyAnchors[name] = dummy
 end
 
 function Compat:InitDummyAnchors()

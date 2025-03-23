@@ -843,6 +843,8 @@ local function SetFontStyle(self, styleTable)
 
     self:SetTextColor(unpack(styleTable.rgb))
 
+    self:SetJustifyH(styleTable.justify)
+
     self:SetPosition(styleTable)
 end
 

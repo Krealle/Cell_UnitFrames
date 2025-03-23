@@ -800,7 +800,7 @@ end
 function Builder:CreateFontOptions(parent, widgetName, path)
     ---@class FontOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 45
+    f.optionHeight = 70
     f.id = "Font"
 
     local fontItems = Util:GetFontItems()
@@ -818,8 +818,13 @@ function Builder:CreateFontOptions(parent, widgetName, path)
         path .. ".size")
     self:AnchorRight(f.sizeSlider, f.outlineDropdown)
 
+    f.justifyDropdown = self:CreateDropdown(parent, widgetName, L.Alignment, nil, const.TEXT_JUSTIFY,
+        path .. ".justify")
+    self:AnchorBelow(f.justifyDropdown, f.styleDropdown)
+
     f.shadowCB = self:CreateCheckBox(f, widgetName, L["Shadow"], path .. ".shadow")
-    f.shadowCB:SetPoint("TOPLEFT", f.styleDropdown, "BOTTOMLEFT", 0, -10)
+    self:AnchorRight(f.shadowCB, f.justifyDropdown)
+    --f.shadowCB:SetPoint("TOPLEFT", f.styleDropdown, "BOTTOMLEFT", 0, -10)
 
     return f
 end
@@ -1409,7 +1414,7 @@ function Builder:CreateAuraFontOptions(parent, widgetName, kind)
     ---@class AuraFontOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.id = "Aura" .. titleKind .. "FontOptions"
-    f.optionHeight = 160
+    f.optionHeight = 210
 
     -- Title
     f.title = self:CreateOptionTitle(f, titleKind .. " Font")
@@ -1447,7 +1452,7 @@ function Builder:CreateAuraStackFontOptions(parent, widgetName)
     local f = Builder:CreateAuraFontOptions(parent, widgetName, "stacks")
 
     f.showStacksCB = self:CreateCheckBox(f, widgetName, L["Show stacks"], const.AURA_OPTION_KIND.SHOW_STACK)
-    self:AnchorBelow(f.showStacksCB, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.showStacksCB, f.fontOptions.justifyDropdown)
 
     return f
 end
@@ -1471,7 +1476,7 @@ function Builder:CreateAuraDurationFontOptions(parent, widgetName)
     }
     f.iconDurationDropdown = self:CreateDropdown(f, widgetName, L["showDuration"], nil,
         items, const.AURA_OPTION_KIND.SHOW_DURATION)
-    self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.iconDurationDropdown, f.fontOptions.justifyDropdown)
 
     return f
 end
@@ -1663,6 +1668,8 @@ function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
     ---@class CastBarTimerFontOptions: BigFontOptions
     local f = Builder:CreateBigFontOptions(parent, widgetName, "Timer", const.OPTION_KIND.TIMER)
 
+    f.optionHeight = f.optionHeight + 50
+
     local items = {
         const.CastBarTimerFormat.HIDDEN,
         const.CastBarTimerFormat.NORMAL,
@@ -1673,7 +1680,7 @@ function Builder:CreateCastBarTimerFontOptions(parent, widgetName)
     }
     f.timerFormat = self:CreateDropdown(f, widgetName, L.TimerFormat, 140,
         items, const.OPTION_KIND.TIMER_FORMAT)
-    self:AnchorBelow(f.timerFormat, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.timerFormat, f.fontOptions.justifyDropdown)
 
     return f
 end
@@ -1684,38 +1691,27 @@ end
 function Builder:CreateCastBarSpellFontOptions(parent, widgetName)
     ---@class CastBarSpellFontOptions: BigFontOptions
     local f = Builder:CreateBigFontOptions(parent, widgetName, "Spell", const.OPTION_KIND.SPELL)
+    f.optionHeight = f.optionHeight + 100
 
     f.spellCB = self:CreateCheckBox(f, widgetName, L.ShowSpell, const.OPTION_KIND.SHOW_SPELL)
-    self:AnchorBelow(f.spellCB, f.fontOptions.styleDropdown)
+    self:AnchorBelow(f.spellCB, f.fontOptions.justifyDropdown)
 
     f.showTarget = self:CreateCheckBox(f, widgetName, L.ShowTarget, const.OPTION_KIND.SHOW_TARGET)
-    self:AnchorBelow(f.showTarget, f.spellCB)
+    self:AnchorRightOfCB(f.showTarget, f.spellCB)
 
     f.targetSeparator = self:CreateEditBox(f, widgetName, L.Separator, nil, const.OPTION_KIND.TARGET_SEPARATOR)
     self:AnchorRightOfCB(f.targetSeparator, f.showTarget)
 
     f.spellWidth = self:CreateTextWidthOption(f, widgetName, const.OPTION_KIND.SPELL_WIDTH)
-    self:AnchorBelow(f.spellWidth, f.showTarget)
-
-    f.optionHeight = f.optionHeight + 100
+    self:AnchorBelow(f.spellWidth, f.spellCB)
 
     local function LoadPageDB()
         if CUF.vars.selectedUnit == const.UNIT.PLAYER then
-            f.wrapperFrame:SetHeight(f.optionHeight + 35)
-
             f.showTarget:Show()
             f.targetSeparator:Show()
-
-            f.spellWidth:ClearAllPoints()
-            self:AnchorBelow(f.spellWidth, f.showTarget)
         else
-            f.wrapperFrame:SetHeight(f.optionHeight - 15)
-
             f.showTarget:Hide()
             f.targetSeparator:Hide()
-
-            f.spellWidth:ClearAllPoints()
-            self:AnchorBelow(f.spellWidth, f.spellCB)
         end
     end
     Handler:RegisterOption(LoadPageDB, widgetName, "CastBarSpellFontOptions")
@@ -1927,7 +1923,7 @@ end
 function Builder:CreateCustomTextOptions(parent, widgetName)
     ---@class CustomTextOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
-    f.optionHeight = 300
+    f.optionHeight = 325
     f.id = "CustomTextOptions"
     f.selectedIndex = 1
 
@@ -2032,10 +2028,14 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     local sizeSlider = self:CreateSlider(f, widgetName, L["Size"], nil, 5, 50, "font.size")
     self:AnchorRight(sizeSlider, outlineDropdown)
 
+    local justifyDropdown = self:CreateDropdown(parent, widgetName, "Alignment", nil, const.TEXT_JUSTIFY, "font.justify")
+    self:AnchorBelow(justifyDropdown, styleDropdown)
+
     local shadowCB = Cell.CreateCheckButton(parent, L["Shadow"], function(checked, cb)
         Set_DB(widgetName, "font.shadow", checked)
     end)
-    shadowCB:SetPoint("TOPLEFT", styleDropdown, "BOTTOMLEFT", 0, -10)
+    self:AnchorRight(shadowCB, justifyDropdown)
+    --shadowCB:SetPoint("TOPLEFT", styleDropdown, "BOTTOMLEFT", 0, -10)
 
     styleDropdown.Set_DB = Set_DB
     styleDropdown.Get_DB = Get_DB
@@ -2043,6 +2043,8 @@ function Builder:CreateCustomTextOptions(parent, widgetName)
     outlineDropdown.Get_DB = Get_DB
     sizeSlider.Set_DB = Set_DB
     sizeSlider.Get_DB = Get_DB
+    justifyDropdown.Set_DB = Set_DB
+    justifyDropdown.Get_DB = Get_DB
 
     local function LoadText()
         ---@type HealthTextWidgetTable

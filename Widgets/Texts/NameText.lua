@@ -32,7 +32,6 @@ menu:AddWidget(const.WIDGET_KIND.NAME_TEXT,
     Builder.MenuOptions.Font,
     Builder.MenuOptions.FrameLevel)
 
-
 ---@param button CUFUnitButton
 ---@param unit Unit
 ---@param setting OPTION_KIND

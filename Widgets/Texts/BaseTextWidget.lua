@@ -52,6 +52,8 @@ function W.CreateBaseTextWidget(button, kind)
             self.text:SetShadowOffset(0, 0)
             self.text:SetShadowColor(0, 0, 0, 0)
         end
+
+        self.text:SetJustifyH(styleTable.font.justify)
     end
 
     ---@param styleTable WidgetTable

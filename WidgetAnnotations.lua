@@ -412,6 +412,7 @@
 ---@field size number
 ---@field style string
 ---@field shadow boolean
+---@field justify "LEFT" | "RIGHT" | "CENTER"
 
 ---@class BigFontOpt
 ---@field outline string
@@ -423,6 +424,7 @@
 ---@field offsetY number
 ---@field offsetX number
 ---@field size number
+---@field justify "LEFT" | "RIGHT" | "CENTER"
 
 ---@class SizeOpt
 ---@field width number

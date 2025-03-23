@@ -255,6 +255,7 @@ L.powerLossTexture = "Power Loss Texture"
 L.TextureOverwriteTooltip = "Enable to overwrite texture set in Cell"
 L.reverseHealthFill = "Reverse Health Fill"
 L.AnchorToPowerBar = "Anchor to Power Bar"
+L.Alignment = "Alignment"
 
 -- Custom Formats
 L.ValidTags = "Valid Tags"

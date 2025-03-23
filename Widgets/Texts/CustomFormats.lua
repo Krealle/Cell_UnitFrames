@@ -803,7 +803,7 @@ W:AddTag("group", "GROUP_ROSTER_UPDATE", function(unit)
 end, "Group", "1-8")
 
 W:AddTag("group:raid", "GROUP_ROSTER_UPDATE", function(unit)
-    if not IsInRaid() then return "" end
+    if not IsInRaid() then return end
     local subgroup = Util:GetUnitSubgroup(unit)
     if subgroup then
         return FormatNumber(subgroup)

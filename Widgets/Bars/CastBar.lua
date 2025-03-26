@@ -580,8 +580,7 @@ local function Enable(self)
         button:AddEventListener("UNIT_SPELLCAST_SENT", SpellCastSent, true)
     end
 
-    if CUF.vars.isRetail and (button.states.class == "EVOKER"
-            or select(2, UnitRace(button.states.unit)) == "EarthenDwarf") then
+    if CUF.vars.isRetail then
         button:AddEventListener("UNIT_SPELLCAST_EMPOWER_START", CastStart)
         button:AddEventListener("UNIT_SPELLCAST_EMPOWER_STOP", CastStop)
         button:AddEventListener("UNIT_SPELLCAST_EMPOWER_UPDATE", CastUpdate)

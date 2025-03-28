@@ -132,12 +132,12 @@ local function Update(button, event, unit)
     if shouldFadeIn then
         if fader.isFadedIn ~= shouldFadeIn then
             fader.isFadedIn = true
-            A.FrameFadeIn(button, 0.25, button:GetAlpha(), fader.maxAlpha)
+            A.FrameFadeIn(button, fader.fadeDuration, button:GetAlpha(), fader.maxAlpha)
         end
     else
         if fader.isFadedIn ~= shouldFadeIn then
             fader.isFadedIn = false
-            A.FrameFadeOut(button, 0.25, button:GetAlpha(), fader.minAlpha)
+            A.FrameFadeOut(button, fader.fadeDuration, button:GetAlpha(), fader.minAlpha)
         end
     end
 end

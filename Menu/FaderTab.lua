@@ -176,7 +176,7 @@ function FaderTab:Create()
 
     ---@type CellSlider
     local fadeDurationSlider = Cell.CreateSlider(L.FadeDuration, sliderSection, 0, 4, 117, 0.01, function(value)
-        self:SetOption("fadeDelay", value)
+        self:SetOption("fadeDuration", value)
     end)
     fadeDurationSlider:SetPoint("TOPLEFT", sliderSection, "TOPLEFT", 5, -25)
     self.fadeDurationSlider = fadeDurationSlider

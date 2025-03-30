@@ -564,6 +564,7 @@ Defaults.Widgets = {
             tempEnchant = false,
             dispellable = false,
             raid = false,
+            cellRaidDebuffs = false,
         },
         position = {
             point = "BOTTOMRIGHT",

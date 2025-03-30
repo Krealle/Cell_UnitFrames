@@ -95,6 +95,9 @@ function W.UpdateAuraWidget(button, unit, which, setting, subSetting, ...)
         if not subSetting or subSetting == const.AURA_OPTION_KIND.RAID then
             auras:SetRaid(styleTable.filter.raid)
         end
+        if not subSetting or subSetting == const.AURA_OPTION_KIND.CELL_RAID_DEBUFFS then
+            auras:SetCellRaidDebuffs(styleTable.filter.cellRaidDebuffs)
+        end
         if not subSetting or subSetting == const.AURA_OPTION_KIND.WHITE_LIST_PRIORITY then
             auras:SetWhiteListPriority(styleTable.filter.whiteListPriority)
         end

@@ -246,6 +246,7 @@ const.AURA_OPTION_KIND = {
     TEMP_ENCHANT = "tempEnchant",
     DISPELLABLE = "dispellable",
     RAID = "raid",
+    CELL_RAID_DEBUFFS = "cellRaidDebuffs",
 }
 
 ---@enum GrowthOrientation

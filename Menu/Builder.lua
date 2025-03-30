@@ -1551,6 +1551,13 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         L.RaidTooltip)
     self:AnchorRightOfCB(f.raidCB, f.dispellableCB)
 
+    if widgetName == const.WIDGET_KIND.DEBUFFS then
+        f.cellRaidDebuffsCB = self:CreateCheckBox(f, widgetName, L["Raid Debuffs"],
+            const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.CELL_RAID_DEBUFFS,
+            L.CellRaidDebuffsTooltip)
+        self:AnchorRightOfCB(f.cellRaidDebuffsCB, f.raidCB)
+    end
+
     -- Fifth Row
     f.useBlacklistCB = self:CreateCheckBox(f, widgetName, L.UseBlacklist,
         const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.USE_BLACKLIST)

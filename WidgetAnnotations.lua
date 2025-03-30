@@ -222,6 +222,7 @@
 ---@field tempEnchant boolean
 ---@field dispellable boolean
 ---@field raid boolean
+---@field cellRaidDebuffs boolean?
 
 ---@class AuraFontOpt
 ---@field stacks BigFontOpt

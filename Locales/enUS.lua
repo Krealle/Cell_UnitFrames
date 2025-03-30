@@ -98,6 +98,7 @@ L.Dispellable = "Dispellable"
 L.DispellableTooltip = "Show auras dispellable by you"
 L.Raid = "Raid"
 L.RaidTooltip = "Show raid auras"
+L.CellRaidDebuffsTooltip = "Show Raid Debuffs enabled in Cell"
 
 -- Cast Bar
 L.Reverse = "Reverse"

@@ -202,6 +202,12 @@ local function Icons_SetRaid(icons, raid)
 end
 
 ---@param icons CellAuraIcons
+---@param cellRaidDebuffs boolean
+local function Icons_SetCellRaidDebuffs(icons, cellRaidDebuffs)
+    icons.cellRaidDebuffs = cellRaidDebuffs
+end
+
+---@param icons CellAuraIcons
 ---@param priority boolean
 local function Icons_SetWhiteListPriority(icons, priority)
     icons.whiteListPriority = priority
@@ -336,12 +342,22 @@ end
 -- MARK: HandleAura
 -------------------------------------------------
 
+local CELL_RAID_DEBUFFS = {}
+local GetDebuffList = F.GetDebuffList
+
+hooksecurefunc(F, "GetDebuffList", function(instanceName)
+    CELL_RAID_DEBUFFS = GetDebuffList(instanceName)
+end)
+
 ---@param icon CellAuraIcons
 ---@param auraData AuraData
 ---@return boolean show
 local function CheckFilter(icon, auraData)
     --TODO: Filter prio?
     local spellId = auraData.spellId
+
+    -- Cell Raid Debuffs
+    if icon.cellRaidDebuffs and CELL_RAID_DEBUFFS[spellId] or CELL_RAID_DEBUFFS[auraData.name] then return true end
 
     -- Blacklist / Whitelist Check
     if icon.useBlacklist and icon.blacklist[spellId] then return false end
@@ -720,6 +736,7 @@ function W:CreateAuraIcons(button, type)
     auraIcons.SetPersonal = Icons_SetPersonal
     auraIcons.SetDispellable = Icons_SetUseDispellable
     auraIcons.SetRaid = Icons_SetRaid
+    auraIcons.SetCellRaidDebuffs = Icons_SetCellRaidDebuffs
     auraIcons.ShowDuration = Icons_ShowDuration
 
     auraIcons.ShowPreview = Icons_ShowPreview
@@ -831,3 +848,4 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 ---@field personal boolean
 ---@field dispellable boolean
 ---@field raid boolean
+---@field cellRaidDebuffs boolean?

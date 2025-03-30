@@ -88,7 +88,7 @@ local function Update(button)
         return
     end
 
-    local totalIncomingHeal = UnitGetIncomingHeals(unit)
+    local totalIncomingHeal = UnitGetIncomingHeals(unit) or 0
     if totalIncomingHeal > 0 then
         healPrediction:Show()
 

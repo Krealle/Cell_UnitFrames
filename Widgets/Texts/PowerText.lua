@@ -296,7 +296,7 @@ function W:CreatePowerText(button)
     powerText.hideIfEmptyOrFull = false
     powerText.active = false
     powerText.unitLess = false
-    powerText.powerFilter = true
+    powerText.powerFilter = false
 
     powerText.SetFormat = PowerText_SetFormat
     powerText.SetTextFormat = PowerText_SetTextFormat

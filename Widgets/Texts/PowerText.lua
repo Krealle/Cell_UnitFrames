@@ -3,6 +3,8 @@ local CUF = select(2, ...)
 
 local Cell = CUF.Cell
 local F = Cell.funcs
+---@type LibGroupInfo
+local LGI = LibStub:GetLibrary("LibGroupInfo", true)
 
 ---@class CUF.widgets
 local W = CUF.widgets
@@ -52,6 +54,9 @@ function W.UpdatePowerTextWidget(button, unit, setting, subSetting)
     if not setting or setting == const.OPTION_KIND.ANCHOR_TO_POWER_BAR then
         widget:SetPosition(styleTable)
     end
+    if not setting or setting == const.OPTION_KIND.POWER_FILTER then
+        widget.powerFilter = styleTable.powerFilter
+    end
 
     if widget.enabled and button:IsVisible() then
         widget.Update(button)
@@ -65,6 +70,113 @@ Handler:RegisterWidget(W.UpdatePowerTextWidget, const.WIDGET_KIND.POWER_TEXT)
 -------------------------------------------------
 
 ---@param button CUFUnitButton
+local function GetRole(button)
+    local role
+    local info = LGI and LGI:GetCachedInfo(button.states.guid)
+
+    if button.states.unit == "player" then
+        local classID = select(2, UnitClassBase("player"))
+        if classID then
+            role = select(5, GetSpecializationInfoForClassID(classID, GetSpecialization()))
+        end
+    elseif info then
+        role = info.role
+    else
+        role = UnitGroupRolesAssigned(button.states.unit)
+    end
+
+    return role
+end
+
+---@param self PowerTextWidget
+local function PowerFilterCheck(self)
+    local owner = self._owner
+    local guid = owner.states.guid or UnitGUID(owner.states.unit)
+    if not guid then return end
+
+    local class, role
+    if owner.states.inVehicle then
+        class = "VEHICLE"
+    elseif F.IsPlayer(guid) then
+        class = UnitClassBase(owner.states.unit)
+        role = GetRole(owner)
+    elseif F.IsPet(guid) then
+        class = "PET"
+    elseif F.IsNPC(guid) then
+        if UnitInPartyIsAI(owner.states.unit) then
+            class = UnitClassBase(owner.states.unit)
+            role = GetRole(owner)
+        else
+            class = "NPC"
+        end
+    elseif F.IsVehicle(guid) then
+        class = "VEHICLE"
+    end
+
+    if not Cell.vars.currentLayoutTable then return end
+
+    if class then
+        if type(Cell.vars.currentLayoutTable["powerFilters"][class]) == "boolean" then
+            return Cell.vars.currentLayoutTable["powerFilters"][class]
+        else
+            if role then
+                if role == "NONE" then
+                    return true
+                end
+                return Cell.vars.currentLayoutTable["powerFilters"][class][role]
+            else
+                return
+            end
+        end
+    end
+
+    return true
+end
+
+---@param self PowerTextWidget
+local function UpdateVisibility(self)
+    if self.powerFilter then
+        local powerFilterCheck = PowerFilterCheck(self)
+
+        if powerFilterCheck == nil then
+            C_Timer.After(0.1, function()
+                self:UpdateVisibility()
+            end)
+            return
+        elseif not powerFilterCheck then
+            self:HidePowerText()
+            return
+        end
+    end
+
+    self:ShowPowerText()
+end
+
+---@param self PowerTextWidget
+local function HidePowerText(self)
+    if not self.active then return end
+
+    self.active = false
+
+    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdateFrequent)
+    self._owner:RemoveEventListener("UNIT_MAXPOWER", self.Update)
+
+    self:Hide()
+end
+
+---@param self PowerTextWidget
+local function ShowPowerText(self)
+    if self.active then return end
+
+    self.active = true
+
+    self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdateFrequent, self.unitLess)
+    self._owner:AddEventListener("UNIT_MAXPOWER", self.Update, self.unitLess)
+
+    self:Show()
+end
+
+---@param button CUFUnitButton
 local function UpdateFrequent(button)
     if button.states.displayedUnit then
         button.widgets.powerText:UpdateValue()
@@ -73,30 +185,35 @@ end
 
 ---@param button CUFUnitButton
 local function Update(button)
-    button.widgets.powerText:UpdateTextColor()
-    button.widgets.powerText:UpdateValue()
+    local powerText = button.widgets.powerText
+    if not powerText.enabled then return end
+
+    powerText:UpdateVisibility()
+    if not powerText.active then return end
+
+    powerText:UpdateTextColor()
+    powerText:UpdateValue()
 end
 
 ---@param self PowerTextWidget
 local function Enable(self)
-    local unitLess
-    if self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET then
-        unitLess = true
-    end
+    self.Update(self._owner)
+    self.unitLess = self._owner.states.unit == CUF.constants.UNIT.TARGET_TARGET
 
-    self._owner:AddEventListener("UNIT_POWER_FREQUENT", UpdateFrequent, unitLess)
-    self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update, unitLess)
-    self._owner:AddEventListener("UNIT_MAXPOWER", Update, unitLess)
-    self:Show()
+    self._owner:AddEventListener("UNIT_DISPLAYPOWER", Update, self.unitLess)
+    if F.IsPlayer(UnitGUID(self._owner.states.unit)) then
+        self._owner:AddEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
+    end
 
     return true
 end
 
 ---@param self PowerTextWidget
 local function Disable(self)
-    self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", UpdateFrequent)
     self._owner:RemoveEventListener("UNIT_DISPLAYPOWER", Update)
-    self._owner:RemoveEventListener("UNIT_MAXPOWER", Update)
+    self._owner:RemoveEventListener("PLAYER_SPECIALIZATION_CHANGED", self.Update)
+
+    self:HidePowerText()
 end
 
 -------------------------------------------------
@@ -177,12 +294,20 @@ function W:CreatePowerText(button)
 
     powerText.textFormat = ""
     powerText.hideIfEmptyOrFull = false
+    powerText.active = false
+    powerText.unitLess = false
+    powerText.powerFilter = true
 
     powerText.SetFormat = PowerText_SetFormat
     powerText.SetTextFormat = PowerText_SetTextFormat
     powerText.SetValue = SetPower_Percentage
 
     function powerText:UpdateValue()
+        if not self.enabled then
+            self:Hide()
+            return
+        end
+
         local unit = button.states.unit
         local powerMax = UnitPowerMax(unit)
         local power = UnitPower(unit)
@@ -230,6 +355,10 @@ function W:CreatePowerText(button)
             self:SetTextColor(unpack(self.rgb))
         end
     end
+
+    powerText.UpdateVisibility = UpdateVisibility
+    powerText.HidePowerText = HidePowerText
+    powerText.ShowPowerText = ShowPowerText
 
     powerText.Update = Update
     powerText.UpdateFrequent = UpdateFrequent

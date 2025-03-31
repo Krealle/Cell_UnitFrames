@@ -123,6 +123,7 @@
 ---@field font SmallFontOpt
 ---@field textFormat string
 ---@field anchorToPowerBar boolean
+---@field powerFilter boolean
 
 ---@class LevelTextWidgetTable
 ---@field enabled boolean

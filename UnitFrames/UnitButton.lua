@@ -126,6 +126,7 @@ function U:UpdateUnitButtonLayout(unit, kind, button)
 
     if kind == "powerFilter" then
         button.widgets.powerBar.Update(button)
+        button.widgets.powerText.Update(button)
     end
 
     if not kind or kind == "alwaysUpdate" then

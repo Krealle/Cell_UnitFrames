@@ -999,6 +999,10 @@ function Builder:CreatePowerFormatOptions(parent, widgetName)
         const.OPTION_KIND.HIDE_IF_EMPTY_OR_FULL)
     self:AnchorBelow(f.hideIfEmptyOrFull, f.formatEditBox, 35)
 
+    f.powerFilter = self:CreateCheckBox(f, widgetName, L.PowerFilter,
+        const.OPTION_KIND.POWER_FILTER, L.PowerFilterTooltip)
+    self:AnchorRightOfCB(f.powerFilter, f.hideIfEmptyOrFull)
+
     local function LoadPageDB()
         SetEnabled(HandleWidgetOption(widgetName, const.OPTION_KIND.FORMAT) == const.PowerTextFormat.CUSTOM)
     end

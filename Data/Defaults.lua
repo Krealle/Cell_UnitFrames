@@ -442,6 +442,7 @@ Defaults.Widgets = {
         format = "percentage",
         hideIfEmptyOrFull = false,
         anchorToPowerBar = false,
+        powerFilter = false,
         textFormat = "",
         frameLevel = 10,
         position = {

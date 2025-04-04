@@ -796,7 +796,7 @@ W:RegisterCreateWidgetFunc(const.WIDGET_KIND.DEBUFFS, W.CreateDebuffs)
 -------------------------------------------------
 -- MARK: Cell typing
 -------------------------------------------------
----@class CellAuraIcon: Frame
+---@class CellAuraIcon: Frame, BackdropTemplate
 ---@field icon Texture
 ---@field stack FontString
 ---@field duration FontString

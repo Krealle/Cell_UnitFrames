@@ -674,6 +674,13 @@ function W:CreateAuraIcons(button, type)
     auraIcons._auraCount = 0
 
     for _, icon in ipairs(auraIcons) do
+        -- Make background transparent
+        icon:SetBackdrop({
+            edgeFile = Cell.vars.whiteTexture,
+            edgeSize = P.Scale(CELL_BORDER_SIZE)
+        })
+        icon:SetBackdropBorderColor(0, 0, 0, 1)
+
         ---@class CellAuraIcon.preview: Frame
         icon.preview = CreateFrame("Frame", nil, icon)
         icon.preview:Hide()

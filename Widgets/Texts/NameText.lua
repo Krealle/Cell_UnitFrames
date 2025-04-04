@@ -21,6 +21,8 @@ local UnitClassBase = function(unit)
     return select(2, UnitClass(unit))
 end
 
+local GetTranslitCellNickname = Util.GetTranslitCellNickname
+
 -------------------------------------------------
 -- MARK: AddWidget
 -------------------------------------------------
@@ -100,16 +102,7 @@ function W:CreateNameText(button)
     nameText.format = CUF.Defaults.Widgets.nameText.format
 
     function nameText:UpdateName()
-        local name
-
-        if CELL_NICKTAG_ENABLED and Cell.NickTag then
-            name = Cell.NickTag:GetNickname(button.states.name, nil, true)
-        end
-        name = name or F.GetNickname(button.states.name, button.states.fullName)
-
-        if self.format ~= CUF.constants.NameFormat.FULL_NAME then
-            name = self.FormatName(name, self.format)
-        end
+        local name = GetTranslitCellNickname(button.states.name, button.states.fullName)
 
         self.UpdateTextWidth(nameText.text, name, nameText.width, button)
     end

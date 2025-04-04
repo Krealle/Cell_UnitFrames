@@ -32,6 +32,7 @@ local nameLengths = {
 }
 
 local FormatText = Util.FormatText
+local GetTranslitCellNickname = Util.GetTranslitCellNickname
 
 local format = string.format
 
@@ -827,6 +828,7 @@ for type, length in pairs(nameLengths) do
     W:AddTag("name:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
         if unitName then
+            unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
             return Util.ShortenString(unitName, length)
         end
     end, "Name", normalExample)
@@ -834,6 +836,7 @@ for type, length in pairs(nameLengths) do
     W:AddTag("name:abbrev:" .. type, "UNIT_NAME_UPDATE", function(unit)
         local unitName = UnitName(unit)
         if unitName then
+            unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
             local abbreviated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
             return Util.ShortenString(abbreviated, length)
         end
@@ -842,6 +845,7 @@ for type, length in pairs(nameLengths) do
     W:AddTag("target:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
         if unitName then
+            unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
             return Util.ShortenString(unitName, length)
         end
     end, "Target", normalExample)
@@ -849,6 +853,7 @@ for type, length in pairs(nameLengths) do
     W:AddTag("target:abbrev:" .. type, "UNIT_TARGET", function(unit)
         local unitName = UnitName(unit .. "target")
         if unitName then
+            unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
             local abbreviated = Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
             return Util.ShortenString(abbreviated, length)
         end
@@ -858,12 +863,14 @@ end
 W:AddTag("name", "UNIT_NAME_UPDATE", function(unit)
     local unitName = UnitName(unit)
     if unitName then
+        unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
         return unitName
     end
 end, "Name", "Sylvanas Windrunner")
 W:AddTag("name:abbrev", "UNIT_NAME_UPDATE", function(unit)
     local unitName = UnitName(unit)
     if unitName then
+        unitName = GetTranslitCellNickname(unitName, F.UnitFullName(unit))
         return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
 end, "Name", "S. Windrunner")
@@ -872,13 +879,15 @@ end, "Name", "S. Windrunner")
 W:AddTag("target", "UNIT_TARGET", function(unit)
     local targetName = UnitName(unit .. "target")
     if targetName then
+        targetName = GetTranslitCellNickname(targetName, F.UnitFullName(unit .. "target"))
         return targetName
     end
 end, "Target", "Sylvanas Windrunner")
 W:AddTag("target:abbrev", "UNIT_TARGET", function(unit)
-    local unitName = UnitName(unit .. "target")
-    if unitName then
-        return Util.FormatName(unitName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
+    local targetName = UnitName(unit .. "target")
+    if targetName then
+        targetName = GetTranslitCellNickname(targetName, F.UnitFullName(unit .. "target"))
+        return Util.FormatName(targetName, const.NameFormat.FIRST_INITIAL_LAST_NAME)
     end
 end, "Target", "S. Windrunner")
 

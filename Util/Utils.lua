@@ -681,6 +681,25 @@ function Util:GetTextures()
     return textures
 end
 
+local LibTranslit = LibStub("LibTranslit-1.0")
+
+--- Get potential translit nickname for a given name
+---@param name string
+---@param fullName string
+---@return string
+function Util.GetTranslitCellNickname(name, fullName)
+    if CELL_NICKTAG_ENABLED and Cell.NickTag then
+        name = Cell.NickTag:GetNickname(name, nil, true)
+    end
+    name = F.GetNickname(name, fullName)
+
+    if Cell.loaded and CellDB["general"]["translit"] then
+        name = LibTranslit:Transliterate(name)
+    end
+
+    return name
+end
+
 -------------------------------------------------
 -- MARK: Unit Info
 -------------------------------------------------

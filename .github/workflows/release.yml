@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check LUA
-        uses: Krealle/luals-check-action@v1
+        uses: Krealle/luals-check-action@dev
         with:
           config-path: .vscode/settings.json
 

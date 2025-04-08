@@ -675,11 +675,21 @@ function W:CreateAuraIcons(button, type)
 
     for _, icon in ipairs(auraIcons) do
         -- Make background transparent
-        icon:SetBackdrop({
-            edgeFile = Cell.vars.whiteTexture,
-            edgeSize = P.Scale(CELL_BORDER_SIZE)
-        })
+        if CELL_BORDER_SIZE > 0 then
+            icon:SetBackdrop({
+                edgeFile = Cell.vars.whiteTexture,
+                edgeSize = P.Scale(CELL_BORDER_SIZE)
+            })
+        else
+            icon:SetBackdrop({
+                edgeFile = Cell.vars.whiteTexture,
+                edgeSize = P.Scale(1)
+            })
+        end
         icon:SetBackdropBorderColor(0, 0, 0, 1)
+        -- Dirty workaround to make sure that borders are colored properly for debuffs
+        -- TODO: Change this
+        icon.SetBackdropColor = icon.SetBackdropBorderColor
 
         ---@class CellAuraIcon.preview: Frame
         icon.preview = CreateFrame("Frame", nil, icon)

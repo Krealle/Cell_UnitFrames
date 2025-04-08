@@ -284,10 +284,12 @@ end
 local placeHolderTextures = {
     135939, 237542, 135727, 463286, 132242, 1526618, 136075, 5199640, 1360764, 135988
 }
+local debuffTypes = { "", "Curse", "Disease", "Magic", "Poison", "none", "Bleed" }
 
 ---@param icons CellAuraIcons
 local function Icons_ShowPreview(icons)
     local iconIdx = 0
+    local debuffIdx = 0
     for idx, icon in ipairs(icons) do
         icon:Hide() -- Clear any existing cooldowns
 
@@ -297,18 +299,32 @@ local function Icons_ShowPreview(icons)
                 iconIdx = 1
             end
 
+            debuffIdx = debuffIdx + 1
+            if debuffIdx > #debuffTypes then
+                debuffIdx = 1
+            end
+
             local tex = placeHolderTextures[iconIdx]
+            local debuffType = debuffTypes[debuffIdx]
             icon.preview:SetScript("OnUpdate", function(self, elapsed)
                 self.elapsedTime = (self.elapsedTime or 0) + elapsed
                 if self.elapsedTime >= 10 then
                     self.elapsedTime = 0
-                    icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+                    if icons.id == "buffs" then
+                        icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+                    else
+                        icon:SetCooldown(GetTime(), 10, debuffType, tex, idx, (idx % 3 == 0))
+                    end
                 end
             end)
 
             icon.preview:SetScript("OnShow", function()
                 icon.preview.elapsedTime = 0
-                icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+                if icons.id == "buffs" then
+                    icon:SetCooldown(GetTime(), 10, nil, tex, idx, (idx % 3 == 0))
+                else
+                    icon:SetCooldown(GetTime(), 10, debuffType, tex, idx, (idx % 3 == 0))
+                end
             end)
 
             icon:Show()
@@ -316,6 +332,7 @@ local function Icons_ShowPreview(icons)
         end
     end
 
+    icons:SetSpacing({ icons.spacingX, icons.spacingY })
     icons:UpdateSize(icons._maxNum)
 end
 

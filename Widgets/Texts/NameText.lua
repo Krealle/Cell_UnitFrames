@@ -104,6 +104,10 @@ function W:CreateNameText(button)
     function nameText:UpdateName()
         local name = GetTranslitCellNickname(button.states.name, button.states.fullName)
 
+        if self.format ~= CUF.constants.NameFormat.FULL_NAME then
+            name = self.FormatName(name, self.format)
+        end
+
         self.UpdateTextWidth(nameText.text, name, nameText.width, button)
     end
 

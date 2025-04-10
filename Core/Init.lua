@@ -4,6 +4,8 @@ _G.CUF = CUF
 
 CUF.version = 23
 
+---@class Cell
+---@field NickTag Cell_NickTag?
 CUF.Cell = Cell
 
 ---@class CUF.widgets

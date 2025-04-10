@@ -93,6 +93,9 @@
 ---@field [1] number
 ---@field [2] number
 
+---@class Cell_NickTag
+---@field GetNickname fun(self: Cell_NickTag, name: string, default: string?, silent: boolean?): string?
+
 -------------------------------------------------
 -- MARK: CUF Frames
 -------------------------------------------------

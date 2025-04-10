@@ -689,6 +689,7 @@ local LibTranslit = LibStub("LibTranslit-1.0")
 ---@return string
 function Util.GetTranslitCellNickname(name, fullName)
     if CELL_NICKTAG_ENABLED and Cell.NickTag then
+        -- GetNickname fun(self: Cell_NickTag, name: string, default: string?, silent: boolean?): string?
         name = Cell.NickTag:GetNickname(name, name, true)
     end
     name = F.GetNickname(name, fullName)

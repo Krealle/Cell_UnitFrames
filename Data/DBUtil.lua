@@ -134,7 +134,7 @@ end
 --- C) Prevent data loss due to a bug
 function DB.CreateAutomaticBackup()
     if not CUF_DB.version -- First time addon is loaded, nothing to backup
-        or (CUF_DB.backups.automatic and CUF_DB.backups.automatic.CUFVersion >= CUF.version) then
+        or (CUF_DB.backups.automatic and type(CUF_DB.backups.automatic.CUFVersion) == "number" and (CUF_DB.backups.automatic.CUFVersion >= CUF.version)) then
         return
     end
 

@@ -81,9 +81,10 @@ function Util:RenameProp(table, oldKey, newKey)
     end
 end
 
----@param table table
+---@generic T: table
+---@param table T
 ---@param seen table?
----@return table
+---@return T
 function Util:CopyDeep(table, seen)
     -- Handle non-tables and previously-seen tables.
     if type(table) ~= 'table' then return table end

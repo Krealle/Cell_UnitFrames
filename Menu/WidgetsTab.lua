@@ -4,6 +4,7 @@ local CUF = select(2, ...)
 local Cell = CUF.Cell
 local F = Cell.funcs
 local L = CUF.L
+local P = CUF.PixelPerfect
 
 local Builder = CUF.Builder
 local Handler = CUF.Handler
@@ -22,7 +23,7 @@ WidgetsTab.widgetPages = {}
 WidgetsTab.listButtons = {}
 WidgetsTab.widgetsToAdd = {}
 WidgetsTab.id = "Widgets"
-WidgetsTab.height = 400
+WidgetsTab.height = 410
 WidgetsTab.paneHeight = 17
 
 unitFramesTab:AddTab(WidgetsTab)
@@ -62,7 +63,7 @@ function WidgetsTab:IsShown()
     return WidgetsTab.window and WidgetsTab.window:IsShown()
 end
 
--- Update the selected widge
+-- Update the selected widget
 ---@param widget WIDGET_KIND
 function WidgetsTab:SetWidget(widget)
     -- Hide old widget
@@ -152,7 +153,7 @@ function WidgetsTab.LoadWidgetList(unit)
             if not prevButton then
                 button:SetPoint("TOPLEFT")
             else
-                button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, 1)
+                button:SetPoint("TOPLEFT", prevButton, "BOTTOMLEFT", 0, P.Scale(1))
             end
             button:Show()
 
@@ -163,7 +164,7 @@ function WidgetsTab.LoadWidgetList(unit)
         end
     end
 
-    WidgetsTab.widgetListFrame.scrollFrame:SetContentHeight(20, optionCount, -1)
+    WidgetsTab.widgetListFrame.scrollFrame:SetContentHeight(P.Scale(20), optionCount, -P.Scale(1))
 
     Cell.CreateButtonGroup(WidgetsTab.listButtons, function(widget, b)
         WidgetsTab:SetWidget(widget)
@@ -248,5 +249,5 @@ function WidgetsTab:Create()
     self.widgetListFrame:SetPoint("TOPLEFT", widgetListWindow, "TOPLEFT", 0, 0)
 
     Cell.CreateScrollFrame(self.widgetListFrame)
-    self.widgetListFrame.scrollFrame:SetScrollStep(25)
+    self.widgetListFrame.scrollFrame:SetScrollStep(19)
 end

@@ -5,6 +5,7 @@ local Cell = CUF.Cell
 local F = Cell.funcs
 local DB = CUF.DB
 local L = CUF.L
+local P = CUF.PixelPerfect
 
 ---@class CUF.Util
 local Util = CUF.Util
@@ -766,6 +767,7 @@ end
 ---@return Frame
 function CUF:CreateFrame(name, parent, width, height, isTransparent, isShown, template)
     local f = Cell.CreateFrame(name, parent, width, height, isTransparent, template)
+    P.Size(f, width, height)
     if isShown then f:Show() end
     return f
 end
@@ -789,6 +791,7 @@ function CUF:CreateButton(parent, text, size, onClick, buttonColor, noBorder, no
         fontDisable,
         template,
         ...)
+    P.Size(b, size[1], size[2])
 
     if onClick then
         b:SetScript("OnClick", onClick)
@@ -808,6 +811,7 @@ end
 ---@return EditBox
 function CUF:CreateEditBox(parent, width, height, text, isTransparent, isMultiLine, isNumeric, font)
     local editBox = Cell.CreateEditBox(parent, width, height, isTransparent, isMultiLine, isNumeric, font)
+    P.Size(editBox, width, height)
 
     if text then
         local label = editBox:CreateFontString(nil, "OVERLAY", CUF.constants.FONTS.CELL_WIDGET)

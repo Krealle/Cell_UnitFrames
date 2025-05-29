@@ -9,7 +9,6 @@ local W = CUF.widgets
 ---@class CUF.uFuncs
 local U = CUF.uFuncs
 
-local Util = CUF.Util
 local Handler = CUF.Handler
 local Builder = CUF.Builder
 local menu = CUF.Menu
@@ -44,7 +43,8 @@ local function Update(button, event, ...)
     local unit = button.states.unit
     if not unit then return end
 
-    if not button.widgets.levelText.enabled then return end
+    local levelText = button.widgets.levelText
+    if not levelText.enabled then return end
 
     local level = UnitEffectiveLevel(unit) ---@type number|string
 
@@ -67,7 +67,8 @@ local function Update(button, event, ...)
         level = "??"
     end
 
-    button.widgets.levelText:SetText(level)
+    levelText:SetText(level)
+    levelText:UpdateTextColor()
 end
 
 ---@param self LevelTextWidget

@@ -77,6 +77,12 @@ function WidgetsTab:SetWidget(widget)
     self.selectedWidget.frame:ClearAllPoints()
     self.selectedWidget.frame:SetPoint("TOPLEFT", self.settingsFrame.scrollFrame.content)
 
+    -- Extremely dirty hack, but without this options will sometimes not be shown
+    C_Timer.After(0.05, function()
+        self.settingsFrame.scrollFrame:SetContentHeight(self.selectedWidget.height)
+        self.settingsFrame.scrollFrame:ResetScroll()
+    end)
+
     Menu:UpdateSelectedPages(nil, widget)
 end
 

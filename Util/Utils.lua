@@ -13,6 +13,7 @@ local Util = CUF.Util
 local const = CUF.constants
 
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
+local GetClassColor = GetClassColor
 
 -------------------------------------------------
 -- MARK: Prop Hunting
@@ -1143,9 +1144,9 @@ end
 --- @param className string
 --- @return string?
 function Util.GetClassColorCode(className)
-    local classColor = RAID_CLASS_COLORS[className:upper()]
-    if classColor then
-        return classColor.colorStr
+    local _, _, _, colorStr = GetClassColor(className:upper())
+    if colorStr then
+        return colorStr
     end
     return nil
 end

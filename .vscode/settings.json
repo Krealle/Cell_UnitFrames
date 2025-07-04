@@ -21,7 +21,7 @@
     "~\\.vscode\\extensions\\ketho.wow-api-0.20.8\\Annotations\\Core",
     "~\\.vscode\\extensions\\ketho.wow-api-0.20.8\\Annotations\\FrameXML\\Annotations\\AddOns\\Blizzard_SharedXML\\SmoothStatusBar.lua.annotated.lua",
     "~\\.vscode\\extensions\\ketho.wow-api-0.20.8\\Annotations\\FrameXML\\Annotations\\AddOns\\Blizzard_FrameXMLBase\\Constants.lua.annotated.lua",
-    "~\\.vscode\\extensions\\ketho.wow-api-0.20.8\\Annotations\\FrameXML\\Annotations\\AddOns\\Blizzard_SharedXML\\PixelUtil.lua.annotated.lua",
+    "~\\.vscode\\extensions\\ketho.wow-api-0.20.8\\Annotations\\FrameXML\\Annotations\\AddOns\\Blizzard_SharedXML\\PixelUtil.lua.annotated.lua"
   ],
   "Lua.diagnostics.globals": [
     "SlashCmdList",

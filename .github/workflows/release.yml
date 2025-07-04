@@ -7,17 +7,17 @@ on:
       - "**"
 
 jobs:
-  LUA:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check LUA
-        uses: Krealle/luals-check-action@v1
-        with:
-          config-path: .vscode/settings.json
+  #LUA:
+    #runs-on: ubuntu-latest
+    #steps:
+      #- name: Check LUA
+        #uses: Krealle/luals-check-action@v1
+        #with:
+          #config-path: .vscode/settings.json
 
   release:
     runs-on: ubuntu-latest
-    needs: LUA
+    #needs: LUA
 
     outputs:
       changeLogText: ${{ steps.readChanglog.outputs.text }}

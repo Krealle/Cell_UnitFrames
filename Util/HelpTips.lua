@@ -7,6 +7,14 @@ local DB = CUF.DB
 local HelpTips = {}
 CUF.HelpTips = HelpTips
 
+if not CUF.vars.isRetail then
+    function HelpTips:Show() end
+
+    function HelpTips:Acknowledge() end
+
+    return
+end
+
 local function HelpTipReset(framePool, frame)
     frame:ClearAllPoints()
     frame:Hide()

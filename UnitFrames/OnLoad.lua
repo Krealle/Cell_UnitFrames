@@ -12,7 +12,6 @@ local W = CUF.widgets
 local const = CUF.constants
 local Util = CUF.Util
 
-local GetUnitName = GetUnitName
 local UnitGUID = UnitGUID
 
 local wipe = table.wipe
@@ -218,7 +217,7 @@ local function UnitFrame_OnTick(self)
 
                 -- NOTE: only save players' names
                 if UnitIsPlayer(self.states.unit) then
-                    local name = GetUnitName(self.states.unit, true)
+                    local name = Util:GetUnitNameWithServer(self.states.unit)
                     if (name and self.__nameRetries and self.__nameRetries >= 4) or (name and name ~= UNKNOWN and name ~= UNKNOWNOBJECT) then
                         self.__unitName = name
                         self.__nameRetries = nil

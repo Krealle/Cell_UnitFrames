@@ -723,6 +723,13 @@ function Util:GetUnitName(unit)
 end
 
 ---@param unit UnitToken
+---@return string unitName
+function Util:GetUnitNameWithServer(unit)
+    local name, nameWithServer = self:GetUnitName(unit)
+    return nameWithServer or name
+end
+
+---@param unit UnitToken
 ---@return number? subgroup
 function Util:GetUnitSubgroup(unit)
     local name, nameWithServer = self:GetUnitName(unit)

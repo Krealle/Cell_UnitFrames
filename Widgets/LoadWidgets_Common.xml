@@ -1,0 +1,36 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/FrameXML/UI_shared.xsd">
+    <Script file="Common.lua"/>
+
+    <Script file="Texts/BaseTextWidget.lua"/>
+    <Script file="Texts/CustomFormats.lua"/>
+    <Script file="Texts/NameText.lua"/>
+    <Script file="Texts/HealthText.lua"/>
+    <Script file="Texts/PowerText.lua"/>
+    <Script file="Texts/LevelText.lua"/>
+    <Script file="Texts/CustomText.lua"/>
+
+    <Script file="Bars/HealthBar.lua"/>
+    <Script file="Bars/PowerBar.lua"/>
+    <!-- <Script file="Bars/AltPowerBar.lua"/> -->
+    <!-- <Script file="Bars/ShieldBar.lua"/> -->
+    <Script file="Bars/CastBar.lua"/>
+    <!-- <Script file="Bars/ClassBar.lua"/> -->
+    <!-- <Script file="Bars/HealAbsorb.lua"/> -->
+    <!-- <Script file="Bars/HealPrediction.lua"/> -->
+
+    <Script file="Icons/RaidIcon.lua"/>
+    <!-- <Script file="Icons/RoleIcon.lua"/> -->
+    <Script file="Icons/LeaderIcon.lua"/>
+    <Script file="Icons/CombatIcon.lua"/>
+    <Script file="Icons/ReadyCheckIcon.lua"/>
+    <Script file="Icons/RestingIcon.lua"/>
+
+    <Script file="Auras/Auras.lua"/>
+    <Script file="Auras/Updater.lua"/>
+    <Script file="Auras/Dispels.lua"/>
+    <Script file="Auras/Totems.lua"/>
+
+    <Script file="Misc/Fader.lua"/>
+    <Script file="Misc/Highlight.lua"/>
+</Ui>

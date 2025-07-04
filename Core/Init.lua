@@ -50,4 +50,11 @@ CUF.vars = {}
 ---@field boss table<string, CUFUnitButton>
 CUF.unitButtons = {}
 
-CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+-- Borrowed from DBM: https://github.com/DeadlyBossMods/DeadlyBossMods/blob/171258b10cd053a3fbb34f5f9fe93a238f4cfaad/DBM-Core/modules/objects/GameVersion.lua
+CUF.vars.wowTOC = (select(4, GetBuildInfo()))
+CUF.vars.isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
+CUF.vars.isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
+CUF.vars.isBCC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
+CUF.vars.isWrath = WOW_PROJECT_ID == (WOW_PROJECT_WRATH_CLASSIC or 11)
+CUF.vars.isCata = WOW_PROJECT_ID == (WOW_PROJECT_CATACLYSM_CLASSIC or 14)
+CUF.vars.isMop = WOW_PROJECT_ID == (WOW_PROJECT_MISTS_CLASSIC or 19)

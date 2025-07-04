@@ -49,3 +49,5 @@ CUF.vars = {}
 ---@field [Unit] CUFUnitButton
 ---@field boss table<string, CUFUnitButton>
 CUF.unitButtons = {}
+
+CUF.vars.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE

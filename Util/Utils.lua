@@ -15,6 +15,16 @@ local const = CUF.constants
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
 local GetClassColor = GetClassColor
 
+local UnitSelectionType = UnitSelectionType or
+    ---@param unit UnitToken
+    function(unit)
+        -- Helper fallback function for older game versions, blizzards function was introduced with BFA
+        if UnitIsFriend(unit, "player") then return 3 end
+        if UnitIsEnemy(unit, "player") then return 0 end
+        if UnitIsUnit(unit, "pet") or UnitIsOtherPlayersPet(unit) then return 4 end
+        return 999
+    end
+
 -------------------------------------------------
 -- MARK: Prop Hunting
 -------------------------------------------------

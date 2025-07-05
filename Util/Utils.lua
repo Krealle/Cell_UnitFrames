@@ -782,6 +782,21 @@ function Util:GetUnitClassificationIcon(unit)
     return typeIcon[UnitClassification(unit)]
 end
 
+-- Helper function to get a aura index by auraInstanceID
+-- Currently only used for non-retail tooltips
+---@param unit string
+---@param auraInstanceID number
+---@param filter string
+---@return number? auraIndex
+function Util:GetAuraIndexByAuraInstanceID(unit, auraInstanceID, filter)
+    for index = 1, select("#", C_UnitAuras.GetAuraSlots(unit, filter)) do
+        local auraInfo = C_UnitAuras.GetAuraDataByIndex(unit, index, filter);
+        if auraInfo and auraInfo.auraInstanceID == auraInstanceID then
+            return index
+        end
+    end
+end
+
 -------------------------------------------------
 -- MARK: Frames
 -------------------------------------------------

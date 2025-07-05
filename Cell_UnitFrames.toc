@@ -9,6 +9,7 @@
 ## X-License: MIT
 ## X-Curse-Project-ID: 1085605
 ## X-Wago-ID: ZKxqRdGk
+## X-Flavor: Mainline
 
 ## Dependencies: Cell
 

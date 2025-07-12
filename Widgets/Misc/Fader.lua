@@ -64,9 +64,11 @@ local DEFAULT_HARM_SPELLS = {}
 if CUF.vars.isRetail then
     DEFAULT_HARM_SPELLS = {
         ["WARLOCK"] = 234153, -- Drain Life
-        ["EVOKER"] = 361469, -- Living Flame
+        ["EVOKER"] = 361469,  -- Living Flame
     }
 end
+
+local playerClass = UnitClassBase("player")
 
 ---@param self FaderWidget
 ---@param unit UnitToken
@@ -79,6 +81,17 @@ local function RangeCheck(self, unit)
         if overrideSpell then
             inRange = C_Spell.IsSpellInRange(overrideSpell, unit) or false
         end
+    end
+
+    -- https://github.com/Krealle/Cell_UnitFrames/pull/184/files#diff-6fa34949c1834df47e53631f3408c7f74bdb538c3a39bff748e697136669cb62R90
+    -- Hack to enable hunter melee detection on era (idk if this actually works lol)
+    -- C_Spell.IsSpellInRange always returns true for melee spells
+    -- even IsActionInRange always returns true for melee spells...
+    if not inRange and playerClass == "HUNTER" then
+        -- duel range check, 7 yards
+        -- this is not accurate to melee range
+        -- but enables the frames to not get faded at least
+        inRange = CheckInteractDistance(unit, 3)
     end
 
     return inRange

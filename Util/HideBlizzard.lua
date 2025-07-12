@@ -68,9 +68,8 @@ function CUF:HideBlizzardUnitFrame(type)
     if type == "player" and _G.PlayerFrame then
         HideFrame(_G.PlayerFrame)
     elseif type == "playerCastBar" then
-        if _G.PlayerCastingBarFrame then
-            HideFrame(_G.PlayerCastingBarFrame)
-        end
+        HideFrame(_G.PlayerCastingBarFrame) -- Retail
+        HideFrame(_G.CastingBarFrame)       -- Non Retail
     elseif type == "target" and _G.TargetFrame then
         HideFrame(_G.TargetFrame)
     elseif type == "focus" and _G.FocusFrame then

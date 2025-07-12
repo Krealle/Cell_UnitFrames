@@ -142,6 +142,23 @@ local function GetHealthInfo(unit, absorbs, healAbsorbs)
     return health, healthMax, totalAbsorbs, healAborbs
 end
 
+if CUF.vars.isVanilla then
+    ---@param unit Unit
+    ---@param absorbs boolean
+    ---@param healAbsorbs boolean
+    ---@return number health
+    ---@return number healthMax
+    ---@return number totalAbsorbs
+    ---@return number totalHealAbsorbs
+    GetHealthInfo = function(unit, absorbs, healAbsorbs)
+        local health = UnitHealth(unit) or 0
+        local healthMax = UnitHealthMax(unit) or 0
+        local totalAbsorbs = 0
+        local healAborbs = 0
+        return health, healthMax, totalAbsorbs, healAborbs
+    end
+end
+
 ---@param self HealthTextWidget
 ---@param current number
 ---@param max number

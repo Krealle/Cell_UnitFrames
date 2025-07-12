@@ -101,7 +101,6 @@ local function UpdateUnitHealthState(button)
 
     button.states.health = health
     button.states.healthMax = healthMax
-    button.states.totalAbsorbs = UnitGetTotalAbsorbs(unit)
 
     if healthMax == 0 then
         button.states.healthPercent = 0

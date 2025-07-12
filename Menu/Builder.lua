@@ -905,13 +905,20 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
         { L["Custom"], const.HealthTextFormat.CUSTOM }
     }
 
+    local filteredHealthFormats = {}
+    for _, format in ipairs(healthFormats) do
+        if const.ValidHealthTextFormats[format[2]] then
+            table.insert(filteredHealthFormats, format)
+        end
+    end
+
     ---@class HealthFormatOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.optionHeight = 120
     f.id = "HealthFormatOptions"
 
     f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
-        healthFormats, const.OPTION_KIND.FORMAT)
+        filteredHealthFormats, const.OPTION_KIND.FORMAT)
     f.formatDropdown:SetPoint("TOPLEFT", f)
 
     f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)

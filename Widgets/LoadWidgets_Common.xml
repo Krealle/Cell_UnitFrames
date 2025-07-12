@@ -20,7 +20,7 @@
     <!-- <Script file="Bars/HealPrediction.lua"/> -->
 
     <Script file="Icons/RaidIcon.lua"/>
-    <!-- <Script file="Icons/RoleIcon.lua"/> -->
+    <Script file="Icons/RoleIcon.lua"/>
     <Script file="Icons/LeaderIcon.lua"/>
     <Script file="Icons/CombatIcon.lua"/>
     <Script file="Icons/ReadyCheckIcon.lua"/>

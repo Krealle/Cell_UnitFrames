@@ -15,8 +15,6 @@
 
 ## Notes: Unitframes for our beloved Cell!
 
-Libs/LibDispel/LibDispel.lua
-
 Locales/LoadLocales.xml
 Core/Init.lua
 Core/Events.lua

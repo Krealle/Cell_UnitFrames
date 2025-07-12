@@ -60,10 +60,13 @@ Handler:RegisterWidget(W.FaderWidget, const.WIDGET_KIND.FADER)
 -- MARK: Checks
 -------------------------------------------------
 
-local DEFAULT_HARM_SPELLS = {
-    ["WARLOCK"] = 234153, -- Drain Life
-    ["EVOKER"] = 361469,  -- Living Flame
-}
+local DEFAULT_HARM_SPELLS = {}
+if CUF.vars.isRetail then
+    DEFAULT_HARM_SPELLS = {
+        ["WARLOCK"] = 234153, -- Drain Life
+        ["EVOKER"] = 361469, -- Living Flame
+    }
+end
 
 ---@param self FaderWidget
 ---@param unit UnitToken

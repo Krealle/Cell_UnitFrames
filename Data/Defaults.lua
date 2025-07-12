@@ -258,19 +258,21 @@ Defaults.Colors = {
     },
 }
 
+local isRetail = CUF.vars.isRetail
+local isVanilla = CUF.vars.isVanilla
 Defaults.ColorsMenuOrder = {
     castBar = {
         { "texture",          "texture" },
         { "background",       "rgb" },
         { "interruptible",    "rgb" },
         { "nonInterruptible", "rgb" },
-        { "Empowers",         "separator" },
-        { "stageZero",        "rgb" },
-        { "stageOne",         "rgb" },
-        { "stageTwo",         "rgb" },
-        { "stageThree",       "rgb" },
-        { "stageFour",        "rgb" },
-        { "fullyCharged",     "rgb" }
+        { "Empowers",         "separator", isRetail },
+        { "stageZero",        "rgb",       isRetail },
+        { "stageOne",         "rgb",       isRetail },
+        { "stageTwo",         "rgb",       isRetail },
+        { "stageThree",       "rgb",       isRetail },
+        { "stageFour",        "rgb",       isRetail },
+        { "fullyCharged",     "rgb",       isRetail }
     },
     reaction = {
         { "friendly",                       "rgb" },
@@ -282,17 +284,17 @@ Defaults.ColorsMenuOrder = {
         { "swapHostileHealthAndLossColors", "toggle" }
     },
     essence = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
+        { "1", "rgb", isRetail },
+        { "2", "rgb", isRetail },
+        { "3", "rgb", isRetail },
+        { "4", "rgb", isRetail },
+        { "5", "rgb", isRetail },
+        { "6", "rgb", isRetail },
     },
     classResources = {
-        { "holyPower",     "rgb" },
-        { "soulShards",    "rgb" },
-        { "arcaneCharges", "rgb" },
+        { "holyPower",     "rgb", isRetail },
+        { "soulShards",    "rgb", isRetail },
+        { "arcaneCharges", "rgb", isRetail },
     },
     comboPoints = {
         { "1",       "rgb" },
@@ -302,46 +304,46 @@ Defaults.ColorsMenuOrder = {
         { "5",       "rgb" },
         { "6",       "rgb" },
         { "7",       "rgb" },
-        { "charged", "rgb" },
+        { "charged", "rgb", isRetail },
     },
     chi = {
-        { "1", "rgb" },
-        { "2", "rgb" },
-        { "3", "rgb" },
-        { "4", "rgb" },
-        { "5", "rgb" },
-        { "6", "rgb" },
+        { "1", "rgb", not isVanilla },
+        { "2", "rgb", not isVanilla },
+        { "3", "rgb", not isVanilla },
+        { "4", "rgb", not isVanilla },
+        { "5", "rgb", not isVanilla },
+        { "6", "rgb", not isVanilla },
     },
     runes = {
-        { "bloodRune",  "rgb" },
-        { "frostRune",  "rgb" },
-        { "unholyRune", "rgb" },
+        { "bloodRune",  "rgb", not isVanilla },
+        { "frostRune",  "rgb", not isVanilla },
+        { "unholyRune", "rgb", not isVanilla },
     },
     shieldBar = {
-        { "shieldTexture",           "texture" },
-        { "overshieldTexture",       "texture" },
-        { "overlayTexture",          "texture" },
-        { "shieldColor",             "rgb" },
-        { "overshieldColor",         "rgb" },
-        { "",                        "newline" },
-        { "overlayColor",            "rgb" },
-        { "useOverlay",              "toggle" },
-        { "overshieldOffset",        "slider" },
-        { "overshieldReverseOffset", "slider" },
-        { "overshieldSize",          "slider" },
+        { "shieldTexture",           "texture", not isVanilla },
+        { "overshieldTexture",       "texture", not isVanilla },
+        { "overlayTexture",          "texture", not isVanilla },
+        { "shieldColor",             "rgb",     not isVanilla },
+        { "overshieldColor",         "rgb",     not isVanilla },
+        { "",                        "newline", not isVanilla },
+        { "overlayColor",            "rgb",     not isVanilla },
+        { "useOverlay",              "toggle",  not isVanilla },
+        { "overshieldOffset",        "slider",  not isVanilla },
+        { "overshieldReverseOffset", "slider",  not isVanilla },
+        { "overshieldSize",          "slider",  not isVanilla },
     },
     healPrediction = {
-        { "texture",  "texture" },
-        { "color",    "rgb" },
-        { "overHeal", "rgb" },
+        { "texture",  "texture", not isVanilla },
+        { "color",    "rgb",     not isVanilla },
+        { "overHeal", "rgb",     not isVanilla },
     },
     healAbsorb = {
-        { "absorbTexture",     "texture" },
-        { "overabsorbTexture", "texture" },
-        { "absorbColor",       "rgb" },
-        { "overabsorbColor",   "rgb" },
-        { "",                  "newline" },
-        { "invertColor",       "toggle" },
+        { "absorbTexture",     "texture", not isVanilla },
+        { "overabsorbTexture", "texture", not isVanilla },
+        { "absorbColor",       "rgb",     not isVanilla },
+        { "overabsorbColor",   "rgb",     not isVanilla },
+        { "",                  "newline", not isVanilla },
+        { "invertColor",       "toggle",  not isVanilla },
     },
     unitFrames = {
         { "barColor",        "rgb" },
@@ -360,13 +362,24 @@ Defaults.ColorsMenuOrder = {
         { "powerLossAlpha",  "slider-percent" },
     },
     classBar = {
-        { "texture", "texture" },
+        { "texture", "texture", isRetail },
     },
     highlight = {
         { "target", "rgb" },
         { "hover",  "rgb" },
     }
 }
+
+for section, rows in pairs(Defaults.ColorsMenuOrder) do
+    local filtered = {}
+    for _, row in ipairs(rows) do
+        local condition = row[3]
+        if condition == nil or condition then
+            table.insert(filtered, row)
+        end
+    end
+    Defaults.ColorsMenuOrder[section] = filtered
+end
 
 ---@class Defaults.BlizzardFrames
 Defaults.BlizzardFrames = {}

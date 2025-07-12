@@ -15,23 +15,21 @@ end
 
 CUF:RegisterCallback("AddonLoaded", "CUF_Constants_OnAddonLoaded", OnAddonLoaded)
 
-do
-    ---@enum Unit
-    const.UNIT = {
-        PLAYER = "player",
-        TARGET = "target",
-        FOCUS = "focus",
-        PET = "pet",
-        TARGET_TARGET = "targettarget",
-        BOSS = "boss",
-    }
+---@enum Unit
+const.UNIT = {
+    PLAYER = "player",
+    TARGET = "target",
+    FOCUS = "focus",
+    PET = "pet",
+    TARGET_TARGET = "targettarget",
+    BOSS = "boss",
+}
 
-    if CUF.vars.isClassic then
-        const.UNIT.FOCUS = nil
-    end
-    if CUF.vars.isClassic or CUF.vars.isBCC then
-        const.UNIT.BOSS = nil
-    end
+if CUF.vars.isClassic then
+    const.UNIT.FOCUS = nil
+end
+if CUF.vars.isClassic or CUF.vars.isBCC then
+    const.UNIT.BOSS = nil
 end
 
 ---@enum TitleCasedUnits

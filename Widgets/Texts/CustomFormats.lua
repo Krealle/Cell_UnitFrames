@@ -257,7 +257,10 @@ end
 ---@param func CustomTagFunc
 ---@param category TagCategory?
 ---@param example string?
-function W:AddTag(tagName, events, func, category, example)
+---@param conditional boolean?
+function W:AddTag(tagName, events, func, category, example, conditional)
+    if not (conditional or conditional == nil) then return end
+
     category = category or "Miscellaneous"
     self.Tags[tagName] = { events = events, func = func, category = category }
 
@@ -508,110 +511,110 @@ W:AddTag("abs", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     if totalAbsorbs == 0 then return end
     return FormatText(totalAbsorbs)
-end, "Health", "25000")
+end, "Health", "25000", (not CUF.vars.isVanilla))
 W:AddTag("abs:short", "UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     if totalAbsorbs == 0 then return end
     return FormatText(totalAbsorbs, nil, false, true)
-end, "Health", "25K")
+end, "Health", "25K", (not CUF.vars.isVanilla))
 W:AddTag("perabs", "UNIT_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     if totalAbsorbs == 0 then return end
     local maxhp = UnitHealthMax(unit)
     return FormatText(maxhp, totalAbsorbs, true)
-end, "Health", "50.20%")
+end, "Health", "50.20%", (not CUF.vars.isVanilla))
 W:AddTag("perabs:short", "UNIT_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     if totalAbsorbs == 0 then return end
     local maxhp = UnitHealthMax(unit)
     return FormatText(maxhp, totalAbsorbs, true, true)
-end, "Health", "50%")
+end, "Health", "50%", (not CUF.vars.isVanilla))
 
 -- MARK: Combine
 W:AddTag("curhp:abs", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return CombineFormats(FormatNumber(curhp), FormatNumberNoZeroes(totalAbsorbs))
-end, "Health", "35000 + 5000")
+end, "Health", "35000 + 5000", (not CUF.vars.isVanilla))
 W:AddTag("curhp:abs:short", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return CombineFormats(FormatNumberShort(curhp), FormatNumberShortNoZeroes(totalAbsorbs))
-end, "Health", "35K + 5K")
+end, "Health", "35K + 5K", (not CUF.vars.isVanilla))
 W:AddTag("perhp:perabs", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return CombineFormats(FormatPercent(maxhp, curhp), FormatPercentNoZeroes(maxhp, totalAbsorbs))
-end, "Health", "75.20% + 15%")
+end, "Health", "75.20% + 15%", (not CUF.vars.isVanilla))
 W:AddTag("perhp:perabs:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return CombineFormats(FormatPercentShort(maxhp, curhp), FormatPercentShortNoZeroes(maxhp, totalAbsorbs))
-end, "Health", "75% + 15%")
+end, "Health", "75% + 15%", (not CUF.vars.isVanilla))
 
 -- MARK: Merge
 W:AddTag("curhp:abs:merge", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return FormatText(curhp + totalAbsorbs)
-end, "Health", "40000")
+end, "Health", "40000", (not CUF.vars.isVanilla))
 W:AddTag("curhp:abs:merge:short", "UNIT_HEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return FormatText(curhp + totalAbsorbs, nil, false, true)
-end, "Health", "40K")
+end, "Health", "40K", (not CUF.vars.isVanilla))
 W:AddTag("perhp:perabs:merge", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return FormatText(maxhp, (curhp + totalAbsorbs), true)
-end, "Health", "90.20%")
+end, "Health", "90.20%", (not CUF.vars.isVanilla))
 W:AddTag("perhp:perabs:merge:short", "UNIT_HEALTH UNIT_MAXHEALTH UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local curhp = UnitHealth(unit)
     local maxhp = UnitHealthMax(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     return FormatText(maxhp, (curhp + totalAbsorbs), true, true)
-end, "Health", "90%")
+end, "Health", "90%", (not CUF.vars.isVanilla))
 W:AddTag("abs:healabs:merge", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     local tot = totalAbsorbs - totalHealAbsorbs
     if tot == 0 then return end
     return FormatText(tot)
-end, "Health", "40000")
+end, "Health", "40000", (not CUF.vars.isVanilla))
 W:AddTag("abs:healabs:merge:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     local totalAbsorbs = UnitGetTotalAbsorbs(unit)
     local tot = totalAbsorbs - totalHealAbsorbs
     if tot == 0 then return end
     return FormatText(tot, nil, false, true)
-end, "Health", "-40k")
+end, "Health", "-40k", (not CUF.vars.isVanilla))
 
 -- MARK: Heal Absorbs
 W:AddTag("healabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     if totalHealAbsorbs == 0 then return end
     return FormatText(totalHealAbsorbs)
-end, "Health", "20000")
+end, "Health", "20000", (not CUF.vars.isVanilla))
 W:AddTag("healabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     if totalHealAbsorbs == 0 then return end
     return FormatText(totalHealAbsorbs, nil, false, true)
-end, "Health", "20K")
+end, "Health", "20K", (not CUF.vars.isVanilla))
 W:AddTag("perhealabs", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     if totalHealAbsorbs == 0 then return end
     local maxhp = UnitHealthMax(unit)
     return FormatText(maxhp, totalHealAbsorbs, true)
-end, "Health", "40.20%")
+end, "Health", "40.20%", (not CUF.vars.isVanilla))
 W:AddTag("perhealabs:short", "UNIT_HEAL_ABSORB_AMOUNT_CHANGED UNIT_MAXHEALTH", function(unit)
     local totalHealAbsorbs = UnitGetTotalHealAbsorbs(unit)
     if totalHealAbsorbs == 0 then return end
     local maxhp = UnitHealthMax(unit)
     return FormatText(maxhp, totalHealAbsorbs, true, true)
-end, "Health", "40%")
+end, "Health", "40%", (not CUF.vars.isVanilla))
 
 -- MARK: Power
 W:AddTag("curpp", "UNIT_POWER_FREQUENT UNIT_DISPLAYPOWER", function(unit)

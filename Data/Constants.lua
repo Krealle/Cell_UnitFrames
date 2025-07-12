@@ -94,6 +94,14 @@ const.HealthTextFormat = {
     CUSTOM = "custom",
 }
 
+---@type table<HealthTextFormat, boolean>
+const.ValidHealthTextFormats = {}
+for _, format in pairs(const.HealthTextFormat) do
+    -- There is no absorbs API in Vanilla
+    local isValidFormat = (not CUF.vars.isVanilla) or (not string.match(format, "absorbs"))
+    const.ValidHealthTextFormats[format] = isValidFormat
+end
+
 ---@enum WIDGET_KIND
 const.WIDGET_KIND = {
     NAME_TEXT = "nameText",

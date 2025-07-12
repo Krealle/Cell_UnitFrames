@@ -915,7 +915,3 @@ W:AddTag("dead", "PLAYER_FLAGS_CHANGED UNIT_FLAGS", function(unit)
         return L["Dead"]
     end
 end, "Status")
-
-W:AddTag("test", "UNIT_TARGET", function(unit)
-    return "|cFFFF0000This is |cFFFFFFFFwhite|r red text"
-end)

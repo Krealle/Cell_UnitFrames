@@ -1,7 +1,7 @@
 ---@class CUF
 local CUF = select(2, ...)
 
-local LibDispel = LibStub("LibDispel")
+local LibDispel = LibStub("LibDispel", true)
 
 ---@class CUF.Mixin
 local Mixin = CUF.Mixin
@@ -116,11 +116,44 @@ AurasMixin._auraDebuffCallbacks = {}
 AurasMixin._ignoreBuffs = true
 AurasMixin._ignoreDebuffs = true
 
----@param dispelName string?
----@param spellID number
----@return string
-local function CheckDebuffType(dispelName, spellID)
-    return LibDispel:GetDispelType(spellID, dispelName)
+local CheckDebuffType, IsDispellable
+
+do
+    if LibDispel then
+        ---@param dispelName string?
+        ---@param spellID number
+        ---@return string
+        CheckDebuffType = function(dispelName, spellID)
+            return LibDispel:GetDispelType(spellID, dispelName)
+        end
+
+        ---@param unit UnitToken
+        ---@param spellID number
+        ---@param dispelName string?
+        ---@param isHarmful boolean
+        ---@return boolean
+        IsDispellable = function(unit, spellID, dispelName, isHarmful)
+            return LibDispel:IsDispelable(unit, spellID, dispelName, isHarmful)
+        end
+    else
+        local I = Cell.iFuncs
+
+        ---@param dispelName string?
+        ---@param spellID number
+        ---@return string
+        CheckDebuffType = function(dispelName, spellID)
+            return I.CheckDebuffType(dispelName, spellID)
+        end
+
+        ---@param unit UnitToken
+        ---@param spellID number
+        ---@param dispelName string?
+        ---@param isHarmful boolean
+        ---@return boolean
+        IsDispellable = function(unit, spellID, dispelName, isHarmful)
+            return I.CanDispel(dispelName)
+        end
+    end
 end
 
 function AurasMixin:ResetAuraTables()
@@ -150,7 +183,7 @@ local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs, unit)
 
     if aura.isHarmful and not ignoreDebuffs then
         aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
-        aura.isDispellable = LibDispel:IsDispelable(unit, aura.spellId, aura.dispelName, true)
+        aura.isDispellable = IsDispellable(unit, aura.spellId, aura.dispelName, true)
 
         if aura.dispelName ~= "" and aura.dispelName ~= "none" then
             return AuraUpdateChangedType.Dispel
@@ -159,7 +192,7 @@ local function ProcessAura(aura, ignoreBuffs, ignoreDebuffs, unit)
         return AuraUpdateChangedType.Debuff
     elseif aura.isHelpful and not ignoreBuffs then
         aura.dispelName = CheckDebuffType(aura.dispelName, aura.spellId)
-        aura.isDispellable = LibDispel:IsDispelable(unit, aura.spellId, aura.dispelName, false)
+        aura.isDispellable = IsDispellable(unit, aura.spellId, aura.dispelName, false)
 
         return AuraUpdateChangedType.Buff
     end

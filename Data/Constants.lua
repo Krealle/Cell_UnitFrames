@@ -25,10 +25,10 @@ const.UNIT = {
     BOSS = "boss",
 }
 
-if CUF.vars.isClassic then
+if CUF.vars.isVanilla then
     const.UNIT.FOCUS = nil
 end
-if CUF.vars.isClassic or CUF.vars.isBCC then
+if CUF.vars.isVanilla or CUF.vars.isBCC then
     const.UNIT.BOSS = nil
 end
 

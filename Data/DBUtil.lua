@@ -223,6 +223,10 @@ function DB.VerifyDB()
                 layoutTable.CUFUnits[unit] = Util:CopyDeep(unitLayout)
             else
                 Util:AddMissingProps(layoutTable.CUFUnits[unit], unitLayout, DB.PropsToOnlyInit)
+
+                if not CUF.constants.ValidHealthTextFormats[layoutTable.CUFUnits[unit].widgets.healthText.format] then
+                    layoutTable.CUFUnits[unit].widgets.healthText.format = CUF.constants.HealthTextFormat.PERCENTAGE
+                end
             end
         end
     end

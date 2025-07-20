@@ -239,7 +239,7 @@ end
 ---@param icons CellAuraIcons
 ---@param show boolean
 local function Icons_SetShowTempEnchant(icons, show)
-    if icons._owner._baseUnit == "player" and icons.id == "buffs" then
+    if CUF.vars.isRetail and icons._owner._baseUnit == "player" and icons.id == "buffs" then
         icons.showTempEnchant = show
         icons:UpdateTempEnchantListener()
     end

@@ -1583,7 +1583,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         L.WhiteListPriorityTooltip)
     self:AnchorBelowCB(f.whiteListPriority, f.useBlacklistCB)
 
-    if widgetName == const.WIDGET_KIND.BUFFS then
+    if widgetName == const.WIDGET_KIND.BUFFS and CUF.vars.isRetail then
         f.tempEnchant = self:CreateCheckBox(f, widgetName, L.tempEnchant,
             const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.TEMP_ENCHANT,
             L.tempEnchantTooltip)

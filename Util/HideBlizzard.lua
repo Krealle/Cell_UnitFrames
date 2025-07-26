@@ -88,6 +88,7 @@ function CUF:HideBlizzardUnitFrame(type)
         end
     elseif type == "buffFrame" then
         HideFrame(_G.BuffFrame)
+        HideFrame(_G.TemporaryEnchantFrame)
     elseif type == "debuffFrame" then
         HideFrame(_G.DebuffFrame)
     end

@@ -183,7 +183,7 @@ end
 -- MARK: Sections
 -------------------------------------------------
 
---- Update all color pickers with the current color table
+--- Update all elements with the current color table
 ---
 --- This is called when a new color table is imported
 function ColorTab:UpdateColors()
@@ -199,6 +199,9 @@ function ColorTab:UpdateColors()
         end
         for _, dropdown in pairs(section.dropdowns) do
             dropdown:SetSelected(Util.textureToName[colorTable[dropdown.id]], colorTable[dropdown.id])
+        end
+        for _, slider in pairs(section.sliders) do
+            slider:SetValue(colorTable[slider.id])
         end
     end
 end
@@ -233,6 +236,7 @@ function ColorTab:CreateSections()
             section.id = which
             section.cps = {} ---@type (CUF.ColorSection.ColorPicker|CUF.ColorSection.Checkbox)[]
             section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
+            section.sliders = {} ---@type CUF.ColorSection.Slider[]
 
             local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
             sectionTitle:SetPoint("TOPLEFT", sectionGap, -sectionGap)
@@ -315,7 +319,7 @@ function ColorTab:CreateSections()
                     end
                     gridLayout.firstInRow = element
 
-                    table.insert(section.dropdowns, element)
+                    table.insert(section.sliders, element)
                 elseif colorType == "rgb" or colorType == "toggle" then
                     if colorType == "toggle" then
                         element, elementWidth = CreateCheckbox(which, colorName, colorTable, section)

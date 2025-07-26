@@ -25,6 +25,13 @@ const.UNIT = {
     BOSS = "boss",
 }
 
+if CUF.vars.isVanilla then
+    const.UNIT.FOCUS = nil
+end
+if CUF.vars.isVanilla or CUF.vars.isBCC then
+    const.UNIT.BOSS = nil
+end
+
 ---@enum TitleCasedUnits
 -- Used for frame titles
 const.TITLE_CASED_UNITS = {
@@ -86,6 +93,14 @@ const.HealthTextFormat = {
     ABSORBS_ONLY_PERCENTAGE = "absorbs-only-percentage",
     CUSTOM = "custom",
 }
+
+---@type table<HealthTextFormat, boolean>
+const.ValidHealthTextFormats = {}
+for _, format in pairs(const.HealthTextFormat) do
+    -- There is no absorbs API in Vanilla
+    local isValidFormat = (not CUF.vars.isVanilla) or (not string.match(format, "absorbs"))
+    const.ValidHealthTextFormats[format] = isValidFormat
+end
 
 ---@enum WIDGET_KIND
 const.WIDGET_KIND = {

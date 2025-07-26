@@ -49,6 +49,7 @@
     "RegisterAttributeDriver",
     "FAILED",
     "INTERRUPTED",
-    "CellParent"
+    "CellParent",
+    "WOW_PROJECT_MISTS_CLASSIC"
   ]
 }

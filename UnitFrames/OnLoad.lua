@@ -313,12 +313,14 @@ function CUFUnitButton_OnLoad(button)
     button.healthBarColorType = const.UnitButtonColorType.CELL
     button.healthLossColorType = const.UnitButtonColorType.CELL
 
-    -- ping system
-    Mixin(button, PingableType_UnitFrameMixin)
-    button:SetAttribute("ping-receiver", true)
+    if CUF.vars.isRetail then
+        -- ping system
+        Mixin(button, PingableType_UnitFrameMixin)
+        button:SetAttribute("ping-receiver", true)
 
-    function button:GetTargetPingGUID()
-        return button.__unitGuid
+        function button:GetTargetPingGUID()
+            return button.__unitGuid
+        end
     end
 
     ---@param widget WIDGET_KIND

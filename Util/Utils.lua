@@ -15,6 +15,16 @@ local const = CUF.constants
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
 local GetClassColor = GetClassColor
 
+local UnitSelectionType = UnitSelectionType or
+    ---@param unit UnitToken
+    function(unit)
+        -- Helper fallback function for older game versions, blizzards function was introduced with BFA
+        if UnitIsFriend(unit, "player") then return 3 end
+        if UnitIsEnemy(unit, "player") then return 0 end
+        if UnitIsUnit(unit, "pet") or UnitIsOtherPlayersPet(unit) then return 4 end
+        return 999
+    end
+
 -------------------------------------------------
 -- MARK: Prop Hunting
 -------------------------------------------------
@@ -152,6 +162,17 @@ end
 function Util:Mixin(object, ...)
     for i = 1, select("#", ...) do
         Mixin(object, Util:CopyDeep(select(i, ...)))
+    end
+end
+
+---@param enum table
+---@param val any
+---@return boolean?
+function Util:EnumHasValue(enum, val)
+    if not enum or not val then return false end
+
+    for _, value in pairs(enum) do
+        if val == value then return true end
     end
 end
 
@@ -759,6 +780,21 @@ local typeIcon = { elite = gold, worldboss = gold, rareelite = silver, rare = si
 ---@return string? icon
 function Util:GetUnitClassificationIcon(unit)
     return typeIcon[UnitClassification(unit)]
+end
+
+-- Helper function to get a aura index by auraInstanceID
+-- Currently only used for non-retail tooltips
+---@param unit string
+---@param auraInstanceID number
+---@param filter string
+---@return number? auraIndex
+function Util:GetAuraIndexByAuraInstanceID(unit, auraInstanceID, filter)
+    for index = 1, select("#", C_UnitAuras.GetAuraSlots(unit, filter)) do
+        local auraInfo = C_UnitAuras.GetAuraDataByIndex(unit, index, filter);
+        if auraInfo and auraInfo.auraInstanceID == auraInstanceID then
+            return index
+        end
+    end
 end
 
 -------------------------------------------------

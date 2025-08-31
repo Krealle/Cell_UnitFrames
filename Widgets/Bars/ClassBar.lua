@@ -238,7 +238,7 @@ local function TogglePowerEvents(self, enable)
             self._owner:AddEventListener("UNIT_POWER_FREQUENT", self.UpdateEssence)
         else
             -- Check for Charged Combo Points
-            if self._owner.states.class == "ROGUE" then
+            if self._owner.states.class == "ROGUE" and CUF.vars.isRetail then
                 self._owner:AddEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
             end
             self._owner:AddEventListener("UNIT_POWER_UPDATE", self.UpdatePower)
@@ -250,7 +250,9 @@ local function TogglePowerEvents(self, enable)
         self._owner:RemoveEventListener("UNIT_POWER_UPDATE", self.UpdatePower)
         self._owner:RemoveEventListener("RUNE_POWER_UPDATE", self.UpdateRunes)
         self._owner:RemoveEventListener("UNIT_POWER_FREQUENT", self.UpdateEssence)
-        self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
+        if CUF.vars.isRetail then
+            self._owner:RemoveEventListener("UNIT_POWER_POINT_CHARGE", self.UpdateChargedComboPoints)
+        end
     end
 end
 

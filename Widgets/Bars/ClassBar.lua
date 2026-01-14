@@ -446,12 +446,24 @@ local function UpdateRune(bar)
     -- When changing zones this API can return nil
     if start == nil then return end
 
+    if duration <= 0 then
+        bar:SetValue(1)
+        bar:StopRuneTimer()
+        return
+    end
+
     if runeReady then
         bar:SetValue(1)
         bar:StopRuneTimer()
     else
         local timeLeft = duration - (GetTime() - start)
+        if timeLeft < 0 then timeLeft = 0 end
+        
         local progress = 1 - (timeLeft / duration)
+        if progress ~= progress or progress == math.huge or progress == -math.huge then
+            progress = 0
+        end
+        
         bar:SetValue(progress)
         bar:StartRuneTimer()
     end

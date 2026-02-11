@@ -1,8 +1,12 @@
+<div align="center">
+  
+ ### ⚠️ This project is no being longer maintained
+ 
+ ---
+ 
+</div>
+
 # Cell - Unit Frames
-
-[![Discord](https://img.shields.io/discord/1062050991664529498?label=Discord&color=5865F2)](https://discord.gg/C5STjYRsCD)
-
-[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/vollmerino)
 
 Plugin for the amazing AddOn **[Cell](https://www.curseforge.com/wow/addons/cell)** that adds various unit frames.
 
@@ -78,11 +82,3 @@ Check out https://github.com/Krealle/Cell_UnitFrames/tree/master/API for further
 This plugin provides built-in support for creating dummy anchors to match other Unit Frame addons.
 
 With these anchors, you can easily migrate from other Unit Frame addons to **Cell Unit Frames**, without having to update various anchors used in eg. WeakAuras.
-
-## Issues / Feature Requests
-
-Please report any issues or feature requests over on [GitHub](https://github.com/Krealle/Cell_UnitFrames/issues).
-
-## Localization
-
-Want to help translate the AddOn? Head over to [CurseForge](https://legacy.curseforge.com/wow/addons/cell-unit-frames/localization).

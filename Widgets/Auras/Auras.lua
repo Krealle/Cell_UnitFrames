@@ -79,18 +79,18 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
             icons[i]:SetScript("OnEnter", function(self)
                 -- Don't show tooltips in preview mode
                 if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
-
-                GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
                 if icons.id == "buffs" then
-                    if self.isTempEnchant then
-                        GameTooltip:SetInventoryItem("player", self.auraInstanceID);
-                    else
-                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                            icons.auraFilter);
+                    if self.index then
+                        F.ShowTooltips(icons._owner, "spell", icons._owner.states.displayedUnit, self.index, "HELPFUL")
+                    elseif self.auraInstanceID then
+                        F.ShowTooltips(icons._owner, "aura", icons._owner.states.displayedUnit, self.auraInstanceID, "HELPFUL")
                     end
                 else
-                    GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                        icons.auraFilter);
+                    if self.index then
+                        F.ShowTooltips(icons._owner, "spell", icons._owner.states.displayedUnit, self.index, "HARMFUL")
+                    elseif self.auraInstanceID then
+                        F.ShowTooltips(icons._owner, "aura", icons._owner.states.displayedUnit, self.auraInstanceID, "HARMFUL")
+                    end
                 end
             end)
 

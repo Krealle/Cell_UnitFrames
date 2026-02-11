@@ -1,6 +1,6 @@
 <div align="center">
   
- ### ⚠️ This project is no being longer maintained
+ ### ⚠️ This project is no longer being maintained
  
  ---
  

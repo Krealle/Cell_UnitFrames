@@ -18,6 +18,8 @@ local DB = CUF.DB
 local Builder = CUF.Builder
 local Handler = CUF.Handler
 
+local GetSpecialization = GetSpecialization or C_SpecializationInfo.GetSpecialization
+
 --[[ local SPEC_ROLES = {
     -- Melee
     [251] = "DAMAGER", -- Death Knight - Frost

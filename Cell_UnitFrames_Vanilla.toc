@@ -1,4 +1,4 @@
-## Interface: 110107
+## Interface: 11507
 ## SavedVariables: CUF_DB
 ## IconTexture: Interface\ICONS\spell_progenitor_buff
 
@@ -9,13 +9,11 @@
 ## X-License: MIT
 ## X-Curse-Project-ID: 1085605
 ## X-Wago-ID: ZKxqRdGk
-## X-Flavor: Mainline
+## X-Flavor: Vanilla
 
 ## Dependencies: Cell
 
 ## Notes: Unitframes for our beloved Cell!
-
-Libs/LibDispel/LibDispel.lua
 
 Locales/LoadLocales.xml
 Core/Init.lua
@@ -52,7 +50,6 @@ Menu/ColorTab.lua
 Menu/VisibilityTab.lua
 
 Widgets/LoadWidgets_Common.xml
-Widgets/LoadWidgets_Retail.xml
 
 UnitFrames/UnitButton.xml
 UnitFrames/UnitButton.lua

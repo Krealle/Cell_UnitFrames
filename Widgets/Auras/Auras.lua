@@ -81,16 +81,30 @@ local function Icons_ShowTooltip(icons, show, hideInCombat)
                 if (hideInCombat and InCombatLockdown()) or icons._isSelected then return end
 
                 GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-                if icons.id == "buffs" then
-                    if self.isTempEnchant then
-                        GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+
+                if self.isTempEnchant then
+                    -- Why is this a thing, but we cant set auras by auraInstanceID???
+                    GameTooltip:SetInventoryItem("player", self.auraInstanceID);
+                    return
+                end
+
+                if CUF.vars.isRetail then
+                    if icons.id == "buffs" then
+                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit,
+                            self.auraInstanceID,
+                            icons.auraFilter);
                     else
-                        GameTooltip:SetUnitBuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
+                        GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
                             icons.auraFilter);
                     end
                 else
-                    GameTooltip:SetUnitDebuffByAuraInstanceID(icons._owner.states.displayedUnit, self.auraInstanceID,
-                        icons.auraFilter);
+                    local index = Util:GetAuraIndexByAuraInstanceID(icons._owner.states.displayedUnit,
+                        self.auraInstanceID, icons.auraFilter)
+                    if not index then return end
+
+                    GameTooltip:SetUnitAura(icons._owner.states.displayedUnit,
+                        index,
+                        icons.auraFilter)
                 end
             end)
 
@@ -225,7 +239,7 @@ end
 ---@param icons CellAuraIcons
 ---@param show boolean
 local function Icons_SetShowTempEnchant(icons, show)
-    if icons._owner._baseUnit == "player" and icons.id == "buffs" then
+    if CUF.vars.isRetail and icons._owner._baseUnit == "player" and icons.id == "buffs" then
         icons.showTempEnchant = show
         icons:UpdateTempEnchantListener()
     end

@@ -905,13 +905,20 @@ function Builder:CreateHealthFormatOptions(parent, widgetName)
         { L["Custom"], const.HealthTextFormat.CUSTOM }
     }
 
+    local filteredHealthFormats = {}
+    for _, format in ipairs(healthFormats) do
+        if const.ValidHealthTextFormats[format[2]] then
+            table.insert(filteredHealthFormats, format)
+        end
+    end
+
     ---@class HealthFormatOptions: OptionsFrame
     local f = CUF:CreateFrame(nil, parent, 1, 1, true, true)
     f.optionHeight = 120
     f.id = "HealthFormatOptions"
 
     f.formatDropdown = self:CreateDropdown(parent, widgetName, "Format", 200,
-        healthFormats, const.OPTION_KIND.FORMAT)
+        filteredHealthFormats, const.OPTION_KIND.FORMAT)
     f.formatDropdown:SetPoint("TOPLEFT", f)
 
     f.formatEditBox = self:CreateEditBox(parent, widgetName, L["Text Format"], 300, const.OPTION_KIND.TEXT_FORMAT)
@@ -1576,7 +1583,7 @@ function Builder:CreateAuraFilterOptions(parent, widgetName)
         L.WhiteListPriorityTooltip)
     self:AnchorBelowCB(f.whiteListPriority, f.useBlacklistCB)
 
-    if widgetName == const.WIDGET_KIND.BUFFS then
+    if widgetName == const.WIDGET_KIND.BUFFS and CUF.vars.isRetail then
         f.tempEnchant = self:CreateCheckBox(f, widgetName, L.tempEnchant,
             const.AURA_OPTION_KIND.FILTER .. "." .. const.AURA_OPTION_KIND.TEMP_ENCHANT,
             L.tempEnchantTooltip)

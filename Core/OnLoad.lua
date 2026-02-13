@@ -29,12 +29,14 @@ local function OnCellInitialUpdateLayout(_layout)
     -- TODO: This is kinda non-ideal and should be looked into
     -- Mixin in some extra bleeds/enrages
     -- These values can be overwritten by the user via snippets
-    local LibDispel = LibStub("LibDispel")
-    if Cell.vars.bleedList then
-        Mixin(LibDispel.bleed, Cell.vars.bleedList)
+    local LibDispel = LibStub("LibDispel", true)
+    if LibDispel then
+        if Cell.vars.bleedList then
+            Mixin(LibDispel.bleed, Cell.vars.bleedList)
+        end
+        Mixin(LibDispel.bleed, CUF.Defaults.Values.extraBleeds)
+        Mixin(LibDispel.enrage, CUF.Defaults.Values.extraEnrages)
     end
-    Mixin(LibDispel.bleed, CUF.Defaults.Values.extraBleeds)
-    Mixin(LibDispel.enrage, CUF.Defaults.Values.extraEnrages)
 
     -- Init Unit Buttons
     CUF.uFuncs:InitUnitButtons()

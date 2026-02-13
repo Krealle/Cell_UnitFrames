@@ -228,143 +228,147 @@ function ColorTab:CreateSections()
     local colorOrder = CUF.Defaults.ColorsMenuOrder
 
     for which, order in pairs(colorOrder) do
-        ---@class CUF.ColorSection: Frame
-        local section = CUF:CreateFrame(colorSection:GetName() .. "_" .. Util:ToTitleCase(which),
-            colorSection.scrollFrame.content, self.window:GetWidth() - 10, 1, false, true)
-        section.id = which
-        section.cps = {} ---@type (CUF.ColorSection.ColorPicker|CUF.ColorSection.Checkbox)[]
-        section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
-        section.sliders = {} ---@type CUF.ColorSection.Slider[]
+        -- Oh how I wish for a continue
+        if #order > 0 then
+            ---@class CUF.ColorSection: Frame
+            local section = CUF:CreateFrame(colorSection:GetName() .. "_" .. Util:ToTitleCase(which),
+                colorSection.scrollFrame.content, self.window:GetWidth() - 10, 1, false, true)
+            section.id = which
+            section.cps = {} ---@type (CUF.ColorSection.ColorPicker|CUF.ColorSection.Checkbox)[]
+            section.dropdowns = {} ---@type CUF.ColorSection.Dropdown[]
+            section.sliders = {} ---@type CUF.ColorSection.Slider[]
 
-        local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
-        sectionTitle:SetPoint("TOPLEFT", sectionGap, -sectionGap)
-        sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
-        sectionTitle.title:SetText(L[which])
-        sectionTitle.title:SetScale(1.2)
-        sectionTitle.title:SetPoint("TOPLEFT")
-        sectionTitle:SetHeight(sectionTitle.title:GetStringHeight())
+            local sectionTitle = CUF:CreateFrame(nil, section, 1, 1, true, true) --[[@as OptionTitle]]
+            sectionTitle:SetPoint("TOPLEFT", sectionGap, -sectionGap)
+            sectionTitle.title = sectionTitle:CreateFontString(nil, "OVERLAY", "CELL_FONT_CLASS_TITLE")
+            sectionTitle.title:SetText(L[which])
+            sectionTitle.title:SetScale(1.2)
+            sectionTitle.title:SetPoint("TOPLEFT")
+            sectionTitle:SetHeight(sectionTitle.title:GetStringHeight())
 
-        local gridLayout = {
-            maxColumns = 3,
-            currentRow = 1,
-            currentColumn = 1,
-            currentColumnWidth = sectionGap * 2,
-            firstInRow = nil
-        }
-        local baseHeight = 35
 
-        ---@type table<string, RGBAOpt>
-        local colorTable = colorTables[which]
-        for _, info in ipairs(order) do
-            local colorName, colorType = info[1], info[2]
-            local element, elementWidth
+            local gridLayout = {
+                maxColumns = 3,
+                currentRow = 1,
+                currentColumn = 1,
+                currentColumnWidth = sectionGap * 2,
+                firstInRow = nil
+            }
+            local baseHeight = 35
 
-            if colorType == "separator" then
-                element = CreateSeparatorTitle(colorName, section)
-                gridLayout.currentColumn = 1
-                gridLayout.currentColumnWidth = section:GetWidth()
-                gridLayout.currentRow = gridLayout.currentRow + 1
+            ---@type table<string, RGBAOpt>
+            local colorTable = colorTables[which]
+            for _, info in ipairs(order) do
+                local colorName, colorType = info[1], info[2]
+                local element, elementWidth
 
-                element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
-                gridLayout.firstInRow = element
-                baseHeight = baseHeight + element:GetHeight() + sectionGap
-            elseif colorType == "newline" then
-                gridLayout.currentColumn = 0
-                gridLayout.currentRow = gridLayout.currentRow + 1
-                gridLayout.currentColumnWidth = 0
-            elseif colorType == "texture" then
-                element = CreateTextureDropdown(which, colorName, colorTable, section)
-                gridLayout.currentColumn = 1
-                gridLayout.currentColumnWidth = section:GetWidth()
-
-                if gridLayout.currentRow > 1 then
-                    gridLayout.currentRow = gridLayout.currentRow + 1
-                end
-
-                -- Start of a new row
-                if not gridLayout.firstInRow then
-                    element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
-                else
-                    element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
-                end
-                gridLayout.firstInRow = element
-
-                baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
-
-                table.insert(section.dropdowns, element)
-            elseif colorType:match("slider") then
-                element = CreateSlider(which, colorName, colorTable, section, colorType:match("percent"))
-                gridLayout.currentColumn = 1
-                gridLayout.currentColumnWidth = section:GetWidth()
-
-                if gridLayout.currentRow > 1 then
-                    gridLayout.currentRow = gridLayout.currentRow + 1
-                end
-
-                -- Start of a new row
-                if not gridLayout.firstInRow then
-                    element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
-                    baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
-                else
-                    if gridLayout.firstInRow.type == "slider" then
-                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 4.5)
-                        baseHeight = baseHeight + element:GetHeight() * 3 + sectionGap * 3
-                    else
-                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
-                        baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
-                    end
-                end
-                gridLayout.firstInRow = element
-
-                table.insert(section.sliders, element)
-            elseif colorType == "rgb" or colorType == "toggle" then
-                if colorType == "toggle" then
-                    element, elementWidth = CreateCheckbox(which, colorName, colorTable, section)
-                else
-                    element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
-                end
-
-                -- Move to the next column, or wrap to the next row if necessary
-                if gridLayout.currentColumn > gridLayout.maxColumns
-                    or (gridLayout.currentColumnWidth + elementWidth) > (section:GetWidth()) then
+                if colorType == "separator" then
+                    element = CreateSeparatorTitle(colorName, section)
                     gridLayout.currentColumn = 1
+                    gridLayout.currentColumnWidth = section:GetWidth()
                     gridLayout.currentRow = gridLayout.currentRow + 1
-                    gridLayout.currentColumnWidth = sectionGap * 2
-                end
 
-                gridLayout.currentColumnWidth = gridLayout.currentColumnWidth + elementWidth
-                table.insert(section.cps, element)
-
-                -- Position the element in the grid
-                if gridLayout.currentColumn == 1 then
-                    -- Start of a new row
-                    if not gridLayout.firstInRow then
-                        element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap)
-                    else
-                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
-                    end
+                    element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
                     gridLayout.firstInRow = element
                     baseHeight = baseHeight + element:GetHeight() + sectionGap
-                else
-                    -- Position to the right of the previous element
-                    element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
+                elseif colorType == "newline" then
+                    gridLayout.currentColumn = 0
+                    gridLayout.currentRow = gridLayout.currentRow + 1
+                    gridLayout.currentColumnWidth = 0
+                elseif colorType == "texture" then
+                    element = CreateTextureDropdown(which, colorName, colorTable, section)
+                    gridLayout.currentColumn = 1
+                    gridLayout.currentColumnWidth = section:GetWidth()
+
+                    if gridLayout.currentRow > 1 then
+                        gridLayout.currentRow = gridLayout.currentRow + 1
+                    end
+
+                    -- Start of a new row
+                    if not gridLayout.firstInRow then
+                        element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                    else
+                        element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                    end
+                    gridLayout.firstInRow = element
+
+                    baseHeight = baseHeight + element:GetHeight() + sectionGap * 2.5
+
+                    table.insert(section.dropdowns, element)
+                elseif colorType:match("slider") then
+                    element = CreateSlider(which, colorName, colorTable, section, colorType:match("percent"))
+                    gridLayout.currentColumn = 1
+                    gridLayout.currentColumnWidth = section:GetWidth()
+
+                    if gridLayout.currentRow > 1 then
+                        gridLayout.currentRow = gridLayout.currentRow + 1
+                    end
+
+                    -- Start of a new row
+                    if not gridLayout.firstInRow then
+                        element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                        baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
+                    else
+                        if gridLayout.firstInRow.type == "slider" then
+                            element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 4.5)
+                            baseHeight = baseHeight + element:GetHeight() * 3 + sectionGap * 3
+                        else
+                            element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap * 2.5)
+                            baseHeight = baseHeight + element:GetHeight() + sectionGap * 3
+                        end
+                    end
+                    gridLayout.firstInRow = element
+
+                    table.insert(section.sliders, element)
+                elseif colorType == "rgb" or colorType == "toggle" then
+                    if colorType == "toggle" then
+                        element, elementWidth = CreateCheckbox(which, colorName, colorTable, section)
+                    else
+                        element, elementWidth = CreateColorPicker(which, colorName, colorTable, section)
+                    end
+
+                    -- Move to the next column, or wrap to the next row if necessary
+                    if gridLayout.currentColumn > gridLayout.maxColumns
+                        or (gridLayout.currentColumnWidth + elementWidth) > (section:GetWidth()) then
+                        gridLayout.currentColumn = 1
+                        gridLayout.currentRow = gridLayout.currentRow + 1
+                        gridLayout.currentColumnWidth = sectionGap * 2
+                    end
+
+                    gridLayout.currentColumnWidth = gridLayout.currentColumnWidth + elementWidth
+                    table.insert(section.cps, element)
+
+                    -- Position the element in the grid
+                    if gridLayout.currentColumn == 1 then
+                        -- Start of a new row
+                        if not gridLayout.firstInRow then
+                            element:SetPoint("TOPLEFT", sectionTitle, "BOTTOMLEFT", 0, -sectionGap)
+                        else
+                            element:SetPoint("TOPLEFT", gridLayout.firstInRow, "BOTTOMLEFT", 0, -sectionGap)
+                        end
+                        gridLayout.firstInRow = element
+                        baseHeight = baseHeight + element:GetHeight() + sectionGap
+                    else
+                        -- Position to the right of the previous element
+                        element:SetPoint("TOPLEFT", section.cps[#section.cps - 1], "TOPRIGHT", cpGap, 0)
+                    end
                 end
+
+                gridLayout.currentColumn = gridLayout.currentColumn + 1
             end
 
-            gridLayout.currentColumn = gridLayout.currentColumn + 1
+            section:SetHeight(baseHeight)
+            self.sectionsHeight = self.sectionsHeight + baseHeight + sectionGap
+
+            if not prevSection then
+                section:SetPoint("TOPLEFT", colorSection.scrollFrame.content)
+            else
+                section:SetPoint("TOPLEFT", prevSection, "BOTTOMLEFT", 0, -sectionGap)
+            end
+
+            prevSection = section
+            table.insert(self.colorSections, section)
         end
-
-        section:SetHeight(baseHeight)
-        self.sectionsHeight = self.sectionsHeight + baseHeight + sectionGap
-
-        if not prevSection then
-            section:SetPoint("TOPLEFT", colorSection.scrollFrame.content)
-        else
-            section:SetPoint("TOPLEFT", prevSection, "BOTTOMLEFT", 0, -sectionGap)
-        end
-
-        prevSection = section
-        table.insert(self.colorSections, section)
     end
 
     self.colorSection = colorSection

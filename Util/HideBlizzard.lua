@@ -68,15 +68,17 @@ function CUF:HideBlizzardUnitFrame(type)
     if type == "player" and _G.PlayerFrame then
         HideFrame(_G.PlayerFrame)
     elseif type == "playerCastBar" then
-        if _G.PlayerCastingBarFrame then
-            HideFrame(_G.PlayerCastingBarFrame)
-        end
+        HideFrame(_G.PlayerCastingBarFrame) -- Retail
+        HideFrame(_G.CastingBarFrame)       -- Non Retail
     elseif type == "target" and _G.TargetFrame then
         HideFrame(_G.TargetFrame)
+        HideFrame(_G.ComboFrame)
     elseif type == "focus" and _G.FocusFrame then
         HideFrame(_G.FocusFrame)
+        HideFrame(_G.TargetofFocusFrame)
     elseif type == "pet" and _G.PetFrame then
         HideFrame(_G.PetFrame)
+        HideFrame(_G.PetCastingBarFrame)
     elseif type == "boss" then
         HideFrame(_G.BossTargetFrameContainer)
         for i = 1, MAX_BOSS_FRAMES do
@@ -86,6 +88,7 @@ function CUF:HideBlizzardUnitFrame(type)
         end
     elseif type == "buffFrame" then
         HideFrame(_G.BuffFrame)
+        HideFrame(_G.TemporaryEnchantFrame)
     elseif type == "debuffFrame" then
         HideFrame(_G.DebuffFrame)
     end

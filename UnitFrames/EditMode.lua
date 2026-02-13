@@ -436,14 +436,6 @@ end
 ---@type table<Unit, CUFOverlayBox>
 local overlays = {}
 
-local colors = {
-    [const.UNIT.PLAYER] = { 1, 0, 0 },
-    [const.UNIT.TARGET] = { 1, 0.5, 0 },
-    [const.UNIT.TARGET_TARGET] = { 1, 1, 0 },
-    [const.UNIT.FOCUS] = { 0, 1, 0 },
-    [const.UNIT.PET] = { 0, 0.5, 1 },
-}
-
 ---@param widget Widget
 ---@param unit Unit
 ---@param unitOverlay CUFOverlayBox
